@@ -1,0 +1,182 @@
+# AI智能助手开发环境 Docker Compose 配置
+# 用于本地开发和测试
+
+version: '3.8'
+
+services:
+  # Redis - 用于会话缓存和短期记忆
+  redis:
+    image: redis:7-alpine
+    container_name: ai-assistant-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - ai-network
+
+  # Milvus Standalone - 向量数据库（用于知识库和长期记忆）
+  # 使用standalone模式简化开发环境
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.5
+    container_name: ai-assistant-etcd
+    environment:
+      - ETCD_AUTO_COMPACTION_MODE=revision
+      - ETCD_AUTO_COMPACTION_RETENTION=1000
+      - ETCD_QUOTA_BACKEND_BYTES=4294967296
+      - ETCD_SNAPSHOT_COUNT=50000
+    volumes:
+      - etcd-data:/etcd
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - ai-network
+
+  minio:
+    image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+    container_name: ai-assistant-minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio-data:/minio_data
+    command: minio server /minio_data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - ai-network
+
+  milvus:
+    image: milvusdb/milvus:v2.3.3
+    container_name: ai-assistant-milvus
+    depends_on:
+      - etcd
+      - minio
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+    volumes:
+      - milvus-data:/var/lib/milvus
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    command: ["milvus", "run", "standalone"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
+      interval: 30s
+      start_period: 90s
+      timeout: 20s
+      retries: 3
+    networks:
+      - ai-network
+
+  # MySQL - 复用现有数据库（通过host网络连接）
+  # 注意：实际使用时连接宿主机的MySQL，这里仅作为参考配置
+  # mysql:
+  #   image: mysql:9.2.0
+  #   container_name: ai-assistant-mysql
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=root
+  #     - MYSQL_DATABASE=workhour
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - mysql-data:/var/lib/mysql
+  #   command: mysqld --character_set_server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  #   networks:
+  #     - ai-network
+
+  # FastAPI AI Service - AI服务层
+  ai-service:
+    build:
+      context: ./fastapi-service
+      dockerfile: Dockerfile
+    container_name: ai-assistant-service
+    depends_on:
+      - redis
+      - milvus
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MILVUS_HOST=milvus
+      - MILVUS_PORT=19530
+      - MYSQL_HOST=host.docker.internal  # 连接宿主机MySQL
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=thsappv8
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=19990512
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_API_BASE=${LLM_API_BASE:-https://api.openai.com/v1}
+      - LLM_MODEL=${LLM_MODEL:-gpt-3.5-turbo}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./fastapi-service:/app
+      - ./prompts:/app/prompts
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - ai-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Prometheus - 监控指标收集
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: ai-assistant-prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    ports:
+      - "9090:9090"
+    networks:
+      - ai-network
+
+  # Grafana - 监控可视化
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: ai-assistant-grafana
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+    ports:
+      - "3000:3000"
+    networks:
+      - ai-network
+
+volumes:
+  redis-data:
+  etcd-data:
+  minio-data:
+  milvus-data:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  ai-network:
+    driver: bridge
