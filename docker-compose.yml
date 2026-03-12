@@ -1,8 +1,6 @@
 # AI智能助手开发环境 Docker Compose 配置
 # 用于本地开发和测试
 
-version: '3.8'
-
 services:
   # Redis - 用于会话缓存和短期记忆
   redis:
@@ -86,21 +84,26 @@ services:
     networks:
       - ai-network
 
-  # MySQL - 复用现有数据库（通过host网络连接）
-  # 注意：实际使用时连接宿主机的MySQL，这里仅作为参考配置
-  # mysql:
-  #   image: mysql:9.2.0
-  #   container_name: ai-assistant-mysql
-  #   environment:
-  #     - MYSQL_ROOT_PASSWORD=root
-  #     - MYSQL_DATABASE=workhour
-  #   ports:
-  #     - "3306:3306"
-  #   volumes:
-  #     - mysql-data:/var/lib/mysql
-  #   command: mysqld --character_set_server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-  #   networks:
-  #     - ai-network
+  # MySQL - 数据库服务
+  mysql:
+    image: mysql:8.0
+    container_name: ai-assistant-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=19990512
+      - MYSQL_DATABASE=thsappv8
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p19990512"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ai-network
 
   # FastAPI AI Service - AI服务层
   ai-service:
@@ -111,12 +114,13 @@ services:
     depends_on:
       - redis
       - milvus
+      - mysql
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - MILVUS_HOST=milvus
       - MILVUS_PORT=19530
-      - MYSQL_HOST=host.docker.internal  # 连接宿主机MySQL
+      - MYSQL_HOST=mysql
       - MYSQL_PORT=3306
       - MYSQL_DATABASE=thsappv8
       - MYSQL_USER=root
@@ -174,6 +178,7 @@ volumes:
   etcd-data:
   minio-data:
   milvus-data:
+  mysql-data:
   prometheus-data:
   grafana-data:
 
