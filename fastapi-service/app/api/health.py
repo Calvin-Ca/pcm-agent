@@ -1,34 +1,38 @@
 """
-健康检查接口
+Health Check API - 健康检查接口
 """
+
+import logging
 from fastapi import APIRouter
 from datetime import datetime
 
-router = APIRouter()
+logger = logging.getLogger(__name__)
+
+router = APIRouter(tags=["Health"])
 
 
-@router.get("")
+@router.get("/health")
 async def health_check():
-    """健康检查"""
+    """
+    基础健康检查接口
+    
+    Returns:
+        Dict: 健康状态
+    """
     return {
         "status": "healthy",
+        "service": "AI Assistant Service",
         "timestamp": datetime.now().isoformat(),
-        "service": "ai-assistant"
+        "version": "1.0.0"
     }
 
 
-@router.get("/ready")
-async def readiness_check():
-    """就绪检查"""
-    # TODO: 检查数据库连接
-    # TODO: 检查Redis连接
-    # TODO: 检查Milvus连接
+@router.get("/ping")
+async def ping():
+    """
+    简单ping接口
     
-    return {
-        "status": "ready",
-        "checks": {
-            "database": "ok",
-            "redis": "ok",
-            "milvus": "ok"
-        }
-    }
+    Returns:
+        Dict: pong响应
+    """
+    return {"message": "pong"}
