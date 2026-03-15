@@ -60,14 +60,14 @@
     - _需求: 23.1, 23.3, 23.5, 23.6, 23.8, 23.9_
     - _预估: 3小时_
   
-  - [ ]* 4.3 编写Tool Registry属性测试
+  - [x] 4.3 编写Tool Registry属性测试
     - **属性8: 工具注册唯一性**
     - **验证需求: 23.3**
     - 使用Hypothesis生成随机工具定义
     - 验证重复注册失败
     - _预估: 1小时_
   
-  - [ ]* 4.4 编写Tool Registry单元测试
+  - [x] 4.4 编写Tool Registry单元测试
     - 测试工具注册成功场景
     - 测试参数验证失败场景
     - 测试工具不存在场景
@@ -75,7 +75,7 @@
     - _预估: 2小时_
 
 - [ ] 5. 实现基础工具（query_timesheet, query_project, compute_statistics）
-  - [ ] 5.1 实现query_timesheet工具
+  - [x] 5.1 实现query_timesheet工具
     - 定义工具JSON Schema（userId, dateRange参数）
     - 实现工具处理函数（调用SpringBoot API）
     - 实现结果格式化逻辑
@@ -83,7 +83,7 @@
     - _需求: 3.1, 3.2, 3.7, 3.8_
     - _预估: 2小时_
   
-  - [ ] 5.2 实现query_project工具
+  - [x] 5.2 实现query_project工具
     - 定义工具JSON Schema（projectId参数）
     - 实现工具处理函数
     - 实现结果格式化逻辑
@@ -91,7 +91,7 @@
     - _需求: 4.1, 4.2, 4.6_
     - _预估: 1.5小时_
   
-  - [ ] 5.3 实现compute_statistics工具
+  - [x] 5.3 实现compute_statistics工具
     - 定义工具JSON Schema（统计类型、时间范围、过滤条件）
     - 实现统计逻辑（用户工时汇总、项目工时汇总等）
     - 实现结果格式化逻辑
@@ -107,7 +107,7 @@
     - _预估: 2小时_
 
 - [ ] 6. 实现权限验证模块
-  - [ ] 6.1 创建PermissionContext和PermissionValidator类
+  - [x] 6.1 创建PermissionContext和PermissionValidator类
     - 定义PermissionContext数据模型
     - 实现can_access_user_data方法
     - 实现can_access_project_data方法
@@ -132,7 +132,7 @@
     - _预估: 2小时_
 
 - [ ] 7. 实现Intent Router（意图路由器）
-  - [ ] 7.1 实现意图识别逻辑
+  - [x] 7.1 实现意图识别逻辑
     - 创建IntentRouter类
     - 实现route_intent方法
     - 构建意图识别Prompt模板
@@ -141,7 +141,7 @@
     - _需求: 2.1, 2.2, 2.8_
     - _预估: 4小时_
   
-  - [ ] 7.2 实现意图路由决策
+  - [x] 7.2 实现意图路由决策
     - 实现知识问答路由（RAG_Engine）
     - 实现工具执行路由（Tool_Executor）
     - 实现复杂请求路由（Planner_Agent）
@@ -157,13 +157,13 @@
     - _预估: 2小时_
 
 - [ ] 8. 实现Planner Agent（任务规划）
-  - [ ] 8.1 创建TaskPlan和TaskNode数据模型
+  - [x] 8.1 创建TaskPlan和TaskNode数据模型
     - 定义TaskNode模型（task_id, tool_name, parameters, dependencies）
     - 定义TaskPlan模型
     - _需求: 22.2, 22.3_
     - _预估: 1小时_
   
-  - [ ] 8.2 实现任务规划算法
+  - [x] 8.2 实现任务规划算法
     - 实现plan_tasks方法（使用ReAct框架）
     - 构建规划Prompt模板
     - 实现LLM调用和结果解析
@@ -171,7 +171,7 @@
     - _需求: 22.1, 22.2, 22.3, 22.4_
     - _预估: 4小时_
   
-  - [ ] 8.3 实现依赖关系验证和拓扑排序
+  - [x] 8.3 实现依赖关系验证和拓扑排序
     - 实现has_circular_dependency方法
     - 实现topological_sort方法（BFS算法）
     - 实现group_by_dependency_level方法
@@ -194,7 +194,7 @@
     - _预估: 2小时_
 
 - [ ] 9. 实现Task Executor（任务执行器）
-  - [ ] 9.1 实现任务执行逻辑
+  - [x] 9.1 实现任务执行逻辑
     - 实现execute_plan方法（按拓扑顺序执行）
     - 实现execute_single_task方法
     - 实现并行执行同层级任务
@@ -203,7 +203,7 @@
     - _需求: 22.7, 22.8_
     - _预估: 4小时_
   
-  - [ ] 9.2 集成权限验证和工具调用
+  - [x] 9.2 集成权限验证和工具调用
     - 在execute_single_task中集成PermissionValidator
     - 集成ToolRegistry工具调用
     - 实现超时控制（asyncio.wait_for）
@@ -221,14 +221,14 @@
     - _预估: 2小时_
 
 - [ ] 10. 实现流式响应处理
-  - [ ] 10.1 实现SSE流式响应生成器
+  - [x] 10.1 实现SSE流式响应生成器
     - 实现stream_response异步生成器
     - 实现format_sse_event方法
     - 实现各类事件类型（start, thinking, tool_call, response, done, error）
     - _需求: 12.1, 12.2, 12.3, 12.4, 12.5_
     - _预估: 3小时_
   
-  - [ ] 10.2 集成Intent Router和Task Executor
+  - [x] 10.2 集成Intent Router和Task Executor
     - 在stream_response中集成意图识别
     - 集成工具执行流程
     - 集成任务规划和执行流程
@@ -250,7 +250,7 @@
     - _需求: 12.1-12.5_
     - _预估: 2小时_
 
-- [ ] 11. 实现AI Chat API接口
+- [x] 11. 实现AI Chat API接口
   - 创建/ai/chat/stream接口（POST）
   - 实现请求参数验证
   - 集成stream_response生成器
@@ -258,7 +258,7 @@
   - _需求: 14.3, 13.1, 13.2, 13.3, 13.4_
   - _预估: 2小时_
 
-- [ ] 12. Checkpoint - AI服务层核心功能验证
+- [x] 12. Checkpoint - AI服务层核心功能验证
   - 启动FastAPI服务
   - 使用Postman/curl测试各接口
   - 验证工具注册和调用
@@ -271,14 +271,14 @@
 ## 第三阶段：SpringBoot网关层（2-3天）[P0]
 
 - [ ] 13. 创建AI Chat API接口
-  - [ ] 13.1 创建AIController和相关DTO
+  - [x] 13.1 创建AIController和相关DTO
     - 创建ChatRequest DTO（message, sessionId, stream）
     - 创建ChatResponse DTO
     - 创建AIController类
     - _需求: 14.3_
     - _预估: 1小时_
   
-  - [ ] 13.2 实现/api/ai/chat接口
+  - [x] 13.2 实现/api/ai/chat接口
     - 实现POST /api/ai/chat接口
     - 实现请求参数验证
     - 从JWT提取用户信息（userId, entityType）
@@ -286,7 +286,7 @@
     - _需求: 14.3, 14.4, 10.2_
     - _预估: 2小时_
   
-  - [ ] 13.3 实现流式响应代理（SSE）
+  - [x] 13.3 实现流式响应代理（SSE）
     - 使用WebFlux实现SSE流式响应
     - 使用WebClient调用AI服务
     - 实现流式数据转发
@@ -302,7 +302,7 @@
     - _需求: 14.3-14.6, 13.2_
     - _预估: 2小时_
 
-- [ ] 14. 实现权限验证中间件
+- [x] 14. 实现权限验证中间件
   - 创建AIPermissionInterceptor
   - 实现JWT验证逻辑
   - 提取用户权限信息（entityType, departmentId）
@@ -311,20 +311,20 @@
   - _预估: 2小时_
 
 - [ ] 15. 实现工具管理接口
-  - [ ] 15.1 实现GET /api/ai/tools接口
+  - [x] 15.1 实现GET /api/ai/tools接口
     - 调用AI服务获取工具列表
     - 返回工具元数据
     - _需求: 23.5_
     - _预估: 1小时_
   
-  - [ ] 15.2 实现POST /api/ai/tools/register接口（管理员权限）
+  - [x] 15.2 实现POST /api/ai/tools/register接口（管理员权限）
     - 验证管理员权限
     - 调用AI服务注册工具
     - 返回注册结果
     - _需求: 23.1, 15.5_
     - _预估: 1.5小时_
 
-- [ ] 16. 实现健康检查和错误处理
+- [x] 16. 实现健康检查和错误处理
   - 实现GET /api/ai/health接口
   - 实现AI服务连接检查
   - 实现统一错误处理（ExceptionHandler）
@@ -332,7 +332,7 @@
   - _需求: 13.1, 13.3, 13.4_
   - _预估: 2小时_
 
-- [ ] 17. 配置和部署
+- [x] 17. 配置和部署
   - 配置application.yml（AI服务URL、超时时间）
   - 配置CORS（允许前端跨域）
   - 配置日志输出
@@ -340,7 +340,7 @@
   - _需求: 14.7_
   - _预估: 1小时_
 
-- [ ] 18. Checkpoint - 网关层功能验证
+- [x] 18. Checkpoint - 网关层功能验证
   - 启动SpringBoot服务
   - 测试/api/ai/chat接口
   - 测试JWT验证
@@ -351,8 +351,8 @@
 
 ## 第四阶段：前端聊天组件（2-3天）[P0]
 
-- [ ] 19. 创建聊天组件基础结构
-  - [ ] 19.1 创建ChatWindow组件
+- [x] 19. 创建聊天组件基础结构
+  - [x] 19.1 创建ChatWindow组件
     - 创建ChatWindow.vue组件文件
     - 定义Props（visible, position）
     - 定义State（messages, inputText, isTyping, sessionId）
@@ -360,7 +360,7 @@
     - _需求: 1.1, 1.2_
     - _预估: 2小时_
   
-  - [ ] 19.2 创建MessageList组件
+  - [x] 19.2 创建MessageList组件
     - 创建MessageList.vue组件文件
     - 定义Props（messages）
     - 实现消息列表渲染
@@ -368,7 +368,7 @@
     - _需求: 1.5_
     - _预估: 1.5小时_
   
-  - [ ] 19.3 创建InputBox组件
+  - [x] 19.3 创建InputBox组件
     - 创建InputBox.vue组件文件
     - 定义Props（disabled, placeholder）
     - 实现输入框和发送按钮
@@ -377,7 +377,7 @@
     - _需求: 1.3_
     - _预估: 1小时_
 
-- [ ] 20. 实现Markdown渲染
+- [x] 20. 实现Markdown渲染
   - 安装markdown-it和highlight.js
   - 创建Markdown渲染工具函数
   - 在MessageList中集成Markdown渲染
@@ -386,8 +386,8 @@
   - _需求: 1.4_
   - _预估: 2小时_
 
-- [ ] 21. 实现SSE流式接收
-  - [ ] 21.1 创建AI API服务模块
+- [x] 21. 实现SSE流式接收
+  - [x] 21.1 创建AI API服务模块
     - 创建api/ai.ts文件
     - 实现sendMessage方法（使用EventSource）
     - 实现SSE事件解析
@@ -395,7 +395,7 @@
     - _需求: 1.3, 1.4, 12.1_
     - _预估: 2小时_
   
-  - [ ] 21.2 在ChatWindow中集成SSE接收
+  - [x] 21.2 在ChatWindow中集成SSE接收
     - 实现sendMessage方法
     - 实现handleStream方法（处理SSE事件）
     - 实现流式显示逻辑（逐步追加内容）
@@ -410,7 +410,7 @@
     - _需求: 1.3, 1.4, 12.1-12.4_
     - _预估: 2小时_
 
-- [ ] 22. 实现状态管理（Pinia）
+- [x] 22. 实现状态管理（Pinia）
   - 创建chatStore（Pinia store）
   - 定义state（sessions, currentSessionId, messages）
   - 实现actions（createSession, addMessage, clearHistory）
@@ -418,7 +418,7 @@
   - _需求: 1.5, 1.6, 11.1_
   - _预估: 2小时_
 
-- [ ] 23. 实现对话历史管理
+- [x] 23. 实现对话历史管理
   - 实现会话创建逻辑（生成sessionId）
   - 实现对话历史保存（最近10轮）
   - 实现会话关闭时清除历史
@@ -426,7 +426,7 @@
   - _需求: 1.5, 1.6, 11.2, 11.3, 11.4, 11.6_
   - _预估: 2小时_
 
-- [ ] 24. 实现错误处理和用户提示
+- [x] 24. 实现错误处理和用户提示
   - 实现连接错误提示
   - 实现超时提示
   - 实现服务不可用提示
@@ -434,7 +434,7 @@
   - _需求: 12.5, 13.1, 13.2, 13.3_
   - _预估: 1.5小时_
 
-- [ ] 25. 样式和交互优化
+- [x] 25. 样式和交互优化
   - 实现响应式布局
   - 实现打开/关闭动画
   - 实现消息气泡样式
@@ -443,7 +443,7 @@
   - _需求: 1.2_
   - _预估: 2小时_
 
-- [ ] 26. Checkpoint - 前端功能验证
+- [x] 26. Checkpoint - 前端功能验证
   - 启动前端开发服务器
   - 测试聊天窗口打开/关闭
   - 测试消息发送和接收
@@ -455,8 +455,8 @@
 
 ## 第五阶段：基础RAG功能（2天）[P0]
 
-- [ ] 27. 实现文档加载和分块
-  - [ ] 27.1 实现Document Loader
+- [x] 27. 实现文档加载和分块
+  - [x] 27.1 实现Document Loader
     - 安装文档处理库（PyPDF2, python-docx）
     - 实现PDF文档加载
     - 实现Word文档加载
@@ -464,7 +464,7 @@
     - _需求: 24.1_
     - _预估: 2小时_
   
-  - [ ] 27.2 实现Chunk Splitter
+  - [x] 27.2 实现Chunk Splitter
     - 实现智能分块算法（按段落、句子分割）
     - 实现块大小控制（512 tokens）
     - 实现块重叠（50 tokens）
@@ -478,8 +478,8 @@
     - _需求: 24.1-24.3_
     - _预估: 1.5小时_
 
-- [ ] 28. 实现向量数据库集成
-  - [ ] 28.1 配置向量数据库（Milvus或pgvector）
+- [x] 28. 实现向量数据库集成
+  - [x] 28.1 配置向量数据库（Milvus或pgvector）
     - 选择向量数据库方案
     - 配置数据库连接
     - 创建collection/table
@@ -487,7 +487,7 @@
     - _需求: 24.5_
     - _预估: 2小时_
   
-  - [ ] 28.2 实现向量化和存储
+  - [x] 28.2 实现向量化和存储
     - 集成Embedding模型（bge-large-zh或OpenAI）
     - 实现文档向量化
     - 实现向量存储
@@ -495,15 +495,15 @@
     - _需求: 24.4, 24.5_
     - _预估: 2小时_
 
-- [ ] 29. 实现基础检索功能
-  - [ ] 29.1 实现向量检索
+- [x] 29. 实现基础检索功能
+  - [x] 29.1 实现向量检索
     - 实现查询向量生成
     - 实现向量相似度搜索
     - 实现Top-K结果返回
     - _需求: 9.3, 9.4_
     - _预估: 2小时_
   
-  - [ ] 29.2 实现search_knowledge工具
+  - [x] 29.2 实现search_knowledge工具
     - 定义工具JSON Schema
     - 实现工具处理函数
     - 实现结果格式化（包含文档来源）
@@ -518,7 +518,7 @@
     - _需求: 9.1-9.7_
     - _预估: 1.5小时_
 
-- [ ] 30. 实现RAG响应生成
+- [x] 30. 实现RAG响应生成
   - 实现基于检索文档的Prompt构建
   - 集成LLM生成回答
   - 实现文档来源引用
@@ -526,7 +526,7 @@
   - _需求: 9.5, 9.6, 9.7_
   - _预估: 2小时_
 
-- [ ] 31. 加载初始知识库
+- [x] 31. 加载初始知识库
   - 准备企业制度文档
   - 准备FAQ文档
   - 执行文档加载和向量化
@@ -534,7 +534,7 @@
   - _需求: 9.1_
   - _预估: 2小时_
 
-- [ ] 32. Checkpoint - RAG功能验证
+- [x] 32. Checkpoint - RAG功能验证
   - 测试文档加载和分块
   - 测试向量存储
   - 测试知识库检索
