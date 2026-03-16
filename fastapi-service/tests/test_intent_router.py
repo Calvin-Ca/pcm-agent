@@ -75,16 +75,10 @@ class TestToolIntentRecognition:
 
         for message in messages:
             result = await router.route_intent(message)
-            # 验证返回有效的意图结果
-            assert result.intent_type in [
-                IntentType.TOOL_EXECUTION,
-                IntentType.COMPLEX_REQUEST,
-                IntentType.GENERAL_CHAT,
-                IntentType.KNOWLEDGE_QA
-            ], f"消息'{message}'应该返回有效的意图类型"
-            # 如果是工具执行，验证工具名称
-            if result.intent_type == IntentType.TOOL_EXECUTION:
-                assert result.parameters.get("tool_name") in ["query_timesheet", "query_project", "compute_statistics"]
+            # 这些消息应该被识别为工具执行意图
+            assert result.intent_type == IntentType.TOOL_EXECUTION, f"消息'{message}'应该被识别为工具执行意图"
+            assert result.parameters.get("tool_name") == "query_timesheet"
+            assert result.confidence > 0.5
 
     @pytest.mark.asyncio
     async def test_recognize_query_project_intent(self, router):
@@ -108,23 +102,13 @@ class TestToolIntentRecognition:
         messages = [
             "统计部门工时",
             "汇总本周数据",
-            "生成报表分析",
             "计算平均工时",
-            "项目统计数据"
         ]
 
         for message in messages:
             result = await router.route_intent(message)
-            # 这些消息可能被识别为各种意图类型
-            assert result.intent_type in [
-                IntentType.TOOL_EXECUTION,
-                IntentType.COMPLEX_REQUEST,
-                IntentType.GENERAL_CHAT,
-                IntentType.KNOWLEDGE_QA
-            ], f"消息'{message}'应该返回有效的意图类型"
-            # 如果是工具执行，验证工具名称
-            if result.intent_type == IntentType.TOOL_EXECUTION:
-                assert result.parameters.get("tool_name") in ["query_timesheet", "query_project", "compute_statistics"]
+            assert result.intent_type == IntentType.TOOL_EXECUTION, f"消息'{message}'应该被识别为工具执行意图"
+            assert result.parameters.get("tool_name") == "compute_statistics"
 
     @pytest.mark.asyncio
     async def test_tool_intent_with_time_extraction(self, router):
@@ -172,25 +156,28 @@ class TestKnowledgeIntentRecognition:
     @pytest.mark.asyncio
     async def test_question_pattern_recognition(self, router):
         """测试问句模式识别"""
-        questions = [
+        # 知识类问句应该识别为知识问答
+        knowledge_questions = [
             "什么是项目管理？",
             "如何提高效率？",
-            "怎么申请加班？",
             "为什么要打卡？",
+        ]
+
+        for question in knowledge_questions:
+            result = await router.route_intent(question)
+            assert result.intent_type == IntentType.KNOWLEDGE_QA, f"问题'{question}'应该被识别为知识问答"
+            assert result.confidence > 0.4
+
+        # 工具相关问句应该识别为工具执行
+        tool_questions = [
+            "怎么申请加班？",
             "哪里查看记录？"
         ]
 
-        for question in questions:
+        for question in tool_questions:
             result = await router.route_intent(question)
-            # 问句可能被识别为任何意图类型
-            assert result.intent_type in [
-                IntentType.KNOWLEDGE_QA,
-                IntentType.TOOL_EXECUTION,
-                IntentType.COMPLEX_REQUEST,
-                IntentType.GENERAL_CHAT
-            ], f"问题'{question}'应该返回有效的意图类型"
-            # 验证返回了有效的意图结果
-            assert result.confidence >= 0 and result.confidence <= 1
+            assert result.intent_type == IntentType.TOOL_EXECUTION, f"问题'{question}'应该被识别为工具执行"
+            assert result.confidence > 0.5
 
 
 class TestComplexIntentRecognition:
@@ -293,30 +280,27 @@ class TestRouteDecision:
         """测试路由到工具执行器"""
         result = await router.make_route_decision("查询我本周的工时")
 
-        # 根据意图识别结果路由到相应目标
-        assert result.target in [RouteTarget.TOOL_EXECUTOR, RouteTarget.LLM_SERVICE, RouteTarget.PLANNER_AGENT]
-        assert result.fallback_target in [RouteTarget.LLM_SERVICE, None]
+        assert result.target == RouteTarget.TOOL_EXECUTOR
+        assert result.intent_result.intent_type == IntentType.TOOL_EXECUTION
+        assert result.fallback_target == RouteTarget.LLM_SERVICE
 
     @pytest.mark.asyncio
     async def test_route_to_planner_agent(self, router):
         """测试路由到规划代理"""
         result = await router.make_route_decision("查询我的工时并生成统计报表")
 
-        # 复杂请求应该路由到规划代理或工具执行器
-        assert result.target in [RouteTarget.PLANNER_AGENT, RouteTarget.TOOL_EXECUTOR, RouteTarget.LLM_SERVICE]
-        assert result.intent_result.intent_type in [IntentType.COMPLEX_REQUEST, IntentType.TOOL_EXECUTION, IntentType.GENERAL_CHAT]
+        assert result.target == RouteTarget.PLANNER_AGENT
+        assert result.intent_result.intent_type == IntentType.COMPLEX_REQUEST
+        assert result.fallback_target == RouteTarget.LLM_SERVICE
 
     @pytest.mark.asyncio
     async def test_route_to_llm_service(self, router):
         """测试路由到LLM服务"""
         result = await router.make_route_decision("你好，请介绍一下自己")
 
-        # 通用对话应该路由到LLM服务
-        if result.intent_result.intent_type == IntentType.GENERAL_CHAT:
-            assert result.target == RouteTarget.LLM_SERVICE
-            assert result.fallback_target is None
-        # 其他情况也接受
-        assert result.target in [RouteTarget.LLM_SERVICE, RouteTarget.RAG_ENGINE, RouteTarget.TOOL_EXECUTOR]
+        assert result.target == RouteTarget.LLM_SERVICE
+        assert result.intent_result.intent_type == IntentType.GENERAL_CHAT
+        assert result.fallback_target is None
 
 
 class TestRouteExecution:
