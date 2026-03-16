@@ -368,8 +368,8 @@ class TaskExecutor:
                         
                         if len(parts) >= 3 and parts[1] == "result":
                             task_id = parts[0]
-                            field_path = parts[2:]
-                            
+                            field_path = parts[1:]  # 包含 "result" 作为起始路径
+
                             # 获取依赖任务的结果
                             if task_id in self.execution_results:
                                 result = self.execution_results[task_id]
