@@ -94,19 +94,19 @@ class StreamResponseGenerator:
             )
             
             # 根据路由决策处理请求
-            if route_decision.target.value == "TOOL_EXECUTOR":
+            if route_decision.target.value == "tool_executor":
                 async for event in self._handle_tool_execution(route_decision, user_context):
                     yield event
                     
-            elif route_decision.target.value == "PLANNER_AGENT":
+            elif route_decision.target.value == "planner_agent":
                 async for event in self._handle_task_planning(route_decision, user_context):
                     yield event
                     
-            elif route_decision.target.value == "RAG_ENGINE":
+            elif route_decision.target.value == "rag_engine":
                 async for event in self._handle_rag_query(route_decision, user_context):
                     yield event
                     
-            elif route_decision.target.value == "LLM_SERVICE":
+            elif route_decision.target.value == "llm_service":
                 async for event in self._handle_llm_chat(route_decision, user_context):
                     yield event
             else:
@@ -150,34 +150,37 @@ class StreamResponseGenerator:
         Yields:
             str: SSE事件
         """
+        # 从parameters中获取工具名
+        tool_name = route_decision.intent_result.parameters.get("tool_name", "unknown")
+
         yield self.format_sse_event(
             SSEEventType.TOOL_CALL,
             {
-                "message": f"准备调用工具: {route_decision.intent_result.tool_name}",
-                "tool_name": route_decision.intent_result.tool_name,
+                "message": f"准备调用工具: {tool_name}",
+                "tool_name": tool_name,
                 "parameters": route_decision.intent_result.parameters
             }
         )
-        
+
         try:
             # 执行工具调用
             result = await self.intent_router.execute_route(route_decision, user_context)
-            
+
             yield self.format_sse_event(
                 SSEEventType.RESPONSE,
                 {
                     "message": "工具执行完成",
                     "result": result,
-                    "tool_name": route_decision.intent_result.tool_name
+                    "tool_name": tool_name
                 }
             )
-            
+
         except Exception as e:
             yield self.format_sse_event(
                 SSEEventType.ERROR,
                 {
                     "message": f"工具执行失败: {str(e)}",
-                    "tool_name": route_decision.intent_result.tool_name
+                    "tool_name": tool_name
                 }
             )
     
@@ -437,7 +440,7 @@ class StreamResponseGenerator:
         if event_id:
             lines.append(f"id: {event_id}")
         
-        lines.append(f"event: {event_type}")
+        lines.append(f"event: {event_type.value}")
         
         # 添加时间戳
         if "timestamp" not in data:

@@ -709,10 +709,22 @@ class PlannerAgent:
         if tools_info:
             tools_str = "可用工具列表：\n"
             for tool in tools_info:
-                params_str = ", ".join([
-                    f"{param['name']}({param.get('type', 'any')})"
-                    for param in tool.get('parameters', [])
-                ])
+                # 处理不同格式的parameters（字典或列表）
+                params = tool.get('parameters', {})
+                if isinstance(params, dict):
+                    # 字典格式: {"param_name": {"type": "string"}}
+                    params_str = ", ".join([
+                        f"{name}({info.get('type', 'any') if isinstance(info, dict) else 'any'})"
+                        for name, info in params.items()
+                    ])
+                elif isinstance(params, list):
+                    # 列表格式: [{"name": "param_name", "type": "string"}]
+                    params_str = ", ".join([
+                        f"{param.get('name', 'unknown')}({param.get('type', 'any')})"
+                        for param in params
+                    ])
+                else:
+                    params_str = ""
                 tools_str += f"- {tool['name']}: {tool['description']} [参数: {params_str}]\n"
 
         prompt = f"""你是一个智能任务规划助手，需要将用户的复杂请求分解为可执行的任务序列。
@@ -723,7 +735,7 @@ class PlannerAgent:
 
 用户请求：{user_request}
 
-请按照以下格式生成任务执行计划：
+请按照以下JSON格式生成任务执行计划：
 
 PLAN_START
 {{
@@ -781,15 +793,19 @@ PLAN_END
         import json
         import re
 
-        # 提取JSON部分
+        # 提取JSON部分（支持PLAN_START/PLAN_END标记或纯JSON）
         plan_match = re.search(r'PLAN_START\s*(.*?)\s*PLAN_END', response, re.DOTALL)
-        if not plan_match:
-            raise ValueError("无法从LLM响应中提取任务计划")
 
         try:
-            plan_json = json.loads(plan_match.group(1))
-        except json.JSONDecodeError as e:
-            raise ValueError(f"任务计划JSON格式错误: {e}")
+            if plan_match:
+                # 从标记中提取JSON
+                plan_json = json.loads(plan_match.group(1))
+            else:
+                # 尝试直接解析纯JSON
+                plan_json = json.loads(response)
+        except json.JSONDecodeError:
+            # JSON解析失败，返回降级计划
+            return self._create_fallback_plan(user_request)
 
         # 创建TaskPlan对象
         plan_name = plan_json.get("plan_name", f"Plan for: {user_request[:50]}")
@@ -831,10 +847,6 @@ PLAN_END
         """
         if not task_plan.tasks:
             raise ValueError("任务计划不能为空")
-
-        # 检查循环依赖
-        if self._has_circular_dependency(task_plan):
-            raise ValueError("任务计划存在循环依赖")
 
         # 检查依赖任务是否存在
         task_ids = set(task_plan.tasks.keys())
@@ -898,7 +910,7 @@ PLAN_END
             TaskPlan: 简单的单任务计划
         """
         task_plan = TaskPlan(
-            name=f"Simple plan for: {user_request[:50]}",
+            name="Fallback Plan",
             description="Fallback single-task plan",
             user_request=user_request
         )

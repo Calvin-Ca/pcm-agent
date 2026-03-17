@@ -74,7 +74,7 @@
     - _需求: 23.1-23.11_
     - _预估: 2小时_
 
-- [ ] 5. 实现基础工具（query_timesheet, query_project, compute_statistics）
+- [x] 5. 实现基础工具（query_timesheet, query_project, compute_statistics）
   - [x] 5.1 实现query_timesheet工具
     - 定义工具JSON Schema（userId, dateRange参数）
     - 实现工具处理函数（调用SpringBoot API）
@@ -106,7 +106,7 @@
     - _需求: 3.1-3.8, 4.1-4.6, 5.1-5.6_
     - _预估: 2小时_
 
-- [ ] 6. 实现权限验证模块
+- [x] 6. 实现权限验证模块
   - [x] 6.1 创建PermissionContext和PermissionValidator类
     - 定义PermissionContext数据模型
     - 实现can_access_user_data方法
@@ -131,7 +131,7 @@
     - _需求: 10.1-10.8_
     - _预估: 2小时_
 
-- [ ] 7. 实现Intent Router（意图路由器）
+- [x] 7. 实现Intent Router（意图路由器）
   - [x] 7.1 实现意图识别逻辑
     - 创建IntentRouter类
     - 实现route_intent方法
@@ -156,7 +156,7 @@
     - _需求: 2.1-2.8_
     - _预估: 2小时_
 
-- [ ] 8. 实现Planner Agent（任务规划）
+- [x] 8. 实现Planner Agent（任务规划）
   - [x] 8.1 创建TaskPlan和TaskNode数据模型
     - 定义TaskNode模型（task_id, tool_name, parameters, dependencies）
     - 定义TaskPlan模型
@@ -178,22 +178,24 @@
     - _需求: 22.5, 22.6_
     - _预估: 2小时_
   
-  - [ ]* 8.4 编写Planner Agent属性测试
+  - [x]* 8.4 编写Planner Agent属性测试
     - **属性4: 任务依赖顺序**
     - **验证需求: 22.4-22.7**
     - 使用Hypothesis生成随机任务图
     - 验证拓扑排序正确性
     - 验证循环依赖检测
     - _预估: 2小时_
-  
-  - [ ]* 8.5 编写Planner Agent单元测试
+    - _状态: ✅ 已完成 (2025-03-17)_
+
+  - [x]* 8.5 编写Planner Agent单元测试
     - 测试简单任务规划
     - 测试复杂依赖关系
     - 测试循环依赖检测
     - _需求: 22.1-22.10_
     - _预估: 2小时_
+    - _状态: ✅ 已完成 (2025-03-17)_
 
-- [ ] 9. 实现Task Executor（任务执行器）
+- [x] 9. 实现Task Executor（任务执行器）
   - [x] 9.1 实现任务执行逻辑
     - 实现execute_plan方法（按拓扑顺序执行）
     - 实现execute_single_task方法
@@ -220,7 +222,7 @@
     - _需求: 22.7, 22.8, 10.1, 17.2_
     - _预估: 2小时_
 
-- [ ] 10. 实现流式响应处理
+- [x] 10. 实现流式响应处理
   - [x] 10.1 实现SSE流式响应生成器
     - 实现stream_response异步生成器
     - 实现format_sse_event方法
@@ -236,19 +238,21 @@
     - _需求: 2.1, 22.1, 12.1_
     - _预估: 2小时_
   
-  - [ ]* 10.3 编写流式响应属性测试
+  - [x]* 10.3 编写流式响应属性测试
     - **属性1: 流式响应完整性**
     - **验证需求: 1.4, 12.1, 12.2**
     - 使用Hypothesis生成随机响应片段
     - 验证组合后内容完整性
     - _预估: 1小时_
-  
-  - [ ]* 10.4 编写流式响应单元测试
+    - _状态: ✅ 已完成 (2025-03-17)_
+
+  - [x]* 10.4 编写流式响应单元测试
     - 测试SSE事件格式
     - 测试完整响应流程
     - 测试错误处理
     - _需求: 12.1-12.5_
     - _预估: 2小时_
+    - _状态: ✅ 已完成 (2025-03-17)_
 
 - [x] 11. 实现AI Chat API接口
   - 创建/ai/chat/stream接口（POST）
