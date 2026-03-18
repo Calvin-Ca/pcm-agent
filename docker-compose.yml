@@ -90,7 +90,7 @@ services:
     container_name: ai-assistant-mysql
     environment:
       - MYSQL_ROOT_PASSWORD=19990512
-      - MYSQL_DATABASE=thsappv8
+      - MYSQL_DATABASE=workhour
     ports:
       - "3306:3306"
     volumes:
@@ -122,7 +122,7 @@ services:
       - MILVUS_PORT=19530
       - MYSQL_HOST=mysql
       - MYSQL_PORT=3306
-      - MYSQL_DATABASE=thsappv8
+      - MYSQL_DATABASE=workhour
       - MYSQL_USER=root
       - MYSQL_PASSWORD=19990512
       - LLM_API_KEY=${LLM_API_KEY}

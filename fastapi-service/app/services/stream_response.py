@@ -88,8 +88,8 @@ class StreamResponseGenerator:
                 {"message": "正在分析您的请求意图..."}
             )
             
-            # 意图识别和路由
-            route_decision = await self.intent_router.route_intent(
+            # 意图识别和路由决策
+            route_decision = await self.intent_router.make_route_decision(
                 message, user_context
             )
             
@@ -385,11 +385,17 @@ class StreamResponseGenerator:
         )
         
         try:
-            # 检查LLM客户端是否支持流式响应
+            user_message = route_decision.route_parameters.get("message", "")
+            system_prompt = (
+                "你是一个专业的企业工时管理助手。"
+                "请用简洁、友好的方式回答用户问题。"
+                "如果涉及工时管理相关功能，可以引导用户使用对应的功能。"
+            )
+
             if hasattr(self.llm_client, 'stream_generate'):
-                # 流式生成
                 async for chunk in self.llm_client.stream_generate(
-                    prompt=route_decision.intent_result.message,
+                    prompt=user_message,
+                    system_prompt=system_prompt,
                     max_tokens=1000,
                     temperature=0.7
                 ):

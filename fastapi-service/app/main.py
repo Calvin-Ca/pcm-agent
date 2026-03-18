@@ -13,6 +13,7 @@ from app.api import health
 from app.api.chat import router as chat_router, initialize_chat_components
 from app.services.tool_registry import ToolRegistry
 from app.services.permission_validator import PermissionValidator
+from app.services.llm_client import LLMClient
 from app.tools import query_timesheet, query_project, compute_statistics
 
 # 配置日志
@@ -31,7 +32,7 @@ async def lifespan(app: FastAPI):
     
     logger.info("🚀 AI Service starting...")
     logger.info(f"Environment: {settings.ENVIRONMENT}")
-    logger.info(f"LLM Model: {settings.LLM_MODEL}")
+    logger.info(f"Chat LLM Model: {settings.CHAT_LLM_MODEL}")
     
     # 启动时初始化
     try:
@@ -47,9 +48,9 @@ async def lifespan(app: FastAPI):
         permission_validator = PermissionValidator()
         logger.info("✅ Permission Validator initialized")
         
-        # 初始化聊天组件
-        # TODO: 在实际部署时需要提供真实的LLM客户端
-        llm_client = None  # 这里应该初始化真实的LLM客户端
+        # 初始化 LLM 客户端
+        llm_client = LLMClient(env_prefix="CHAT_LLM")
+        logger.info(f"✅ LLM Client initialized (model: {llm_client.model})")
         
         initialize_chat_components(
             tool_reg=tool_registry,

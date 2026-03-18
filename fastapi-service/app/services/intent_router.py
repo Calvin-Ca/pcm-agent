@@ -332,31 +332,23 @@ class IntentRouter:
 
     async def _call_llm(self, prompt: str) -> str:
         """
-        调用LLM API
+        调用意图识别专用LLM API（OpenAI兼容格式）
 
-        支持多种LLM服务：
-        - DashScope (阿里千问) - 推荐，有免费额度
-        - OpenAI API
-        - 其他兼容OpenAI接口的服务
+        通过环境变量 INTENT_LLM_* 配置：
+        - INTENT_LLM_API_KEY: API密钥
+        - INTENT_LLM_API_BASE: API端点（兼容OpenAI格式）
+        - INTENT_LLM_MODEL: 模型名称
         """
-        # 优先使用DashScope (千问)
-        dashscope_key = os.getenv("DASHSCOPE_API_KEY")
-        if dashscope_key:
-            return await self._call_dashscope(prompt, dashscope_key)
-
-        # 回退到OpenAI
-        openai_key = os.getenv("OPENAI_API_KEY")
-        if openai_key:
-            return await self._call_openai(prompt, openai_key)
-
-        # 无可用API，返回空
-        raise ValueError("未配置LLM API密钥")
-
-    async def _call_dashscope(self, prompt: str, api_key: str) -> str:
-        """调用阿里DashScope (千问) API"""
         import aiohttp
 
-        url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
+        api_key = os.getenv("INTENT_LLM_API_KEY")
+        api_base = os.getenv("INTENT_LLM_API_BASE", "https://dashscope.aliyuncs.com/compatible-mode/v1")
+        model = os.getenv("INTENT_LLM_MODEL", "qwen-flash")
+
+        if not api_key:
+            raise ValueError("未配置 INTENT_LLM_API_KEY 环境变量")
+
+        url = f"{api_base.rstrip('/')}/chat/completions"
 
         headers = {
             "Authorization": f"Bearer {api_key}",
@@ -364,40 +356,7 @@ class IntentRouter:
         }
 
         payload = {
-            "model": "qwen-turbo",  # 轻量级模型，成本低
-            "input": {
-                "messages": [
-                    {"role": "user", "content": prompt}
-                ]
-            },
-            "parameters": {
-                "temperature": 0.1,  # 低温度，输出更确定
-                "max_tokens": 200
-            }
-        }
-
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=payload) as resp:
-                if resp.status == 200:
-                    data = await resp.json()
-                    return data["output"]["text"]
-                else:
-                    error_text = await resp.text()
-                    raise ValueError(f"DashScope API错误: {resp.status} - {error_text}")
-
-    async def _call_openai(self, prompt: str, api_key: str) -> str:
-        """调用OpenAI API"""
-        import aiohttp
-
-        url = "https://api.openai.com/v1/chat/completions"
-
-        headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        }
-
-        payload = {
-            "model": "gpt-3.5-turbo",
+            "model": model,
             "messages": [
                 {"role": "user", "content": prompt}
             ],
@@ -412,7 +371,7 @@ class IntentRouter:
                     return data["choices"][0]["message"]["content"]
                 else:
                     error_text = await resp.text()
-                    raise ValueError(f"OpenAI API错误: {resp.status} - {error_text}")
+                    raise ValueError(f"Intent LLM API错误 ({model}): {resp.status} - {error_text}")
 
     def _check_chat_intent(self, message: str) -> Optional[IntentResult]:
         """检查通用对话意图（快速排除）"""
@@ -476,7 +435,7 @@ class IntentRouter:
                 return self._route_to_planner_agent(intent_result, context)
             
             else:  # GENERAL_CHAT
-                return self._route_to_llm_service(intent_result, context)
+                return self._route_to_llm_service(intent_result, context, user_message)
         
         except Exception as e:
             logger.error(f"路由决策异常: {str(e)}")
@@ -488,7 +447,7 @@ class IntentRouter:
                 reasoning=f"路由决策异常，降级处理: {str(e)}",
                 suggested_action="使用LLM服务处理"
             )
-            return self._route_to_llm_service(fallback_intent, context)
+            return self._route_to_llm_service(fallback_intent, context, user_message)
     
     def _route_to_rag_engine(
         self,
@@ -556,11 +515,12 @@ class IntentRouter:
     def _route_to_llm_service(
         self,
         intent_result: IntentResult,
-        context: Optional[Dict[str, Any]]
+        context: Optional[Dict[str, Any]],
+        user_message: str = ""
     ) -> RouteDecision:
         """路由到LLM服务"""
         route_params = {
-            "message": intent_result.parameters.get("message", ""),
+            "message": user_message or intent_result.parameters.get("message", ""),
             "conversation_type": "general",
             "context": context or {},
             "temperature": 0.7,

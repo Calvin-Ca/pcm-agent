@@ -4,6 +4,7 @@ AI Chat API - AI聊天接口
 提供流式AI聊天服务，支持意图识别、工具调用、任务规划等功能。
 """
 
+from datetime import datetime
 import logging
 from typing import Dict, Any, Optional
 from fastapi import APIRouter, HTTPException, Request
@@ -12,7 +13,7 @@ from pydantic import BaseModel, Field
 import json
 
 from ..services.stream_response import StreamResponseGenerator
-from ..services.intent_router import IntentRouter
+from ..services.intent_router import IntentRouter, RouteTarget
 from ..services.task_executor import TaskExecutor
 from ..services.tool_registry import ToolRegistry
 from ..services.permission_validator import PermissionValidator, PermissionContext
@@ -85,6 +86,27 @@ def initialize_chat_components(
         llm_client=llm_client
     )
     intent_router.set_task_executor(task_executor)
+    
+    # 注册路由处理器
+    if llm_client:
+        async def llm_service_handler(params):
+            """LLM 通用对话处理器"""
+            message = params.get("message", "")
+            system_prompt = (
+                "你是一个专业的企业工时管理助手。"
+                "请用简洁、友好的方式回答用户问题。"
+                "如果涉及工时管理相关功能，可以引导用户使用对应的功能。"
+            )
+            response = await llm_client.generate(
+                prompt=message,
+                system_prompt=system_prompt,
+                temperature=params.get("temperature", 0.7),
+                max_tokens=params.get("max_tokens", 1000),
+            )
+            return {"success": True, "message": response}
+
+        intent_router.register_route_handler(RouteTarget.LLM_SERVICE, llm_service_handler)
+        logger.info("✅ LLM_SERVICE route handler registered")
     
     # 初始化流式响应生成器
     stream_generator = StreamResponseGenerator(
@@ -215,8 +237,8 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
         
         logger.info(f"处理非流式聊天请求: {request.message[:100]}...")
         
-        # 意图识别和路由
-        route_decision = await intent_router.route_intent(
+        # 意图识别和路由决策
+        route_decision = await intent_router.make_route_decision(
             request.message, user_context
         )
         
@@ -263,7 +285,7 @@ async def health_check():
         return {
             "status": "healthy" if all_healthy else "unhealthy",
             "components": components_status,
-            "timestamp": "2024-01-01T00:00:00Z"  # 实际应用中使用 datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat()
         }
         
     except Exception as e:

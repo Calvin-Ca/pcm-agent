@@ -15,12 +15,22 @@ class Settings(BaseSettings):
     # CORS配置
     CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8080"]
     
-    # LLM配置
-    LLM_API_KEY: str
-    LLM_API_BASE: str = "https://api.openai.com/v1"
-    LLM_MODEL: str = "gpt-3.5-turbo"
-    LLM_TEMPERATURE: float = 0.7
-    LLM_MAX_TOKENS: int = 2000
+    # 意图识别 LLM配置（轻量模型）
+    INTENT_LLM_API_KEY: str = ""
+    INTENT_LLM_API_BASE: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    INTENT_LLM_MODEL: str = "qwen-flash"
+
+    # 主对话 LLM配置
+    CHAT_LLM_API_KEY: str
+    CHAT_LLM_API_BASE: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    CHAT_LLM_MODEL: str = "qwen-plus"
+    CHAT_LLM_TEMPERATURE: float = 0.7
+    CHAT_LLM_MAX_TOKENS: int = 2000
+
+    # 任务规划 LLM配置（可选，默认复用主对话配置）
+    PLANNER_LLM_API_KEY: str = ""
+    PLANNER_LLM_API_BASE: str = ""
+    PLANNER_LLM_MODEL: str = ""
     
     # MySQL配置
     MYSQL_HOST: str = "localhost"
@@ -47,7 +57,7 @@ class Settings(BaseSettings):
     TOOL_TIMEOUT_SECONDS: int = 30
     
     class Config:
-        env_file = ".env"
+        env_file = "../.env"
         case_sensitive = True
 
 

@@ -462,6 +462,65 @@ class TestErrorHandling:
             assert len(template) > 0
 
 
+@pytest.mark.integration
+class TestLLMIntegration:
+    """LLM API集成测试（需要配置 INTENT_LLM_* 环境变量）"""
+
+    @pytest.fixture
+    def router(self):
+        import os
+        os.environ.setdefault("INTENT_LLM_API_KEY", "sk-f9e8301e97fb460e85212722ac570f3d")
+        os.environ.setdefault("INTENT_LLM_API_BASE", "https://dashscope.aliyuncs.com/compatible-mode/v1")
+        os.environ.setdefault("INTENT_LLM_MODEL", "qwen-flash")
+        return IntentRouter()
+
+    @pytest.mark.asyncio
+    async def test_call_llm_basic(self, router):
+        """测试基础LLM调用"""
+        result = await router._call_llm("请用一句话回答：1+1等于几？")
+        assert result is not None
+        assert len(result) > 0
+        print(f"LLM返回: {result}")
+
+    @pytest.mark.asyncio
+    async def test_call_llm_intent_classification(self, router):
+        """测试LLM意图分类JSON输出"""
+        prompt = """请判断以下用户消息的意图类型，返回JSON格式。
+用户消息："帮我看看项目进度"
+可选类型：knowledge_qa, tool_execution, complex_request, general_chat
+返回格式：{"intent_type": "xxx", "confidence": 0.0-1.0, "reasoning": "理由"}
+只返回JSON。"""
+        result = await router._call_llm(prompt)
+        assert result is not None
+        assert "intent_type" in result
+        print(f"分类结果: {result}")
+
+    @pytest.mark.asyncio
+    async def test_classify_with_llm(self, router):
+        """测试LLM兜底意图分类"""
+        result = await router._classify_with_llm(
+            "帮我看看项目进度",
+            [("tool_execution", 0.4), ("knowledge_qa", 0.3)]
+        )
+        assert result is not None
+        assert result.intent_type in list(IntentType)
+        assert 0 <= result.confidence <= 1
+        print(f"意图: {result.intent_type}, 置信度: {result.confidence}, 推理: {result.reasoning}")
+
+    @pytest.mark.asyncio
+    async def test_call_llm_missing_key(self):
+        """测试未配置API Key时抛出异常"""
+        import os
+        old_key = os.environ.pop("INTENT_LLM_API_KEY", None)
+        try:
+            router = IntentRouter()
+            with pytest.raises(ValueError, match="未配置 INTENT_LLM_API_KEY"):
+                await router._call_llm("测试")
+        finally:
+            if old_key:
+                os.environ["INTENT_LLM_API_KEY"] = old_key
+
+
 class TestIntentConfidence:
     """意图置信度测试"""
 
