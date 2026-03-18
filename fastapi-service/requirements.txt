@@ -30,3 +30,7 @@ python-json-logger>=2.0.7
 python-dotenv>=1.0.0
 pyyaml>=6.0.1
 jsonschema>=4.21.0
+
+# 测试
+pytest>=8.0.0
+hypothesis>=6.98.0
