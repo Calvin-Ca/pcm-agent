@@ -125,9 +125,12 @@ services:
       - MYSQL_DATABASE=workhour
       - MYSQL_USER=root
       - MYSQL_PASSWORD=19990512
-      - LLM_API_KEY=${LLM_API_KEY}
-      - LLM_API_BASE=${LLM_API_BASE:-https://api.openai.com/v1}
-      - LLM_MODEL=${LLM_MODEL:-gpt-3.5-turbo}
+      - INTENT_LLM_API_KEY=${INTENT_LLM_API_KEY}
+      - INTENT_LLM_API_BASE=${INTENT_LLM_API_BASE}
+      - INTENT_LLM_MODEL=${INTENT_LLM_MODEL}
+      - CHAT_LLM_API_KEY=${CHAT_LLM_API_KEY}
+      - CHAT_LLM_API_BASE=${CHAT_LLM_API_BASE}
+      - CHAT_LLM_MODEL=${CHAT_LLM_MODEL}
     ports:
       - "8000:8000"
     volumes:

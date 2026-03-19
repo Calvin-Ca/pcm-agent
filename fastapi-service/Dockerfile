@@ -20,4 +20,7 @@ COPY . .
 EXPOSE 8000
 
 # 启动命令
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "main.py"]
+
+# 用下面这个命令可以和docker保持一致
+# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

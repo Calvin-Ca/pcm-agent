@@ -10,6 +10,7 @@ requests>=2.31.0
 
 # 数据库
 pymysql>=1.1.0
+cryptography>=42.0.0
 sqlalchemy>=2.0.25
 redis>=5.0.1
 
