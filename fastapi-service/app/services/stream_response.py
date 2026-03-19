@@ -53,6 +53,10 @@ class StreamResponseGenerator:
         self.intent_router = intent_router
         self.task_executor = task_executor
         self.llm_client = llm_client
+        
+        # 导入会话日志记录器
+        from app.services.conversation_logger import get_conversation_logger
+        self.conversation_logger = get_conversation_logger()
     
     async def stream_response(
         self,
@@ -71,6 +75,16 @@ class StreamResponseGenerator:
         Yields:
             str: SSE格式的事件数据
         """
+        start_time = datetime.now()
+        route_type = None
+        intent = None
+        ai_response_parts = []
+        tools_called = []
+        has_task_plan = False
+        task_plan = None
+        status = "success"
+        error_message = None
+        
         try:
             # 发送开始事件
             yield self.format_sse_event(
@@ -93,12 +107,17 @@ class StreamResponseGenerator:
                 message, user_context
             )
             
+            route_type = route_decision.target.value
+            intent = route_decision.intent
+            
             # 根据路由决策处理请求
             if route_decision.target.value == "tool_executor":
                 async for event in self._handle_tool_execution(route_decision, user_context):
                     yield event
+                    # 收集响应内容（简化处理）
                     
             elif route_decision.target.value == "planner_agent":
+                has_task_plan = True
                 async for event in self._handle_task_planning(route_decision, user_context):
                     yield event
                     
@@ -127,6 +146,8 @@ class StreamResponseGenerator:
             
         except Exception as e:
             logger.error(f"流式响应生成异常: {e}", exc_info=True)
+            status = "error"
+            error_message = str(e)
             yield self.format_sse_event(
                 SSEEventType.ERROR,
                 {
@@ -134,6 +155,28 @@ class StreamResponseGenerator:
                     "timestamp": datetime.now().isoformat()
                 }
             )
+        
+        finally:
+            # 记录会话日志
+            duration_ms = int((datetime.now() - start_time).total_seconds() * 1000)
+            user_id = user_context.get("user_id", "anonymous") if user_context else "anonymous"
+            
+            try:
+                self.conversation_logger.log_conversation(
+                    session_id=session_id or "unknown",
+                    user_id=user_id,
+                    user_message=message,
+                    route_type=route_type or "unknown",
+                    intent=intent,
+                    tools_called=tools_called if tools_called else None,
+                    has_task_plan=has_task_plan,
+                    task_plan=task_plan,
+                    duration_ms=duration_ms,
+                    status=status,
+                    error_message=error_message
+                )
+            except Exception as log_error:
+                logger.error(f"Failed to log conversation: {log_error}")
     
     async def _handle_tool_execution(
         self,

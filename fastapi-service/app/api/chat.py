@@ -210,12 +210,21 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
     if not intent_router:
         raise HTTPException(status_code=500, detail="AI Chat components not initialized")
     
+    from datetime import datetime
+    from app.services.conversation_logger import get_conversation_logger
+    
+    start_time = datetime.now()
+    status = "success"
+    error_message = None
+    route_type = None
+    intent_value = None
+    
     try:
         # 构建用户上下文
         user_context = request.user_context or {}
         
         # 从请求头中提取用户信息
-        user_id = http_request.headers.get("X-User-ID")
+        user_id = http_request.headers.get("X-User-ID", "anonymous")
         entity_type = http_request.headers.get("X-Entity-Type")
         department_id = http_request.headers.get("X-Department-ID")
         
@@ -242,23 +251,50 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
             request.message, user_context
         )
         
+        route_type = route_decision.target.value
+        intent_value = route_decision.intent
+        
         # 执行路由
         result = await intent_router.execute_route(route_decision, user_context)
         
-        return ChatResponse(
+        response = ChatResponse(
             success=True,
             message="请求处理完成",
             session_id=request.session_id,
             result=result
         )
         
+        return response
+        
     except Exception as e:
         logger.error(f"非流式聊天接口异常: {e}", exc_info=True)
+        status = "error"
+        error_message = str(e)
+        
         return ChatResponse(
             success=False,
             session_id=request.session_id,
             error=f"处理聊天请求失败: {str(e)}"
         )
+    
+    finally:
+        # 记录会话日志
+        try:
+            duration_ms = int((datetime.now() - start_time).total_seconds() * 1000)
+            conv_logger = get_conversation_logger()
+            
+            conv_logger.log_conversation(
+                session_id=request.session_id or "unknown",
+                user_id=user_id,
+                user_message=request.message,
+                route_type=route_type or "unknown",
+                intent=intent_value,
+                duration_ms=duration_ms,
+                status=status,
+                error_message=error_message
+            )
+        except Exception as log_error:
+            logger.error(f"Failed to log conversation: {log_error}")
 
 
 @router.get("/health")
