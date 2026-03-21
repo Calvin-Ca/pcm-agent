@@ -107,7 +107,37 @@ def initialize_chat_components(
 
         intent_router.register_route_handler(RouteTarget.LLM_SERVICE, llm_service_handler)
         logger.info("✅ LLM_SERVICE route handler registered")
-    
+
+    # 注册工具执行器路由处理器
+    async def tool_executor_handler(params):
+        """工具执行路由处理器"""
+        from app.models.task_plan import TaskNode, TaskType
+        import uuid
+        task = TaskNode(
+            task_id=f"direct_{uuid.uuid4().hex[:8]}",
+            task_type=TaskType.TOOL_CALL,
+            tool_name=params.get("tool_name"),
+            parameters=params.get("tool_parameters", {}),
+            description=f"执行工具: {params.get('tool_name')}"
+        )
+        result = await task_executor.execute_single_task(
+            task, params.get("permission_context")
+        )
+        return result
+
+    intent_router.register_route_handler(RouteTarget.TOOL_EXECUTOR, tool_executor_handler)
+    logger.info("✅ TOOL_EXECUTOR route handler registered")
+
+    # 注册RAG引擎路由处理器
+    async def rag_engine_handler(params):
+        """RAG知识库查询路由处理器"""
+        from app.services.rag_service import RAGService
+        rag = RAGService()
+        return await rag.generate_rag_response(query=params.get("query", ""))
+
+    intent_router.register_route_handler(RouteTarget.RAG_ENGINE, rag_engine_handler)
+    logger.info("✅ RAG_ENGINE route handler registered")
+
     # 初始化流式响应生成器
     stream_generator = StreamResponseGenerator(
         intent_router=intent_router,
@@ -252,7 +282,7 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
         )
         
         route_type = route_decision.target.value
-        intent_value = route_decision.intent
+        intent_value = route_decision.intent_result.intent_type.value
         
         # 执行路由
         result = await intent_router.execute_route(route_decision, user_context)

@@ -108,7 +108,7 @@ class StreamResponseGenerator:
             )
             
             route_type = route_decision.target.value
-            intent = route_decision.intent
+            intent = route_decision.intent_result.intent_type.value
             
             # 根据路由决策处理请求
             if route_decision.target.value == "tool_executor":
