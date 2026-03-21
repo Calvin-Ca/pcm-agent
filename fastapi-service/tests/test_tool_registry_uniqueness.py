@@ -58,10 +58,11 @@ class TestToolRegistrationUniqueness:
     def test_duplicate_registration_fails(self, name):
         """
         属性8: 工具注册唯一性
-        
+
         验证：同一个工具名称不能被注册两次
         需求：23.3 - 工具名称必须唯一
         """
+        self.registry.clear()
         schema = create_simple_schema()
         
         # 第一次注册应该成功
@@ -233,9 +234,10 @@ class TestToolRegistrationUniqueness:
     def test_registration_idempotency_check(self, name):
         """
         验证注册操作的幂等性检查
-        
+
         多次尝试注册相同工具应该始终失败（除了第一次）
         """
+        self.registry.clear()
         schema = create_simple_schema()
         
         # 第一次注册

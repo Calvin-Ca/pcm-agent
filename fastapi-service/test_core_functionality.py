@@ -37,15 +37,15 @@ async def test_tool_registry():
         
         # 检查工具列表
         tools = tool_registry.list_tools()
-        logger.info(f"已注册工具: {tools}")
-        
+        logger.info(f"已注册工具数量: {len(tools)}")
+
         # 验证每个工具
-        for tool_name in tools:
-            tool_def = tool_registry.get_tool(tool_name)
-            if tool_def:
-                logger.info(f"✅ 工具 {tool_name} 注册成功")
+        for tool_def in tools:
+            retrieved = tool_registry.get_tool(tool_def.name)
+            if retrieved:
+                logger.info(f"✅ 工具 {tool_def.name} 注册成功")
             else:
-                logger.error(f"❌ 工具 {tool_name} 获取失败")
+                logger.error(f"❌ 工具 {tool_def.name} 获取失败")
                 return False
         
         logger.info("✅ 工具注册中心测试通过")
@@ -90,7 +90,7 @@ async def test_permission_validator():
         can_access_self = permission_validator.can_access_user_data(employee_context, "emp001")
         can_access_other = permission_validator.can_access_user_data(employee_context, "emp002")
         
-        if can_access_self and not can_access_other:
+        if can_access_self.allowed and not can_access_other.allowed:
             logger.info("✅ 普通员工权限验证通过")
         else:
             logger.error("❌ 普通员工权限验证失败")
@@ -127,13 +127,13 @@ async def test_intent_router():
         
         for message in test_messages:
             logger.info(f"测试消息: {message}")
-            
-            route_decision = await intent_router.route_intent(message)
-            
+
+            route_decision = await intent_router.make_route_decision(message)
+
             logger.info(f"  意图类型: {route_decision.intent_result.intent_type}")
             logger.info(f"  路由目标: {route_decision.target}")
             logger.info(f"  置信度: {route_decision.intent_result.confidence}")
-            
+
             if route_decision.intent_result.confidence > 0.5:
                 logger.info("  ✅ 意图识别成功")
             else:

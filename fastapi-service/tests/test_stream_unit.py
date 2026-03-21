@@ -169,6 +169,7 @@ class TestStreamResponseFlow:
         """模拟意图路由器"""
         router = Mock(spec=IntentRouter)
         router.route_intent = AsyncMock()
+        router.make_route_decision = AsyncMock()
         router.execute_route = AsyncMock()
         return router
 
@@ -196,7 +197,7 @@ class TestStreamResponseFlow:
             ),
             route_parameters={}
         )
-        mock_intent_router.route_intent.return_value = route_decision
+        mock_intent_router.make_route_decision.return_value = route_decision
         mock_intent_router.execute_route.return_value = {
             "success": True,
             "data": "工时数据"
@@ -236,7 +237,7 @@ class TestStreamResponseFlow:
             ),
             route_parameters={}
         )
-        mock_intent_router.route_intent.return_value = route_decision
+        mock_intent_router.make_route_decision.return_value = route_decision
         mock_intent_router.execute_route.return_value = {
             "answer": "知识库答案",
             "sources": []
@@ -336,6 +337,7 @@ class TestStreamResponseErrorHandling:
         """模拟意图路由器"""
         router = Mock(spec=IntentRouter)
         router.route_intent = AsyncMock()
+        router.make_route_decision = AsyncMock()
         return router
 
     @pytest.fixture
@@ -373,7 +375,7 @@ class TestStreamResponseErrorHandling:
             ),
             route_parameters={}
         )
-        mock_intent_router.route_intent.return_value = route_decision
+        mock_intent_router.make_route_decision.return_value = route_decision
         mock_intent_router.execute_route.side_effect = Exception("工具执行失败")
 
         events = []
@@ -459,7 +461,7 @@ class TestStreamResponseEventSequence:
             ),
             route_parameters={}
         )
-        mock_intent_router.route_intent = AsyncMock(return_value=route_decision)
+        mock_intent_router.make_route_decision = AsyncMock(return_value=route_decision)
         mock_intent_router.execute_route = AsyncMock(return_value={"message": "回复"})
 
         generator = StreamResponseGenerator(
@@ -492,6 +494,7 @@ class TestStreamResponseContext:
         """测试带用户上下文的流式响应"""
         mock_intent_router = Mock(spec=IntentRouter)
         mock_intent_router.route_intent = AsyncMock()
+        mock_intent_router.make_route_decision = AsyncMock()
         mock_intent_router.execute_route = AsyncMock(return_value={})
 
         route_decision = RouteDecision(
@@ -505,7 +508,7 @@ class TestStreamResponseContext:
             ),
             route_parameters={}
         )
-        mock_intent_router.route_intent.return_value = route_decision
+        mock_intent_router.make_route_decision.return_value = route_decision
 
         generator = StreamResponseGenerator(
             intent_router=mock_intent_router,
@@ -532,6 +535,6 @@ class TestStreamResponseContext:
         assert "session_001" in start_event
 
         # 验证user_context被传递给intent_router
-        mock_intent_router.route_intent.assert_called_once()
-        call_args = mock_intent_router.route_intent.call_args
+        mock_intent_router.make_route_decision.assert_called_once()
+        call_args = mock_intent_router.make_route_decision.call_args
         assert call_args[0][1] == user_context

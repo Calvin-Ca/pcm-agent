@@ -18,9 +18,13 @@ from app.models.tool import ToolCategory
 # Hypothesis策略定义
 # ============================================================================
 
-# 生成有效的工具名称
+# 生成有效的工具名称（限制为 ASCII 字符，确保符合 ToolDefinition 名称验证规则）
 tool_names = st.text(
-    alphabet=st.characters(whitelist_categories=('Lu', 'Ll', 'Nd'), whitelist_characters='_'),
+    alphabet=st.characters(
+        whitelist_categories=('Lu', 'Ll', 'Nd'),
+        whitelist_characters='_',
+        max_codepoint=127
+    ),
     min_size=1,
     max_size=50
 ).filter(lambda x: x and x.strip() and x.replace('_', '').isalnum())
@@ -109,14 +113,16 @@ class TestToolRegistrationUniqueness:
     def test_duplicate_registration_fails(self, tool_def):
         """
         属性8: 工具注册唯一性
-        
+
         验证：同一个工具名称不能被注册两次
         需求：23.3 - 工具名称必须唯一
         """
+        self.registry.clear()
+
         # 创建一个简单的handler
         def dummy_handler(**kwargs):
             return {"success": True}
-        
+
         # 第一次注册应该成功
         tool1 = self.registry.register_tool(
             name=tool_def['name'],
@@ -153,12 +159,14 @@ class TestToolRegistrationUniqueness:
     def test_different_names_can_coexist(self, tool_def1, tool_def2):
         """
         属性8扩展: 不同名称的工具可以共存
-        
+
         验证：只要工具名称不同，就可以同时注册多个工具
         """
+        self.registry.clear()
+
         # 确保两个工具名称不同
         assume(tool_def1['name'] != tool_def2['name'])
-        
+
         def dummy_handler(**kwargs):
             return {"success": True}
         
@@ -192,9 +200,11 @@ class TestToolRegistrationUniqueness:
     def test_unregister_allows_reregistration(self, tool_def):
         """
         属性8扩展: 注销后可以重新注册
-        
+
         验证：工具注销后，相同名称可以再次注册
         """
+        self.registry.clear()
+
         def dummy_handler(**kwargs):
             return {"success": True}
         
@@ -342,12 +352,14 @@ class TestToolRegistryEdgeCases:
     def test_case_sensitive_names(self, name):
         """
         验证工具名称是否区分大小写
-        
+
         如果名称区分大小写，"Tool"和"tool"应该是不同的工具
         """
+        self.registry.clear()
+
         # 跳过全小写或全大写的名称
         assume(name.lower() != name and name.upper() != name)
-        
+
         def dummy_handler(**kwargs):
             return {"success": True}
         

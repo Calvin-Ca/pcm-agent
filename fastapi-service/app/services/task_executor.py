@@ -224,10 +224,13 @@ class TaskExecutor:
         if not task.tool_name:
             raise ValueError("工具调用任务必须指定工具名称")
         
-        # 获取工具定义
+        # 获取工具定义和处理器
         tool_def = self.tool_registry.get_tool(task.tool_name)
         if not tool_def:
             raise ValueError(f"工具不存在: {task.tool_name}")
+        handler = self.tool_registry.get_handler(task.tool_name)
+        if not handler:
+            raise ValueError(f"工具处理器不存在: {task.tool_name}")
         
         # 处理参数中的依赖结果注入
         processed_params = self._inject_dependency_results(task.parameters)
@@ -274,10 +277,15 @@ class TaskExecutor:
         start_time = datetime.now()
         try:
             # 使用asyncio.wait_for确保工具执行也有超时控制
-            result = await asyncio.wait_for(
-                tool_def.execute(processed_params),
-                timeout=task.timeout
-            )
+            import asyncio as _asyncio
+            import inspect
+            if inspect.iscoroutinefunction(handler):
+                coro = handler(**processed_params)
+            else:
+                coro = _asyncio.get_event_loop().run_in_executor(
+                    None, lambda: handler(**processed_params)
+                )
+            result = await asyncio.wait_for(coro, timeout=task.timeout)
             
             execution_time = (datetime.now() - start_time).total_seconds()
             logger.info(f"工具执行完成: {task.tool_name}, 耗时: {execution_time:.2f}秒")
