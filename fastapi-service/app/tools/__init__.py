@@ -8,9 +8,13 @@ Tools package - 工具包
 from . import query_timesheet
 from . import query_project
 from . import compute_statistics
+from . import generate_weekly_report
+from . import save_workhour
 
 __all__ = [
     "query_timesheet",
     "query_project",
-    "compute_statistics"
+    "compute_statistics",
+    "generate_weekly_report",
+    "save_workhour",
 ]
