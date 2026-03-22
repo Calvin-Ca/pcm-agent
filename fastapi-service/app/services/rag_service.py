@@ -63,7 +63,7 @@ class RAGService:
                 }
             
             # 4. 构建带上下文的回答
-            response = self._generate_contextual_response(query, context, retrieved_docs)
+            response = await self._generate_contextual_response(query, context, retrieved_docs)
             
             return {
                 "success": True,
@@ -108,53 +108,34 @@ class RAGService:
         
         return "\n\n".join(context_parts)
     
-    def _generate_contextual_response(
-        self, 
-        query: str, 
-        context: str, 
+    async def _generate_contextual_response(
+        self,
+        query: str,
+        context: str,
         sources: List[Dict[str, Any]]
     ) -> str:
-        """生成基于上下文的回答"""
-        # 这里是一个简化的实现，实际应该调用LLM
-        # 在完整实现中，这里会构建prompt并调用LLM服务
-        
-        # 简单的模板响应
-        response_parts = []
-        
-        # 添加基于上下文的回答
-        response_parts.append("根据企业知识库的信息：")
-        response_parts.append("")
-        
-        # 提取关键信息
-        if "工时" in query:
-            if "填报" in context or "提交" in context:
-                response_parts.append("关于工时填报，主要要求如下：")
-            elif "查询" in context or "统计" in context:
-                response_parts.append("关于工时查询，相关规定如下：")
-        elif "项目" in query:
-            response_parts.append("关于项目管理，相关信息如下：")
-        else:
-            response_parts.append("相关信息如下：")
-        
-        response_parts.append("")
-        
-        # 添加上下文内容（简化处理）
-        context_lines = context.split('\n')
-        for line in context_lines[:10]:  # 最多显示10行
-            if line.strip():
-                response_parts.append(f"• {line.strip()}")
-        
-        # 添加来源信息
-        if sources:
-            response_parts.append("")
-            response_parts.append("**参考来源：**")
-            for i, source in enumerate(sources[:3], 1):  # 最多显示3个来源
-                source_name = source.get("source", "未知来源")
-                if source.get("page"):
-                    source_name += f" (第{source['page']}页)"
-                response_parts.append(f"{i}. {source_name}")
-        
-        return "\n".join(response_parts)
+        """调用 LLM 生成基于上下文的回答"""
+        from app.services.llm_client import LLMClient
+
+        system_prompt = (
+            "你是工时管理系统的AI助手。请根据以下知识库内容回答用户的问题，"
+            "回答要简洁、准确。如果知识库内容不足以完整回答，请如实说明。"
+        )
+        user_prompt = f"知识库内容：\n{context}\n\n用户问题：{query}"
+
+        try:
+            llm = LLMClient(env_prefix="CHAT_LLM")
+            answer = await llm.generate(
+                prompt=user_prompt,
+                system_prompt=system_prompt,
+                max_tokens=1000
+            )
+            return answer
+        except Exception as e:
+            logger.error(f"LLM 生成失败，降级为模板回答: {e}")
+            # 降级：直接返回检索到的上下文内容
+            lines = [line.strip() for line in context.split("\n") if line.strip()]
+            return "根据知识库信息：\n\n" + "\n".join(f"• {l}" for l in lines[:10])
     
     def _format_sources(self, retrieved_docs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """格式化来源信息"""

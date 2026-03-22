@@ -19,20 +19,37 @@ embedding_manager: Optional[EmbeddingManager] = None
 async def initialize_knowledge_search():
     """初始化知识库搜索服务"""
     global vector_store_manager, embedding_manager
-    
+
     try:
-        # 初始化向量存储（使用内存存储用于开发）
+        import os
+
+        # 初始化向量存储（使用内存存储）
         vector_store_manager = VectorStoreManager(store_type="memory")
         await vector_store_manager.initialize()
-        
-        # 初始化Embedding服务（使用简单服务用于开发）
-        embedding_manager = EmbeddingManager(service_type="simple", dimension=768)
-        
+
+        # 优先使用 DashScope 语义 embedding，降级为简单 embedding
+        api_key = os.getenv("CHAT_LLM_API_KEY", "")
+        api_base = os.getenv(
+            "CHAT_LLM_API_BASE",
+            "https://dashscope.aliyuncs.com/compatible-mode/v1"
+        )
+        if api_key:
+            embedding_manager = EmbeddingManager(
+                service_type="openai",
+                api_key=api_key,
+                model="text-embedding-v2",
+                api_base=api_base
+            )
+            logger.info("使用 DashScope text-embedding-v2 语义向量化")
+        else:
+            embedding_manager = EmbeddingManager(service_type="simple", dimension=1536)
+            logger.warning("未配置 CHAT_LLM_API_KEY，使用 SimpleEmbeddingService（仅供测试）")
+
         # 创建知识库集合
         await vector_store_manager.create_knowledge_collection(dimension=embedding_manager.dimension)
-        
+
         logger.info("知识库搜索服务初始化完成")
-        
+
     except Exception as e:
         logger.error(f"初始化知识库搜索服务失败: {e}")
         raise

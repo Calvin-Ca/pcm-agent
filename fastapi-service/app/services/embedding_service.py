@@ -37,23 +37,27 @@ class EmbeddingService(ABC):
 class OpenAIEmbeddingService(EmbeddingService):
     """OpenAI Embedding服务"""
     
-    def __init__(self, api_key: str, model: str = "text-embedding-ada-002"):
+    def __init__(self, api_key: str, model: str = "text-embedding-ada-002", api_base: str = None):
         self.api_key = api_key
         self.model = model
-        self._dimension = 1536  # text-embedding-ada-002的维度
-        
+        self._dimension = 1536
+
         try:
             import openai
-            self.client = openai.OpenAI(api_key=api_key)
+            client_kwargs = {"api_key": api_key}
+            if api_base:
+                client_kwargs["base_url"] = api_base
+            self.client = openai.OpenAI(**client_kwargs)
         except ImportError:
             raise ImportError("需要安装openai: pip install openai")
     
     async def embed_text(self, text: str) -> List[float]:
         """单文本向量化"""
         try:
+            # DashScope 兼容模式要求 input 为列表，不接受裸字符串
             response = await asyncio.to_thread(
                 self.client.embeddings.create,
-                input=text,
+                input=[text],
                 model=self.model
             )
             return response.data[0].embedding
@@ -236,8 +240,9 @@ class EmbeddingManager:
             raise
     
     async def embed_query(self, query: str) -> List[float]:
-        """为查询生成向量"""
-        return await self.service.embed_text(query)
+        """为查询生成向量（与 embed_texts 保持一致的调用格式）"""
+        results = await self.service.embed_texts([query])
+        return results[0]
     
     @property
     def dimension(self) -> int:
