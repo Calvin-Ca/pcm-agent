@@ -59,12 +59,17 @@ class TestQueryTimesheetSchema:
         assert "project_id" not in QUERY_TIMESHEET_SCHEMA["required"]
 
     def test_required_fields(self):
-        """测试必需字段"""
+        """测试必需字段
+
+        user_id 为可选：未提供时 SpringBoot 从 JWT 获取当前用户，
+        仅 start_date / end_date 为必填。
+        """
         required = QUERY_TIMESHEET_SCHEMA["required"]
-        assert "user_id" in required
         assert "start_date" in required
         assert "end_date" in required
-        assert set(required) == {"user_id", "start_date", "end_date"}
+        # user_id 为可选，不在 required 中
+        assert "user_id" not in required
+        assert set(required) == {"start_date", "end_date"}
 
     def test_additional_properties(self):
         """测试是否允许额外属性"""
@@ -258,17 +263,19 @@ class TestToolValidation:
         assert error is None
 
     def test_validate_missing_required_param(self):
-        """测试验证缺少必需参数"""
+        """测试验证缺少必需参数（start_date / end_date 为必填，user_id 为可选）"""
         from app.services.tool_registry import tool_registry
 
-        params = {
-            "start_date": "2024-01-01",
-            "end_date": "2024-01-31"
-        }
-
+        # 缺少 start_date 应该验证失败
+        params = {"end_date": "2024-01-31"}
         valid, error = tool_registry.validate_params("query_timesheet", params)
         assert valid is False
-        assert "user_id" in error or "required" in error.lower()
+        assert error  # 存在错误信息
+
+        # 仅有 start_date + end_date（无 user_id）应该通过（SpringBoot 从 JWT 获取用户）
+        params_ok = {"start_date": "2024-01-01", "end_date": "2024-01-31"}
+        valid_ok, _ = tool_registry.validate_params("query_timesheet", params_ok)
+        assert valid_ok is True
 
     def test_validate_invalid_param_type(self):
         """测试验证无效参数类型"""

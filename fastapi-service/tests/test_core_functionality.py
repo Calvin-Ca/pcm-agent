@@ -10,6 +10,8 @@ import logging
 import sys
 from pathlib import Path
 
+import pytest
+
 # 添加项目根目录到Python路径
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -24,6 +26,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+@pytest.mark.asyncio
 async def test_tool_registry():
     """测试工具注册中心"""
     logger.info("=== 测试工具注册中心 ===")
@@ -56,6 +59,7 @@ async def test_tool_registry():
         return False
 
 
+@pytest.mark.asyncio
 async def test_permission_validator():
     """测试权限验证器"""
     logger.info("=== 测试权限验证器 ===")
@@ -104,6 +108,7 @@ async def test_permission_validator():
         return False
 
 
+@pytest.mark.asyncio
 async def test_intent_router():
     """测试意图路由器"""
     logger.info("=== 测试意图路由器 ===")
@@ -147,6 +152,7 @@ async def test_intent_router():
         return False
 
 
+@pytest.mark.asyncio
 async def test_task_planner():
     """测试任务规划器"""
     logger.info("=== 测试任务规划器 ===")

@@ -270,9 +270,18 @@ async def stream_agent_response(
         yield _format_sse("error", {"message": "LangGraph Agent 未初始化"})
         return
 
+    # 会话日志收集
+    start_time = datetime.now()
+    user_ctx = user_context or {}
+    user_id = user_ctx.get("user_id", "anonymous")
+    log_intent: Optional[str] = None
+    log_route_type: Optional[str] = None
+    log_status = "success"
+    log_error: Optional[str] = None
+
     initial_state: AgentState = {
         "user_message": message,
-        "user_context": user_context or {},
+        "user_context": user_ctx,
         "session_id": session_id,
         "intent": None,
         "tool_name": None,
@@ -296,6 +305,14 @@ async def stream_agent_response(
             for node_name, state_delta in chunk.items():
                 if node_name == "classify_intent":
                     intent = state_delta.get("intent", "general_chat")
+                    log_intent = intent
+                    log_route_type = {
+                        "knowledge_qa": "rag_engine",
+                        "tool_execution": "tool_executor",
+                        "complex_request": "llm_service",
+                        "general_chat": "llm_service",
+                    }.get(intent, "llm_service")
+
                     if intent == "tool_execution":
                         tool_name = state_delta.get("tool_name", "unknown")
                         yield _format_sse("tool_call", {
@@ -312,6 +329,8 @@ async def stream_agent_response(
                     error = state_delta.get("error")
                     if error or (result and not result.get("success", True)):
                         msg = error or result.get("error", "工具执行失败")
+                        log_status = "error"
+                        log_error = msg
                         yield _format_sse("error", {"message": msg})
                     else:
                         yield _format_sse("response", {
@@ -323,7 +342,10 @@ async def stream_agent_response(
                     result = state_delta.get("rag_result")
                     error = state_delta.get("error")
                     if error or (result and not result.get("success", True)):
-                        yield _format_sse("error", {"message": error or result.get("error", "RAG 查询失败")})
+                        err_msg = error or result.get("error", "RAG 查询失败")
+                        log_status = "error"
+                        log_error = err_msg
+                        yield _format_sse("error", {"message": err_msg})
                     else:
                         yield _format_sse("response", {"result": result})
 
@@ -331,12 +353,34 @@ async def stream_agent_response(
                     llm_result = state_delta.get("llm_result")
                     error = state_delta.get("error")
                     if error and not llm_result:
+                        log_status = "error"
+                        log_error = error
                         yield _format_sse("error", {"message": error})
                     else:
                         yield _format_sse("response", {"message": llm_result or ""})
 
     except Exception as e:
         logger.error(f"LangGraph 流式执行异常: {e}", exc_info=True)
+        log_status = "error"
+        log_error = str(e)
         yield _format_sse("error", {"message": f"处理请求时发生错误: {e}"})
+
+    finally:
+        # 写会话日志（失败不影响主流程）
+        try:
+            from app.services.conversation_logger import get_conversation_logger
+            duration_ms = int((datetime.now() - start_time).total_seconds() * 1000)
+            get_conversation_logger().log_conversation(
+                session_id=session_id or "unknown",
+                user_id=user_id,
+                user_message=message,
+                route_type=log_route_type or "unknown",
+                intent=log_intent,
+                duration_ms=duration_ms,
+                status=log_status,
+                error_message=log_error,
+            )
+        except Exception as log_err:
+            logger.error(f"会话日志写入失败: {log_err}")
 
     yield _format_sse("done", {"message": "请求处理完成"})
