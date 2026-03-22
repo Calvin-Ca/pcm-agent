@@ -18,6 +18,7 @@ from ..services.task_executor import TaskExecutor
 from ..services.tool_registry import ToolRegistry
 from ..services.permission_validator import PermissionValidator, PermissionContext
 from ..models.task_plan import PlannerAgent
+from ..services.langgraph_agent import initialize_agent, stream_agent_response
 
 
 logger = logging.getLogger(__name__)
@@ -137,13 +138,21 @@ def initialize_chat_components(
     intent_router.register_route_handler(RouteTarget.RAG_ENGINE, rag_engine_handler)
     logger.info("✅ RAG_ENGINE route handler registered")
 
-    # 初始化流式响应生成器
+    # 初始化流式响应生成器（旧，供非流式端点使用）
     stream_generator = StreamResponseGenerator(
         intent_router=intent_router,
         task_executor=task_executor,
         llm_client=llm_client
     )
-    
+
+    # 初始化 LangGraph Agent（新，供流式端点使用）
+    initialize_agent(
+        intent_router=intent_router,
+        tool_registry=tool_registry,
+        task_executor=task_executor,
+        llm_client=llm_client,
+    )
+
     logger.info("AI Chat components initialized")
 
 
@@ -195,23 +204,22 @@ async def chat_stream(request: ChatRequest, http_request: Request):
 
         logger.info(f"处理聊天请求: {request.message[:100]}...")
         
-        # 生成流式响应
+        # 生成流式响应（LangGraph Agent）
         async def generate_stream():
             try:
-                async for event in stream_generator.stream_response(
+                async for event in stream_agent_response(
                     message=request.message,
                     user_context=user_context,
-                    session_id=request.session_id
+                    session_id=request.session_id,
                 ):
                     yield event
             except Exception as e:
                 logger.error(f"流式响应生成异常: {e}", exc_info=True)
-                # 发送错误事件
-                error_event = stream_generator.format_sse_event(
-                    "error",
-                    {"message": f"处理请求时发生错误: {str(e)}"}
+                import json
+                yield (
+                    f"event: error\n"
+                    f"data: {json.dumps({'message': f'处理请求时发生错误: {str(e)}'}, ensure_ascii=False)}\n\n"
                 )
-                yield error_event
         
         return StreamingResponse(
             generate_stream(),
