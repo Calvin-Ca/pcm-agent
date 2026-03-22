@@ -128,12 +128,11 @@ def initialize_chat_components(
     intent_router.register_route_handler(RouteTarget.TOOL_EXECUTOR, tool_executor_handler)
     logger.info("✅ TOOL_EXECUTOR route handler registered")
 
-    # 注册RAG引擎路由处理器
+    # 注册RAG引擎路由处理器（LangChain 混合检索）
     async def rag_engine_handler(params):
         """RAG知识库查询路由处理器"""
-        from app.services.rag_service import RAGService
-        rag = RAGService()
-        return await rag.generate_rag_response(query=params.get("query", ""))
+        from app.services.langchain_rag import langchain_rag_query
+        return await langchain_rag_query(question=params.get("query", ""))
 
     intent_router.register_route_handler(RouteTarget.RAG_ENGINE, rag_engine_handler)
     logger.info("✅ RAG_ENGINE route handler registered")

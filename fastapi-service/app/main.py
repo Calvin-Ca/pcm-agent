@@ -15,8 +15,7 @@ from app.services.tool_registry import ToolRegistry
 from app.services.permission_validator import PermissionValidator
 from app.services.llm_client import LLMClient
 from app.tools import query_timesheet, query_project, compute_statistics
-from app.tools.search_knowledge import initialize_knowledge_search
-from app.services.knowledge_loader import initialize_knowledge_base
+from app.services.langchain_rag import initialize_langchain_rag
 
 # 配置日志
 setup_logging()
@@ -61,16 +60,15 @@ async def lifespan(app: FastAPI):
         )
         logger.info("✅ Chat components initialized")
 
-        # 初始化知识库搜索服务
-        await initialize_knowledge_search()
-        logger.info("✅ Knowledge search initialized")
-
-        # 加载知识库文档
-        kb_result = await initialize_knowledge_base()
+        # 初始化 LangChain RAG 服务（混合检索：Milvus + BM25）
+        kb_result = await initialize_langchain_rag(kb_path="knowledge-base")
         if kb_result.get("success"):
-            logger.info(f"✅ Knowledge base loaded: {kb_result.get('loaded_files', 0)} files, {kb_result.get('total_chunks', 0)} chunks")
+            logger.info(
+                f"✅ LangChain RAG initialized: {kb_result.get('loaded_files', 0)} files, "
+                f"{kb_result.get('total_chunks', 0)} chunks"
+            )
         else:
-            logger.warning(f"⚠️  Knowledge base load failed: {kb_result.get('error', 'unknown')}")
+            logger.warning(f"⚠️  LangChain RAG init failed: {kb_result.get('error', 'unknown')}")
 
         logger.info("🎉 AI Service startup completed successfully")
         
