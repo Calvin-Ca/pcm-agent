@@ -62,7 +62,13 @@ class IntentRouter:
         self.knowledge_keywords = [
             "什么是", "如何", "怎么", "为什么", "规则", "制度", "政策", "流程",
             "说明", "介绍", "解释", "定义", "faq", "常见问题", "帮助",
-            "填写", "申请", "方法", "步骤"
+            "填写", "申请", "方法", "步骤",
+            # 制度/规定类关键词
+            "截止", "截止时间", "规定", "要求", "期限", "时限", "多久",
+            "什么时候", "几点", "几日", "不得", "须", "应当", "必须",
+            # 类型/分类类关键词
+            "类型", "有哪些", "哪些类型", "分类", "种类", "有什么类型",
+            "分为哪些", "包括哪些", "有几种"
         ]
 
         self.tool_keywords = {
@@ -148,123 +154,33 @@ class IntentRouter:
         """
         路由用户意图
 
-        Args:
-            user_message: 用户消息
-            context: 上下文信息
-
-        Returns:
-            IntentResult: 意图识别结果
+        主路径：LLM 分类（准确）
+        降级路径：规则匹配（LLM 不可用时）
         """
         try:
-            # 预处理消息
             message = user_message.strip().lower()
 
-            # 0. 首先检查通用对话关键词（快速排除）
+            # 1. 快速预过滤：明确的问候/闲聊，无需调 LLM
             chat_result = self._check_chat_intent(message)
             if chat_result:
                 return chat_result
 
-            # 0. 特殊模式：以"什么是"开头 → 强知识问答信号
-            if re.search(r'^什么是', message):
-                return IntentResult(
-                    intent_type=IntentType.KNOWLEDGE_QA,
-                    confidence=0.85,
-                    parameters={"query": message},
-                    reasoning="以'什么是'开头，强烈知识问答意图",
-                    suggested_action="使用RAG引擎进行知识问答"
-                )
-
-            # 1. 检查是否为复杂请求意图（优先于高置信度工具意图）
-            complex_result = self._check_complex_intent(message)
-            if complex_result:
-                return complex_result
-
-            # 2. 检查是否为工具执行意图
-            tool_result = self._check_tool_intent(message)
-
-            # 2.1 如果检测到工具意图，使用LLM提取参数（更准确）
-            if tool_result and self.llm_client:
-                tool_name = tool_result.parameters.get("tool_name")
-                if tool_name:
-                    llm_params = await self._extract_parameters_with_llm(user_message, tool_name)
-                    merged = {k: v for k, v in tool_result.parameters.items()
-                              if k in ("tool_name", "matched_keywords")}
-                    merged.update(llm_params)
-                    tool_result = IntentResult(
-                        intent_type=tool_result.intent_type,
-                        confidence=tool_result.confidence,
-                        parameters=merged,
-                        reasoning=tool_result.reasoning,
-                        suggested_action=tool_result.suggested_action
-                    )
-
-            # 3. 检查是否为知识问答意图
-            knowledge_result = self._check_knowledge_intent(message)
-
-            # 4. 决策逻辑
-            # 高置信度工具意图优先
-            if tool_result and tool_result.confidence >= 0.7:
-                # 但如果知识意图置信度更高，选择知识
-                if knowledge_result and knowledge_result.confidence > tool_result.confidence:
-                    return knowledge_result
-                return tool_result
-
-            # 高置信度知识意图
-            if knowledge_result and knowledge_result.confidence >= 0.6:
-                return knowledge_result
-
-            # 4. 检查是否为复杂请求意图
-            complex_result = self._check_complex_intent(message)
-            if complex_result:
-                return complex_result
-
-            # 5. 低置信度时，取较高者
-            if tool_result and knowledge_result:
-                if knowledge_result.confidence > tool_result.confidence:
-                    return knowledge_result
-                return tool_result
-            elif tool_result:
-                return tool_result
-            elif knowledge_result:
-                return knowledge_result
-
-            # 4. 如果知识问答有较低置信度，也接受
-            if knowledge_result and knowledge_result.confidence >= 0.5:
-                return knowledge_result
-
-            # 5. 收集规则匹配结果（用于后续LLM兜底决策）
-            rule_results = []
-            if knowledge_result:
-                rule_results.append(("knowledge_qa", knowledge_result.confidence))
-            if tool_result:
-                rule_results.append(("tool_execution", tool_result.confidence))
-            if complex_result:
-                rule_results.append(("complex_request", complex_result.confidence))
-
-            # 6. LLM兜底：如果规则置信度都较低，尝试调用LLM
-            if self.llm_client and rule_results and max(r[1] for r in rule_results) < 0.6:
-                llm_result = await self._classify_with_llm(message, rule_results)
+            # 2. 主路径：LLM 意图分类
+            has_llm = self.llm_client or os.getenv("INTENT_LLM_API_KEY")
+            if has_llm:
+                llm_result = await self._classify_with_llm(message, [])
                 if llm_result:
+                    # 工具执行：继续用 LLM 提取参数
+                    if llm_result.intent_type == IntentType.TOOL_EXECUTION and self.llm_client:
+                        tool_name = llm_result.parameters.get("tool_name")
+                        if tool_name:
+                            llm_params = await self._extract_parameters_with_llm(user_message, tool_name)
+                            llm_result.parameters.update(llm_params)
                     return llm_result
 
-            # 7. 使用最佳规则结果（如果有）
-            if rule_results:
-                best_rule = max(rule_results, key=lambda x: x[1])
-                if best_rule[0] == "knowledge_qa" and knowledge_result:
-                    return knowledge_result
-                elif best_rule[0] == "tool_execution" and tool_result:
-                    return tool_result
-                elif best_rule[0] == "complex_request" and complex_result:
-                    return complex_result
-
-            # 8. 默认为通用对话意图
-            return IntentResult(
-                intent_type=IntentType.GENERAL_CHAT,
-                confidence=0.6,
-                parameters={},
-                reasoning="未匹配到特定意图模式，归类为通用对话",
-                suggested_action="使用LLM进行通用对话处理"
-            )
+            # 3. 降级：规则兜底（LLM 不可用或调用失败时）
+            logger.warning("LLM 不可用，使用规则兜底进行意图分类")
+            return self._rule_based_classify(message, user_message)
 
         except Exception as e:
             logger.error(f"意图路由异常: {str(e)}")
@@ -276,70 +192,104 @@ class IntentRouter:
                 suggested_action="降级到通用对话处理"
             )
 
+    def _rule_based_classify(self, message: str, original_message: str = None) -> IntentResult:
+        """规则兜底分类（LLM 不可用时使用）"""
+        original_message = original_message or message
+
+        complex_result = self._check_complex_intent(message)
+        if complex_result:
+            return complex_result
+
+        tool_result = self._check_tool_intent(message)
+        knowledge_result = self._check_knowledge_intent(message)
+
+        if tool_result and tool_result.confidence >= 0.7:
+            if knowledge_result and knowledge_result.confidence > tool_result.confidence:
+                return knowledge_result
+            return tool_result
+
+        if knowledge_result and knowledge_result.confidence >= 0.6:
+            return knowledge_result
+
+        if tool_result and knowledge_result:
+            return knowledge_result if knowledge_result.confidence > tool_result.confidence else tool_result
+        if tool_result:
+            return tool_result
+        if knowledge_result:
+            return knowledge_result
+
+        return IntentResult(
+            intent_type=IntentType.GENERAL_CHAT,
+            confidence=0.6,
+            parameters={},
+            reasoning="规则兜底：未匹配到特定意图",
+            suggested_action="使用LLM进行通用对话处理"
+        )
+
     async def _classify_with_llm(
         self,
         message: str,
-        rule_results: List[tuple]
+        rule_results: List[tuple]  # 保留参数兼容性，不再使用
     ) -> Optional[IntentResult]:
         """
-        使用LLM进行意图分类（兜底策略）
+        使用 LLM 进行意图分类（主路径）
 
-        适用于规则匹配置信度较低的情况，如：
-        - "如何查询工时"（知识还是工具？）
-        - "帮我看看项目进度"（较口语化）
+        返回 intent_type、confidence、tool_name（tool_execution 时）。
         """
         try:
-            # 构建Prompt
-            rule_info = ", ".join([f"{name}({conf:.2f})" for name, conf in rule_results])
-
-            prompt = f"""你是一个意图分类助手。请分析用户消息，判断其意图类型。
+            prompt = f"""你是工时管理系统的意图分类助手。分析用户消息，判断其意图类型。
 
 用户消息："{message}"
 
-可选意图类型：
-1. knowledge_qa - 用户询问知识、规则、流程（如"什么是工时制度""怎么申请加班"）
-2. tool_execution - 用户想执行具体操作（如"查询我的工时""统计部门数据"）
-3. complex_request - 复杂请求，包含多个步骤（如"查询工时并生成报表"）
-4. general_chat - 通用对话、问候、闲聊
+意图类型说明：
+- knowledge_qa：询问制度、规则、流程、政策、定义等知识性问题
+  示例："工时填报截止时间是什么时候""请假怎么填写""加班怎么认定"
+- tool_execution：查询或统计具体数据
+  示例："查询我本周的工时""统计部门上月加班时长""查看项目成员"
+- complex_request：需要多步骤才能完成的请求
+  示例："查询本月工时并生成报表""统计各项目工时然后发给我"
+- general_chat：问候、闲聊等
+  示例："你好""谢谢"
 
-规则引擎初步结果：{rule_info}
+可用工具（tool_execution 时必须填写 tool_name）：
+- query_timesheet：查询个人或团队工时记录
+- query_project：查询项目信息
+- compute_statistics：统计分析工时数据
 
-请以JSON格式返回：
+只返回 JSON，不要其他内容：
 {{
-    "intent_type": "意图类型",
+    "intent_type": "knowledge_qa|tool_execution|complex_request|general_chat",
     "confidence": 0.0-1.0,
-    "reasoning": "判断理由"
-}}
+    "tool_name": "仅 tool_execution 时填写，否则填 null",
+    "reasoning": "一句话判断理由"
+}}"""
 
-只返回JSON，不要其他内容。"""
-
-            # 调用LLM
             response = await self._call_llm(prompt)
 
-            # 解析JSON响应
-            # 提取JSON部分（处理可能的markdown代码块）
-            json_match = re.search(r'```json\s*(\{.*?\})\s*```', response, re.DOTALL)
-            if json_match:
-                json_str = json_match.group(1)
-            else:
-                json_str = response.strip()
-
-            result = json.loads(json_str)
+            # 提取 JSON（兼容 markdown 代码块）
+            json_match = re.search(r'\{.*\}', response, re.DOTALL)
+            if not json_match:
+                raise ValueError(f"LLM 未返回有效 JSON: {response}")
+            result = json.loads(json_match.group())
 
             intent_type = result.get("intent_type", "general_chat")
-            confidence = float(result.get("confidence", 0.5))
-            reasoning = result.get("reasoning", "LLM分类")
-
-            # 验证意图类型
             if intent_type not in [t.value for t in IntentType]:
                 intent_type = "general_chat"
+
+            confidence = float(result.get("confidence", 0.7))
+            reasoning = result.get("reasoning", "LLM分类")
+            tool_name = result.get("tool_name")
+
+            params: Dict[str, Any] = {"llm_classified": True, "query": message}
+            if tool_name and tool_name != "null":
+                params["tool_name"] = tool_name
 
             return IntentResult(
                 intent_type=IntentType(intent_type),
                 confidence=confidence,
-                parameters={"llm_classified": True},
-                reasoning=f"LLM兜底分类: {reasoning}",
-                suggested_action=f"使用规则+LLM混合决策"
+                parameters=params,
+                reasoning=f"LLM分类: {reasoning}",
+                suggested_action="根据LLM分类结果路由"
             )
 
         except Exception as e:
@@ -778,9 +728,9 @@ class IntentRouter:
         # 检查问句模式（加权更高）
         question_patterns = [
             (r'^什么是', 1.5),  # "什么是" 是强烈的知识问答信号
-            (r'.*\?$', 0.8),  # 以问号结尾
-            (r'^(什么|如何|怎么|为什么|哪里|哪个|谁|何时)', 0.8),  # 疑问词开头
-            (r'(是什么|怎么办|如何做|为什么要)', 0.8),  # 常见问句模式
+            (r'.*[?？]$', 0.8),  # 以问号结尾（ASCII 或中文全角）
+            (r'^(什么|如何|怎么|为什么|哪里|哪个|哪些|谁|何时)', 0.8),  # 疑问词开头
+            (r'(是什么|怎么办|如何做|为什么要|什么时候)', 0.8),  # 常见问句模式
         ]
 
         for pattern, weight in question_patterns:
