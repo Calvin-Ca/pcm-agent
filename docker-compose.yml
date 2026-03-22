@@ -142,6 +142,17 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  # 前端 Web 服务
+  web:
+    build:
+      context: ../web
+      dockerfile: Dockerfile
+    container_name: ai-assistant-web
+    ports:
+      - "80:80"
+    networks:
+      - ai-network
+
   # Prometheus - 监控指标收集
   prometheus:
     image: prom/prometheus:v2.48.0

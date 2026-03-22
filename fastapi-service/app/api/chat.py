@@ -179,7 +179,12 @@ async def chat_stream(request: ChatRequest, http_request: Request):
             user_context["entity_type"] = entity_type
         if department_id:
             user_context["department_id"] = department_id
-        
+
+        # 传递认证 token，供工具调用下游 SpringBoot 服务
+        auth_header = http_request.headers.get("Authorization", "")
+        if auth_header:
+            user_context["auth_token"] = auth_header
+
         # 构建权限上下文
         if user_id and entity_type:
             permission_context = PermissionContext(
@@ -188,7 +193,7 @@ async def chat_stream(request: ChatRequest, http_request: Request):
                 department_id=department_id
             )
             user_context["permission_context"] = permission_context
-        
+
         logger.info(f"处理聊天请求: {request.message[:100]}...")
         
         # 生成流式响应

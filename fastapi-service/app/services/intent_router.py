@@ -12,7 +12,7 @@ from enum import Enum
 from pydantic import BaseModel, Field
 import json
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from ..models.task_plan import PlannerAgent, TaskPlan
 from .task_executor import TaskExecutor
@@ -181,6 +181,22 @@ class IntentRouter:
 
             # 2. 检查是否为工具执行意图
             tool_result = self._check_tool_intent(message)
+
+            # 2.1 如果检测到工具意图，使用LLM提取参数（更准确）
+            if tool_result and self.llm_client:
+                tool_name = tool_result.parameters.get("tool_name")
+                if tool_name:
+                    llm_params = await self._extract_parameters_with_llm(user_message, tool_name)
+                    merged = {k: v for k, v in tool_result.parameters.items()
+                              if k in ("tool_name", "matched_keywords")}
+                    merged.update(llm_params)
+                    tool_result = IntentResult(
+                        intent_type=tool_result.intent_type,
+                        confidence=tool_result.confidence,
+                        parameters=merged,
+                        reasoning=tool_result.reasoning,
+                        suggested_action=tool_result.suggested_action
+                    )
 
             # 3. 检查是否为知识问答意图
             knowledge_result = self._check_knowledge_intent(message)
@@ -475,12 +491,22 @@ class IntentRouter:
         context: Optional[Dict[str, Any]]
     ) -> RouteDecision:
         """路由到工具执行器"""
+        tool_parameters = {
+            k: v for k, v in intent_result.parameters.items()
+            if k not in ["tool_name", "matched_keywords"]
+        }
+
+        # 从 user_context 注入 user_id（工时查询工具必须有 user_id）
+        if context and context.get("user_id") and "user_id" not in tool_parameters:
+            tool_parameters["user_id"] = context["user_id"]
+
+        # 注入认证 token（工具调用下游服务时使用）
+        if context and context.get("auth_token"):
+            tool_parameters["auth_token"] = context["auth_token"]
+
         route_params = {
             "tool_name": intent_result.parameters.get("tool_name"),
-            "tool_parameters": {
-                k: v for k, v in intent_result.parameters.items()
-                if k not in ["tool_name", "matched_keywords"]
-            },
+            "tool_parameters": tool_parameters,
             "permission_context": context.get("permission_context") if context else None
         }
         
@@ -850,30 +876,118 @@ class IntentRouter:
 
         return None
     
+    async def _extract_parameters_with_llm(self, message: str, tool_name: str) -> Dict[str, Any]:
+        """使用LLM从自然语言中提取工具参数，比正则更准确"""
+        try:
+            today = datetime.now().date()
+
+            if tool_name == "query_timesheet":
+                week_start = today - timedelta(days=today.weekday())
+                last_week_start = week_start - timedelta(weeks=1)
+                last_week_end = week_start - timedelta(days=1)
+                month_start = today.replace(day=1)
+                if today.month == 1:
+                    last_month_start = today.replace(year=today.year - 1, month=12, day=1)
+                else:
+                    last_month_start = today.replace(month=today.month - 1, day=1)
+                last_month_end = month_start - timedelta(days=1)
+
+                prompt = f"""从用户消息中提取工时查询参数。今天是 {today}。
+
+参考日期：
+- 本周：{week_start} 至 {today}
+- 上周：{last_week_start} 至 {last_week_end}
+- 本月/这个月：{month_start} 至 {today}
+- 上月：{last_month_start} 至 {last_month_end}
+
+用户消息："{message}"
+
+只返回JSON，不要其他内容：
+{{
+  "start_date": "YYYY-MM-DD",
+  "end_date": "YYYY-MM-DD",
+  "member_name": "姓名（查询自己时填null）"
+}}"""
+                response = await self.llm_client.generate(
+                    prompt=prompt,
+                    system_prompt="你是参数提取助手，只返回合法JSON，不要任何解释或markdown。",
+                    temperature=0,
+                    max_tokens=150
+                )
+                json_str = response.strip()
+                # 去掉可能的markdown代码块
+                match = re.search(r'\{.*\}', json_str, re.DOTALL)
+                if match:
+                    json_str = match.group()
+                params = json.loads(json_str)
+
+                result: Dict[str, Any] = {}
+                if params.get("start_date"):
+                    result["start_date"] = params["start_date"]
+                if params.get("end_date"):
+                    result["end_date"] = params["end_date"]
+                member_name = params.get("member_name")
+                if member_name and member_name not in ("null", "None", None, ""):
+                    result["member_name"] = member_name
+                return result
+
+        except Exception as e:
+            logger.warning(f"LLM参数提取失败，回退到正则: {e}")
+
+        # 回退到正则
+        return self._extract_tool_parameters(message, tool_name)
+
     def _extract_tool_parameters(self, message: str, tool_name: str) -> Dict[str, Any]:
-        """提取工具参数"""
+        """提取工具参数（正则兜底）"""
         parameters = {}
-        
+
         try:
             if tool_name == "query_timesheet":
-                # 提取时间范围
+                # 计算实际日期
+                today = datetime.now().date()
+                week_start = today - timedelta(days=today.weekday())  # 本周一
+                last_week_start = week_start - timedelta(weeks=1)
+                last_week_end = week_start - timedelta(days=1)
+                month_start = today.replace(day=1)
+                # 上月第一天
+                if today.month == 1:
+                    last_month_start = today.replace(year=today.year - 1, month=12, day=1)
+                else:
+                    last_month_start = today.replace(month=today.month - 1, day=1)
+                last_month_end = month_start - timedelta(days=1)
+
                 time_patterns = {
-                    "今天": {"start_date": "today", "end_date": "today"},
-                    "昨天": {"start_date": "yesterday", "end_date": "yesterday"},
-                    "本周": {"start_date": "this_week_start", "end_date": "this_week_end"},
-                    "上周": {"start_date": "last_week_start", "end_date": "last_week_end"},
-                    "本月": {"start_date": "this_month_start", "end_date": "this_month_end"},
-                    "上月": {"start_date": "last_month_start", "end_date": "last_month_end"}
+                    "今天": {"start_date": today.strftime("%Y-%m-%d"), "end_date": today.strftime("%Y-%m-%d")},
+                    "昨天": {"start_date": (today - timedelta(days=1)).strftime("%Y-%m-%d"),
+                             "end_date": (today - timedelta(days=1)).strftime("%Y-%m-%d")},
+                    "本周": {"start_date": week_start.strftime("%Y-%m-%d"), "end_date": today.strftime("%Y-%m-%d")},
+                    "上周": {"start_date": last_week_start.strftime("%Y-%m-%d"), "end_date": last_week_end.strftime("%Y-%m-%d")},
+                    "本月": {"start_date": month_start.strftime("%Y-%m-%d"), "end_date": today.strftime("%Y-%m-%d")},
+                    "上月": {"start_date": last_month_start.strftime("%Y-%m-%d"), "end_date": last_month_end.strftime("%Y-%m-%d")}
                 }
-                
+
                 for pattern, dates in time_patterns.items():
                     if pattern in message:
                         parameters.update(dates)
                         break
+
+                # 如果没有匹配到时间，默认查询本月
+                if "start_date" not in parameters:
+                    parameters["start_date"] = month_start.strftime("%Y-%m-%d")
+                    parameters["end_date"] = today.strftime("%Y-%m-%d")
                 
                 # 提取用户相关信息
                 if "我的" in message or "自己的" in message:
                     parameters["target_self"] = True
+                else:
+                    # 尝试从消息中提取目标人员姓名，如"查询张三的工时"
+                    name_match = re.search(r'查(?:询|看|一下)?(.{2,4}?)(?:的|上周|本周|本月|上月|今天|昨天)(?:的)?工时', message)
+                    if name_match:
+                        candidate = name_match.group(1).strip()
+                        # 排除时间词和动词
+                        exclude = {"我", "你", "他", "她", "所有", "全部", "本周", "上周", "本月", "上月", "今天", "昨天"}
+                        if candidate not in exclude and len(candidate) >= 2:
+                            parameters["member_name"] = candidate
             
             elif tool_name == "query_project":
                 # 提取项目相关信息
