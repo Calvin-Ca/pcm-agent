@@ -114,8 +114,7 @@ async def query_timesheet_handler(**kwargs) -> Dict[str, Any]:
 
         # Docker 容器内访问宿主机 SpringBoot 服务
         import os
-        springboot_host = os.getenv("SPRINGBOOT_HOST", "host.docker.internal")
-        base_url = f"http://{springboot_host}:8080"
+        base_url = os.getenv("SPRINGBOOT_BASE_URL") or f"http://{os.getenv('SPRINGBOOT_HOST', 'host.docker.internal')}:8080"
 
         # 如果指定了姓名但没有 user_id，先查成员获取 memberId
         resolved_user_id = params.user_id

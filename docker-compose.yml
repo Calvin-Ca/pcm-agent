@@ -131,11 +131,13 @@ services:
       - CHAT_LLM_API_KEY=${CHAT_LLM_API_KEY}
       - CHAT_LLM_API_BASE=${CHAT_LLM_API_BASE}
       - CHAT_LLM_MODEL=${CHAT_LLM_MODEL}
+      - SPRINGBOOT_BASE_URL=https://gst.thsware.com
     ports:
       - "8000:8000"
     volumes:
       - ./fastapi-service:/app
       - ./prompts:/app/prompts
+      - ./knowledge-base:/app/knowledge-base
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     networks:
       - ai-network
