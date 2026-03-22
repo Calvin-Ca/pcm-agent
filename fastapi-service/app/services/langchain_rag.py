@@ -139,7 +139,7 @@ class LangChainRAGService:
         logger.info("BM25 检索器初始化完成")
 
         # 5. 混合检索（向量 60% + BM25 40%）
-        from langchain.retrievers import EnsembleRetriever
+        from langchain_classic.retrievers import EnsembleRetriever
 
         self.ensemble_retriever = EnsembleRetriever(
             retrievers=[vector_retriever, self.bm25_retriever],

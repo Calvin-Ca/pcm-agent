@@ -55,7 +55,8 @@ planner_agent: Optional[PlannerAgent] = None
 def initialize_chat_components(
     tool_reg: ToolRegistry,
     perm_validator: PermissionValidator,
-    llm_client=None
+    llm_client=None,
+    prompt_builder=None,
 ):
     """
     初始化聊天组件
@@ -151,6 +152,7 @@ def initialize_chat_components(
         tool_registry=tool_registry,
         task_executor=task_executor,
         llm_client=llm_client,
+        prompt_builder=prompt_builder,
     )
 
     logger.info("AI Chat components initialized")

@@ -11,11 +11,15 @@ from app.core.config import settings
 from app.core.logging_config import setup_logging
 from app.api import health
 from app.api.chat import router as chat_router, initialize_chat_components
+from app.api.memory import router as memory_router
 from app.services.tool_registry import ToolRegistry
 from app.services.permission_validator import PermissionValidator
 from app.services.llm_client import LLMClient
 from app.tools import query_timesheet, query_project, compute_statistics
 from app.services.langchain_rag import initialize_langchain_rag
+from app.services.session_memory import initialize_session_memory
+from app.services.user_memory import initialize_user_memory
+from app.services.prompt_builder import initialize_prompt_builder, get_prompt_builder
 
 # 配置日志
 setup_logging()
@@ -34,29 +38,60 @@ async def lifespan(app: FastAPI):
     logger.info("🚀 AI Service starting...")
     logger.info(f"Environment: {settings.ENVIRONMENT}")
     logger.info(f"Chat LLM Model: {settings.CHAT_LLM_MODEL}")
-    
+
+    redis_client = None
+
     # 启动时初始化
     try:
         # 初始化工具注册中心
         tool_registry = ToolRegistry()
         logger.info("✅ Tool Registry initialized")
-        
-        # 注册工具（工具会自动注册）
-        # 导入工具模块会触发自动注册
+
+        # 注册工具（导入工具模块会触发自动注册）
         logger.info("✅ Tools registered")
-        
+
         # 初始化权限验证器
         permission_validator = PermissionValidator()
         logger.info("✅ Permission Validator initialized")
-        
+
         # 初始化 LLM 客户端
         llm_client = LLMClient(env_prefix="CHAT_LLM")
         logger.info(f"✅ LLM Client initialized (model: {llm_client.model})")
-        
+
+        # ── Task 37/38: 初始化 Redis 连接和记忆服务 ──────────────────────────
+        try:
+            import redis.asyncio as aioredis
+            redis_client = aioredis.Redis(
+                host=settings.REDIS_HOST,
+                port=settings.REDIS_PORT,
+                db=settings.REDIS_DB,
+                password=settings.REDIS_PASSWORD or None,
+                decode_responses=False,  # 保持 bytes，service 层自行解码
+            )
+            await redis_client.ping()
+            logger.info(f"✅ Redis 连接成功 ({settings.REDIS_HOST}:{settings.REDIS_PORT})")
+
+            initialize_session_memory(
+                redis_client=redis_client,
+                ttl=settings.SESSION_EXPIRE_SECONDS,
+                max_history=settings.MAX_CONVERSATION_HISTORY,
+            )
+            initialize_user_memory(redis_client=redis_client)
+
+            from app.services.session_memory import get_session_memory
+            from app.services.user_memory import get_user_memory
+            initialize_prompt_builder(
+                session_memory_service=get_session_memory(),
+                user_memory_service=get_user_memory(),
+            )
+        except Exception as redis_err:
+            logger.warning(f"⚠️  Redis 不可用，记忆功能将降级: {redis_err}")
+
         initialize_chat_components(
             tool_reg=tool_registry,
             perm_validator=permission_validator,
-            llm_client=llm_client
+            llm_client=llm_client,
+            prompt_builder=get_prompt_builder(),
         )
         logger.info("✅ Chat components initialized")
 
@@ -71,22 +106,18 @@ async def lifespan(app: FastAPI):
             logger.warning(f"⚠️  LangChain RAG init failed: {kb_result.get('error', 'unknown')}")
 
         logger.info("🎉 AI Service startup completed successfully")
-        
+
     except Exception as e:
         logger.error(f"❌ Failed to initialize AI Service: {e}", exc_info=True)
         raise
-    
-    # TODO: 初始化数据库连接池
-    # TODO: 初始化Redis连接
-    # TODO: 初始化Milvus连接
-    
+
     yield
-    
+
     # 关闭时清理
     logger.info("🛑 AI Service shutting down...")
-    # TODO: 关闭数据库连接
-    # TODO: 关闭Redis连接
-    # TODO: 关闭Milvus连接
+    if redis_client:
+        await redis_client.aclose()
+        logger.info("✅ Redis 连接已关闭")
 
 
 # 创建FastAPI应用
@@ -125,6 +156,7 @@ async def global_exception_handler(request, exc):
 # 注册路由
 app.include_router(health.router, prefix="/health", tags=["Health"])
 app.include_router(chat_router, prefix="/api", tags=["AI Chat"])
+app.include_router(memory_router, prefix="/api", tags=["Memory Management"])
 
 
 @app.get("/")
