@@ -316,13 +316,13 @@
   - _预估: 2小时_
 
 - [ ] 15. 实现工具管理接口
-  - [x] 15.1 实现GET /api/ai/tools接口
+  - [ ] 15.1 实现GET /api/ai/tools接口
     - 调用AI服务获取工具列表
     - 返回工具元数据
     - _需求: 23.5_
     - _预估: 1小时_
-  
-  - [x] 15.2 实现POST /api/ai/tools/register接口（管理员权限）
+
+  - [ ] 15.2 实现POST /api/ai/tools/register接口（管理员权限）
     - 验证管理员权限
     - 调用AI服务注册工具
     - 返回注册结果
@@ -921,22 +921,24 @@
     - _预估: 1.5小时_
 
 - [ ] 56. 实现审计日志系统
-  - [ ] 56.1 创建审计日志表和模型
-    - 创建ai_audit_log数据库表
-    - 创建AuditLog数据模型
-    - 实现日志存储接口
+  - [x] 56.1 创建审计日志表和模型
+    - 创建 conversation_logs 表（含 session_id/user_id/intent/tools_called/context_snapshot 等字段）
+    - 创建 ai_sessions 会话汇总表
+    - 实现 ConversationLogger 写入服务
+    - 注册 /api/db/init 接口（create_all 自动建表）
     - _需求: 16.6_
-    - _预估: 1小时_
-  
-  - [ ] 56.2 实现审计日志记录
-    - 实现用户请求记录
-    - 实现意图识别记录
-    - 实现工具调用记录
-    - 实现权限验证记录
-    - 实现响应时间记录
+    - _状态: ✅ 已完成（表名 conversation_logs 替代 ai_audit_log）_
+
+  - [x] 56.2 实现审计日志记录
+    - 实现用户请求记录（user_message、user_id）
+    - 实现意图识别记录（intent、route_type）
+    - 实现工具调用记录（tools_called、tool_count）
+    - 实现上下文快照记录（history_turns_count、memory_count、context_snapshot）
+    - 实现响应时间记录（duration_ms、model_name）
+    - 同步写入 ai_sessions 汇总（turn_count、last_active）
     - _需求: 16.1, 16.2, 16.3, 16.4, 16.5_
-    - _预估: 2小时_
-  
+    - _状态: ✅ 已完成_
+
   - [ ] 56.3 集成审计日志到各模块
     - 在Intent Router集成日志记录
     - 在Tool Executor集成日志记录

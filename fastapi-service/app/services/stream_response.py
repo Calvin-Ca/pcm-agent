@@ -1,7 +1,12 @@
 """
-Stream Response - 流式响应处理器
+Stream Response - 流式响应处理器（已废弃，仅供学习参考）
 
 实现SSE（Server-Sent Events）流式响应生成，支持多种事件类型的流式输出。
+
+⚠️  DEPRECATED: 此文件是早期的流式响应实现，已被 LangGraph Agent 完全替代。
+    当前生产代码入口：app/services/langgraph_agent.py -> stream_agent_response()
+    LangGraph 版本新增了：Redis 短期记忆、用户长期记忆、多轮上下文、会话日志等能力。
+    保留此文件仅供学习原始 SSE 流程参考，不再被任何路由引用。
 """
 
 import json
