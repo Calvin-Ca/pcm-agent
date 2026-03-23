@@ -13,6 +13,8 @@ from app.api import health
 from app.api.chat import router as chat_router, initialize_chat_components
 from app.api.memory import router as memory_router
 from app.api.init_db import router as init_db_router
+from app.api.db_test import router as db_test_router
+from app.api.conversation_query import router as conversation_query_router
 from app.services.tool_registry import ToolRegistry
 from app.services.permission_validator import PermissionValidator
 from app.services.llm_client import LLMClient
@@ -159,6 +161,8 @@ app.include_router(health.router, prefix="/health", tags=["Health"])
 app.include_router(chat_router, prefix="/api", tags=["AI Chat"])
 app.include_router(memory_router, prefix="/api", tags=["Memory Management"])
 app.include_router(init_db_router, prefix="/api", tags=["Database Init"])
+app.include_router(db_test_router, prefix="/api", tags=["Database Test"])
+app.include_router(conversation_query_router, prefix="/api", tags=["Conversation Query"])
 
 
 @app.get("/")

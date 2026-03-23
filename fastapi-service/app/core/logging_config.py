@@ -23,7 +23,8 @@ def setup_logging():
     # 创建日志格式化器
     formatter = jsonlogger.JsonFormatter(
         '%(asctime)s %(name)s %(levelname)s %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
+        datefmt='%Y-%m-%d %H:%M:%S',
+        json_ensure_ascii=False
     )
     
     # 配置控制台处理器

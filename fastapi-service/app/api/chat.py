@@ -12,7 +12,6 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 import json
 
-from ..services.stream_response import StreamResponseGenerator
 from ..services.intent_router import IntentRouter, RouteTarget
 from ..services.task_executor import TaskExecutor
 from ..services.tool_registry import ToolRegistry
@@ -44,7 +43,6 @@ class ChatResponse(BaseModel):
 
 
 # 全局组件实例（在应用启动时初始化）
-stream_generator: Optional[StreamResponseGenerator] = None
 intent_router: Optional[IntentRouter] = None
 task_executor: Optional[TaskExecutor] = None
 tool_registry: Optional[ToolRegistry] = None
@@ -66,7 +64,7 @@ def initialize_chat_components(
         perm_validator: 权限验证器
         llm_client: LLM客户端
     """
-    global stream_generator, intent_router, task_executor, tool_registry, permission_validator, planner_agent
+    global intent_router, task_executor, tool_registry, permission_validator, planner_agent
     
     # 设置全局组件
     tool_registry = tool_reg
@@ -139,14 +137,7 @@ def initialize_chat_components(
     intent_router.register_route_handler(RouteTarget.RAG_ENGINE, rag_engine_handler)
     logger.info("✅ RAG_ENGINE route handler registered")
 
-    # 初始化流式响应生成器（旧，供非流式端点使用）
-    stream_generator = StreamResponseGenerator(
-        intent_router=intent_router,
-        task_executor=task_executor,
-        llm_client=llm_client
-    )
-
-    # 初始化 LangGraph Agent（新，供流式端点使用）
+    # 初始化 LangGraph Agent（流式端点使用）
     initialize_agent(
         intent_router=intent_router,
         tool_registry=tool_registry,
@@ -170,7 +161,7 @@ async def chat_stream(request: ChatRequest, http_request: Request):
     Returns:
         StreamingResponse: SSE流式响应
     """
-    if not stream_generator:
+    if not intent_router:
         raise HTTPException(status_code=500, detail="AI Chat components not initialized")
     
     try:
@@ -352,7 +343,6 @@ async def health_check():
     try:
         # 检查各组件状态
         components_status = {
-            "stream_generator": stream_generator is not None,
             "intent_router": intent_router is not None,
             "task_executor": task_executor is not None,
             "tool_registry": tool_registry is not None,
