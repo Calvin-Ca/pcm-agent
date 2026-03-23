@@ -168,13 +168,15 @@ class IntentRouter:
             # 2. 主路径：LLM 意图分类
             has_llm = self.llm_client or os.getenv("INTENT_LLM_API_KEY")
             if has_llm:
-                llm_result = await self._classify_with_llm(message, [])
+                llm_result = await self._classify_with_llm(message, [], context=context)
                 if llm_result:
                     # 工具执行：继续用 LLM 提取参数
                     if llm_result.intent_type == IntentType.TOOL_EXECUTION and self.llm_client:
                         tool_name = llm_result.parameters.get("tool_name")
                         if tool_name:
-                            llm_params = await self._extract_parameters_with_llm(user_message, tool_name)
+                            llm_params = await self._extract_parameters_with_llm(
+                                user_message, tool_name, context=context
+                            )
                             llm_result.parameters.update(llm_params)
                     return llm_result
 
@@ -229,7 +231,8 @@ class IntentRouter:
     async def _classify_with_llm(
         self,
         message: str,
-        rule_results: List[tuple]  # 保留参数兼容性，不再使用
+        rule_results: List[tuple],  # 保留参数兼容性，不再使用
+        context: Optional[Dict[str, Any]] = None
     ) -> Optional[IntentResult]:
         """
         使用 LLM 进行意图分类（主路径）
@@ -237,8 +240,19 @@ class IntentRouter:
         返回 intent_type、confidence、tool_name（tool_execution 时）。
         """
         try:
-            prompt = f"""你是工时管理系统的意图分类助手。分析用户消息，判断其意图类型。
+            # 构建历史上下文段落（最近 3 轮，用于解析指代词）
+            history_section = ""
+            history_turns = (context or {}).get("conversation_history", [])
+            if history_turns:
+                recent = history_turns[-6:]  # 最多 3 轮
+                lines = []
+                for msg in recent:
+                    role = "用户" if msg.get("role") == "user" else "助手"
+                    content = str(msg.get("content", ""))[:150]
+                    lines.append(f"{role}：{content}")
+                history_section = "\n历史对话（供参考，用于解析'再查一次''上周呢'等指代）：\n" + "\n".join(lines) + "\n"
 
+            prompt = f"""你是工时管理系统的意图分类助手。分析用户消息，判断其意图类型。{history_section}
 用户消息："{message}"
 
 意图类型说明：
@@ -826,7 +840,9 @@ class IntentRouter:
 
         return None
     
-    async def _extract_parameters_with_llm(self, message: str, tool_name: str) -> Dict[str, Any]:
+    async def _extract_parameters_with_llm(
+        self, message: str, tool_name: str, context: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """使用LLM从自然语言中提取工具参数，比正则更准确"""
         try:
             today = datetime.now().date()
@@ -842,8 +858,19 @@ class IntentRouter:
                     last_month_start = today.replace(month=today.month - 1, day=1)
                 last_month_end = month_start - timedelta(days=1)
 
-                prompt = f"""从用户消息中提取工时查询参数。今天是 {today}。
+                # 构建历史上下文（帮助解析"再查一次""上周呢"等指代）
+                history_section = ""
+                history_turns = (context or {}).get("conversation_history", [])
+                if history_turns:
+                    recent = history_turns[-4:]  # 最近 2 轮
+                    lines = []
+                    for msg in recent:
+                        role = "用户" if msg.get("role") == "user" else "助手"
+                        content = str(msg.get("content", ""))[:200]
+                        lines.append(f"{role}：{content}")
+                    history_section = "\n历史对话（供参考）：\n" + "\n".join(lines) + "\n"
 
+                prompt = f"""从用户消息中提取工时查询参数。今天是 {today}。{history_section}
 参考日期：
 - 本周：{week_start} 至 {today}
 - 上周：{last_week_start} 至 {last_week_end}

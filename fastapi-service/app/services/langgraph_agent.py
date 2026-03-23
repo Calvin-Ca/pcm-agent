@@ -89,22 +89,30 @@ async def node_classify_intent(state: AgentState) -> dict:
     if not router:
         return {"intent": "general_chat", "tool_name": None, "tool_params": {}, "query": state["user_message"]}
 
+    # 将会话历史注入 user_ctx，供 route_intent 内部的 LLM 分类和参数提取使用
+    user_ctx = dict(state.get("user_context") or {})
+    full_history = state.get("conversation_history") or []
+    # 去掉 system 消息和最后一条（当前用户消息），只保留历史对话轮次
+    history_turns = [m for m in full_history[1:-1] if m.get("role") in ("user", "assistant")]
+    if history_turns:
+        user_ctx["conversation_history"] = history_turns
+
     try:
         intent_result = await router.route_intent(
             state["user_message"],
-            state.get("user_context"),
+            user_ctx,
         )
     except Exception as e:
         logger.error(f"意图分类节点异常: {e}")
         return {"intent": "general_chat", "tool_name": None, "tool_params": {}, "query": state["user_message"], "error": str(e)}
 
-    user_ctx = state.get("user_context") or {}
     tool_params: Dict[str, Any] = {}
 
     if intent_result.intent_type == IntentType.TOOL_EXECUTION:
         tool_name = intent_result.parameters.get("tool_name")
 
         # 提取工具参数（排除路由元数据字段）
+        # route_intent 内部已调用 _extract_parameters_with_llm，此处直接使用结果
         tool_params = {
             k: v for k, v in intent_result.parameters.items()
             if k not in ("tool_name", "matched_keywords", "llm_classified", "query")
@@ -115,16 +123,6 @@ async def node_classify_intent(state: AgentState) -> dict:
             tool_params["user_id"] = user_ctx["user_id"]
         if user_ctx.get("auth_token"):
             tool_params["auth_token"] = user_ctx["auth_token"]
-
-        # 用 LLM 精细化提取参数（如日期范围）
-        if _intent_router and _llm_client and tool_name:
-            try:
-                llm_params = await _intent_router._extract_parameters_with_llm(
-                    state["user_message"], tool_name
-                )
-                tool_params.update(llm_params)
-            except Exception as e:
-                logger.warning(f"LLM 参数提取失败，使用已有参数: {e}")
 
         return {
             "intent": intent_result.intent_type.value,
@@ -381,10 +379,11 @@ async def stream_agent_response(
                         log_error = msg
                         yield _format_sse("error", {"message": msg})
                     else:
-                        _collected_assistant_response = json.dumps(result, ensure_ascii=False)
+                        tool_name_used = initial_state.get("tool_name") or ""
+                        _collected_assistant_response = _summarize_tool_result(tool_name_used, result)
                         yield _format_sse("response", {
                             "result": result,
-                            "tool_name": initial_state.get("tool_name"),
+                            "tool_name": tool_name_used,
                         })
 
                 elif node_name == "execute_rag":
@@ -514,3 +513,51 @@ async def _try_extract_long_term_memory(
             )
             logger.debug(f"提取长期记忆: user_id={user_id}, importance={importance:.1f}")
             break  # 每轮最多存一条，避免冗余
+
+
+# ─── 工具结果格式化（用于存入会话记忆，供多轮对话上下文使用）─────────────────────
+
+def _summarize_tool_result(tool_name: str, result: Optional[Dict[str, Any]]) -> str:
+    """
+    将工具执行结果转为简洁的自然语言摘要，存入会话记忆。
+    避免将大体量 JSON 写入 Redis，同时让 LLM 在下轮对话中能理解上一轮内容。
+    """
+    if not result:
+        return "查询完成，无数据。"
+
+    # 取 task_executor 包装的内层结果
+    inner = result.get("result", result)
+
+    if inner.get("success") is False:
+        return f"查询失败：{inner.get('error', '未知错误')}"
+
+    if tool_name == "query_timesheet":
+        summary = inner.get("summary", {})
+        total = inner.get("total_hours", 0)
+        count = inner.get("record_count", 0)
+        date_range = summary.get("date_range", "")
+        member = summary.get("member_name", "")
+        projects = summary.get("projects", {})
+
+        parts = ["工时查询结果："]
+        if member:
+            parts.append(f"查询对象：{member}")
+        if date_range:
+            parts.append(f"时间范围：{date_range}")
+        parts.append(f"总工时：{total} 小时，共 {count} 条记录")
+        if projects:
+            proj_lines = [f"{p}：{s.get('total_hours', 0)} 小时" for p, s in list(projects.items())[:5]]
+            parts.append("各项目：" + "；".join(proj_lines))
+        return "；".join(parts)
+
+    if tool_name == "query_project":
+        projects = inner.get("projects", [])
+        if not projects:
+            return "项目查询完成，无数据。"
+        names = [p.get("name") or p.get("projectName", "") for p in projects[:5]]
+        return f"项目查询结果：共 {len(projects)} 个项目，包括：{', '.join(names)}"
+
+    # 通用兜底：只取关键字段
+    keys = ["message", "total", "count", "status"]
+    parts = [f"{k}={inner[k]}" for k in keys if k in inner]
+    return f"{tool_name} 执行完成" + (f"：{'; '.join(parts)}" if parts else "")
