@@ -26,9 +26,10 @@ langchain-milvus>=0.1.0
 langchain-text-splitters>=0.3.0
 langgraph>=0.2.0
 
-# 混合检索
+# 混合检索和重排序
 rank-bm25>=0.2.2
 faiss-cpu>=1.7.4
+sentence-transformers>=2.5.0
 
 # 文档加载器（知识库多格式支持，按需安装）
 pypdf>=4.0.0

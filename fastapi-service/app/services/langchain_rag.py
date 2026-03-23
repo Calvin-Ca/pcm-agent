@@ -174,10 +174,10 @@ class LangChainRAGService:
     """
     基于 LangChain 的 RAG 服务。
 
-    检索策略：
-        EnsembleRetriever（权重 6:4）
-            ├── MilvusVectorStore（语义向量检索，fallback: FAISS）
-            └── BM25Retriever（关键词检索）
+    检索策略（三级管道）：
+        1. MultiQueryRetriever（LLM 改写为多种表述，提升召回）
+        2. EnsembleRetriever（混合检索，向量 60% + BM25 40%）
+        3. CrossEncoderReranker（精排，取 Top 5）
 
     生成策略：
         ChatOpenAI（DashScope OpenAI 兼容接口）via LCEL chain
@@ -188,9 +188,12 @@ class LangChainRAGService:
         self.vector_store = None
         self.bm25_retriever = None
         self.ensemble_retriever = None
+        self.multi_query_retriever = None
+        self.reranker: Optional[Any] = None  # CrossEncoderReranker
         self.llm = None
         self._initialized = False
         self._use_milvus = False
+        self._reranker_enabled = False
 
     async def initialize(self, documents: List[Document]) -> None:
         """异步初始化 RAG 管道"""
@@ -268,6 +271,20 @@ class LangChainRAGService:
         backend = "Milvus" if self._use_milvus else "FAISS"
         logger.info(f"✅ LangChain RAG 服务初始化完成（向量后端: {backend}，文档块: {len(documents)}）")
 
+        # 7. 初始化 CrossEncoderReranker（精排）
+        try:
+            from langchain.retrievers.document_compressors import CrossEncoderReranker
+            from langchain_community.cross_encoders import HuggingFaceCrossEncoder
+
+            model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-base")
+            self.reranker = CrossEncoderReranker(model=model, top_n=5)
+            self._reranker_enabled = True
+            logger.info("CrossEncoderReranker 初始化完成（BAAI/bge-reranker-base）")
+        except Exception as e:
+            logger.warning(f"CrossEncoderReranker 初始化失败，降级为无重排序: {e}")
+            self.reranker = None
+            self._reranker_enabled = False
+
     async def _init_vector_store(self, documents: List[Document]):
         """初始化向量存储，Milvus 优先，降级 FAISS"""
         milvus_host = os.getenv("MILVUS_HOST", "milvus")
@@ -328,6 +345,16 @@ class LangChainRAGService:
             docs: List[Document] = await asyncio.to_thread(
                 retriever.invoke, question
             )
+
+            # 2. 重排序（如果启用了 Reranker）
+            if self._reranker_enabled and self.reranker and docs:
+                try:
+                    docs = await asyncio.to_thread(
+                        self.reranker.compress_documents, docs, question
+                    )
+                    logger.debug(f"CrossEncoderReranker 重排序完成，返回 {len(docs)} 个文档")
+                except Exception as e:
+                    logger.warning(f"重排序失败，使用原始检索结果: {e}")
 
             if not docs:
                 return {
