@@ -84,26 +84,26 @@ services:
     networks:
       - ai-network
 
-  # MySQL - 数据库服务
-  mysql:
-    image: mysql:8.0
-    container_name: ai-assistant-mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=19990512
-      - MYSQL_DATABASE=workhour
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-      - ./sql:/docker-entrypoint-initdb.d
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p19990512"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - ai-network
+  # MySQL - 数据库服务（当前使用宿主机 MySQL，此服务已禁用）
+  # mysql:
+  #   image: mysql:8.0
+  #   container_name: ai-assistant-mysql
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=19990512
+  #     - MYSQL_DATABASE=workhour
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - mysql-data:/var/lib/mysql
+  #     - ./sql:/docker-entrypoint-initdb.d
+  #   command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p19990512"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - ai-network
 
   # FastAPI AI Service - AI服务层
   ai-service:
@@ -114,13 +114,12 @@ services:
     depends_on:
       - redis
       - milvus
-      - mysql
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - MILVUS_HOST=milvus
       - MILVUS_PORT=19530
-      - MYSQL_HOST=mysql
+      - MYSQL_HOST=host.docker.internal
       - MYSQL_PORT=3306
       - MYSQL_DATABASE=workhour
       - MYSQL_USER=root
@@ -132,6 +131,7 @@ services:
       - CHAT_LLM_API_BASE=${CHAT_LLM_API_BASE}
       - CHAT_LLM_MODEL=${CHAT_LLM_MODEL}
       - SPRINGBOOT_BASE_URL=https://gst.thsware.com
+      # - SPRINGBOOT_BASE_URL=http://host.docker.internal:8080  # 本地开发时切换此行
     ports:
       - "8000:8000"
     volumes:
@@ -194,7 +194,7 @@ volumes:
   etcd-data:
   minio-data:
   milvus-data:
-  mysql-data:
+  # mysql-data:
   prometheus-data:
   grafana-data:
 

@@ -461,7 +461,8 @@ class IntentRouter:
         }
 
         # 从 user_context 注入 user_id（工时查询工具必须有 user_id）
-        if context and context.get("user_id") and "user_id" not in tool_parameters:
+        # 若已有 member_name（查询他人），不注入当前用户 ID
+        if context and context.get("user_id") and "user_id" not in tool_parameters and "member_name" not in tool_parameters:
             tool_parameters["user_id"] = context["user_id"]
 
         # 注入认证 token（工具调用下游服务时使用）
@@ -879,11 +880,15 @@ class IntentRouter:
 
 用户消息："{message}"
 
+提取规则：
+1. member_name：当前消息中提到的人名；如果当前消息没有提到人名（如"上周的呢""再查一次"），则从历史对话中找到上一次查询的人名并继承；只有明确说"我的""自己的"或完全没有指向他人时才填null。
+2. start_date / end_date：根据当前消息的时间词提取；如果没有时间词则从历史对话中继承上一次的时间范围。
+
 只返回JSON，不要其他内容：
 {{
   "start_date": "YYYY-MM-DD",
   "end_date": "YYYY-MM-DD",
-  "member_name": "姓名（查询自己时填null）"
+  "member_name": "姓名或null"
 }}"""
                 response = await self.llm_client.generate(
                     prompt=prompt,

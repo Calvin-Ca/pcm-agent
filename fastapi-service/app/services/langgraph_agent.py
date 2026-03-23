@@ -119,7 +119,9 @@ async def node_classify_intent(state: AgentState) -> dict:
         }
 
         # 注入用户身份（工时查询必须）
-        if user_ctx.get("user_id") and "user_id" not in tool_params:
+        # 若已有 member_name（查询他人），则不注入当前用户 ID，
+        # 否则 query_timesheet 会因 resolved_user_id 非空而跳过成员查询
+        if user_ctx.get("user_id") and "user_id" not in tool_params and "member_name" not in tool_params:
             tool_params["user_id"] = user_ctx["user_id"]
         if user_ctx.get("auth_token"):
             tool_params["auth_token"] = user_ctx["auth_token"]
@@ -298,6 +300,11 @@ async def stream_agent_response(
     log_route_type: Optional[str] = None
     log_status = "success"
     log_error: Optional[str] = None
+    log_history_turns = 0
+    log_memory_count = 0
+    log_context_snapshot: Optional[dict] = None
+    log_tool_name: str = ""           # 运行时从 classify_intent 节点获取
+    log_ai_response: str = ""         # 收集完整的 AI 响应文本
 
     # ── Task 40: 如果没有 session_id，自动生成一个 ─────────────────────────────
     from app.services.session_memory import generate_session_id
@@ -318,6 +325,24 @@ async def stream_agent_response(
                 user_id=user_id if user_id != "anonymous" else None,
                 base_system_prompt=base_system,
             )
+            # 统计注入的历史轮次和记忆条数（用于日志）
+            # conversation_history = [system, user1, asst1, ..., current_user]
+            # 去掉 system 和最后一条（当前消息），剩余条数 / 2 = 历史轮次
+            history_msgs = [m for m in conversation_history[1:-1] if m.get("role") in ("user", "assistant")]
+            log_history_turns = len(history_msgs) // 2
+            # 从 system prompt 中提取记忆条数（粗略统计）
+            system_content = conversation_history[0].get("content", "") if conversation_history else ""
+            log_memory_count = system_content.count("\n-") if "关于该用户的已知信息" in system_content else 0
+            # 构建上下文快照：最近2轮历史 + 记忆摘要
+            recent_history = history_msgs[-4:]  # 最近2轮
+            memories_section = ""
+            if "关于该用户的已知信息" in system_content:
+                start = system_content.find("关于该用户的已知信息")
+                memories_section = system_content[start:]
+            log_context_snapshot = {
+                "history": recent_history,
+                "memories": memories_section or None,
+            }
         except Exception as e:
             logger.warning(f"构建带历史 messages 失败，降级为无历史模式: {e}")
 
@@ -361,6 +386,7 @@ async def stream_agent_response(
 
                     if intent == "tool_execution":
                         tool_name = state_delta.get("tool_name", "unknown")
+                        log_tool_name = tool_name  # 记录真实工具名，供日志和摘要使用
                         yield _format_sse("tool_call", {
                             "tool_name": tool_name,
                             "message": f"正在调用工具: {tool_name}...",
@@ -379,11 +405,11 @@ async def stream_agent_response(
                         log_error = msg
                         yield _format_sse("error", {"message": msg})
                     else:
-                        tool_name_used = initial_state.get("tool_name") or ""
-                        _collected_assistant_response = _summarize_tool_result(tool_name_used, result)
+                        _collected_assistant_response = _summarize_tool_result(log_tool_name, result)
+                        log_ai_response = _collected_assistant_response
                         yield _format_sse("response", {
                             "result": result,
-                            "tool_name": tool_name_used,
+                            "tool_name": log_tool_name,
                         })
 
                 elif node_name == "execute_rag":
@@ -396,6 +422,7 @@ async def stream_agent_response(
                         yield _format_sse("error", {"message": err_msg})
                     else:
                         _collected_assistant_response = result.get("response", "") if result else ""
+                        log_ai_response = _collected_assistant_response
                         yield _format_sse("response", {"result": result})
 
                 elif node_name == "execute_llm":
@@ -407,6 +434,7 @@ async def stream_agent_response(
                         yield _format_sse("error", {"message": error})
                     else:
                         _collected_assistant_response = llm_result or ""
+                        log_ai_response = _collected_assistant_response
                         yield _format_sse("response", {"message": llm_result or ""})
 
     except Exception as e:
@@ -455,18 +483,58 @@ async def stream_agent_response(
 
         # 写会话日志（失败不影响主流程）
         try:
+            import os
             from app.services.conversation_logger import get_conversation_logger
+            from app.services.database import get_db_service
+            from app.models.ai_session import AiSession
+
             duration_ms = int((datetime.now() - start_time).total_seconds() * 1000)
+            model = os.getenv("CHAT_LLM_MODEL", os.getenv("LLM_MODEL", "unknown"))
+
+            # 截断过大的 JSON 字段，防止单行超 MB
+            safe_snapshot = log_context_snapshot
+            if safe_snapshot and len(json.dumps(safe_snapshot, ensure_ascii=False)) > 8000:
+                safe_snapshot = {
+                    "history": safe_snapshot.get("history", [])[-2:],
+                    "memories": (safe_snapshot.get("memories") or "")[:500] or None,
+                    "truncated": True,
+                }
+
+            total_tokens = 0
             get_conversation_logger().log_conversation(
                 session_id=effective_session_id,
                 user_id=user_id,
                 user_message=message,
                 route_type=log_route_type or "unknown",
                 intent=log_intent,
+                history_turns_count=log_history_turns,
+                memory_count=log_memory_count,
+                context_snapshot=safe_snapshot,
+                ai_response=log_ai_response or None,
                 duration_ms=duration_ms,
+                model_name=model,
                 status=log_status,
                 error_message=log_error,
             )
+
+            # 同步更新 ai_sessions 汇总（upsert）
+            if user_id != "anonymous":
+                db = get_db_service()
+                with db.get_session() as sess:
+                    session_row = sess.query(AiSession).filter_by(session_id=effective_session_id).first()
+                    if session_row:
+                        session_row.turn_count += 1
+                        session_row.total_tokens += total_tokens
+                        session_row.last_active = datetime.now()
+                    else:
+                        sess.add(AiSession(
+                            session_id=effective_session_id,
+                            user_id=user_id,
+                            turn_count=1,
+                            total_tokens=total_tokens,
+                            created_at=datetime.now(),
+                            last_active=datetime.now(),
+                        ))
         except Exception as log_err:
             logger.error(f"会话日志写入失败: {log_err}")
 
@@ -539,7 +607,7 @@ def _summarize_tool_result(tool_name: str, result: Optional[Dict[str, Any]]) -> 
         member = summary.get("member_name", "")
         projects = summary.get("projects", {})
 
-        parts = ["工时查询结果："]
+        parts = []
         if member:
             parts.append(f"查询对象：{member}")
         if date_range:
@@ -548,7 +616,7 @@ def _summarize_tool_result(tool_name: str, result: Optional[Dict[str, Any]]) -> 
         if projects:
             proj_lines = [f"{p}：{s.get('total_hours', 0)} 小时" for p, s in list(projects.items())[:5]]
             parts.append("各项目：" + "；".join(proj_lines))
-        return "；".join(parts)
+        return "工时查询结果：" + "；".join(parts)
 
     if tool_name == "query_project":
         projects = inner.get("projects", [])

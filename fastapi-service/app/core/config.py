@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     DEBUG: bool = True
     
     # CORS配置
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8080"]
+    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8080", "http://localhost:8001", "http://localhost"]
     
     # 意图识别 LLM配置（轻量模型）
     INTENT_LLM_API_KEY: str = ""
