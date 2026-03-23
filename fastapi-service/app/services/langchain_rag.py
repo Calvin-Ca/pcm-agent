@@ -3,6 +3,40 @@ LangChain RAG 服务
 
 基于 LangChain 框架实现混合检索（Milvus 向量检索 + BM25 关键词检索）RAG 管道。
 向量存储优先使用 Milvus，不可用时自动降级为 FAISS 内存存储。
+
+当前检索链路：
+    _load_documents_from_dir （支持 .md/.txt/.pdf/.docx/.csv/.xlsx）
+        ↓
+    _split_documents （Markdown 按标题分割 + Recursive 二次切分）
+        ↓
+    EnsembleRetriever（Milvus/FAISS 60% + BM25 40%）
+        ↓
+    MultiQueryRetriever（LLM 改写问题，多路召回合并）
+        ↓
+    LCEL chain（ChatPromptTemplate → ChatOpenAI → StrOutputParser）
+
+后续升级路线（按优先级排列）：
+    1. ContextualCompressionRetriever —— 在 MultiQueryRetriever 外再包一层，
+       用 LLM 压缩检索结果，只保留与问题相关的段落，减少噪声。
+       from langchain.retrievers import ContextualCompressionRetriever
+       from langchain.retrievers.document_compressors import LLMChainExtractor
+
+    2. ParentDocumentRetriever —— 索引时用小块做向量化（如 128 字），
+       返回时给 LLM 对应的大块（如 1024 字），兼顾检索精度和上下文完整性。
+       from langchain.retrievers import ParentDocumentRetriever
+
+    3. SelfQueryRetriever —— 用户说"2024年的制度"时，自动提取 metadata 过滤条件
+       （如 year=2024），先过滤再做语义检索，适合知识库文档有明确属性分类时使用。
+       from langchain.retrievers.self_query.base import SelfQueryRetriever
+
+    4. 流式 RAG 输出 —— 当前 query() 是等 LLM 全部生成完再返回，
+       可改为 chain.astream() 逐 token 输出，配合 SSE 实现打字机效果。
+
+    5. 新文件格式支持 —— 在 _load_documents_from_dir 中添加对应 Loader 即可：
+       - HTML:  from langchain_community.document_loaders import BSHTMLLoader
+       - PPT:   from langchain_community.document_loaders import UnstructuredPowerPointLoader
+       - JSON:  from langchain_community.document_loaders import JSONLoader
+       每种 Loader 的 import 都包在 try/except ImportError 中，依赖缺失时自动跳过。
 """
 
 import asyncio
