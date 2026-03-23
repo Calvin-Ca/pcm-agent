@@ -51,6 +51,7 @@ class DatabaseService:
     def create_tables(self):
         """创建所有表"""
         from app.models.conversation import Base
+        import app.models.ai_session  # noqa: F401 — 注册 AiSession 到 Base.metadata
         Base.metadata.create_all(bind=self.engine)
         logger.info("Database tables created")
 

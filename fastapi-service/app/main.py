@@ -12,6 +12,7 @@ from app.core.logging_config import setup_logging
 from app.api import health
 from app.api.chat import router as chat_router, initialize_chat_components
 from app.api.memory import router as memory_router
+from app.api.init_db import router as init_db_router
 from app.services.tool_registry import ToolRegistry
 from app.services.permission_validator import PermissionValidator
 from app.services.llm_client import LLMClient
@@ -157,6 +158,7 @@ async def global_exception_handler(request, exc):
 app.include_router(health.router, prefix="/health", tags=["Health"])
 app.include_router(chat_router, prefix="/api", tags=["AI Chat"])
 app.include_router(memory_router, prefix="/api", tags=["Memory Management"])
+app.include_router(init_db_router, prefix="/api", tags=["Database Init"])
 
 
 @app.get("/")

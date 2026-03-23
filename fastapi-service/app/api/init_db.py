@@ -27,7 +27,7 @@ async def initialize_database():
         return {
             "status": "success",
             "message": "数据库表初始化成功",
-            "tables": ["conversation_logs"]
+            "tables": ["conversation_logs", "ai_sessions"]
         }
         
     except Exception as e:
