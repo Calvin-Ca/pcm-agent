@@ -24,7 +24,7 @@ _rag_service: Optional["LangChainRAGService"] = None
 def _load_documents_from_dir(kb_path: str) -> List[Document]:
     """
     从目录加载文档，使用 LangChain 文档加载器。
-    支持 .md / .txt 文件，递归扫描子目录。
+    支持 .md / .txt / .pdf / .docx / .csv 文件，递归扫描子目录。
     """
     from langchain_community.document_loaders import DirectoryLoader, TextLoader
 
@@ -34,6 +34,8 @@ def _load_documents_from_dir(kb_path: str) -> List[Document]:
         return []
 
     docs: List[Document] = []
+
+    # ── 文本类：.md / .txt ───────────────────────────────────────────────────
     for pattern in ("**/*.md", "**/*.txt"):
         try:
             loader = DirectoryLoader(
@@ -43,25 +45,125 @@ def _load_documents_from_dir(kb_path: str) -> List[Document]:
                 loader_kwargs={"encoding": "utf-8", "autodetect_encoding": True},
                 silent_errors=True,
             )
-            loaded = loader.load()
-            docs.extend(loaded)
+            docs.extend(loader.load())
         except Exception as e:
             logger.warning(f"加载 {pattern} 失败: {e}")
+
+    # ── PDF ───────────────────────────────────────────────────────────────────
+    try:
+        from langchain_community.document_loaders import PyPDFLoader
+
+        for pdf_file in path.rglob("*.pdf"):
+            try:
+                loader = PyPDFLoader(str(pdf_file))
+                docs.extend(loader.load())
+            except Exception as e:
+                logger.warning(f"加载 PDF 失败 {pdf_file}: {e}")
+    except ImportError:
+        pdf_count = len(list(path.rglob("*.pdf")))
+        if pdf_count:
+            logger.warning(f"发现 {pdf_count} 个 PDF 文件但 pypdf 未安装，跳过。pip install pypdf")
+
+    # ── Word (.docx) ─────────────────────────────────────────────────────────
+    try:
+        from langchain_community.document_loaders import Docx2txtLoader
+
+        for docx_file in path.rglob("*.docx"):
+            try:
+                loader = Docx2txtLoader(str(docx_file))
+                docs.extend(loader.load())
+            except Exception as e:
+                logger.warning(f"加载 Word 文档失败 {docx_file}: {e}")
+    except ImportError:
+        docx_count = len(list(path.rglob("*.docx")))
+        if docx_count:
+            logger.warning(f"发现 {docx_count} 个 Word 文件但 docx2txt 未安装，跳过。pip install docx2txt")
+
+    # ── CSV ───────────────────────────────────────────────────────────────────
+    try:
+        from langchain_community.document_loaders import CSVLoader
+
+        for csv_file in path.rglob("*.csv"):
+            try:
+                loader = CSVLoader(str(csv_file), encoding="utf-8")
+                docs.extend(loader.load())
+            except Exception as e:
+                logger.warning(f"加载 CSV 失败 {csv_file}: {e}")
+    except ImportError:
+        pass  # csv 是标准库，CSVLoader 一般都可用
+
+    # ── Excel (.xlsx) ────────────────────────────────────────────────────────
+    try:
+        from langchain_community.document_loaders import UnstructuredExcelLoader
+
+        for xlsx_file in path.rglob("*.xlsx"):
+            try:
+                loader = UnstructuredExcelLoader(str(xlsx_file))
+                docs.extend(loader.load())
+            except Exception as e:
+                logger.warning(f"加载 Excel 失败 {xlsx_file}: {e}")
+    except ImportError:
+        xlsx_count = len(list(path.rglob("*.xlsx")))
+        if xlsx_count:
+            logger.warning(f"发现 {xlsx_count} 个 Excel 文件但 openpyxl/unstructured 未安装，跳过")
 
     logger.info(f"从 {kb_path} 加载了 {len(docs)} 个文档")
     return docs
 
 
 def _split_documents(docs: List[Document], chunk_size: int = 512, chunk_overlap: int = 50) -> List[Document]:
-    """使用 RecursiveCharacterTextSplitter 分割文档"""
-    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    """
+    智能文档分割：
+    - Markdown 文件：先按标题层级分割（保留标题上下文到 metadata），再对大块做 Recursive 分割
+    - 其他文件：直接用 RecursiveCharacterTextSplitter
+    """
+    from langchain_text_splitters import (
+        MarkdownHeaderTextSplitter,
+        RecursiveCharacterTextSplitter,
+    )
 
-    splitter = RecursiveCharacterTextSplitter(
+    # Markdown 标题分割配置
+    md_headers_to_split_on = [
+        ("#", "h1"),
+        ("##", "h2"),
+        ("###", "h3"),
+    ]
+    md_splitter = MarkdownHeaderTextSplitter(
+        headers_to_split_on=md_headers_to_split_on,
+        strip_headers=False,  # 保留标题文本在 content 中，便于检索命中
+    )
+
+    # 二次分割器：对超过 chunk_size 的块做进一步切分
+    recursive_splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
         separators=["\n\n", "\n", "。", "！", "？", "，", " ", ""],
     )
-    chunks = splitter.split_documents(docs)
+
+    chunks: List[Document] = []
+
+    for doc in docs:
+        source = doc.metadata.get("source", "")
+        is_markdown = source.lower().endswith((".md", ".markdown"))
+
+        if is_markdown:
+            # 第一步：按标题分割，每个块的 metadata 自动带有 h1/h2/h3
+            try:
+                md_chunks = md_splitter.split_text(doc.page_content)
+                for md_chunk in md_chunks:
+                    # 合并原始 metadata（source 等）和标题 metadata（h1/h2/h3）
+                    merged_meta = {**doc.metadata, **md_chunk.metadata}
+                    md_chunk.metadata = merged_meta
+
+                # 第二步：大块再做 Recursive 切分
+                sub_chunks = recursive_splitter.split_documents(md_chunks)
+                chunks.extend(sub_chunks)
+            except Exception as e:
+                logger.warning(f"Markdown 标题分割失败，降级为普通分割: {e}")
+                chunks.extend(recursive_splitter.split_documents([doc]))
+        else:
+            chunks.extend(recursive_splitter.split_documents([doc]))
+
     logger.info(f"文档分割完成：{len(docs)} 篇 → {len(chunks)} 个块")
     return chunks
 
@@ -147,6 +249,19 @@ class LangChainRAGService:
         )
         logger.info("混合检索器（EnsembleRetriever）初始化完成")
 
+        # 6. MultiQueryRetriever：让 LLM 将用户问题改写为多种表述，提升召回率
+        try:
+            from langchain.retrievers.multi_query import MultiQueryRetriever
+
+            self.multi_query_retriever = MultiQueryRetriever.from_llm(
+                retriever=self.ensemble_retriever,
+                llm=self.llm,
+            )
+            logger.info("MultiQueryRetriever 初始化完成（基于混合检索器）")
+        except Exception as e:
+            logger.warning(f"MultiQueryRetriever 初始化失败，降级为普通混合检索: {e}")
+            self.multi_query_retriever = None
+
         self._initialized = True
         backend = "Milvus" if self._use_milvus else "FAISS"
         logger.info(f"✅ LangChain RAG 服务初始化完成（向量后端: {backend}，文档块: {len(documents)}）")
@@ -206,9 +321,10 @@ class LangChainRAGService:
             }
 
         try:
-            # 1. 混合检索
+            # 1. 混合检索（优先 MultiQuery，降级为普通 Ensemble）
+            retriever = self.multi_query_retriever or self.ensemble_retriever
             docs: List[Document] = await asyncio.to_thread(
-                self.ensemble_retriever.invoke, question
+                retriever.invoke, question
             )
 
             if not docs:

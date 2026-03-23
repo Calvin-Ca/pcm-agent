@@ -1,7 +1,11 @@
 """
-知识库加载服务
+知识库加载服务（已废弃，仅供学习参考）
 
 负责加载初始知识库文档
+
+⚠️  DEPRECATED: 此文件是早期知识库加载流程，依赖已废弃的 document_loader.py。
+    当前生产代码入口：app/services/langchain_rag.py -> initialize_langchain_rag()
+    保留此文件仅供学习参考，不再被 main.py 调用。
 """
 
 import logging

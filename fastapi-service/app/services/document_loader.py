@@ -1,7 +1,13 @@
 """
-文档加载器模块
+文档加载器模块（已废弃，仅供学习参考）
 
 支持加载PDF、Word、Markdown和TXT文档
+
+⚠️  DEPRECATED: 此文件是早期手写的文档加载与分块实现，已被 LangChain 内置组件完全替代。
+    当前生产代码入口：app/services/langchain_rag.py
+    - 文档加载：LangChain DirectoryLoader / PyPDFLoader / Docx2txtLoader 等
+    - 文档分块：MarkdownHeaderTextSplitter + RecursiveCharacterTextSplitter
+    保留此文件仅供学习原始实现思路参考，不再被生产路由引用。
 """
 
 import os

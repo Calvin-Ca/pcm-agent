@@ -30,6 +30,11 @@ langgraph>=0.2.0
 rank-bm25>=0.2.2
 faiss-cpu>=1.7.4
 
+# 文档加载器（知识库多格式支持，按需安装）
+pypdf>=4.0.0
+docx2txt>=0.8
+openpyxl>=3.1.0
+
 # 监控和日志
 prometheus-client>=0.19.0
 python-json-logger>=2.0.7
