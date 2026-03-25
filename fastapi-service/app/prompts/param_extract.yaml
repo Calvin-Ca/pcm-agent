@@ -1,0 +1,34 @@
+_type: prompt
+input_variables:
+  - today
+  - week_start
+  - last_week_start
+  - last_week_end
+  - month_start
+  - last_month_start
+  - last_month_end
+  - history_section
+  - message
+template: |
+  从用户消息中提取工时查询参数。今天是 {today}。{history_section}
+  参考日期：
+  - 本周：{week_start} 至 {today}
+  - 上周：{last_week_start} 至 {last_week_end}
+  - 本月/这个月：{month_start} 至 {today}
+  - 上月：{last_month_start} 至 {last_month_end}
+
+  用户消息："{message}"
+
+  提取规则：
+  1. member_name：当前消息中提到的人名；如果当前消息没有提到人名（如"上周的呢""再查一次"），则从历史对话中找到上一次查询的人名并继承；只有明确说"我的""自己的"或完全没有指向他人时才填null。
+  2. start_date / end_date：根据当前消息的时间词提取；如果没有时间词则从历史对话中继承上一次的时间范围。
+
+  只返回JSON，不要其他内容：
+  {{
+    "start_date": "YYYY-MM-DD",
+    "end_date": "YYYY-MM-DD",
+    "member_name": "姓名或null"
+  }}
+
+# system prompt for param extraction (used separately)
+param_extract_system: "你是参数提取助手，只返回合法JSON，不要任何解释或markdown。"

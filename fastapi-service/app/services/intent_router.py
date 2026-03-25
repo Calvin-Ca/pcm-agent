@@ -14,6 +14,8 @@ import json
 import re
 from datetime import datetime, timedelta
 
+from app.services.prompt_manager import get_prompt_manager
+
 from ..models.task_plan import PlannerAgent, TaskPlan
 from .task_executor import TaskExecutor
 from .permission_validator import PermissionContext
@@ -252,31 +254,19 @@ class IntentRouter:
                     lines.append(f"{role}：{content}")
                 history_section = "\n历史对话（供参考，用于解析'再查一次''上周呢'等指代）：\n" + "\n".join(lines) + "\n"
 
-            prompt = f"""你是工时管理系统的意图分类助手。分析用户消息，判断其意图类型。{history_section}
+            tools_desc = (
+                "- query_timesheet：查询个人或团队工时记录\n"
+                "- query_project：查询项目信息\n"
+                "- compute_statistics：统计分析工时数据"
+            )
+            prompt = get_prompt_manager().format(
+                "intent_classify",
+                history_section=history_section,
+                message=message,
+                tools_desc=tools_desc,
+            ) or f"""你是工时管理系统的意图分类助手。分析用户消息，判断其意图类型。{history_section}
 用户消息："{message}"
-
-意图类型说明：
-- knowledge_qa：询问制度、规则、流程、政策、定义等知识性问题
-  示例："工时填报截止时间是什么时候""请假怎么填写""加班怎么认定"
-- tool_execution：查询或统计具体数据
-  示例："查询我本周的工时""统计部门上月加班时长""查看项目成员"
-- complex_request：需要多步骤才能完成的请求
-  示例："查询本月工时并生成报表""统计各项目工时然后发给我"
-- general_chat：问候、闲聊等
-  示例："你好""谢谢"
-
-可用工具（tool_execution 时必须填写 tool_name）：
-- query_timesheet：查询个人或团队工时记录
-- query_project：查询项目信息
-- compute_statistics：统计分析工时数据
-
-只返回 JSON，不要其他内容：
-{{
-    "intent_type": "knowledge_qa|tool_execution|complex_request|general_chat",
-    "confidence": 0.0-1.0,
-    "tool_name": "仅 tool_execution 时填写，否则填 null",
-    "reasoning": "一句话判断理由"
-}}"""
+只返回JSON：{{"intent_type":"general_chat","confidence":0.5,"tool_name":null,"reasoning":"fallback"}}"""
 
             response = await self._call_llm(prompt)
 
@@ -871,28 +861,23 @@ class IntentRouter:
                         lines.append(f"{role}：{content}")
                     history_section = "\n历史对话（供参考）：\n" + "\n".join(lines) + "\n"
 
-                prompt = f"""从用户消息中提取工时查询参数。今天是 {today}。{history_section}
-参考日期：
-- 本周：{week_start} 至 {today}
-- 上周：{last_week_start} 至 {last_week_end}
-- 本月/这个月：{month_start} 至 {today}
-- 上月：{last_month_start} 至 {last_month_end}
-
-用户消息："{message}"
-
-提取规则：
-1. member_name：当前消息中提到的人名；如果当前消息没有提到人名（如"上周的呢""再查一次"），则从历史对话中找到上一次查询的人名并继承；只有明确说"我的""自己的"或完全没有指向他人时才填null。
-2. start_date / end_date：根据当前消息的时间词提取；如果没有时间词则从历史对话中继承上一次的时间范围。
-
-只返回JSON，不要其他内容：
-{{
-  "start_date": "YYYY-MM-DD",
-  "end_date": "YYYY-MM-DD",
-  "member_name": "姓名或null"
-}}"""
+                pm = get_prompt_manager()
+                prompt = pm.format(
+                    "param_extract",
+                    today=str(today),
+                    week_start=str(week_start),
+                    last_week_start=str(last_week_start),
+                    last_week_end=str(last_week_end),
+                    month_start=str(month_start),
+                    last_month_start=str(last_month_start),
+                    last_month_end=str(last_month_end),
+                    history_section=history_section,
+                    message=message,
+                ) or f"从用户消息中提取工时查询参数。今天是{today}。用户消息：\"{message}\"。只返回JSON：{{\"start_date\":null,\"end_date\":null,\"member_name\":null}}"
+                system_prompt_text = pm.get_str("param_extract_system", file="param_extract") or "你是参数提取助手，只返回合法JSON，不要任何解释或markdown。"
                 response = await self.llm_client.generate(
                     prompt=prompt,
-                    system_prompt="你是参数提取助手，只返回合法JSON，不要任何解释或markdown。",
+                    system_prompt=system_prompt_text,
                     temperature=0,
                     max_tokens=150
                 )

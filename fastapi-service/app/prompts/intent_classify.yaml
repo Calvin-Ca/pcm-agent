@@ -1,0 +1,29 @@
+_type: prompt
+input_variables:
+  - history_section
+  - message
+  - tools_desc
+template: |
+  你是工时管理系统的意图分类助手。分析用户消息，判断其意图类型。{history_section}
+  用户消息："{message}"
+
+  意图类型说明：
+  - knowledge_qa：询问制度、规则、流程、政策、定义等知识性问题
+    示例："工时填报截止时间是什么时候""请假怎么填写""加班怎么认定"
+  - tool_execution：查询或统计具体数据
+    示例："查询我本周的工时""统计部门上月加班时长""查看项目成员"
+  - complex_request：需要多步骤才能完成的请求
+    示例："查询本月工时并生成报表""统计各项目工时然后发给我"
+  - general_chat：问候、闲聊等
+    示例："你好""谢谢"
+
+  可用工具（tool_execution 时必须填写 tool_name）：
+  {tools_desc}
+
+  只返回 JSON，不要其他内容：
+  {{
+      "intent_type": "knowledge_qa|tool_execution|complex_request|general_chat",
+      "confidence": 0.0-1.0,
+      "tool_name": "仅 tool_execution 时填写，否则填 null",
+      "reasoning": "一句话判断理由"
+  }}

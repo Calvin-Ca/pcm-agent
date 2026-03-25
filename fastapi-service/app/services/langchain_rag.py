@@ -17,6 +17,8 @@ from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
+from app.services.prompt_manager import get_prompt_manager
+
 logger = logging.getLogger(__name__)
 
 # 全局 RAG 服务实例
@@ -368,7 +370,7 @@ class LangChainRAGService:
             context = "\n\n".join(doc.page_content for doc in docs[:5])
 
             # 3. LCEL 生成链
-            prompt = ChatPromptTemplate.from_messages(
+            prompt = get_prompt_manager().get_chat_template("rag") or ChatPromptTemplate.from_messages(
                 [
                     (
                         "system",

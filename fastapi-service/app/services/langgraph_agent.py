@@ -20,6 +20,8 @@ from typing import Any, AsyncGenerator, Dict, Optional
 from langgraph.graph import END, START, StateGraph
 from typing_extensions import TypedDict
 
+from app.services.prompt_manager import get_prompt_manager
+
 logger = logging.getLogger(__name__)
 
 # ─── 全局组件（由 initialize_agent 在应用启动时注入）──────────────────────────
@@ -189,10 +191,9 @@ async def node_execute_llm(state: AgentState) -> dict:
     if not _llm_client:
         return {"llm_result": "LLM 服务未初始化", "error": "LLM not available"}
 
-    base_system_prompt = (
+    base_system_prompt = get_prompt_manager().format("system") or (
         "你是一个专业的企业工时管理助手。"
         "请用简洁、友好的方式回答用户问题。"
-        "如果涉及工时管理相关功能，可以引导用户使用对应的功能。"
     )
 
     try:
@@ -315,10 +316,9 @@ async def stream_agent_response(
     conversation_history: list = []
     if _prompt_builder:
         try:
-            base_system = (
+            base_system = get_prompt_manager().format("system") or (
                 "你是一个专业的企业工时管理助手。"
                 "请用简洁、友好的方式回答用户问题。"
-                "如果涉及工时管理相关功能，可以引导用户使用对应的功能。"
             )
             conversation_history = await _prompt_builder.build_messages_with_history(
                 user_message=message,

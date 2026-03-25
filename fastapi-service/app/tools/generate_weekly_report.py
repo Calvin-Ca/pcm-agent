@@ -16,6 +16,7 @@ from typing import Any, Dict, List, Optional
 
 from app.models.tool import ToolCategory
 from app.services.tool_registry import tool_registry
+from app.services.prompt_manager import get_prompt_manager
 
 logger = logging.getLogger(__name__)
 
@@ -223,17 +224,18 @@ async def _generate_summary(stats: Dict[str, Any], week_label: str) -> str:
         for p in stats["projects"]
     )
 
-    prompt = (
+    pm = get_prompt_manager()
+    stats_text = (
         f"以下是员工 {week_label} 的工时数据：\n\n"
         f"{project_lines}\n\n"
-        f"总工时：{stats['total_hours']} 小时\n\n"
-        "请根据项目分布，用 2-3 句话撰写专业的工作总结，语气正式简洁，"
-        "重点说明主要投入的项目和工作内容方向。不要重复列出具体工时数字。"
+        f"总工时：{stats['total_hours']} 小时"
     )
+    prompt = pm.format("weekly_report", stats_text=stats_text) or stats_text + "\n\n请用2-3句话撰写专业工作总结。"
+    system_prompt_text = pm.get_str("weekly_report_system", file="weekly_report") or "你是一个专业的企业工时管理助手，帮助员工撰写简洁的工作总结。"
 
     return await llm.generate(
         prompt=prompt,
-        system_prompt="你是一个专业的企业工时管理助手，帮助员工撰写简洁的工作总结。",
+        system_prompt=system_prompt_text,
         temperature=0.5,
         max_tokens=200,
     )

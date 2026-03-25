@@ -1,0 +1,10 @@
+_type: prompt
+input_variables:
+  - stats_text
+template: |
+  {stats_text}
+  请根据项目分布，用 2-3 句话撰写专业的工作总结，语气正式简洁，
+  重点说明主要投入的项目和工作内容方向。不要重复列出具体工时数字。
+
+# system prompt used when calling LLM for weekly report
+weekly_report_system: "你是一个专业的企业工时管理助手，帮助员工撰写简洁的工作总结。"
