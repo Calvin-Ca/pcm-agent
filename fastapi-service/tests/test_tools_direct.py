@@ -4,8 +4,10 @@
 """
 
 import asyncio
+import os
 import sys
-sys.path.insert(0, '/app')
+# 兼容直接运行（python tests/test_tools_direct.py）和 pytest 两种方式
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 async def test_generate_weekly_report():
     """直接测试周报生成工具"""
