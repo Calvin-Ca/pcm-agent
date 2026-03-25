@@ -424,9 +424,15 @@ async def stream_agent_response(
                         log_error = err_msg
                         yield _format_sse("error", {"message": err_msg})
                     else:
-                        _collected_assistant_response = result.get("response", "") if result else ""
-                        log_ai_response = _collected_assistant_response
-                        yield _format_sse("response", {"result": result})
+                        response_text = result.get("response", "") if result else ""
+                        sources = result.get("sources", []) if result else []
+                        if sources:
+                            source_names = [s.get("source", "") for s in sources if s.get("source")]
+                            if source_names:
+                                response_text += "\n\n---\n📚 **来源：** " + " | ".join(source_names)
+                        _collected_assistant_response = response_text
+                        log_ai_response = response_text
+                        yield _format_sse("response", {"message": response_text})
 
                 elif node_name == "execute_llm":
                     llm_result = state_delta.get("llm_result")
