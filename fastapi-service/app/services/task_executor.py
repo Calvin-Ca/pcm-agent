@@ -242,34 +242,46 @@ class TaskExecutor:
                 # 数据查询工具需要验证数据访问权限
                 user_id = processed_params.get('userId') or processed_params.get('user_id')
                 project_id = processed_params.get('projectId') or processed_params.get('project_id')
-                
-                if user_id and not self.permission_validator.can_access_user_data(permission_context, user_id):
-                    raise PermissionError(f"无权限访问用户 {user_id} 的数据")
-                
-                if project_id and not self.permission_validator.can_access_project_data(permission_context, project_id):
-                    raise PermissionError(f"无权限访问项目 {project_id} 的数据")
-            
+
+                if user_id:
+                    result = self.permission_validator.can_access_user_data(permission_context, user_id)
+                    if not result.allowed:
+                        raise PermissionError(f"无权限访问用户 {user_id} 的数据：{result.reason}")
+
+                if project_id:
+                    result = self.permission_validator.can_access_project_data(permission_context, project_id)
+                    if not result.allowed:
+                        raise PermissionError(f"无权限访问项目 {project_id} 的数据：{result.reason}")
+
             elif task.tool_name == 'compute_statistics':
                 # 统计工具需要验证统计范围权限
                 filters = processed_params.get('filters', {})
                 user_ids = filters.get('user_ids', [])
                 project_ids = filters.get('project_ids', [])
                 department_ids = filters.get('department_ids', [])
-                
-                # 验证用户数据访问权限
+
                 for user_id in user_ids:
-                    if not self.permission_validator.can_access_user_data(permission_context, user_id):
-                        raise PermissionError(f"无权限访问用户 {user_id} 的统计数据")
-                
-                # 验证项目数据访问权限
+                    result = self.permission_validator.can_access_user_data(permission_context, user_id)
+                    if not result.allowed:
+                        raise PermissionError(f"无权限访问用户 {user_id} 的统计数据：{result.reason}")
+
                 for project_id in project_ids:
-                    if not self.permission_validator.can_access_project_data(permission_context, project_id):
-                        raise PermissionError(f"无权限访问项目 {project_id} 的统计数据")
-                
-                # 验证部门数据访问权限
+                    result = self.permission_validator.can_access_project_data(permission_context, project_id)
+                    if not result.allowed:
+                        raise PermissionError(f"无权限访问项目 {project_id} 的统计数据：{result.reason}")
+
                 for dept_id in department_ids:
-                    if not self.permission_validator.can_access_department_data(permission_context, dept_id):
-                        raise PermissionError(f"无权限访问部门 {dept_id} 的统计数据")
+                    result = self.permission_validator.can_access_department_data(permission_context, dept_id)
+                    if not result.allowed:
+                        raise PermissionError(f"无权限访问部门 {dept_id} 的统计数据：{result.reason}")
+
+            elif task.tool_name in ['generate_weekly_report', 'save_workhour']:
+                # Phase 8 工具：只允许访问自己的数据，管理员除外
+                target_user_id = processed_params.get('user_id')
+                if target_user_id:
+                    result = self.permission_validator.can_access_user_data(permission_context, target_user_id)
+                    if not result.allowed:
+                        raise PermissionError(f"无权限操作用户 {target_user_id} 的工时数据：{result.reason}")
         
         # 执行工具
         logger.info(f"执行工具: {task.tool_name}, 参数: {processed_params}")

@@ -304,6 +304,7 @@ async def stream_agent_response(
     log_memory_count = 0
     log_context_snapshot: Optional[dict] = None
     log_tool_name: str = ""           # 运行时从 classify_intent 节点获取
+    log_tools_called: list = []       # 记录工具调用列表，用于 tool_count
     log_ai_response: str = ""         # 收集完整的 AI 响应文本
 
     # ── Task 40: 如果没有 session_id，自动生成一个 ─────────────────────────────
@@ -403,10 +404,12 @@ async def stream_agent_response(
                         msg = error or result.get("error", "工具执行失败")
                         log_status = "error"
                         log_error = msg
+                        log_tools_called = [{"tool_name": log_tool_name, "success": False, "error": msg}]
                         yield _format_sse("error", {"message": msg})
                     else:
                         _collected_assistant_response = _summarize_tool_result(log_tool_name, result)
                         log_ai_response = _collected_assistant_response
+                        log_tools_called = [{"tool_name": log_tool_name, "success": True}]
                         yield _format_sse("response", {
                             "result": result,
                             "tool_name": log_tool_name,
@@ -436,6 +439,13 @@ async def stream_agent_response(
                         _collected_assistant_response = llm_result or ""
                         log_ai_response = _collected_assistant_response
                         yield _format_sse("response", {"message": llm_result or ""})
+
+    except PermissionError as e:
+        logger.warning(f"权限拒绝: {e}")
+        log_status = "rejected"
+        log_error = str(e)
+        log_tools_called = [{"tool_name": log_tool_name, "success": False, "error": str(e), "rejected": True}] if log_tool_name else []
+        yield _format_sse("error", {"message": f"权限不足: {e}"})
 
     except Exception as e:
         logger.error(f"LangGraph 流式执行异常: {e}", exc_info=True)
@@ -510,6 +520,7 @@ async def stream_agent_response(
                 history_turns_count=log_history_turns,
                 memory_count=log_memory_count,
                 context_snapshot=safe_snapshot,
+                tools_called=log_tools_called or None,
                 ai_response=log_ai_response or None,
                 duration_ms=duration_ms,
                 model_name=model,
