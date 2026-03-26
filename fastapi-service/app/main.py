@@ -125,10 +125,33 @@ async def lifespan(app: FastAPI):
 
 # 创建FastAPI应用
 app = FastAPI(
-    title="AI Assistant Service",
-    description="AI智能助手服务API",
+    title="AI 智能助手服务",
+    description="""
+## 工时管理系统 AI 智能助手 API
+
+基于 LangGraph + LangChain 构建的 AI 对话服务，提供工时查询、周报生成、知识问答等功能。
+
+### 认证方式
+
+所有接口通过 SpringBoot 网关代理，由网关完成 JWT 验证后，将以下信息注入请求头：
+
+| 请求头 | 说明 |
+|--------|------|
+| `X-User-ID` | 当前登录用户 ID |
+| `X-Entity-Type` | 用户角色（employee / deptAdmin / superAdmin 等） |
+| `X-Department-ID` | 用户所属部门 ID |
+| `Authorization` | 原始 Bearer Token（工具调用透传给 SpringBoot） |
+
+### 主要接口分组
+
+- **AI Chat**：核心对话接口，SSE 流式输出
+- **Audit Log**：审计日志查询（管理员）
+- **Memory Management**：用户记忆管理
+- **Health**：服务健康检查
+""",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    contact={"name": "技术支持", "email": "support@thsware.com"},
 )
 
 # CORS配置
@@ -162,7 +185,7 @@ app.include_router(chat_router, prefix="/api", tags=["AI Chat"])
 app.include_router(memory_router, prefix="/api", tags=["Memory Management"])
 app.include_router(init_db_router, prefix="/api", tags=["Database Init"])
 app.include_router(db_test_router, prefix="/api", tags=["Database Test"])
-app.include_router(conversation_query_router, prefix="/api", tags=["Conversation Query"])
+app.include_router(conversation_query_router, prefix="/api", tags=["Audit Log"])
 
 
 @app.get("/")
