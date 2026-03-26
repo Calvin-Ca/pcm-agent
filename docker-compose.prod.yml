@@ -1,0 +1,72 @@
+# AI智能助手 - 生产环境 Docker Compose 配置
+#
+# 使用方式：
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# 此文件覆盖开发配置中的以下内容：
+#   - ai-service 去掉 --reload 和源码 volume 挂载
+#   - 所有服务添加 restart: unless-stopped
+#   - ai-service 添加资源限制
+#   - 敏感配置全部通过 .env 注入，不在此文件中硬编码
+#   - 监控服务（Prometheus/Grafana）通过 profile 按需启用
+
+services:
+  redis:
+    restart: unless-stopped
+    # 生产环境建议设置持久化和访问密码
+    # command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+
+  etcd:
+    restart: unless-stopped
+
+  minio:
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+
+  milvus:
+    restart: unless-stopped
+
+  ai-service:
+    restart: unless-stopped
+    # 生产环境：不挂载源码，使用打包进镜像的代码
+    volumes:
+      - ./knowledge-base:/app/knowledge-base
+      - ai-service-logs:/app/logs
+    # 生产环境：去掉 --reload，使用多 worker 提升并发
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    # 资源限制：防止单个服务耗尽宿主机资源
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.5'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/ai/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  web:
+    restart: unless-stopped
+
+  # 监控服务：默认不启动，需要时加 --profile monitoring
+  prometheus:
+    profiles:
+      - monitoring
+    restart: unless-stopped
+
+  grafana:
+    profiles:
+      - monitoring
+    restart: unless-stopped
+
+volumes:
+  ai-service-logs:
