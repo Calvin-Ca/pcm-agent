@@ -257,7 +257,9 @@ class IntentRouter:
             tools_desc = (
                 "- query_timesheet：查询个人或团队工时记录\n"
                 "- query_project：查询项目信息\n"
-                "- compute_statistics：统计分析工时数据"
+                "- compute_statistics：统计分析工时数据\n"
+                "- generate_weekly_report：生成工作周报\n"
+                "- save_workhour：填报工时记录（用户说"填工时"、"记录工时"、"报工时"等）"
             )
             prompt = get_prompt_manager().format(
                 "intent_classify",
@@ -896,6 +898,58 @@ class IntentRouter:
                 member_name = params.get("member_name")
                 if member_name and member_name not in ("null", "None", None, ""):
                     result["member_name"] = member_name
+                return result
+
+            elif tool_name == "save_workhour":
+                yesterday = today - timedelta(days=1)
+                # 构建历史上下文（帮助解析多轮对话中的补充信息）
+                history_section = ""
+                history_turns = (context or {}).get("conversation_history", [])
+                if history_turns:
+                    recent = history_turns[-4:]  # 最近 2 轮
+                    lines = []
+                    for msg in recent:
+                        role = "用户" if msg.get("role") == "user" else "助手"
+                        content = str(msg.get("content", ""))[:200]
+                        lines.append(f"{role}：{content}")
+                    history_section = "\n历史对话（供参考，用于补全前几轮提供的信息）：\n" + "\n".join(lines) + "\n"
+
+                prompt = (
+                    f"从用户消息中提取工时填报参数。今天是 {today}，昨天是 {yesterday}。\n"
+                    f"{history_section}"
+                    f"用户消息：\"{message}\"\n\n"
+                    f"提取以下字段（无法从消息中确定的字段返回 null）：\n"
+                    f"- project_id: 项目ID（纯数字）或项目名称（字符串），无法确定则 null\n"
+                    f"- date: 工时日期，YYYY-MM-DD 格式（\"今天\"→{today}，\"昨天\"→{yesterday}），无法确定则 null\n"
+                    f"- duration: 工时时长（小时，数字，如 8 或 4.5），无法确定则 null\n"
+                    f"- description: 工作内容描述（可选，无则 null）\n\n"
+                    f"只返回 JSON，不要任何解释或 markdown：\n"
+                    f"{{\"project_id\": null, \"date\": null, \"duration\": null, \"description\": null}}"
+                )
+                system_prompt_text = "你是参数提取助手，只返回合法JSON，不要任何解释或markdown。"
+                response = await self.llm_client.generate(
+                    prompt=prompt,
+                    system_prompt=system_prompt_text,
+                    temperature=0,
+                    max_tokens=150,
+                )
+                json_str = response.strip()
+                match = re.search(r'\{.*\}', json_str, re.DOTALL)
+                if match:
+                    json_str = match.group()
+                params = json.loads(json_str)
+
+                result: Dict[str, Any] = {}
+                for field in ("project_id", "date", "duration", "description"):
+                    val = params.get(field)
+                    if val is not None and val not in ("null", "None", ""):
+                        result[field] = val
+                # duration 需要转为 float
+                if "duration" in result:
+                    try:
+                        result["duration"] = float(result["duration"])
+                    except (ValueError, TypeError):
+                        del result["duration"]
                 return result
 
         except Exception as e:

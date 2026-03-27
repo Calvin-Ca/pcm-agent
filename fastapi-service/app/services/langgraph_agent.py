@@ -62,10 +62,12 @@ class AgentState(TypedDict):
     # 记忆上下文（Task 40）
     conversation_history: list     # OpenAI messages 格式的历史消息列表
     # 分类结果
-    intent: Optional[str]          # knowledge_qa | tool_execution | complex_request | general_chat
+    intent: Optional[str]          # knowledge_qa | tool_execution | complex_request | general_chat | clarify
     tool_name: Optional[str]
     tool_params: Dict[str, Any]
     query: str                     # RAG / 工具查询用
+    # 引导填报（缺少必要参数时）
+    clarify_message: Optional[str]
     # 执行结果（仅一个非 None）
     tool_result: Optional[Dict[str, Any]]
     rag_result: Optional[Dict[str, Any]]
@@ -128,6 +130,25 @@ async def node_classify_intent(state: AgentState) -> dict:
         if user_ctx.get("auth_token"):
             tool_params["auth_token"] = user_ctx["auth_token"]
 
+        # 工时填报：检测必填参数是否缺失，缺失则转为引导对话
+        if tool_name == "save_workhour":
+            missing = []
+            if not tool_params.get("project_id"):
+                missing.append("**项目名称或项目ID**")
+            if not tool_params.get("date"):
+                missing.append("**工时日期**（如"今天"、"2026-03-26"）")
+            if not tool_params.get("duration"):
+                missing.append("**工时时长**（小时，如 8 或 4.5）")
+            if missing:
+                clarify_msg = _build_workhour_clarify_message(tool_params, missing)
+                return {
+                    "intent": "clarify",
+                    "tool_name": None,
+                    "tool_params": tool_params,
+                    "query": state["user_message"],
+                    "clarify_message": clarify_msg,
+                }
+
         return {
             "intent": intent_result.intent_type.value,
             "tool_name": tool_name,
@@ -168,6 +189,34 @@ async def node_execute_tool(state: AgentState) -> dict:
     except Exception as e:
         logger.error(f"工具执行节点异常: {e}")
         return {"tool_result": {"success": False, "error": str(e)}, "error": str(e)}
+
+
+def _build_workhour_clarify_message(partial_params: Dict[str, Any], missing: list) -> str:
+    """生成引导式提问，收集工时填报缺失的必要信息。"""
+    lines = ["好的，我来帮您填报工时！请提供以下缺少的信息：\n"]
+    for i, field in enumerate(missing, 1):
+        lines.append(f"{i}. {field}")
+
+    already = []
+    if partial_params.get("project_id"):
+        already.append(f"项目：{partial_params['project_id']}")
+    if partial_params.get("date"):
+        already.append(f"日期：{partial_params['date']}")
+    if partial_params.get("duration"):
+        already.append(f"时长：{partial_params['duration']}小时")
+    if partial_params.get("description"):
+        already.append(f"描述：{partial_params['description']}")
+    if already:
+        lines.append(f"\n（已获取：{', '.join(already)}）")
+
+    lines.append("\n💡 您可以一次性回复所有信息，例如：")
+    lines.append("「工时管理系统，今天，8小时，完成了AI助手开发」")
+    return "\n".join(lines)
+
+
+async def node_clarify(state: AgentState) -> dict:
+    """节点：引导用户补充工时填报缺失参数（不调用 LLM，直接返回引导问题）"""
+    return {"llm_result": state.get("clarify_message", "请提供更多信息以便完成工时填报。")}
 
 
 async def node_execute_rag(state: AgentState) -> dict:
@@ -232,6 +281,7 @@ def _route_by_intent(state: AgentState) -> str:
         "tool_execution": "execute_tool",
         "complex_request": "execute_llm",   # Phase 3: 改为独立规划节点
         "general_chat": "execute_llm",
+        "clarify": "clarify_node",           # 工时填报引导对话
     }.get(intent, "execute_llm")
 
 
@@ -246,11 +296,12 @@ def _build_graph():
     builder.add_node("execute_tool", node_execute_tool)
     builder.add_node("execute_rag", node_execute_rag)
     builder.add_node("execute_llm", node_execute_llm)
+    builder.add_node("clarify_node", node_clarify)
 
     # 入口
     builder.add_edge(START, "classify_intent")
 
-    # 条件路由（classify_intent → 3 个执行节点之一）
+    # 条件路由（classify_intent → 执行节点之一）
     builder.add_conditional_edges(
         "classify_intent",
         _route_by_intent,
@@ -258,6 +309,7 @@ def _build_graph():
             "execute_tool": "execute_tool",
             "execute_rag": "execute_rag",
             "execute_llm": "execute_llm",
+            "clarify_node": "clarify_node",
         },
     )
 
@@ -265,6 +317,7 @@ def _build_graph():
     builder.add_edge("execute_tool", END)
     builder.add_edge("execute_rag", END)
     builder.add_edge("execute_llm", END)
+    builder.add_edge("clarify_node", END)
 
     return builder.compile()
 
@@ -356,6 +409,7 @@ async def stream_agent_response(
         "tool_name": None,
         "tool_params": {},
         "query": message,
+        "clarify_message": None,
         "tool_result": None,
         "rag_result": None,
         "llm_result": None,
@@ -383,6 +437,7 @@ async def stream_agent_response(
                         "tool_execution": "tool_executor",
                         "complex_request": "llm_service",
                         "general_chat": "llm_service",
+                        "clarify": "clarify",
                     }.get(intent, "llm_service")
 
                     if intent == "tool_execution":
@@ -445,6 +500,13 @@ async def stream_agent_response(
                         _collected_assistant_response = llm_result or ""
                         log_ai_response = _collected_assistant_response
                         yield _format_sse("response", {"message": llm_result or ""})
+
+                elif node_name == "clarify_node":
+                    # 引导式工时填报：直接输出引导问题
+                    clarify_text = state_delta.get("llm_result", "")
+                    _collected_assistant_response = clarify_text
+                    log_ai_response = clarify_text
+                    yield _format_sse("response", {"message": clarify_text})
 
     except PermissionError as e:
         logger.warning(f"权限拒绝: {e}")
