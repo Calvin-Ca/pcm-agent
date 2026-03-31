@@ -1,6 +1,6 @@
 # AI 智能助手 — 升级路线与优化建议
 
-> 更新日期：2026-03-26
+> 更新日期：2026-03-27
 > 当前版本：1.0（已完成 MVP + Memory + RAG + 审计日志）
 
 ---
@@ -22,7 +22,61 @@
 
 ---
 
-## 二、AI 能力扩展策略
+## 二、已知 Bug 与修复方案（2026-03-27 实测发现）
+
+### 2.1 查工时返回全员数据
+
+**根因**：`query_timesheet.py` 在 `resolved_user_id` 为空时不传 `memberId` 参数，SpringBoot 侧无过滤条件，返回全员数据。`intent_router.py` 的 prompt 中"查我的工时"里的"我"未被自动映射为当前用户 ID。
+
+**涉及文件**：
+- `app/tools/query_timesheet.py`：第 143-145 行，`resolved_user_id` 为空时应 fallback 到当前用户 ID
+- `app/services/langgraph_agent.py`：第 128 行，`user_id` 注入逻辑需确保工具能正确接收
+- `app/services/intent_router.py`：prompt 中明确"查工时"默认含义为"查我自己的"
+
+**修复方案**：
+```python
+# query_timesheet.py 修改：无指定对象时默认查当前用户
+if resolved_user_id:
+    query_params["memberId"] = resolved_user_id
+elif user_id:  # fallback 到当前登录用户
+    query_params["memberId"] = user_id
+```
+
+**预估工作量**：1-2 小时
+
+---
+
+### 2.2 填工时把项目名当项目 ID
+
+**根因**：`intent_router.py` 的参数提取 prompt 允许 `project_id` 字段接收项目名称字符串，LLM 直接填入名称，而 `save_workhour.py` 不做名称→ID 的转换，直接把名称传给 SpringBoot，后端找不到对应项目报错。
+
+**涉及文件**：
+- `app/services/intent_router.py`：prompt 中 `project_id` 字段描述改为"必须是纯数字 ID，不接受项目名称"
+- `app/tools/save_workhour.py`：增加解析层——若 `project_id` 不是纯数字，先调 `/api/project/search?name=xx` 查出真实 ID，再填报
+
+**修复方案**：
+```python
+# save_workhour.py 增加项目名转ID
+if project_id and not str(project_id).isdigit():
+    # 调 SpringBoot 接口按名称查项目
+    project_id = await resolve_project_id_by_name(project_id, auth_token)
+    if not project_id:
+        return {"success": False, "message": f"找不到项目，请确认项目名称是否正确"}
+```
+
+**预估工作量**：2-3 小时（含查询接口调用）
+
+---
+
+### 2.3 架构层面的参数处理问题
+
+**根因**：参数提取、类型转换、权限注入分散在 `intent_router` / `langgraph_agent` / `task_executor` 三个文件中，相互覆盖，缺少统一的参数校验层。
+
+**建议**：中期重构时增加一个统一的参数解析层（见第五节 5.4）。
+
+---
+
+## 三、AI 能力扩展策略
 
 ### 核心问题：每增加一个能力都要写一个 Tool 吗？
 
@@ -44,7 +98,7 @@
 
 ---
 
-## 三、近期可落地的能力扩展
+## 四、近期可落地的能力扩展
 
 ### 3.1 工时审核（Tool 方案）
 
@@ -103,7 +157,7 @@
 
 ---
 
-## 四、中期升级方向
+## 五、中期升级方向
 
 ### 4.1 MCP Server 接入（解决接口扩展问题）
 
@@ -165,7 +219,33 @@ LLM 生成 SQL → 安全沙箱执行 → 返回数据 → LLM 生成图表描�
 
 ---
 
-## 五、技术债与优化项（来自 optimization-todo.md）
+## 六、技术债与优化项
+
+### 5.4 统一参数校验层（中期重构）
+
+**背景**：查工时/填工时 Bug 的共同根因是参数在多层之间流转时缺乏统一校验。
+
+**方案**：在工具调用前增加一个参数解析层：
+
+```
+LLM 提取参数（可能含名称/错误类型）
+        ↓
+[参数解析层 — 新增]
+  · 项目名 → 项目 ID（调 SpringBoot 查询）
+  · 成员名 → 成员 ID（调 SpringBoot 查询）
+  · 类型校验（用 Pydantic Model）
+  · 缺参检测 → 触发追问
+        ↓
+工具执行（只接受已验证的 ID 和正确类型）
+```
+
+**涉及改动**：新增 `app/services/param_resolver.py`，各 Tool 的 handler 改为只接受解析后的参数。
+
+**预估工作量**：1 天
+
+---
+
+### 原有技术债与优化项
 
 按优先级整理，建议在每次迭代中穿插处理：
 
@@ -185,6 +265,7 @@ LLM 生成 SQL → 安全沙箱执行 → 返回数据 → LLM 生成图表描�
 | 5 | 意图关键词散落在 `IntentRouter.__init__` | 提取到 `config/intent_rules.yaml` | 中 |
 | 6 | LLM 调用缺少统一重试/限流 | `LLMClient.call_with_json_response()` 封装 | 中 |
 | 7 | `log_conversation()` 参数过多（15+个） | 用 Pydantic 模型封装 | 小 |
+| 8 | 记忆服务各自管理 Redis Key | 创建 `MemoryStore` 抽象接口，支持未来切换存储后端（如 PostgreSQL） | 中 |
 
 ### 低优先级（完善）
 
@@ -193,10 +274,14 @@ LLM 生成 SQL → 安全沙箱执行 → 返回数据 → LLM 生成图表描�
 | 9 | `EmbeddingService` 未被引用 | 移至 `deprecated/` 或删除 | 小 |
 | 10 | `PlannerAgent` 初始化但未使用 | 配合 4.2 节真正启用，或暂时移除 | 中 |
 | 11 | 上下文快照粗暴截断 | 实现渐进式压缩（先汇总，再裁剪，最后截断） | 中 |
+| 12 | 部分异常用空 `pass` 吞掉 | 统一改为 `logger.warning(...)` + 返回降级默认值（`session_memory.py` 等） | 小 |
+| 13 | 关键服务缺乏自动化测试 | 创建 `tests/unit/` 和 `tests/integration/` 测试套件，覆盖意图路由、任务执行、记忆管理 | 中 |
 
 ---
 
-## 六、RAG 检索优化（来自 rag-upgrade-roadmap.md）
+## 七、RAG 检索优化
+
+> 详细的技术方案和代码示例见 [`fastapi-service/docs/rag-upgrade-roadmap.md`](../fastapi-service/docs/rag-upgrade-roadmap.md)
 
 | 优化项 | 效果 | 改动量 | 建议时机 |
 |--------|------|--------|----------|
@@ -208,7 +293,7 @@ LLM 生成 SQL → 安全沙箱执行 → 返回数据 → LLM 生成图表描�
 
 ---
 
-## 七、未启动的 tasks.md 任务
+## 八、未启动的 tasks.md 任务
 
 ### P1 — 建议尽快完成
 
@@ -229,41 +314,138 @@ LLM 生成 SQL → 安全沙箱执行 → 返回数据 → LLM 生成图表描�
 
 ---
 
-## 八、推荐执行顺序
+## 九、核心架构升级：Function Calling 改造（★★★★★ 最高优先级）
+
+> **问题诊断**：助手"不聪明"的根因不是某个工具的 Bug，而是意图识别架构本身。
+
+### 当前架构的三个瓶颈
+
+| 瓶颈 | 现状 | 影响 |
+|------|------|------|
+| 两步分离 | 意图分类（qwen-flash）+ 参数提取（qwen-plus）分两次 LLM 调用 | 上下文割裂，参数经常提错或漏提 |
+| System Prompt 过弱 | 仅3行通用描述，不含用户身份/工具 schema/默认行为 | LLM 不知道"查工时"默认查自己，不知道缺什么参数该追问 |
+| 规则匹配臃肿 | 800+ 行关键词评分逻辑，与 LLM 结果互相冲突 | 维护困难，每加一个工具要改多处，且有时覆盖 LLM 的正确判断 |
+
+### 改造方案：切换到 Function Calling
+
+qwen-plus 支持 OpenAI 兼容的 `tools` 参数（函数调用），可以在 **一次 LLM 调用中同时完成意图识别 + 参数提取 + 缺参追问**。
 
 ```
-立即可做（本周）
-  ├── 修复数据库密码硬编码（安全风险，30分钟）
-  ├── 补充知识库文档（考勤/审核制度，不写代码）
-  └── jieba 中文分词接入 BM25（1小时）
+改造前（两步拆分，容易出错）：
+  用户: "查一下张三本周的工时"
+    → LLM1(flash): 意图分类 → tool_execution / query_timesheet
+    → LLM2(plus): 参数提取 → {start_date, member_name}
+    → user_id 注入（3处逻辑各自为政）
+    → 执行工具
 
-短期（1-2周）
-  ├── 工时审核 Tool（3-4小时）
-  ├── 导出报表 Tool（2-3小时）
-  └── Prometheus 指标收集（Task 50.1-50.3，3小时）
+改造后（一步到位）：
+  用户: "查一下张三本周的工时"
+    → LLM(plus) + tools=[query_timesheet, save_workhour, ...]
+    → tool_call: query_timesheet(member_name="张三", start_date="2026-03-30", end_date="2026-03-31")
+    → 执行工具
 
-中期（1个月内）
-  ├── MCP Server 接入（1-2天，如接口增多）
-  ├── 激活 PlannerAgent 支持多步骤任务（1天）
-  └── 工具重试机制 + Tool 基类重构（代码质量）
+  用户: "查工时"（缺参数）
+    → LLM(plus) 自动回复: "请问您要查哪个时间段的工时？本周还是本月？"
+```
 
-长期（按需）
-  ├── Code Interpreter / SQL 分析（2-3天）
-  ├── Grafana Dashboard + 告警（Task 51-53）
-  └── 流式 RAG 输出（体验优化）
+### 改造步骤
+
+**第一步：增强 System Prompt（0.5 天）**
+
+在 `system.yaml` 中注入：
+- 当前用户身份（user_id、姓名、部门、角色）
+- 默认行为规则（"查工时"默认查自己、"填工时"必须有项目/日期/时长）
+- 可用工具列表及参数 schema
+
+**第二步：实现 Function Calling 调用层（1 天）**
+
+- 新增 `app/services/function_calling.py`，封装 qwen-plus 的 `tools` 参数调用
+- 将 5 个工具的参数定义为 OpenAI function schema
+- 处理 `tool_calls` 响应：有 tool_call → 执行工具；无 tool_call → 直接返回文本（闲聊/追问/知识问答）
+
+**第三步：简化 LangGraph 流程（0.5 天）**
+
+```
+改造前节点：classify_intent → (execute_tool | execute_rag | execute_llm | clarify_node)
+改造后节点：llm_with_tools → (execute_tool_call | return_text)
+                                    ↓
+                              tool_result → llm_summarize → return_text
+```
+
+- `classify_intent` 节点改为调用 Function Calling，不再单独分类
+- RAG 作为一个"工具"注册（`search_knowledge`），由 LLM 自己决定是否调用
+- 移除 `clarify_node`，缺参追问由 LLM 自然语言完成
+
+**第四步：清理旧代码（0.5 天）**
+
+- `intent_router.py` 的 800 行规则匹配降级为紧急 fallback（LLM 不可用时）
+- 移除 `_classify_with_llm` + `_extract_parameters_with_llm` 两步流程
+- `param_extract.yaml` 合并进 system prompt
+
+### 预估工作量与收益
+
+| 步骤 | 工作量 | 收益 |
+|------|--------|------|
+| 增强 System Prompt | 0.5 天 | 立即提升准确率，零风险 |
+| Function Calling 调用层 | 1 天 | 消除两步分离问题，参数提取准确率大幅提升 |
+| 简化 LangGraph | 0.5 天 | 代码量减少 500+ 行，新增工具只需写 schema |
+| 清理旧代码 | 0.5 天 | 可维护性提升 |
+| **合计** | **2-3 天** | **助手智能程度质的飞跃** |
+
+### 改造后的工具扩展方式
+
+```python
+# 改造前：新增一个工具需要改 4 个文件
+# 1. app/tools/xxx.py（写工具）
+# 2. intent_router.py（加关键词、加 tools_desc）
+# 3. intent_router.py（加参数提取 prompt）
+# 4. langgraph_agent.py（可能需要改注入逻辑）
+
+# 改造后：只需 1 个文件
+# 1. app/tools/xxx.py（写工具 + 声明 function schema）
+# tool_registry 自动收集 schema → LLM 自动选择调用
 ```
 
 ---
 
-## 附：让 AI 更聪明的成本对比
+## 十、修订后的推荐执行顺序
 
-| 手段 | 智能提升效果 | 开发成本 | 运行成本 |
-|------|-------------|----------|----------|
-| 完善知识库文档 | ★★★ 制度问答更准 | 极低（加文档） | 无 |
-| 优化 Prompt 模板 | ★★★ 意图识别更准 | 低（改 YAML） | 无 |
-| 增加对话历史轮数 | ★★ 上下文更连贯 | 低 | 低（Redis） |
-| 接入更多 Tool | ★★★ 能做更多事 | 中（每个Tool 2-4小时） | 低 |
-| MCP Server 批量接入 | ★★★★ 能力快速扩展 | 中（一次性） | 低 |
-| 升级更强 LLM 模型 | ★★★★ 整体理解力提升 | 极低（改配置） | 高（API费用） |
-| 激活 PlannerAgent | ★★★ 支持复杂多步骤 | 中 | 中 |
-| Code Interpreter | ★★★★★ 自定义分析 | 高 | 中 |
+```
+🔴 第一优先（本周）— 框架升级，从根本上解决"助手笨"的问题
+  ├── 增强 System Prompt — 注入用户身份、默认行为、工具说明（0.5天）
+  ├── 实现 Function Calling 调用层（1天）
+  ├── 简化 LangGraph 流程（0.5天）
+  └── 修复数据库密码硬编码（安全风险，30分钟）
+
+🟡 第二优先（下周）— 工具级修复 + 参数校验
+  ├── 统一参数校验层 param_resolver.py — 项目名转ID、成员名转ID（1天）
+  │   （Function Calling 改造后，查工时默认查自己的 Bug 自动消失）
+  ├── jieba 中文分词接入 BM25（1小时）
+  └── 补充知识库文档（考勤/审核制度，不写代码）
+
+🟢 第三优先（2周内）— 能力扩展
+  ├── 工时审核 Tool（3-4小时，改造后只需写工具+schema）
+  ├── 导出报表 Tool（2-3小时）
+  └── Prometheus 指标收集（Task 50.1-50.3，3小时）
+
+🔵 中长期（按需）
+  ├── MCP Server 接入（工具 > 10 个时）
+  ├── 激活 PlannerAgent（多步骤任务）
+  ├── Code Interpreter / SQL 分析
+  └── Grafana Dashboard + 流式 RAG
+```
+
+---
+
+## 附：让 AI 更聪明的成本对比（修订版）
+
+| 手段 | 智能提升效果 | 开发成本 | 运行成本 | 建议 |
+|------|-------------|----------|----------|------|
+| **Function Calling 改造** | ★★★★★ 意图+参数一步到位 | 中（2-3天） | 略增（统一用 plus） | **最高优先** |
+| **增强 System Prompt** | ★★★★ 默认行为+上下文感知 | 极低（改 YAML） | 无 | **立即可做** |
+| 完善知识库文档 | ★★★ 制度问答更准 | 极低（加文档） | 无 | 随时补充 |
+| 统一参数校验层 | ★★★ 类型转换+缺参追问 | 中（1天） | 无 | Function Calling 后做 |
+| 接入更多 Tool | ★★★ 能做更多事 | 低（改造后每个1-2小时） | 低 | 框架改完再扩展 |
+| MCP Server 批量接入 | ★★★★ 能力快速扩展 | 中（一次性） | 低 | 工具 > 10 个时 |
+| 激活 PlannerAgent | ★★★ 支持复杂多步骤 | 中 | 中 | 按需 |
+| Code Interpreter | ★★★★★ 自定义分析 | 高 | 中 | 长期 |

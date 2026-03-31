@@ -13,6 +13,8 @@
 | `vector_store.py` | `app/services/` | `app/services/langchain_rag.py` → Milvus/FAISS 向量存储 | 早期手写的向量存储管理器。已被 LangChain 的 VectorStore 抽象替代。 |
 | `search_knowledge.py` | `app/tools/` | `app/services/langchain_rag.py` → `langchain_rag_query()` | 早期知识库搜索工具，依赖 `vector_store.py`。RAG 查询现在通过 LangGraph 的 `execute_rag` 节点直接调用 LangChain RAG。 |
 
+| `phase7-memory-design.md` | `docs/` | — | Memory System 的历史设计文档（Task 37-41），功能已在 `session_memory.py`、`user_memory.py`、`prompt_builder.py` 中实现。 |
+
 ## 学习建议
 
 - **想了解原始 SSE 流程：** 看 `stream_response.py`，重点关注 `generate_stream()` 方法中如何拼装 `event: xxx\ndata: {...}\n\n` 格式

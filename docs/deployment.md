@@ -631,6 +631,106 @@ docker run --rm -v ai-service_milvus-data:/data -v $(pwd):/backup \
 
 ---
 
+## 11. Embedding 模型本地部署（规划中）
+
+> 当前：使用阿里云 DashScope `text-embedding-v2` API（按量计费）。
+> 服务器有 GPU 时，可迁移到本地部署，消除外部 API 依赖、降低延迟和成本。
+
+### 11.1 方案选型
+
+| 方案 | 适用场景 | 优点 | 缺点 |
+|------|---------|------|------|
+| **HuggingFace TEI**（推荐） | 生产部署 | 独立服务、GPU 加速、OpenAI 兼容 API、高并发 | 多一个 Docker 容器 |
+| sentence-transformers 直接加载 | 开发/测试 | 无需额外服务，零配置 | 模型在 FastAPI 进程内，占用内存大，重启慢 |
+| Ollama | 开发调试 | 安装简单 | 与 Milvus 集成需额外适配，不推荐生产用 |
+
+### 11.2 推荐模型（中文场景）
+
+| 模型 | 向量维度 | 模型大小 | 中文效果 | 说明 |
+|------|---------|---------|---------|------|
+| `BAAI/bge-m3` | 1024 | 570 MB | ⭐⭐⭐⭐⭐ | **首选**，多语言，中英文均佳，支持长文本（8192 token） |
+| `BAAI/bge-large-zh-v1.5` | 1024 | 326 MB | ⭐⭐⭐⭐⭐ | 纯中文，效果与 bge-m3 接近，体积更小 |
+| `BAAI/bge-small-zh-v1.5` | 512 | 93 MB | ⭐⭐⭐⭐ | GPU 资源受限时的备选 |
+
+### 11.3 部署步骤（HuggingFace TEI）
+
+**Step 1：在 `docker-compose.yml` 中添加 TEI 服务**
+
+```yaml
+tei:
+  image: ghcr.io/huggingface/text-embeddings-inference:1.5
+  ports:
+    - "8001:80"
+  volumes:
+    - tei-model-cache:/data
+  command: --model-id BAAI/bge-large-zh-v1.5 --dtype float16
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
+  restart: unless-stopped
+```
+
+首次启动会自动从 HuggingFace 下载模型（`bge-large-zh-v1.5` 约 326 MB）。
+如服务器无法访问 HuggingFace，可提前下载模型文件挂载到 `/data` 目录。
+
+**Step 2：修改 `langchain_rag.py` 的 Embedding 初始化**
+
+```python
+# 当前（DashScope API）：
+self.embeddings = OpenAIEmbeddings(
+    model="text-embedding-v2",
+    openai_api_key=api_key,
+    openai_api_base=api_base,
+    chunk_size=20,
+    check_embedding_ctx_length=False,  # DashScope 不接受 token ID 数组
+)
+
+# 切换为本地 TEI（改这一处即可，其余代码零改动）：
+self.embeddings = OpenAIEmbeddings(
+    model="BAAI/bge-large-zh-v1.5",
+    openai_api_key="none",               # TEI 不需要鉴权
+    openai_api_base="http://tei:80/v1",  # Docker 内网访问
+    chunk_size=100,                      # TEI 无 25 条限制，可调大
+    check_embedding_ctx_length=False,    # 本地服务同样只接受字符串
+)
+```
+
+**Step 3：更新 `.env`（可选，将 TEI 地址做成可配置）**
+
+```dotenv
+EMBEDDING_API_BASE=http://tei:80/v1
+EMBEDDING_MODEL=BAAI/bge-large-zh-v1.5
+```
+
+**Step 4：Milvus 集合重建**
+
+切换 Embedding 模型后，向量维度可能从 1536（DashScope）变为 1024（bge 系列），**必须重建 Milvus 集合**：
+
+```bash
+# 触发知识库重新加载（drop_old=True 会自动重建集合）
+curl -X POST http://localhost:8000/api/rag/reload
+```
+
+### 11.4 注意事项
+
+1. **向量维度变化**：DashScope `text-embedding-v2` 输出 1536 维，`bge-large-zh-v1.5` 输出 1024 维。切换时必须删除旧的 Milvus collection 并重建，否则维度不匹配会报错。
+
+2. **`check_embedding_ctx_length=False` 保留**：本地 TEI 服务同样接收文本字符串而非 token 数组，此参数需保留。我们的 `_split_documents(chunk_size=512)` 已保证所有文本分块远低于 8192 token 上限，不存在截断风险。
+
+3. **首次下载耗时**：TEI 容器启动时从 HuggingFace 下载模型，内网受限时可提前手动下载：
+   ```bash
+   # 使用 huggingface-cli 下载到本地后挂载
+   pip install huggingface_hub
+   huggingface-cli download BAAI/bge-large-zh-v1.5 --local-dir ./models/bge-large-zh
+   ```
+   然后 docker-compose volumes 挂载 `./models/bge-large-zh:/data`。
+
+---
+
 ## 附录：常用命令速查
 
 ```bash
