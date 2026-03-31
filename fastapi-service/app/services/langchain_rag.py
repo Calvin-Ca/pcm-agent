@@ -222,6 +222,8 @@ class LangChainRAGService:
             model="text-embedding-v2",
             openai_api_key=api_key,
             openai_api_base=api_base,
+            chunk_size=20,                    # DashScope 单批最多 25 条
+            check_embedding_ctx_length=False, # DashScope 不接受 token ID 数组，必须发原始文本
         )
         logger.info("Embeddings 初始化完成（DashScope text-embedding-v2）")
 
@@ -258,7 +260,7 @@ class LangChainRAGService:
 
         # 6. MultiQueryRetriever：让 LLM 将用户问题改写为多种表述，提升召回率
         try:
-            from langchain.retrievers.multi_query import MultiQueryRetriever
+            from langchain_classic.retrievers.multi_query import MultiQueryRetriever
 
             self.multi_query_retriever = MultiQueryRetriever.from_llm(
                 retriever=self.ensemble_retriever,
@@ -275,7 +277,7 @@ class LangChainRAGService:
 
         # 7. 初始化 CrossEncoderReranker（精排）
         try:
-            from langchain.retrievers.document_compressors import CrossEncoderReranker
+            from langchain_classic.retrievers.document_compressors import CrossEncoderReranker
             from langchain_community.cross_encoders import HuggingFaceCrossEncoder
 
             model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-base")
@@ -295,15 +297,32 @@ class LangChainRAGService:
 
         try:
             from langchain_milvus import Milvus
+            from pymilvus import MilvusClient as _MilvusClient, connections
 
-            self.vector_store = await asyncio.to_thread(
-                Milvus.from_documents,
-                documents=documents,
-                embedding=self.embeddings,
-                connection_args={"uri": milvus_uri},
-                collection_name="knowledge_base",
-                drop_old=True,
-            )
+            # pymilvus 2.6 的 MilvusClient._using = "cm-{id}"，不在 ORM 连接池中。
+            # langchain_milvus 0.3.3 内部用 Collection(using=self.alias) 走 ORM 路径，
+            # 导致 ConnectionNotExistException。
+            # 修复：预注册 "lc_default" ORM 连接，然后让 MilvusClient._using 指向它。
+            ORM_ALIAS = "lc_default"
+            connections.connect(alias=ORM_ALIAS, uri=milvus_uri)
+
+            _orig_init = _MilvusClient.__init__
+
+            def _patched_init(self, *args, **kwargs):
+                _orig_init(self, *args, **kwargs)
+                self._using = ORM_ALIAS
+
+            _MilvusClient.__init__ = _patched_init
+            try:
+                self.vector_store = Milvus.from_documents(
+                    documents=documents,
+                    embedding=self.embeddings,
+                    connection_args={"uri": milvus_uri},
+                    collection_name="knowledge_base",
+                    drop_old=True,
+                )
+            finally:
+                _MilvusClient.__init__ = _orig_init
             self._use_milvus = True
             logger.info(f"Milvus 向量存储初始化完成（{milvus_uri}）")
         except Exception as e:
