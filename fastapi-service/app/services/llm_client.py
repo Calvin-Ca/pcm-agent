@@ -160,6 +160,60 @@ class LLMClient:
                     except json.JSONDecodeError:
                         continue
 
+    async def generate_with_tools(
+        self,
+        messages: List[Dict[str, Any]],
+        tools: List[Dict[str, Any]],
+        tool_choice: str = "auto",
+        temperature: float = 0.1,
+        max_tokens: int = 500,
+    ) -> Dict[str, Any]:
+        """
+        Function Calling 调用，一次完成意图识别 + 参数提取。
+
+        Returns:
+            {"finish_reason": "tool_calls", "content": None, "tool_calls": [{"name": ..., "arguments": {...}}]}
+            或
+            {"finish_reason": "stop", "content": "...", "tool_calls": []}
+        """
+        if not self.api_key:
+            raise ValueError("LLM API Key 未配置")
+
+        url = f"{self.api_base.rstrip('/')}/chat/completions"
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "tools": tools,
+            "tool_choice": tool_choice,
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+        }
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, headers=headers, json=payload) as resp:
+                if resp.status == 200:
+                    data = await resp.json()
+                    choice = data["choices"][0]
+                    finish_reason = choice.get("finish_reason")
+                    msg = choice.get("message", {})
+                    if finish_reason == "tool_calls":
+                        calls = [
+                            {
+                                "name": tc["function"]["name"],
+                                "arguments": json.loads(tc["function"]["arguments"]),
+                            }
+                            for tc in msg.get("tool_calls", [])
+                        ]
+                        return {"finish_reason": "tool_calls", "content": None, "tool_calls": calls}
+                    return {"finish_reason": "stop", "content": msg.get("content", ""), "tool_calls": []}
+                else:
+                    err = await resp.text()
+                    raise ValueError(f"Function Calling API 错误 ({self.model}): {resp.status} - {err}")
+
     def _build_messages(
         self,
         prompt: str = None,

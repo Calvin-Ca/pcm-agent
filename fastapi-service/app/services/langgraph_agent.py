@@ -77,6 +77,109 @@ class AgentState(TypedDict):
 
 # ─── 节点函数 ─────────────────────────────────────────────────────────────────
 
+def _build_openai_tools(tool_registry) -> list:
+    """将 ToolRegistry 的 json_schema 转换为 OpenAI function calling 格式"""
+    tools = []
+    for tool_def in tool_registry.list_tools():
+        schema = {k: v for k, v in tool_def.json_schema.items()
+                  if k != "additionalProperties"}
+        tools.append({
+            "type": "function",
+            "function": {
+                "name": tool_def.name,
+                "description": tool_def.description,
+                "parameters": schema,
+            }
+        })
+    return tools
+
+
+async def node_llm_with_tools(state: AgentState) -> dict:
+    """
+    节点：Function Calling 主入口
+    一次 LLM 调用同时完成：意图识别 + 工具选择 + 参数提取 + 缺参追问
+    LLM/registry 不可用时自动降级到 node_classify_intent
+    """
+    if not _llm_client or not _tool_registry:
+        return await node_classify_intent(state)
+
+    try:
+        tools = _build_openai_tools(_tool_registry)
+        if not tools:
+            return await node_classify_intent(state)
+
+        messages = state.get("conversation_history") or []
+        if not messages:
+            return await node_classify_intent(state)
+
+        result = await _llm_client.generate_with_tools(
+            messages=messages,
+            tools=tools,
+            tool_choice="auto",
+            temperature=0.1,
+            max_tokens=500,
+        )
+    except Exception as e:
+        logger.warning(f"Function Calling 失败，降级到规则路由: {e}")
+        return await node_classify_intent(state)
+
+    if result.get("finish_reason") == "tool_calls":
+        tool_calls = result.get("tool_calls", [])
+        if not tool_calls:
+            return await node_classify_intent(state)
+
+        tc = tool_calls[0]
+        tool_name = tc["name"]
+        tool_params = dict(tc.get("arguments", {}))
+
+        user_ctx = state.get("user_context") or {}
+        if user_ctx.get("user_id") and "user_id" not in tool_params and "member_name" not in tool_params:
+            tool_params["user_id"] = user_ctx["user_id"]
+        if user_ctx.get("auth_token"):
+            tool_params["auth_token"] = user_ctx["auth_token"]
+
+        if tool_name == "save_workhour":
+            missing = []
+            if not tool_params.get("project_id"):
+                missing.append("**项目名称或项目ID**")
+            if not tool_params.get("date"):
+                missing.append("**工时日期**（如'今天'、'2026-03-26'）")
+            if not tool_params.get("duration"):
+                missing.append("**工时时长**（小时，如 8 或 4.5）")
+            if missing:
+                clarify_msg = _build_workhour_clarify_message(tool_params, missing)
+                return {
+                    "intent": "clarify",
+                    "tool_name": None,
+                    "tool_params": tool_params,
+                    "query": state["user_message"],
+                    "clarify_message": clarify_msg,
+                }
+
+        return {
+            "intent": "tool_execution",
+            "tool_name": tool_name,
+            "tool_params": tool_params,
+            "query": state["user_message"],
+        }
+
+    # finish_reason == "stop"：LLM 返回文字（追问/闲聊/知识问答）
+    content = result.get("content", "")
+    user_message = state.get("user_message", "")
+    knowledge_keywords = ["截止", "规定", "制度", "流程", "什么是", "如何", "怎么", "政策", "规则", "要求"]
+    if any(kw in user_message for kw in knowledge_keywords):
+        return {"intent": "knowledge_qa", "tool_name": None, "tool_params": {}, "query": user_message}
+
+    # general_chat：预填 llm_result，避免再调一次 LLM
+    return {
+        "intent": "general_chat",
+        "tool_name": None,
+        "tool_params": {},
+        "query": user_message,
+        "llm_result": content,
+    }
+
+
 async def node_classify_intent(state: AgentState) -> dict:
     """
     节点：意图分类
@@ -136,7 +239,7 @@ async def node_classify_intent(state: AgentState) -> dict:
             if not tool_params.get("project_id"):
                 missing.append("**项目名称或项目ID**")
             if not tool_params.get("date"):
-                missing.append("**工时日期**（如"今天"、"2026-03-26"）")
+                missing.append("**工时日期**（如'今天'、'2026-03-26'）")
             if not tool_params.get("duration"):
                 missing.append("**工时时长**（小时，如 8 或 4.5）")
             if missing:
@@ -237,6 +340,9 @@ async def node_execute_llm(state: AgentState) -> dict:
     优先使用 conversation_history（带记忆的多轮对话），
     无历史时降级为单轮 prompt 模式。
     """
+    if state.get("llm_result"):
+        return {"llm_result": state["llm_result"]}  # node_llm_with_tools 已预填，直接透传
+
     if not _llm_client:
         return {"llm_result": "LLM 服务未初始化", "error": "LLM not available"}
 
@@ -292,18 +398,18 @@ def _build_graph():
     builder = StateGraph(AgentState)
 
     # 注册节点
-    builder.add_node("classify_intent", node_classify_intent)
+    builder.add_node("llm_with_tools", node_llm_with_tools)  # Function Calling 主入口
     builder.add_node("execute_tool", node_execute_tool)
     builder.add_node("execute_rag", node_execute_rag)
     builder.add_node("execute_llm", node_execute_llm)
     builder.add_node("clarify_node", node_clarify)
 
-    # 入口
-    builder.add_edge(START, "classify_intent")
+    # 入口：Function Calling 节点
+    builder.add_edge(START, "llm_with_tools")
 
-    # 条件路由（classify_intent → 执行节点之一）
+    # 条件路由（llm_with_tools → 执行节点之一）
     builder.add_conditional_edges(
-        "classify_intent",
+        "llm_with_tools",
         _route_by_intent,
         {
             "execute_tool": "execute_tool",
@@ -369,10 +475,24 @@ async def stream_agent_response(
     conversation_history: list = []
     if _prompt_builder:
         try:
-            base_system = get_prompt_manager().format("system") or (
-                "你是一个专业的企业工时管理助手。"
-                "请用简洁、友好的方式回答用户问题。"
-            )
+            from datetime import timedelta as _timedelta
+            _today = datetime.now().date()
+            _week_start = _today - _timedelta(days=_today.weekday())
+            try:
+                base_system = get_prompt_manager().format(
+                    "system",
+                    user_id=user_id if user_id != "anonymous" else "未知",
+                    user_name=user_ctx.get("user_name", user_id or "用户"),
+                    entity_type=user_ctx.get("entity_type", "employee"),
+                    department_id=user_ctx.get("department_id", ""),
+                    today=str(_today),
+                    week_start=str(_week_start),
+                    week_end=str(_week_start + _timedelta(days=6)),
+                    last_week_start=str(_week_start - _timedelta(weeks=1)),
+                    last_week_end=str(_week_start - _timedelta(days=1)),
+                ) or "你是一个专业的企业工时管理助手。请用简洁、友好的方式回答用户问题。"
+            except Exception:
+                base_system = "你是一个专业的企业工时管理助手。请用简洁、友好的方式回答用户问题。"
             conversation_history = await _prompt_builder.build_messages_with_history(
                 user_message=message,
                 session_id=effective_session_id,
@@ -429,7 +549,7 @@ async def stream_agent_response(
         async for chunk in _graph.astream(initial_state):
             # chunk 是 {node_name: state_delta} 的字典
             for node_name, state_delta in chunk.items():
-                if node_name == "classify_intent":
+                if node_name in ("classify_intent", "llm_with_tools"):
                     intent = state_delta.get("intent", "general_chat")
                     log_intent = intent
                     log_route_type = {

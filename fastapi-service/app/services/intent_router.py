@@ -259,7 +259,7 @@ class IntentRouter:
                 "- query_project：查询项目信息\n"
                 "- compute_statistics：统计分析工时数据\n"
                 "- generate_weekly_report：生成工作周报\n"
-                "- save_workhour：填报工时记录（用户说"填工时"、"记录工时"、"报工时"等）"
+                "- save_workhour：填报工时记录（用户说'填工时'、'记录工时'、'报工时'等）"
             )
             prompt = get_prompt_manager().format(
                 "intent_classify",
