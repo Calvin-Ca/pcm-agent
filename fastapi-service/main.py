@@ -1,6 +1,18 @@
 """
 FastAPI AI Service - 主应用入口
 """
+import os
+from pathlib import Path
+
+# 必须在所有业务 import 之前加载 .env，否则 os.getenv() 拿不到值
+_base_dir = Path(__file__).parent.parent
+try:
+    from dotenv import load_dotenv
+    load_dotenv(_base_dir / ".env")
+    load_dotenv(_base_dir / ".env.local", override=True)  # 本地开发覆盖
+except ImportError:
+    pass  # 生产环境由 Docker/系统环境变量注入，不需要 dotenv
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -99,7 +111,9 @@ async def lifespan(app: FastAPI):
         logger.info("✅ Chat components initialized")
 
         # 初始化 LangChain RAG 服务（混合检索：Milvus + BM25）
-        kb_result = await initialize_langchain_rag(kb_path="knowledge-base")
+        # knowledge-base 相对于本文件所在目录的上一层（ai-service/）
+        _kb_path = os.path.join(os.path.dirname(__file__), "..", "knowledge-base")
+        kb_result = await initialize_langchain_rag(kb_path=_kb_path)
         if kb_result.get("success"):
             logger.info(
                 f"✅ LangChain RAG initialized: {kb_result.get('loaded_files', 0)} files, "
@@ -201,7 +215,7 @@ async def root():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
-        "app.main:app",
+        "main:app",
         host="0.0.0.0",
         port=8000,
         reload=True

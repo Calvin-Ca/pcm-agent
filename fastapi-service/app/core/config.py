@@ -55,10 +55,15 @@ class Settings(BaseSettings):
     
     # 工具配置
     TOOL_TIMEOUT_SECONDS: int = 30
-    
+
+    # SpringBoot 后端地址（工具调用时使用）
+    SPRINGBOOT_BASE_URL: str = "http://localhost:8080"
+
     class Config:
-        env_file = "../.env"
+        # .env.local 优先级高于 .env，本地开发在 .env.local 中覆盖差异值
+        env_file = ("../.env", "../.env.local")
         case_sensitive = True
+        extra = "ignore"
 
 
 settings = Settings()
