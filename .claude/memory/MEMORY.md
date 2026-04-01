@@ -1,0 +1,17 @@
+# MEMORY.md
+
+## ⚠️ 必读：架构诊断
+- 助手"笨"的根因诊断 → 已归档至 `docs/changelog/diagnosis-2026-03-31.md`（两步LLM调用+弱System Prompt是根因，Function Calling是解法，已完成改造）
+
+## 项目背景
+- [项目概览](project_overview.md) — 技术栈、**改造后架构链路**、核心服务文件、启动方式、环境配置（2026-03-31 更新）
+- [文档目录结构](project_docs_structure.md) — 两个 docs 目录整合后的结构，各文件定位（2026-03-31 整合）
+
+## 开发计划
+- [当前开发优先级](project_next_steps.md) — Function Calling + RAG + param_resolver 均已完成，下一步：测试数据生成 + 精度验证
+
+## 接口参考
+- [SpringBoot API 参考](reference_springboot_api.md) — 工时/项目/用户接口路径、字段名、查询参数（2026-04-01 整理自源码）
+
+## 踩坑记录
+- [RAG/Milvus 兼容性修复经验](feedback_rag_milvus_fixes.md) — pymilvus 2.6 ORM bug、DashScope embedding 兼容、langchain包结构变化（2026-03-31）

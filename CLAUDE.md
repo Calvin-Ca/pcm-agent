@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 跨机器记忆同步
+
+记忆文件存放在项目内的 `.claude/memory/` 目录（已纳入 git）。
+**新对话开始时请先读取 `.claude/memory/MEMORY.md`**，然后按需读取其中索引的各记忆文件，恢复项目上下文。
+
 ## 项目概述
 
 这是**工时管理系统**的 AI 智能助手服务模块，基于 FastAPI + LangGraph 构建，提供自然语言交互能力，与 Spring Boot 主后端（端口 8080）集成。
