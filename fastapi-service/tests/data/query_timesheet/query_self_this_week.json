@@ -1,0 +1,502 @@
+[
+  {
+    "id": "qsw_001",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "短句本周工时",
+    "input": "本周工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_002",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "短句这周",
+    "input": "这周",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_003",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "口语化看看本周",
+    "input": "看看本周工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_004",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "长句正式查询本周",
+    "input": "请帮我查询一下本周的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_005",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "口语化瞅一眼这周",
+    "input": "瞅一眼这周填了多少",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_006",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "口语化查下本周",
+    "input": "查下本周工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_007",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "长句口语化查询",
+    "input": "帮我看看这周一共填了多少小时的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_008",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "短句这周工时",
+    "input": "这周工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_009",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "口语化瞅瞅这周",
+    "input": "瞅瞅这周填报",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_010",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "这个星期表达",
+    "input": "这个星期填了多少",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_011",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "口语化看看这周",
+    "input": "看看这周填的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_012",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "长句正式查询本周填报",
+    "input": "请查询我本周填报的工时统计",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_013",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "口语化查下这周",
+    "input": "查下这周工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_014",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "本星期表达",
+    "input": "本星期工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_015",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "口语化瞅一眼本周",
+    "input": "瞅一眼本周填报情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_016",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "长句本周统计",
+    "input": "请帮我统计一下本周的工时数据",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_017",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "口语化看看这周填了啥",
+    "input": "看看这周填了啥",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_018",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "这礼拜表达",
+    "input": "这礼拜填了多少工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_019",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "口语化查查本周",
+    "input": "查查本周工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  },
+  {
+    "id": "qsw_020",
+    "category": "query_timesheet",
+    "sub_type": "query_self_this_week",
+    "description": "短句本周",
+    "input": "本周",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+  }
+]
