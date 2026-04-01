@@ -140,9 +140,13 @@ async def query_timesheet_handler(**kwargs) -> Dict[str, Any]:
             "startDate": params.start_date,
             "endDate": params.end_date,
         }
-        # 仅在明确指定用户时传 memberId；不传则由 SpringBoot 从 JWT 获取当前用户
+        # 优先使用解析后的用户ID，否则回退到当前登录用户
+        # langgraph_agent.py 在无 member_name 时会将当前用户 user_id 注入参数，
+        # 此处作为 fallback 防止不传 memberId 导致 SpringBoot 返回全员数据
         if resolved_user_id:
             query_params["memberId"] = resolved_user_id
+        elif params.user_id:
+            query_params["memberId"] = params.user_id
 
         if params.project_id:
             query_params["projectId"] = params.project_id
