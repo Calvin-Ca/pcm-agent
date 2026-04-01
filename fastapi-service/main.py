@@ -58,6 +58,11 @@ async def lifespan(app: FastAPI):
 
     # 启动时初始化
     try:
+        # 初始化数据库表（幂等，表已存在时不报错）
+        from app.services.database import get_db_service
+        get_db_service().create_tables()
+        logger.info("✅ Database tables ready")
+
         # 初始化工具注册中心
         tool_registry = ToolRegistry()
         logger.info("✅ Tool Registry initialized")
