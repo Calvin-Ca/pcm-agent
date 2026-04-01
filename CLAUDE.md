@@ -62,12 +62,11 @@ Spring Boot (8080)
   → 注入 X-User-ID、X-Entity-Type、X-Department-ID 请求头（已完成 JWT 验证）
   → POST /api/ai/chat/stream（FastAPI 8000）
     → LangGraph Agent
-      → IntentRouter.classify（规则匹配 → LLM 兜底）
-      → 分支路由:
-          TOOL_EXECUTION → PermissionValidator + TaskExecutor → 调用工具（HTTP 转发到 SpringBoot）
-          KNOWLEDGE_QA   → LangChain RAG（Milvus + BM25 + CrossEncoder Reranker）
-          GENERAL_CHAT   → LLM 直接回复
-          CLARIFY        → 澄清追问
+      → node_llm_with_tools（Function Calling 主节点，qwen-plus + tools schema）
+          ├─ tool_calls → ParamResolver（名称→ID）→ PermissionValidator → TaskExecutor → 调用工具
+          ├─ knowledge_qa → LangChain RAG（Milvus + BM25 + CrossEncoder Reranker）
+          ├─ general_chat → LLM 直接回复
+          └─ （降级）→ IntentRouter 规则匹配（LLM 不可用时）
     → SSE 事件流返回
 ```
 
@@ -75,9 +74,10 @@ Spring Boot (8080)
 
 | 文件 | 职责 |
 |------|------|
-| `app/services/intent_router.py` | 意图识别与路由（1093 行），是系统入口的核心逻辑 |
-| `app/services/langgraph_agent.py` | LangGraph DAG 编排，管理节点跳转和流式输出 |
-| `app/services/task_executor.py` | 工具执行：参数解析、权限预检、调用工具 |
+| `app/services/langgraph_agent.py` | LangGraph DAG 编排，Function Calling 主节点 + 节点路由 |
+| `app/services/intent_router.py` | 规则匹配意图路由（降级 fallback，LLM 不可用时使用） |
+| `app/services/param_resolver.py` | 统一参数解析层：项目名→ID、成员名→ID，带进程级缓存 |
+| `app/services/task_executor.py` | 工具执行：依赖注入、权限预检、调用工具 |
 | `app/services/permission_validator.py` | 细粒度权限校验，基于 X-Entity-Type 角色 |
 | `app/services/langchain_rag.py` | RAG 管道：EnsembleRetriever + MultiQuery + Reranker |
 | `app/services/tool_registry.py` | 单例工具注册中心，负责工具注册、查询、参数验证 |
@@ -89,11 +89,11 @@ Spring Boot (8080)
 
 5 个业务工具，均通过 HTTP 调用 Spring Boot API：
 
-- `query_timesheet.py` — 工时查询（存在已知 Bug：默认返回全员数据，参数注入缺陷）
+- `query_timesheet.py` — 工时查询（`memberId` 无值时回退到当前用户，已修复全员数据问题）
 - `query_project.py` — 项目查询
 - `compute_statistics.py` — 统计分析
 - `generate_weekly_report.py` — 周报生成
-- `save_workhour.py` — 引导式工时填报（多轮对话）
+- `save_workhour.py` — 工时填报（已接入 `param_resolver`，自动将项目名转换为 ID）
 
 ### LLM 模型配置
 
@@ -114,17 +114,26 @@ Spring Boot (8080)
 
 Prompt 模板存放在 `prompts/*.yaml`（系统 prompt、意图分类、参数提取、RAG、周报），由 `PromptManager` 加载并通过 `PromptBuilder` 合并短期/长期记忆后注入上下文。
 
-## 已知问题（优先修复）
+## 已知问题
 
-1. **`query_timesheet.py`** — 查工时时默认返回全员数据，参数注入有缺陷
-2. **`save_workhour.py`** — 把项目名当作项目 ID 传递，参数解析层缺少类型转换
-3. 参数处理逻辑分散在多处，缺少统一的参数校验层
+> 以下问题均已修复（2026-04-01）
+
+- ~~`query_timesheet.py` 默认返回全员数据~~ → 已在第143行加 `elif params.user_id` fallback
+- ~~`save_workhour.py` 把项目名当项目 ID~~ → 已接入 `param_resolver.resolve_project_id()`
+- ~~参数处理逻辑分散~~ → 已新建 `app/services/param_resolver.py` 统一处理
 
 ## 关键配置文件
 
 - `.env.example` — 环境变量模板（所有配置项说明）
+- `.env.local` — 本地开发覆盖（REDIS_HOST/MILVUS_HOST/SPRINGBOOT_BASE_URL=localhost）
 - `fastapi-service/app/core/config.py` — Settings 类（Pydantic），应用级配置入口
 - `docker-compose.yml` — 开发环境，包含全部依赖服务
 - `docker-compose.prod.yml` — 生产环境覆盖配置
 - `prompts/*.yaml` — Prompt 模板（修改后无需重启，热加载）
 - `knowledge-base/*.md` — 企业知识库文档（修改后需重新构建 Milvus 索引）
+
+## 参考文档
+
+- `docs/springboot-api-reference.md` — SpringBoot 后端接口速查（工时/项目/用户，含字段说明）
+- `docs/roadmap.md` — 升级路线与优先级
+- `docs/changelog-*.md` — 各版本变更记录
