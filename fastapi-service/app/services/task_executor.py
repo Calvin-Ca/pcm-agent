@@ -177,7 +177,13 @@ class TaskExecutor:
             logger.error(f"任务 {task.task_id} 执行超时")
             task.fail_execution(error_msg)
             return {"error": error_msg}
-            
+
+        except PermissionError as e:
+            error_msg = str(e)
+            logger.warning(f"任务 {task.task_id} 权限拒绝: {error_msg}")
+            task.fail_execution(error_msg)
+            return {"error": error_msg}
+
         except Exception as e:
             error_msg = f"任务执行异常: {str(e)}"
             logger.error(f"任务 {task.task_id} 执行异常: {e}", exc_info=True)
@@ -246,12 +252,14 @@ class TaskExecutor:
                 if user_id:
                     result = self.permission_validator.can_access_user_data(permission_context, user_id)
                     if not result.allowed:
-                        raise PermissionError(f"无权限访问用户 {user_id} 的数据：{result.reason}")
+                        logger.warning(f"权限拒绝: user_id={user_id}, reason={result.reason}")
+                        raise PermissionError("您没有权限查询该用户的数据")
 
                 if project_id:
                     result = self.permission_validator.can_access_project_data(permission_context, project_id)
                     if not result.allowed:
-                        raise PermissionError(f"无权限访问项目 {project_id} 的数据：{result.reason}")
+                        logger.warning(f"权限拒绝: project_id={project_id}, reason={result.reason}")
+                        raise PermissionError("您没有权限访问该项目的数据")
 
             elif task.tool_name == 'compute_statistics':
                 # 统计工具需要验证统计范围权限

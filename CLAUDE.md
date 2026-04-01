@@ -136,4 +136,4 @@ Prompt 模板存放在 `prompts/*.yaml`（系统 prompt、意图分类、参数�
 
 - `docs/springboot-api-reference.md` — SpringBoot 后端接口速查（工时/项目/用户，含字段说明）
 - `docs/roadmap.md` — 升级路线与优先级
-- `docs/changelog-*.md` — 各版本变更记录
+- `docs/changelog/` — 各版本变更记录（按日期命名，如 `2026-04-01.md`）
