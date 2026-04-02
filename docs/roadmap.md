@@ -1,7 +1,7 @@
 # AI 智能助手 — 升级路线与优化建议
 
-> 更新日期：2026-03-27
-> 当前版本：1.0（已完成 MVP + Memory + RAG + 审计日志）
+> 更新日期：2026-04-02
+> 当前版本：1.1（已完成 MVP + Memory + RAG + 审计日志 + Function Calling + 参数解析层）
 
 ---
 
@@ -18,61 +18,33 @@
 | 长期用户记忆 | ✅ | Redis + BM25 + 时间衰减 |
 | Prompt 管理 | ✅ | YAML 热更新，LangChain 模板 |
 | 审计日志 | ✅ | conversation_logs + ai_sessions 表 |
-| LangGraph 编排 | ✅ | classify_intent → execute_tool/rag/llm/clarify |
+| LangGraph 编排 | ✅ | llm_with_tools（Function Calling）→ execute_tool/rag/llm/clarify，IntentRouter 降级为 fallback |
+| Function Calling 架构 | ✅ | qwen-plus + tools schema，一次调用完成意图+参数提取（2026-03-31）|
+| 统一参数解析层 | ✅ | param_resolver.py：项目名/成员名→ID，含进程级缓存（2026-04-01）|
 
 ---
 
-## 二、已知 Bug 与修复方案（2026-03-27 实测发现）
+## 二、~~已知 Bug~~（均已修复，2026-04-01）
 
-### 2.1 查工时返回全员数据
+### 2.1 ✅ 查工时返回全员数据（已修复）
 
-**根因**：`query_timesheet.py` 在 `resolved_user_id` 为空时不传 `memberId` 参数，SpringBoot 侧无过滤条件，返回全员数据。`intent_router.py` 的 prompt 中"查我的工时"里的"我"未被自动映射为当前用户 ID。
+**修复**：`query_timesheet.py` 第143行加 `elif params.user_id` fallback，无 `member_name` 时强制传当前用户 `memberId`。
 
-**涉及文件**：
-- `app/tools/query_timesheet.py`：第 143-145 行，`resolved_user_id` 为空时应 fallback 到当前用户 ID
-- `app/services/langgraph_agent.py`：第 128 行，`user_id` 注入逻辑需确保工具能正确接收
-- `app/services/intent_router.py`：prompt 中明确"查工时"默认含义为"查我自己的"
-
-**修复方案**：
-```python
-# query_timesheet.py 修改：无指定对象时默认查当前用户
-if resolved_user_id:
-    query_params["memberId"] = resolved_user_id
-elif user_id:  # fallback 到当前登录用户
-    query_params["memberId"] = user_id
-```
-
-**预估工作量**：1-2 小时
+> 详见 `docs/changelog/2026-04-01.md`
 
 ---
 
-### 2.2 填工时把项目名当项目 ID
+### 2.2 ✅ 填工时把项目名当项目 ID（已修复）
 
-**根因**：`intent_router.py` 的参数提取 prompt 允许 `project_id` 字段接收项目名称字符串，LLM 直接填入名称，而 `save_workhour.py` 不做名称→ID 的转换，直接把名称传给 SpringBoot，后端找不到对应项目报错。
+**修复**：新建 `param_resolver.py`，`save_workhour.py` 在发 API 前调用 `resolve_project_id()`，自动将项目名转为数字 ID。
 
-**涉及文件**：
-- `app/services/intent_router.py`：prompt 中 `project_id` 字段描述改为"必须是纯数字 ID，不接受项目名称"
-- `app/tools/save_workhour.py`：增加解析层——若 `project_id` 不是纯数字，先调 `/api/project/search?name=xx` 查出真实 ID，再填报
-
-**修复方案**：
-```python
-# save_workhour.py 增加项目名转ID
-if project_id and not str(project_id).isdigit():
-    # 调 SpringBoot 接口按名称查项目
-    project_id = await resolve_project_id_by_name(project_id, auth_token)
-    if not project_id:
-        return {"success": False, "message": f"找不到项目，请确认项目名称是否正确"}
-```
-
-**预估工作量**：2-3 小时（含查询接口调用）
+> 详见 `docs/changelog/2026-04-01.md`
 
 ---
 
-### 2.3 架构层面的参数处理问题
+### 2.3 ✅ 参数处理逻辑分散（已修复）
 
-**根因**：参数提取、类型转换、权限注入分散在 `intent_router` / `langgraph_agent` / `task_executor` 三个文件中，相互覆盖，缺少统一的参数校验层。
-
-**建议**：中期重构时增加一个统一的参数解析层（见第五节 5.4）。
+**修复**：新建 `app/services/param_resolver.py` 统一处理项目名→ID、成员名→ID，含进程级内存缓存。
 
 ---
 
@@ -314,9 +286,9 @@ LLM 提取参数（可能含名称/错误类型）
 
 ---
 
-## 九、核心架构升级：Function Calling 改造（★★★★★ 最高优先级）
+## 九、✅ 核心架构升级：Function Calling 改造（已完成，2026-03-31）
 
-> **问题诊断**：助手"不聪明"的根因不是某个工具的 Bug，而是意图识别架构本身。
+> **背景**：助手"不聪明"的根因不是某个工具的 Bug，而是意图识别架构本身。改造已完成，详见 `docs/changelog/2026-03-31.md`。
 
 ### 当前架构的三个瓶颈
 
@@ -411,41 +383,71 @@ qwen-plus 支持 OpenAI 兼容的 `tools` 参数（函数调用），可以在 *
 ## 十、修订后的推荐执行顺序
 
 ```
-🔴 第一优先（本周）— 框架升级，从根本上解决"助手笨"的问题
-  ├── 增强 System Prompt — 注入用户身份、默认行为、工具说明（0.5天）
-  ├── 实现 Function Calling 调用层（1天）
-  ├── 简化 LangGraph 流程（0.5天）
-  └── 修复数据库密码硬编码（安全风险，30分钟）
+✅ 已完成（L2：Tool Agent）
+  ├── ✅ Function Calling 架构改造（2026-03-31）
+  ├── ✅ 增强 System Prompt — 注入用户身份、默认行为、工具说明
+  ├── ✅ 统一参数校验层 param_resolver.py（2026-04-01）
+  └── ✅ Bug 修复：查工时全员数据 / 填工时项目名当ID
 
-🟡 第二优先（下周）— 工具级修复 + 参数校验
-  ├── 统一参数校验层 param_resolver.py — 项目名转ID、成员名转ID（1天）
-  │   （Function Calling 改造后，查工时默认查自己的 Bug 自动消失）
-  ├── jieba 中文分词接入 BM25（1小时）
-  └── 补充知识库文档（考勤/审核制度，不写代码）
+🔴 第一阶段（4.2 ~ 4.4）— 精度达标 + 业务补齐
+  ├── 精度 v2 回归测试（已有改进：关键词扩展+描述消歧+System Prompt）
+  ├── 分析 191 条 clarify 失败用例，调整测试期望或补 Few-shot
+  ├── 目标：整体精度 85%+（不含 clarify 争议项达 90%+）
+  ├── 工时审核 Tool — approve_workhour（3h，仅 deptAdmin+）
+  └── jieba 中文分词接入 BM25 + 补充知识库文档（1h）
 
-🟢 第三优先（2周内）— 能力扩展
-  ├── 工时审核 Tool（3-4小时，改造后只需写工具+schema）
-  ├── 导出报表 Tool（2-3小时）
-  └── Prometheus 指标收集（Task 50.1-50.3，3小时）
+🟡 第二阶段（4.7 ~ 4.11）— L3：DeepSearch / 多步推理
+  ├── 激活 PlannerAgent + execution loop（1.5d）
+  │   让"查各项目工时 → 找异常 → 生成报告"成为可能
+  ├── Tool 组合执行 + 结构化中间状态 context（1d）
+  │   一个问题 → 多个 Tool 串联，中间结果可追溯
+  ├── SQL Agent — 只读连接 + SQL 白名单（1.5d）
+  │   "统计各部门近三月工时趋势并排序"
+  └── 导出报表 Tool — export_report（2h）
 
-🔵 中长期（按需）
-  ├── MCP Server 接入（工具 > 10 个时）
-  ├── 激活 PlannerAgent（多步骤任务）
-  ├── Code Interpreter / SQL 分析
-  └── Grafana Dashboard + 流式 RAG
+🟢 第三阶段（4.14 ~ 4.18）— 稳定性 + 本地部署 + 监控
+  ├── LLM 本地部署 — vLLM + Qwen2.5（0.5-1d）
+  │   GPU 服务器部署推理服务，代码零改动（仅改 .env 指向本地地址）
+  │   需验证 Function Calling 兼容性（vLLM tool_calls 格式）
+  │   优势：无 API 调用成本、低延迟、数据不出内网
+  ├── Self-Reflection 机制（工具结果合理性校验，0.5d）
+  ├── Prometheus 指标收集（Task 50.1-50.3，0.5d）
+  ├── 修复数据库密码硬编码（安全风险，0.5h）
+  └── 流式 RAG 输出（知识问答不再"卡住"，0.5d）
+
+🔵 中长期（按需）— L4/L5 方向
+  ├── MCP Server 接入（工具 > 10 个时，自动发现 SpringBoot 接口）
+  ├── Multi-Agent 角色协作（等有明确的多角色业务场景再做，避免过度设计）
+  ├── Code Interpreter Python 沙箱（SQL Agent 之后的进阶）
+  ├── 自动任务执行（定时分析异常 + 通知，Autonomous Agent 方向）
+  └── 记忆升级 Memory 2.0（用户画像 + 行为模式 + 偏好学习）
+```
+
+### AI 能力等级参照（来自 GPT 评审，结合项目实际调整）
+
+```
+L1  RAG 问答           ← 已完成
+L2  Tool Agent         ← 当前（Function Calling + 5 个工具 + RAG）
+L3  DeepSearch Agent   ← 第二阶段目标（多步推理 + Tool 组合 + SQL）
+L4  Multi-Agent        ← 中长期（等业务场景驱动，不提前做）
+L5  Autonomous Agent   ← 远期（定时任务 + 自动执行 + 通知）
 ```
 
 ---
 
-## 附：让 AI 更聪明的成本对比（修订版）
+## 附：让 AI 更聪明的成本对比（修订版，2026-04-02）
 
-| 手段 | 智能提升效果 | 开发成本 | 运行成本 | 建议 |
-|------|-------------|----------|----------|------|
-| **Function Calling 改造** | ★★★★★ 意图+参数一步到位 | 中（2-3天） | 略增（统一用 plus） | **最高优先** |
-| **增强 System Prompt** | ★★★★ 默认行为+上下文感知 | 极低（改 YAML） | 无 | **立即可做** |
-| 完善知识库文档 | ★★★ 制度问答更准 | 极低（加文档） | 无 | 随时补充 |
-| 统一参数校验层 | ★★★ 类型转换+缺参追问 | 中（1天） | 无 | Function Calling 后做 |
-| 接入更多 Tool | ★★★ 能做更多事 | 低（改造后每个1-2小时） | 低 | 框架改完再扩展 |
-| MCP Server 批量接入 | ★★★★ 能力快速扩展 | 中（一次性） | 低 | 工具 > 10 个时 |
-| 激活 PlannerAgent | ★★★ 支持复杂多步骤 | 中 | 中 | 按需 |
-| Code Interpreter | ★★★★★ 自定义分析 | 高 | 中 | 长期 |
+| 手段 | 智能提升 | 开发成本 | 建议 |
+|------|---------|---------|------|
+| ~~Function Calling 改造~~ | ★★★★★ | ~~2-3天~~ | ✅ 已完成 |
+| ~~增强 System Prompt~~ | ★★★★ | ~~0.5天~~ | ✅ 已完成 |
+| ~~统一参数校验层~~ | ★★★ | ~~1天~~ | ✅ 已完成 |
+| **精度调优（v2 回归）** | ★★★★ | 2天 | **🔴 当前** |
+| **工时审核 Tool** | ★★★ | 3h | **🔴 当前** |
+| **PlannerAgent + loop** | ★★★★★ | 1.5天 | **🟡 第二阶段** |
+| **SQL Agent（DeepSearch）** | ★★★★★ | 1.5天 | **🟡 第二阶段** |
+| **LLM 本地部署（vLLM）** | ★★★★ | 0.5-1天 | **🟢 第三阶段** |
+| Self-Reflection | ★★★ | 0.5天 | 🟢 第三阶段 |
+| MCP Server 批量接入 | ★★★★ | 1-2天 | 🔵 工具 > 10 个时 |
+| Multi-Agent | ★★★ | 3-5天 | 🔵 等业务场景驱动 |
+| Code Interpreter 沙箱 | ★★★★★ | 2-3天 | 🔵 SQL Agent 之后 |

@@ -1,7 +1,7 @@
 # AI 智能助手 — 部署文档
 
 > 适用版本：当前主分支
-> 更新日期：2026-03-26
+> 更新日期：2026-04-02
 
 ---
 
@@ -45,26 +45,29 @@
 │  │                  LangGraph Agent                        │  │
 │  │                                                         │  │
 │  │  START                                                  │  │
-│  │    └─► classify_intent ──(条件路由)──┬─► execute_tool  │  │
-│  │             │                       ├─► execute_rag   │  │
-│  │             │                       └─► execute_llm   │  │
-│  │             ▼                              │           │  │
-│  │       Intent Router                        └──► END    │  │
-│  │    (规则匹配 + LLM 兜底)                               │  │
+│  │    └─► llm_with_tools ──(条件路由)──┬─► execute_tool  │  │
+│  │      (Function Calling 主节点)      ├─► execute_rag   │  │
+│  │      qwen-plus + tools schema       ├─► execute_llm   │  │
+│  │      一次调用完成意图+参数提取        └─► clarify_node │  │
+│  │             │                              │           │  │
+│  │      降级 ──┘ (LLM 不可用时)              └──► END    │  │
+│  │             ▼                                           │  │
+│  │       classify_intent                                   │  │
+│  │    (IntentRouter 规则匹配 fallback)                     │  │
 │  └─────────────────────────────────────────────────────────┘  │
 │                                                               │
 │  ┌──────────────────┐  ┌──────────────────────────────────┐   │
-│  │   Intent Router  │  │         RAG 检索引擎              │   │
-│  │                  │  │                                  │   │
-│  │ 规则匹配（关键词）│  │  knowledge-base/ 文档加载         │   │
-│  │ LLM 分类（兜底） │  │  MarkdownHeaderTextSplitter       │   │
-│  │ 参数提取（LLM）  │  │  → EnsembleRetriever             │   │
+│  │  Intent Router   │  │         RAG 检索引擎              │   │
+│  │  (降级 fallback) │  │                                  │   │
+│  │                  │  │  knowledge-base/ 文档加载         │   │
+│  │ 关键词规则匹配    │  │  MarkdownHeaderTextSplitter       │   │
+│  │ （LLM 不可用时） │  │  → EnsembleRetriever             │   │
 │  │                  │  │    ├── Milvus 向量检索（60%）     │   │
 │  │ 路由结果：        │  │    └── BM25 关键词检索（40%）     │   │
 │  │ • tool_execution │  │  → MultiQueryRetriever（改写）    │   │
 │  │ • knowledge_qa   │  │  → CrossEncoderReranker（精排）   │   │
 │  │ • general_chat   │  │  → ChatPromptTemplate + LLM       │   │
-│  │ • complex_request│  │  → 附加文档来源标注               │   │
+│  │ • clarify        │  │  → 附加文档来源标注               │   │
 │  └──────────────────┘  └──────────────────────────────────┘   │
 │                                                               │
 │  ┌──────────────────┐  ┌──────────────────────────────────┐   │
@@ -116,8 +119,8 @@
                  └─────────┘
                                  ┌──────────────────────────┐
                                  │  阿里云 DashScope (HTTPS) │
-                                 │  • qwen-turbo（意图分类） │
-                                 │  • qwen-plus（对话生成）  │
+                                 │  • qwen-plus（主对话+工具）│
+                                 │  • qwen-flash（降级路径） │
                                  │  • text-embedding-v2      │
                                  │    （知识库向量化）       │
                                  └──────────────────────────┘
@@ -144,11 +147,10 @@
   │
   ├─③ LangGraph.astream() 启动图执行
   │
-  ├─④ [节点] classify_intent
-  │    ├── 规则匹配：关键词"工时"→ 命中 tool_execution
-  │    ├── 若规则不确定 → 调用 LLM（intent_classify.yaml prompt）
-  │    └── 参数提取：调用 LLM（param_extract.yaml prompt）
-  │         → start_date=本周一, end_date=今天, user_id=当前用户
+  ├─④ [节点] llm_with_tools（Function Calling 主节点）
+  │    └── qwen-plus + tools schema + system prompt（含用户身份/日期/工具规则）
+  │         一次 LLM 调用同时完成：意图识别 + 工具选择 + 参数提取
+  │         → tool_call: query_timesheet(user_id=当前用户, start_date=本周一, end_date=今天)
   │
   ├─⑤ SSE 发送 tool_call 事件 → 前端显示"正在查询工时..."
   │
@@ -173,7 +175,7 @@
 用户提问
   │
   ▼
-[classify_intent] → intent = knowledge_qa
+[llm_with_tools] → finish_reason=stop + 含知识问答关键词 → intent = knowledge_qa
   │
   ▼
 [execute_rag] → LangChainRAGService.query()
