@@ -21,7 +21,7 @@ from typing import Any
 
 VALID_INTENTS = {"tool_execution", "knowledge_qa", "general_chat", "clarify"}
 VALID_TOOLS = {"query_timesheet", "save_workhour", "query_project", None}
-VALID_ENTITY_TYPES = {"employee", "deptAdmin", "deptSubAdmin", "companyAdmin", "superAdmin"}
+VALID_ENTITY_TYPES = {"employee", "deptSubAdmin", "deptAdmin", "regionAdmin", "companyAdmin", "superAdmin"}
 VALID_CATEGORIES = {
     "query_timesheet", "save_workhour", "query_project",
     "knowledge_qa", "general_chat", "edge_cases",
