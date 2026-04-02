@@ -101,8 +101,8 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
-      "tool_name": null,
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
         "project_id": "p002"
@@ -332,8 +332,8 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
-      "tool_name": null,
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
         "project_id": "p002"
@@ -1253,8 +1253,8 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
-      "tool_name": null,
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
         "project_id": "p003"
