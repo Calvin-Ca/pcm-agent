@@ -40,20 +40,36 @@ def _parse_test_id(node_id: str) -> tuple[str, str]:
     else:
         case_id = node_id
 
-    # 前缀映射到 category（按生成数据时约定的 id 前缀）
+    # 前缀映射到 category（由 tests/data/ 下各 JSON 文件的 id 字段首段决定）
     prefix_map = {
-        "qt":  "query_timesheet",
-        "qst": "query_timesheet",
-        "qsw": "query_timesheet",
-        "qsl": "query_timesheet",
-        "qsm": "query_timesheet",
-        "qot": "query_timesheet",
-        "qol": "query_timesheet",
-        "sw":  "save_workhour",
-        "qp":  "query_project",
-        "kq":  "knowledge_qa",
-        "gc":  "general_chat",
-        "ec":  "edge_cases",
+        # edge_cases / general_chat / knowledge_qa / query_project
+        "ec":   "edge_cases",
+        "gc":   "general_chat",
+        "kq":   "knowledge_qa",
+        "qp":   "query_project",
+        # query_timesheet — self
+        "qt":   "query_timesheet",
+        "qst":  "query_timesheet",   # query_self_today
+        "qsw":  "query_timesheet",   # query_self_this_week
+        "qsl":  "query_timesheet",   # query_self_last_week
+        "qsm":  "query_timesheet",   # query_self_this_month
+        "qspm": "query_timesheet",   # query_self_last_month
+        "qsdr": "query_timesheet",   # query_self_date_range
+        "qsbp": "query_timesheet",   # query_self_by_project
+        # query_timesheet — others
+        "qot":  "query_timesheet",   # query_others_today
+        "qotw": "query_timesheet",   # query_others_this_week
+        "qolm": "query_timesheet",   # query_others_last_month
+        "qol":  "query_timesheet",
+        "qobm": "query_timesheet",   # query_others_by_member
+        "qobp": "query_timesheet",   # query_others_by_project
+        # save_workhour — all variants & batches
+        "sw":   "save_workhour",
+        "swh":  "save_workhour",     # batch2/3/4/5 + remaining
+        "swhs": "save_workhour",     # save_workhour_simple
+        "swhm": "save_workhour",     # save_workhour_multi_days
+        "swhp": "save_workhour",     # save_workhour_with_project
+        "swhr": "save_workhour",     # save_workhour_with_remark
     }
     prefix = case_id.split("_")[0].lower()
     category = prefix_map.get(prefix, "unknown")
