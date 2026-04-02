@@ -82,6 +82,8 @@ fs.writeFileSync(filePath, JSON.stringify(content, null, 2), 'utf-8');
         # 👉 清掉 Kimi
         Remove-Item Env:ANTHROPIC_API_KEY -ErrorAction SilentlyContinue
         Remove-Item Env:ANTHROPIC_BASE_URL -ErrorAction SilentlyContinue
+        Remove-Item Env:ANTHROPIC_MODEL -ErrorAction SilentlyContinue
+        Remove-Item Env:ANTHROPIC_AUTH_TOKEN -ErrorAction SilentlyContinue
 
         $env:LLM_MODE = "claude-pro"
 
