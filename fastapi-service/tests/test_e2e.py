@@ -1,5 +1,5 @@
 """
-Phase 8 端到端测试脚本
+端到端测试脚本
 
 测试内容：
 1. 健康检查
@@ -9,7 +9,7 @@ Phase 8 端到端测试脚本
 
 运行方式:
     cd fastapi-service
-    python test_e2e_phase8.py
+    python test_e2e.py
 
 环境要求:
     - AI Service 运行在 http://localhost:8000
@@ -76,8 +76,8 @@ async def test_tools_list():
         except Exception as e:
             print(f"  ⚠️ 工具列表获取失败: {e}")
 
-    # 检查 Phase 8 特定工具
-    print("\n  Phase 8 工具状态:")
+    # 检查核心工具状态
+    print("\n  核心工具状态:")
     expected_tools = ["generate_weekly_report", "save_workhour"]
     for tool_name in expected_tools:
         print(f"    ✅ {tool_name} 已注册")
@@ -216,7 +216,7 @@ async def test_streaming_chat():
 async def main():
     """主测试流程"""
     print("\n" + "=" * 70)
-    print(" Phase 8 端到端测试 - 周报生成 + 工时填报 ")
+    print(" AI 服务端到端测试 - 周报生成 + 工时填报 ")
     print("=" * 70)
     print(f"\n  测试目标: {BASE_URL}")
     print(f"  测试用户: {TEST_USER_ID}")

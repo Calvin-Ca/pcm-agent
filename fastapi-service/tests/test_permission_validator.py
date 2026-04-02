@@ -466,3 +466,59 @@ class TestPermissionCombinations:
         # 不可以访问非管辖部门
         result = validator.can_access_department_data(context, "dept_004")
         assert result.allowed is False
+
+
+# ─── 属性测试（来自 test_permission_validator_properties.py）────────────────────
+
+class TestPermissionValidatorProperties:
+    """Permission Validator 核心属性测试"""
+
+    def test_all_roles_can_access_own_data(self):
+        """测试所有角色都可以访问自己的数据"""
+        validator = PermissionValidator()
+        roles = list(EntityType)
+        user_id = "test_user_001"
+
+        for role in roles:
+            context = PermissionContext(
+                user_id=user_id,
+                entity_type=role
+            )
+
+            result = validator.can_access_user_data(context, user_id)
+            assert result.allowed is True, f"角色 {role.value} 应该可以访问自己的数据"
+
+    def test_super_admin_unrestricted_access(self):
+        """超级管理员可以访问所有数据"""
+        validator = PermissionValidator()
+
+        context = PermissionContext(
+            user_id="admin",
+            entity_type=EntityType.SUPER_ADMIN
+        )
+
+        # 可以访问任何用户
+        result = validator.can_access_user_data(context, "any_user")
+        assert result.allowed is True
+        assert result.data_filter.is_unrestricted is True
+
+        # 可以访问任何项目
+        result = validator.can_access_project_data(context, "any_project")
+        assert result.allowed is True
+
+        # 可以访问任何部门
+        result = validator.can_access_department_data(context, "any_dept")
+        assert result.allowed is True
+
+    def test_employee_data_filter_limited(self):
+        """测试员工的数据过滤器是受限制的"""
+        validator = PermissionValidator()
+
+        context = PermissionContext(
+            user_id="emp",
+            entity_type=EntityType.EMPLOYEE
+        )
+
+        data_filter = validator.get_data_filter(context)
+        assert data_filter.is_unrestricted is False
+        assert data_filter.user_ids == {"emp"}

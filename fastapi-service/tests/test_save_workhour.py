@@ -315,3 +315,36 @@ async def test_handler_success_message_contains_details():
 
     assert today in result["message"]
     assert "6.0" in result["message"] or "6" in result["message"]
+
+
+# ─── 直接 Handler 测试（来自 test_tools_direct.py）────────────────────────────────
+
+@pytest.mark.asyncio
+async def test_handler_direct_validation():
+    """直接测试工时填报的校验逻辑（无需外部依赖）"""
+    # 测试用例1: 正常填报
+    result = await save_workhour_handler(
+        project_id="123",
+        date="2024-03-20",
+        duration=8.0,
+        description="测试工作内容"
+    )
+    # 注意：这只是验证逻辑，不会真的调用 API
+
+    # 测试用例2: 步长错误
+    result = await save_workhour_handler(
+        project_id="123",
+        date="2024-03-20",
+        duration=8.3
+    )
+    assert result.get("success") is False
+    assert "步长" in result.get("error", "")
+
+    # 测试用例3: 未来日期
+    result = await save_workhour_handler(
+        project_id="123",
+        date="2026-12-31",
+        duration=8.0
+    )
+    assert result.get("success") is False
+    assert "未来" in result.get("error", "") or "提前" in result.get("error", "")

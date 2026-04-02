@@ -522,8 +522,97 @@ class TestToolRegistryUnit:
 
 
 # ============================================================================
-# 异步工具执行测试（可选）
+# 属性测试：工具注册唯一性（来自 test_tool_registry_uniqueness.py）
 # ============================================================================
+
+class TestToolRegistrationUniquenessProps:
+    """测试工具注册唯一性属性（需求23.3）"""
+
+    def setup_method(self):
+        """每个测试前重置单例"""
+        if hasattr(ToolRegistry, '_instance'):
+            ToolRegistry._instance = None
+        self.registry = ToolRegistry()
+
+    def teardown_method(self):
+        """每个测试后清理"""
+        if hasattr(self, 'registry'):
+            self.registry.clear()
+        if hasattr(ToolRegistry, '_instance'):
+            ToolRegistry._instance = None
+
+    def test_different_names_can_coexist(self):
+        """不同名称的工具可以共存"""
+        schema = {
+            "type": "object",
+            "properties": {
+                "param1": {"type": "string", "description": "Test parameter"}
+            },
+            "required": []
+        }
+
+        async def dummy_handler(**kwargs):
+            return {"success": True, "data": kwargs}
+
+        # 注册第一个工具
+        tool1 = self.registry.register_tool(
+            name="tool_one",
+            description="First tool",
+            json_schema=schema,
+            handler=dummy_handler,
+            category=ToolCategory.DATA_QUERY
+        )
+
+        # 注册第二个工具（不同名称）
+        tool2 = self.registry.register_tool(
+            name="tool_two",
+            description="Second tool",
+            json_schema=schema,
+            handler=dummy_handler,
+            category=ToolCategory.STATISTICS
+        )
+
+        assert tool1 is not None
+        assert tool2 is not None
+        assert self.registry.tool_exists("tool_one")
+        assert self.registry.tool_exists("tool_two")
+        assert self.registry.get_tool_count() == 2
+
+    def test_case_sensitive_names(self):
+        """工具名称区分大小写"""
+        schema = {
+            "type": "object",
+            "properties": {},
+            "required": []
+        }
+
+        async def dummy_handler(**kwargs):
+            return {"success": True}
+
+        # 注册不同大小写名称
+        tool1 = self.registry.register_tool(
+            name="mytool",
+            description="Lowercase tool",
+            json_schema=schema,
+            handler=dummy_handler
+        )
+
+        tool2 = self.registry.register_tool(
+            name="MyTool",
+            description="Capitalized tool",
+            json_schema=schema,
+            handler=dummy_handler
+        )
+
+        tool3 = self.registry.register_tool(
+            name="MYTOOL",
+            description="Uppercase tool",
+            json_schema=schema,
+            handler=dummy_handler
+        )
+
+        assert self.registry.get_tool_count() == 3
+
 
 # 注意：异步测试需要 pytest-asyncio 插件正确配置
 # 这些测试展示了如何测试异步 handler，但实际执行依赖于测试环境配置

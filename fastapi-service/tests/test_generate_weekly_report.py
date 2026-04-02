@@ -302,3 +302,29 @@ async def test_handler_week_passed_to_timesheet():
     expected_monday = today - timedelta(days=today.weekday() + 7)
     assert call_kwargs["start_date"] == expected_monday.isoformat()
     assert call_kwargs["end_date"] == (expected_monday + timedelta(days=6)).isoformat()
+
+
+# ─── 直接 Handler 测试（来自 test_tools_direct.py）────────────────────────────────
+
+@pytest.mark.asyncio
+async def test_handler_direct():
+    """直接测试周报生成工具（绕过 HTTP API）"""
+    # 只测试无网络依赖的逻辑
+    from app.tools.generate_weekly_report import _resolve_week_range, _week_label, _build_stats
+
+    # 测试日期解析
+    test_cases = [None, "thisWeek", "lastWeek", "2024-W01", "2024-03-15"]
+    for tc in test_cases:
+        start, end = _resolve_week_range(tc)
+        label = _week_label(start, end)
+        assert label is not None
+
+    # 测试统计和渲染（模拟数据）
+    mock_records = [
+        {"project_name": "项目A", "duration": 20, "project_id": "1"},
+        {"project_name": "项目B", "duration": 15, "project_id": "2"},
+        {"project_name": "项目A", "duration": 5, "project_id": "1"},  # 同名项目合并
+    ]
+    stats = _build_stats(mock_records)
+    assert stats["total_hours"] == 40
+    assert len(stats["projects"]) == 2
