@@ -1,0 +1,1202 @@
+[
+  {
+    "id": "qsbp_001",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句查询AI平台项目工时",
+    "input": "AI平台项目工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "AI平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_002",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句查询我在AI平台的工时",
+    "input": "请查询我在AI平台项目的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "AI平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_003",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化看看AI平台项目",
+    "input": "看看AI平台项目的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "AI平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_004",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句查AI平台",
+    "input": "查下AI平台的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "AI平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_005",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化瞅一眼AI平台",
+    "input": "瞅一眼AI平台填了多少工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "AI平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_006",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句帮我查AI平台项目工时",
+    "input": "帮我查询一下AI平台项目的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "AI平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_007",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句智慧办公项目工时",
+    "input": "智慧办公项目工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智慧办公"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_008",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句查询我在智慧办公的工时",
+    "input": "请查询我在智慧办公项目的工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智慧办公"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_009",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化看看智慧办公项目",
+    "input": "看看智慧办公项目的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智慧办公"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_010",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句查智慧办公",
+    "input": "查下智慧办公的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智慧办公"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_011",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化瞅一眼智慧办公",
+    "input": "瞅一眼智慧办公填了多少工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智慧办公"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_012",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句帮我查智慧办公项目工时",
+    "input": "帮我查询一下智慧办公项目的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智慧办公"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_013",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句数据中台项目工时",
+    "input": "数据中台项目工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "数据中台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_014",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句查询我在数据中台的工时",
+    "input": "请查询我在数据中台项目的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "数据中台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_015",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化看看数据中台项目",
+    "input": "看看数据中台项目的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "数据中台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_016",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句查数据中台",
+    "input": "查下数据中台的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "数据中台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_017",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化瞅一眼数据中台",
+    "input": "瞅一眼数据中台填了多少工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "数据中台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_018",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句帮我查数据中台项目工时",
+    "input": "帮我查询一下数据中台项目的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "数据中台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_019",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句智能客服项目工时",
+    "input": "智能客服项目工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智能客服"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_020",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句查询我在智能客服的工时",
+    "input": "请查询我在智能客服项目的工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智能客服"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_021",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化看看智能客服项目",
+    "input": "看看智能客服项目的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智能客服"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_022",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句查智能客服",
+    "input": "查下智能客服的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智能客服"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_023",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化瞅一眼智能客服",
+    "input": "瞅一眼智能客服填了多少工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智能客服"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_024",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句帮我查智能客服项目工时",
+    "input": "帮我查询一下智能客服项目的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智能客服"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_025",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句云原生平台项目工时",
+    "input": "云原生平台项目工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "云原生平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_026",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句查询我在云原生平台的工时",
+    "input": "请查询我在云原生平台项目的工时记录",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "云原生平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_027",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化看看云原生平台项目",
+    "input": "看看云原生平台项目的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "云原生平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_028",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句查云原生平台",
+    "input": "查下云原生平台的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "云原生平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_029",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化瞅一眼云原生平台",
+    "input": "瞅一眼云原生平台填了多少工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "云原生平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_030",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句帮我查云原生平台项目工时",
+    "input": "帮我查询一下云原生平台项目的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "云原生平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_031",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句区块链平台项目工时",
+    "input": "区块链平台项目工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "区块链平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_032",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句查询我在区块链平台的工时",
+    "input": "请查询我在区块链平台项目的工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "区块链平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_033",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化看看区块链平台项目",
+    "input": "看看区块链平台项目的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "区块链平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_034",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句查区块链平台",
+    "input": "查下区块链平台的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "区块链平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_035",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化瞅一眼区块链平台",
+    "input": "瞅一眼区块链平台填了多少工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "区块链平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_036",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句帮我查区块链平台项目工时",
+    "input": "帮我查询一下区块链平台项目的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "区块链平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_037",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句物联网平台项目工时",
+    "input": "物联网平台项目工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "物联网平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_038",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句查询我在物联网平台的工时",
+    "input": "请查询我在物联网平台项目的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "物联网平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_039",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化看看物联网平台项目",
+    "input": "看看物联网平台项目的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "物联网平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_040",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句查物联网平台",
+    "input": "查下物联网平台的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "物联网平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_041",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化瞅一眼物联网平台",
+    "input": "瞅一眼物联网平台填了多少工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "物联网平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_042",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句帮我查物联网平台项目工时",
+    "input": "帮我查询一下物联网平台项目的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "物联网平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_043",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句大数据平台项目工时",
+    "input": "大数据平台项目工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "大数据平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_044",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句查询我在大数据平台的工时",
+    "input": "请查询我在大数据平台项目的工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "大数据平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_045",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化看看大数据平台项目",
+    "input": "看看大数据平台项目的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "大数据平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_046",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句查大数据平台",
+    "input": "查下大数据平台的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "大数据平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_047",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "口语化瞅一眼大数据平台",
+    "input": "瞅一眼大数据平台填了多少工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "大数据平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_048",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句帮我查大数据平台项目工时",
+    "input": "帮我查询一下大数据平台项目的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "大数据平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_049",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "短句微服务平台项目工时",
+    "input": "微服务平台项目工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "微服务平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsbp_050",
+    "category": "query_timesheet",
+    "sub_type": "query_self_by_project",
+    "description": "长句查询我在微服务平台的工时",
+    "input": "请查询我在微服务平台项目的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "微服务平台"
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "项目名称需要解析；必须传user_id，不得返回全员数据"
+  }
+]

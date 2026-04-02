@@ -1,0 +1,1302 @@
+[
+  {
+    "id": "qotw_001",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员查询员工本周工时",
+    "input": "查看李四本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_002",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "部门管理员查员工本周填报",
+    "input": "查一下王五本周的填报",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_003",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员看看员工本周工时",
+    "input": "看看赵六本周填了多少工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_004",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员瞅一眼员工本周",
+    "input": "瞅一眼孙七本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_005",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "公司管理员查员工本周",
+    "input": "查询周八本周的工时记录",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_006",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "区域管理员查员工本周工时",
+    "input": "帮我查一下吴九本周的工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_007",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "超级管理员查员工本周",
+    "input": "查看郑十本周的填报情况",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_008",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员查询员工这周工时",
+    "input": "李四这周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_009",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员查员工本周数据",
+    "input": "王五本周数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_010",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员查员工本周填了啥",
+    "input": "赵六本周填了啥",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_011",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员看看员工本周工作量",
+    "input": "看看孙七本周工作量",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_012",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "公司管理员查员工本周填报",
+    "input": "查一下周八本周的填报记录",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_013",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员查员工本周工时情况",
+    "input": "吴九本周工时情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_014",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员瞅瞅员工本周",
+    "input": "瞅瞅郑十本周填的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_015",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员查员工本星期工时",
+    "input": "查询李四本星期的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_016",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "区域管理员查员工这星期",
+    "input": "王五这星期填报情况",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_017",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员看一眼员工本周",
+    "input": "看一眼赵六本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_018",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员浏览员工本周工时",
+    "input": "浏览一下孙七本周的工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_019",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "公司管理员统计员工本周",
+    "input": "统计周八本周的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_020",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员核对员工本周工时",
+    "input": "核对吴九本周的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_021",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员看一下员工本周",
+    "input": "看一下郑十本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_022",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员获取员工本周数据",
+    "input": "获取李四本周的工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_023",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员检查员工本周填报",
+    "input": "检查王五本周的填报情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_024",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "超级管理员查员工本周",
+    "input": "帮我看看赵六本周的工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_025",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员翻一下员工本周",
+    "input": "翻一下孙七本周的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_026",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员查员工本周明细",
+    "input": "查周八本周的工时明细",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_027",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员检索员工本周",
+    "input": "检索吴九本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_028",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员展示员工本周",
+    "input": "展示郑十本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_029",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员拉一下员工本周",
+    "input": "拉一下李四本周的工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_030",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "公司管理员翻翻员工本周",
+    "input": "翻翻王五本周的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_031",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员查员工本周统计",
+    "input": "赵六本周工时统计",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_032",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员算一下员工本周",
+    "input": "算一下孙七本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_033",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员汇总员工本周",
+    "input": "汇总周八本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_034",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "区域管理员瞅瞅员工本周",
+    "input": "瞅瞅吴九本周的工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_035",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员查查看员工本周",
+    "input": "查查看郑十本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_036",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员瞧一下员工本周",
+    "input": "瞧一下李四本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_037",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员瞄一眼员工本周",
+    "input": "瞄一眼王五本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_038",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "超级管理员查员工本周填报",
+    "input": "查赵六本周的填报",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_039",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员了解员工本周工时",
+    "input": "了解一下孙七本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_040",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员确认员工本周工时",
+    "input": "确认周八本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_041",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员查员工这礼拜工时",
+    "input": "查一下吴九这礼拜的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_042",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员看看员工这礼拜",
+    "input": "看看郑十这礼拜填了多少",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_043",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "公司管理员查员工本周工时详情",
+    "input": "查询李四本周工时详情",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_044",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员检查员工本周工时",
+    "input": "检查王五本周工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_045",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "区域管理员查看员工本周",
+    "input": "查看赵六本周的工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_046",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员翻一下员工这星期",
+    "input": "翻一下孙七这星期的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_047",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员查员工这个星期",
+    "input": "查周八这个星期的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_048",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "超级管理员看员工本周",
+    "input": "看一下吴九本周的工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_049",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员统计员工本周",
+    "input": "统计郑十本周的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qotw_050",
+    "category": "query_timesheet",
+    "sub_type": "query_others_this_week",
+    "description": "管理员查看员工本周填报",
+    "input": "查看李四本周的填报",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-30",
+        "end_date": "2026-04-05",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "本周=2026-03-30至2026-04-05；查询他人需要member_name；必须传user_id"
+  }
+]

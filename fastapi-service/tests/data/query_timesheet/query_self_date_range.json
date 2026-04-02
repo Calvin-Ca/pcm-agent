@@ -1,0 +1,1502 @@
+[
+  {
+    "id": "qsdr_001",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句查询3月1日到3月15日",
+    "input": "3月1日到3月15日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_002",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询3月1日至3月15日",
+    "input": "请帮我查询3月1日至3月15日的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_003",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化看看3月1号到3月15号",
+    "input": "看看3月1号到3月15号的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_004",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句3/1到3/15",
+    "input": "3/1到3/15的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_005",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询2026年3月1日到2026年3月15日",
+    "input": "请查询2026年3月1日到2026年3月15日的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_006",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化查下3月1日到15日",
+    "input": "查下3月1日到15日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_007",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句2月10号到2月28号",
+    "input": "2月10号到2月28号的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-10",
+        "end_date": "2026-02-28"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_008",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询2月10日至2月28日",
+    "input": "请帮我查询2月10日至2月28日的工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-10",
+        "end_date": "2026-02-28"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_009",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化看看2月10号到2月28号",
+    "input": "看看2月10号到2月28号的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-10",
+        "end_date": "2026-02-28"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_010",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句2/10到2/28",
+    "input": "2/10到2/28的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-10",
+        "end_date": "2026-02-28"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_011",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询2026年2月10日到2026年2月28日",
+    "input": "请查询2026年2月10日到2026年2月28日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-10",
+        "end_date": "2026-02-28"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_012",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化查下2月10日到28日",
+    "input": "查下2月10日到28日的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-10",
+        "end_date": "2026-02-28"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_013",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句1月15日到1月31日",
+    "input": "1月15日到1月31日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-01-15",
+        "end_date": "2026-01-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_014",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询1月15日至1月31日",
+    "input": "请帮我查询1月15日至1月31日的工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-01-15",
+        "end_date": "2026-01-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_015",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化看看1月15号到1月31号",
+    "input": "看看1月15号到1月31号的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-01-15",
+        "end_date": "2026-01-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_016",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句1/15到1/31",
+    "input": "1/15到1/31的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-01-15",
+        "end_date": "2026-01-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_017",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询2026年1月15日到2026年1月31日",
+    "input": "请查询2026年1月15日到2026年1月31日的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-01-15",
+        "end_date": "2026-01-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_018",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化查下1月15日到31日",
+    "input": "查下1月15日到31日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-01-15",
+        "end_date": "2026-01-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_019",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句4月1日到4月10日",
+    "input": "4月1日到4月10日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-10"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_020",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询4月1日至4月10日",
+    "input": "请帮我查询4月1日至4月10日的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-10"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_021",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化看看4月1号到4月10号",
+    "input": "看看4月1号到4月10号的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-10"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_022",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句4/1到4/10",
+    "input": "4/1到4/10的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-10"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_023",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询2026年4月1日到2026年4月10日",
+    "input": "请查询2026年4月1日到2026年4月10日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-10"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_024",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化查下4月1日到10日",
+    "input": "查下4月1日到10日的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-10"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_025",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句3月5日到3月20日",
+    "input": "3月5日到3月20日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-05",
+        "end_date": "2026-03-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_026",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询3月5日至3月20日",
+    "input": "请帮我查询3月5日至3月20日的工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-05",
+        "end_date": "2026-03-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_027",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化看看3月5号到3月20号",
+    "input": "看看3月5号到3月20号的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-05",
+        "end_date": "2026-03-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_028",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句3/5到3/20",
+    "input": "3/5到3/20的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-05",
+        "end_date": "2026-03-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_029",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询2026年3月5日到2026年3月20日",
+    "input": "请查询2026年3月5日到2026年3月20日的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-05",
+        "end_date": "2026-03-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_030",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化查下3月5日到20日",
+    "input": "查下3月5日到20日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-05",
+        "end_date": "2026-03-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_031",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句2月1日到2月15日",
+    "input": "2月1日到2月15日的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-01",
+        "end_date": "2026-02-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_032",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询2月1日至2月15日",
+    "input": "请帮我查询2月1日至2月15日的工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-01",
+        "end_date": "2026-02-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_033",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化看看2月1号到2月15号",
+    "input": "看看2月1号到2月15号的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-01",
+        "end_date": "2026-02-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_034",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句2/1到2/15",
+    "input": "2/1到2/15的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-01",
+        "end_date": "2026-02-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_035",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询2026年2月1日到2026年2月15日",
+    "input": "请查询2026年2月1日到2026年2月15日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-01",
+        "end_date": "2026-02-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_036",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化查下2月1日到15日",
+    "input": "查下2月1日到15日的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-01",
+        "end_date": "2026-02-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_037",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句3月10日到3月25日",
+    "input": "3月10日到3月25日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-10",
+        "end_date": "2026-03-25"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_038",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询3月10日至3月25日",
+    "input": "请帮我查询3月10日至3月25日的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-10",
+        "end_date": "2026-03-25"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_039",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化看看3月10号到3月25号",
+    "input": "看看3月10号到3月25号的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-10",
+        "end_date": "2026-03-25"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_040",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句3/10到3/25",
+    "input": "3/10到3/25的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-10",
+        "end_date": "2026-03-25"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_041",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询2026年3月10日到2026年3月25日",
+    "input": "请查询2026年3月10日到2026年3月25日的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-10",
+        "end_date": "2026-03-25"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_042",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化查下3月10日到25日",
+    "input": "查下3月10日到25日的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-10",
+        "end_date": "2026-03-25"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_043",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句1月1日到1月15日",
+    "input": "1月1日到1月15日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-01-01",
+        "end_date": "2026-01-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_044",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询1月1日至1月15日",
+    "input": "请帮我查询1月1日至1月15日的工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-01-01",
+        "end_date": "2026-01-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_045",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化看看1月1号到1月15号",
+    "input": "看看1月1号到1月15号的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-01-01",
+        "end_date": "2026-01-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_046",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句1/1到1/15",
+    "input": "1/1到1/15的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-01-01",
+        "end_date": "2026-01-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_047",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询2026年1月1日到2026年1月15日",
+    "input": "请查询2026年1月1日到2026年1月15日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-01-01",
+        "end_date": "2026-01-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_048",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化查下1月1日到15日",
+    "input": "查下1月1日到15日的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-01-01",
+        "end_date": "2026-01-15"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_049",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句4月5日到4月20日",
+    "input": "4月5日到4月20日的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-05",
+        "end_date": "2026-04-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_050",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询4月5日至4月20日",
+    "input": "请帮我查询4月5日至4月20日的工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-05",
+        "end_date": "2026-04-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_051",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化看看4月5号到4月20号",
+    "input": "看看4月5号到4月20号的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-05",
+        "end_date": "2026-04-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_052",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句4/5到4/20",
+    "input": "4/5到4/20的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-05",
+        "end_date": "2026-04-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_053",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询2026年4月5日到2026年4月20日",
+    "input": "请查询2026年4月5日到2026年4月20日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-05",
+        "end_date": "2026-04-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_054",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化查下4月5日到20日",
+    "input": "查下4月5日到20日的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-05",
+        "end_date": "2026-04-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_055",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句2月5日到2月20日",
+    "input": "2月5日到2月20日的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-05",
+        "end_date": "2026-02-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_056",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询2月5日至2月20日",
+    "input": "请帮我查询2月5日至2月20日的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-05",
+        "end_date": "2026-02-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_057",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化看看2月5号到2月20号",
+    "input": "看看2月5号到2月20号的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-05",
+        "end_date": "2026-02-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_058",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "短句2/5到2/20",
+    "input": "2/5到2/20的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-05",
+        "end_date": "2026-02-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_059",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "长句查询2026年2月5日到2026年2月20日",
+    "input": "请查询2026年2月5日到2026年2月20日的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-05",
+        "end_date": "2026-02-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qsdr_060",
+    "category": "query_timesheet",
+    "sub_type": "query_self_date_range",
+    "description": "口语化查下2月5日到20日",
+    "input": "查下2月5日到20日的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-02-05",
+        "end_date": "2026-02-20"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期范围；必须传user_id，不得返回全员数据"
+  }
+]

@@ -1,0 +1,752 @@
+[
+  {
+    "id": "qobp_001",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员查询项目成员工时",
+    "input": "AI平台项目李四的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "AI平台",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_002",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员查员工在项目的工时",
+    "input": "查一下王五在智慧办公的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智慧办公",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_003",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员看看员工项目工时",
+    "input": "看看赵六在数据中台的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "数据中台",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_004",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员瞅一眼员工项目",
+    "input": "瞅一眼孙七在智能客服的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智能客服",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_005",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "公司管理员查员工项目",
+    "input": "查询周八在云原生平台的工时记录",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "云原生平台",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_006",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "区域管理员查员工项目工时",
+    "input": "帮我查一下吴九在区块链平台的工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "区块链平台",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_007",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "超级管理员查员工项目",
+    "input": "查看郑十在物联网平台的工时情况",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "物联网平台",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_008",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员查员工项目填报",
+    "input": "李四在AI平台的填报",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "AI平台",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_009",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员查员工项目数据",
+    "input": "王五在智慧办公的数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智慧办公",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_010",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员查员工项目填了啥",
+    "input": "赵六在数据中台填了啥",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "数据中台",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_011",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员看看员工项目工作量",
+    "input": "看看孙七在智能客服的工作量",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智能客服",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_012",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "公司管理员查员工项目填报",
+    "input": "查一下周八在云原生平台的填报记录",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "云原生平台",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_013",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员查员工项目工时情况",
+    "input": "吴九在区块链平台的工时情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "区块链平台",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_014",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员瞅瞅员工项目",
+    "input": "瞅瞅郑十在物联网平台的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "物联网平台",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_015",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员查员工项目工时记录",
+    "input": "查询李四在AI平台的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "AI平台",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_016",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "区域管理员查员工项目",
+    "input": "王五在智慧办公工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智慧办公",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_017",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员看一眼员工项目",
+    "input": "看一眼赵六在数据中台的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "数据中台",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_018",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员浏览员工项目工时",
+    "input": "浏览一下孙七在智能客服的工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智能客服",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_019",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "公司管理员统计员工项目",
+    "input": "统计周八在云原生平台的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "云原生平台",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_020",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员核对员工项目工时",
+    "input": "核对吴九在区块链平台的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "区块链平台",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_021",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员看一下员工项目",
+    "input": "看一下郑十在物联网平台的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "物联网平台",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_022",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员获取员工项目数据",
+    "input": "获取李四在AI平台的工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "AI平台",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_023",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员检查员工项目填报",
+    "input": "检查王五在智慧办公的填报情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智慧办公",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_024",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "超级管理员查员工项目",
+    "input": "帮我看看赵六在数据中台的工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "数据中台",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_025",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员翻一下员工项目",
+    "input": "翻一下孙七在智能客服的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智能客服",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_026",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员查员工项目工时明细",
+    "input": "查周八在云原生平台的工时明细",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "云原生平台",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_027",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员检索员工项目",
+    "input": "检索吴九在区块链平台的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "区块链平台",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_028",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员展示员工项目",
+    "input": "展示郑十在物联网平台的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "物联网平台",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_029",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "管理员拉一下员工项目",
+    "input": "拉一下李四在AI平台的工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "AI平台",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  },
+  {
+    "id": "qobp_030",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_project",
+    "description": "公司管理员翻翻员工项目",
+    "input": "翻翻王五在智慧办公的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "project_id": "智慧办公",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["project_id", "member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
+  }
+]

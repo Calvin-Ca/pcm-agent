@@ -1,0 +1,1042 @@
+[
+  {
+    "id": "qot_001",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员查询员工今天工时",
+    "input": "查看李四今天的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_002",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "部门管理员查员工今天填报",
+    "input": "查一下王五今天的填报",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_003",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员看看员工今天工时",
+    "input": "看看赵六今天填了多少工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_004",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员瞅一眼员工今天",
+    "input": "瞅一眼孙七今天的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_005",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "公司管理员查员工今天",
+    "input": "查询周八今天的工时记录",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_006",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "区域管理员查员工今天工时",
+    "input": "帮我查一下吴九今天的工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_007",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "超级管理员查员工今天",
+    "input": "查看郑十今天的填报情况",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_008",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员查询员工今日工时",
+    "input": "李四今日工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_009",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员查员工今天数据",
+    "input": "王五今天数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_010",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员查员工今天填了啥",
+    "input": "赵六今天填了啥",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_011",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员看看员工今天工作量",
+    "input": "看看孙七今天工作量",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_012",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "公司管理员查员工今天填报",
+    "input": "查一下周八今天的填报记录",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_013",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员查员工今天工时情况",
+    "input": "吴九今天工时情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_014",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员瞅瞅员工今天",
+    "input": "瞅瞅郑十今天填的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_015",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员查员工本日工时",
+    "input": "查询李四本日的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_016",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "区域管理员查员工今日",
+    "input": "王五今日填报情况",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_017",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员看一眼员工今天",
+    "input": "看一眼赵六今天的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_018",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员浏览员工今天工时",
+    "input": "浏览一下孙七今天的工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_019",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "公司管理员统计员工今天",
+    "input": "统计周八今天的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_020",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员核对员工今天工时",
+    "input": "核对吴九今天的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_021",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员看一下员工今天",
+    "input": "看一下郑十今天的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_022",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员获取员工今天数据",
+    "input": "获取李四今天的工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_023",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员检查员工今天填报",
+    "input": "检查王五今天的填报情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_024",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "超级管理员查员工今天",
+    "input": "帮我看看赵六今天的工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_025",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员翻一下员工今天",
+    "input": "翻一下孙七今天的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_026",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员查员工今天明细",
+    "input": "查周八今天的工时明细",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_027",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员检索员工今天",
+    "input": "检索吴九今天的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_028",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员展示员工今天",
+    "input": "展示郑十今天的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_029",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员拉一下员工今天",
+    "input": "拉一下李四今天的工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_030",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "公司管理员翻翻员工今天",
+    "input": "翻翻王五今天的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_031",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员查员工今天统计",
+    "input": "赵六今天工时统计",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_032",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员算一下员工今天",
+    "input": "算一下孙七今天的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_033",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员汇总员工今天",
+    "input": "汇总周八今天的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_034",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "区域管理员瞅瞅员工今天",
+    "input": "瞅瞅吴九今天的工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_035",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员查查看员工今天",
+    "input": "查查看郑十今天的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_036",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员瞧一下员工今天",
+    "input": "瞧一下李四今天的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_037",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员瞄一眼员工今天",
+    "input": "瞄一眼王五今天的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_038",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "超级管理员查员工今天填报",
+    "input": "查赵六今天的填报",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_039",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员了解员工今天工时",
+    "input": "了解一下孙七今天的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qot_040",
+    "category": "query_timesheet",
+    "sub_type": "query_others_today",
+    "description": "管理员确认员工今天工时",
+    "input": "确认周八今天的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-01",
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
+  }
+]

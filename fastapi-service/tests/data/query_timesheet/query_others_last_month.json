@@ -1,0 +1,1562 @@
+[
+  {
+    "id": "qolm_001",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查询何思思上个月工时",
+    "input": "何思思上个月工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "何思思"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_002",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查一下李明上月工时",
+    "input": "查一下李明上月工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "李明"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_003",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看王芳上个月填报",
+    "input": "看看王芳上个月填报",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "王芳"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_004",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查下张总上月工时",
+    "input": "查下张总上月工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "张总"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_005",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅一眼刘工上个月工时",
+    "input": "瞅一眼刘工上个月工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "刘工"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_006",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查询陈经理上月填报",
+    "input": "查询陈经理上月填报",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "陈经理"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_007",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看赵丽上个月工时",
+    "input": "看看赵丽上个月工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "赵丽"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_008",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查下孙涛上月工时",
+    "input": "查下孙涛上月工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "孙涛"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_009",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅瞅周建国上个月工时",
+    "input": "瞅瞅周建国上个月工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "周建国"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_010",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查一下吴晓燕上月工时",
+    "input": "查一下吴晓燕上月工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "吴晓燕"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_011",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查询何思思上月填报情况",
+    "input": "查询何思思上月填报情况",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "何思思"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_012",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看李明上个月工时记录",
+    "input": "看看李明上个月工时记录",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "李明"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_013",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查下王芳上月填报",
+    "input": "查下王芳上月填报",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "王芳"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_014",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅一眼张总上个月工时",
+    "input": "瞅一眼张总上个月工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "张总"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_015",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查询刘工上月工时明细",
+    "input": "查询刘工上月工时明细",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "刘工"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_016",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看陈经理上个月工时",
+    "input": "看看陈经理上个月工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "陈经理"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_017",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查下赵丽上月填报记录",
+    "input": "查下赵丽上月填报记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "赵丽"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_018",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅瞅孙涛上个月工时",
+    "input": "瞅瞅孙涛上个月工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "孙涛"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_019",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查一下周建国上月工时",
+    "input": "查一下周建国上月工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "周建国"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_020",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看吴晓燕上个月填报",
+    "input": "看看吴晓燕上个月填报",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "吴晓燕"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_021",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查询何思思上个月工时记录",
+    "input": "查询何思思上个月工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "何思思"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_022",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查下李明上月填报明细",
+    "input": "查下李明上月填报明细",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "李明"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_023",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅一眼王芳上个月工时",
+    "input": "瞅一眼王芳上个月工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "王芳"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_024",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看张总上月工时",
+    "input": "看看张总上月工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "张总"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_025",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查一下刘工上个月填报",
+    "input": "查一下刘工上个月填报",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "刘工"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_026",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查询陈经理上月工时",
+    "input": "查询陈经理上月工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "陈经理"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_027",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅瞅赵丽上个月工时",
+    "input": "瞅瞅赵丽上个月工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "赵丽"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_028",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查下孙涛上月填报情况",
+    "input": "查下孙涛上月填报情况",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "孙涛"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_029",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看周建国上个月工时",
+    "input": "看看周建国上个月工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "周建国"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_030",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查一下吴晓燕上月填报记录",
+    "input": "查一下吴晓燕上月填报记录",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "吴晓燕"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_031",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查询何思思上月工时明细",
+    "input": "查询何思思上月工时明细",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "何思思"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_032",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅一眼李明上个月工时",
+    "input": "瞅一眼李明上个月工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "李明"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_033",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查下王芳上月工时记录",
+    "input": "查下王芳上月工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "王芳"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_034",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看张总上个月填报",
+    "input": "看看张总上个月填报",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "张总"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_035",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查询刘工上个月工时",
+    "input": "查询刘工上个月工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "刘工"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_036",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅瞅陈经理上月工时",
+    "input": "瞅瞅陈经理上月工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "陈经理"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_037",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查一下赵丽上个月工时",
+    "input": "查一下赵丽上个月工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "赵丽"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_038",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看孙涛上月填报明细",
+    "input": "看看孙涛上月填报明细",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "孙涛"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_039",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查下周建国上月工时",
+    "input": "查下周建国上月工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "周建国"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_040",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅一眼吴晓燕上个月工时",
+    "input": "瞅一眼吴晓燕上个月工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "吴晓燕"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_041",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查询何思思上月工时",
+    "input": "查询何思思上月工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "何思思"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_042",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看李明上个月填报情况",
+    "input": "看看李明上个月填报情况",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "李明"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_043",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查一下王芳上月工时",
+    "input": "查一下王芳上月工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "王芳"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_044",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅瞅张总上个月工时",
+    "input": "瞅瞅张总上个月工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "张总"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_045",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查下刘工上月填报记录",
+    "input": "查下刘工上月填报记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "刘工"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_046",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看陈经理上月工时明细",
+    "input": "看看陈经理上月工时明细",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "陈经理"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_047",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查询赵丽上个月工时记录",
+    "input": "查询赵丽上个月工时记录",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "赵丽"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_048",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅一眼孙涛上月工时",
+    "input": "瞅一眼孙涛上月工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "孙涛"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_049",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查下周建国上个月工时",
+    "input": "查下周建国上个月工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "周建国"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_050",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看吴晓燕上月填报",
+    "input": "看看吴晓燕上月填报",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "吴晓燕"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_051",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查一下何思思上月工时明细",
+    "input": "查一下何思思上月工时明细",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "何思思"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_052",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅瞅李明上个月填报",
+    "input": "瞅瞅李明上个月填报",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "李明"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_053",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查下王芳上月工时",
+    "input": "查下王芳上月工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "王芳"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_054",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看张总上个月工时明细",
+    "input": "看看张总上个月工时明细",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "张总"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_055",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查询刘工上月填报情况",
+    "input": "查询刘工上月填报情况",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "刘工"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_056",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅一眼陈经理上月工时",
+    "input": "瞅一眼陈经理上月工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "陈经理"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_057",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查一下赵丽上个月工时记录",
+    "input": "查一下赵丽上个月工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "赵丽"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_058",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "看看孙涛上月工时",
+    "input": "看看孙涛上月工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "孙涛"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_059",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "查下周建国上月填报明细",
+    "input": "查下周建国上月填报明细",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "周建国"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  },
+  {
+    "id": "qolm_060",
+    "category": "query_timesheet",
+    "sub_type": "query_others_last_month",
+    "description": "瞅瞅吴晓燕上月工时",
+    "input": "瞅瞅吴晓燕上月工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "member_name": "吴晓燕"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["member_name"],
+      "date_relative": true
+    },
+    "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
+  }
+]

@@ -1,10 +1,10 @@
 [
   {
-    "id": "qsw_001",
+    "id": "qspm_001",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "短句本周工时",
-    "input": "本周工时",
+    "sub_type": "query_self_last_month",
+    "description": "短句查询上月工时",
+    "input": "上月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -15,21 +15,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_002",
+    "id": "qspm_002",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "短句这周",
-    "input": "这周",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月",
+    "input": "上月",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -40,21 +40,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_003",
+    "id": "qspm_003",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化看看本周",
-    "input": "看看本周工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看看上月",
+    "input": "看看上月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -65,21 +65,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_004",
+    "id": "qspm_004",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句正式查询本周",
-    "input": "请帮我查询一下本周的工时记录",
+    "sub_type": "query_self_last_month",
+    "description": "长句正式查询上月",
+    "input": "请帮我查询一下上月的工时记录",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -90,21 +90,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_005",
+    "id": "qspm_005",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅一眼这周",
-    "input": "瞅一眼这周填了多少",
+    "sub_type": "query_self_last_month",
+    "description": "口语化瞅一眼上月",
+    "input": "瞅一眼上月填了多少",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -115,21 +115,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_006",
+    "id": "qspm_006",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化查下本周",
-    "input": "查下本周工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化查下上月",
+    "input": "查下上月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -140,21 +140,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_007",
+    "id": "qspm_007",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句口语化查询",
-    "input": "帮我看看这周一共填了多少小时的工时",
+    "sub_type": "query_self_last_month",
+    "description": "长句口语化查询上月",
+    "input": "帮我看看上月一共填了多少小时的工时",
     "user_context": {
       "entity_type": "companyAdmin",
       "user_id": "1001",
@@ -165,21 +165,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_008",
+    "id": "qspm_008",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "短句这周工时",
-    "input": "这周工时",
+    "sub_type": "query_self_last_month",
+    "description": "短句上个月工时",
+    "input": "上个月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -190,21 +190,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_009",
+    "id": "qspm_009",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅瞅这周",
-    "input": "瞅瞅这周填报",
+    "sub_type": "query_self_last_month",
+    "description": "口语化瞅瞅上月",
+    "input": "瞅瞅上月填报",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -215,21 +215,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_010",
+    "id": "qspm_010",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "这个星期表达",
-    "input": "这个星期填了多少",
+    "sub_type": "query_self_last_month",
+    "description": "上个月表达",
+    "input": "上个月填了多少",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -240,21 +240,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_011",
+    "id": "qspm_011",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化看看这周",
-    "input": "看看这周填的工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看看上月",
+    "input": "看看上月填的工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -265,21 +265,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_012",
+    "id": "qspm_012",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句正式查询本周填报",
-    "input": "请查询我本周填报的工时统计",
+    "sub_type": "query_self_last_month",
+    "description": "长句正式查询上月填报",
+    "input": "请查询我上月填报的工时统计",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -290,21 +290,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_013",
+    "id": "qspm_013",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化查下这周",
-    "input": "查下这周工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化查下上个月",
+    "input": "查下上个月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -315,21 +315,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_014",
+    "id": "qspm_014",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "本星期表达",
-    "input": "本星期工时",
+    "sub_type": "query_self_last_month",
+    "description": "上月份表达",
+    "input": "上月份工时",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -340,21 +340,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_015",
+    "id": "qspm_015",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅一眼本周",
-    "input": "瞅一眼本周填报情况",
+    "sub_type": "query_self_last_month",
+    "description": "口语化瞅一眼上月",
+    "input": "瞅一眼上月填报情况",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -365,21 +365,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_016",
+    "id": "qspm_016",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句本周统计",
-    "input": "请帮我统计一下本周的工时数据",
+    "sub_type": "query_self_last_month",
+    "description": "长句上月统计",
+    "input": "请帮我统计一下上月的工时数据",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -390,21 +390,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_017",
+    "id": "qspm_017",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化看看这周填了啥",
-    "input": "看看这周填了啥",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看看上月填了啥",
+    "input": "看看上月填了啥",
     "user_context": {
       "entity_type": "companyAdmin",
       "user_id": "1001",
@@ -415,21 +415,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_018",
+    "id": "qspm_018",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "这礼拜表达",
-    "input": "这礼拜填了多少工时",
+    "sub_type": "query_self_last_month",
+    "description": "前月表达",
+    "input": "前月填了多少工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -440,21 +440,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_019",
+    "id": "qspm_019",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化查查本周",
-    "input": "查查本周工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化查查上月",
+    "input": "查查上月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -465,21 +465,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_020",
+    "id": "qspm_020",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "短句本周",
-    "input": "本周",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月",
+    "input": "上月",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -490,21 +490,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_021",
+    "id": "qspm_021",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "短句本周",
-    "input": "本周",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看一眼上月",
+    "input": "看一眼上月填的工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -515,21 +515,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_022",
+    "id": "qspm_022",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化看看本周",
-    "input": "看看本周",
+    "sub_type": "query_self_last_month",
+    "description": "正式查询上月",
+    "input": "查询上月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -540,46 +540,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_023",
+    "id": "qspm_023",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅一眼这周",
-    "input": "瞅一眼这周",
-    "user_context": {
-      "entity_type": "employee",
-      "user_id": "1001",
-      "user_name": "张三",
-      "department_id": "dept_01"
-    },
-    "expected": {
-      "intent": "tool_execution",
-      "tool_name": "query_timesheet",
-      "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
-      },
-      "params_fuzzy": [],
-      "params_exists": ["user_id"],
-      "date_relative": true
-    },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
-  },
-  {
-    "id": "qsw_024",
-    "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句正式查询本周工时",
-    "input": "请帮我查询一下本周的工时填报情况",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看下上月",
+    "input": "看下上月工时",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -590,21 +565,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_025",
+    "id": "qspm_024",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化查下本周",
-    "input": "查下本周",
+    "sub_type": "query_self_last_month",
+    "description": "口语化瞧瞧上月",
+    "input": "瞧瞧上月填了多少",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -615,21 +590,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_026",
+    "id": "qspm_025",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅瞅这周",
-    "input": "瞅瞅这周",
+    "sub_type": "query_self_last_month",
+    "description": "正式查询上月的",
+    "input": "查询上月的工时记录",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -640,21 +615,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_027",
+    "id": "qspm_026",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句统计本周工时",
-    "input": "我想统计一下本周的工时数据",
+    "sub_type": "query_self_last_month",
+    "description": "口语化查一下上月",
+    "input": "查一下上月填的工时",
     "user_context": {
       "entity_type": "companyAdmin",
       "user_id": "1001",
@@ -665,21 +640,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_028",
+    "id": "qspm_027",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "短句这周",
-    "input": "这周",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月工时",
+    "input": "上月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -690,21 +665,46 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_029",
+    "id": "qspm_028",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化看看这周工时",
-    "input": "看看这周工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看下上个月",
+    "input": "看下上个月填报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qspm_029",
+    "category": "query_timesheet",
+    "sub_type": "query_self_last_month",
+    "description": "长句统计上月工时",
+    "input": "帮我统计一下上月的工时情况",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -715,21 +715,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_030",
+    "id": "qspm_030",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句查询本周填报明细",
-    "input": "请帮我查询本周填报的工时明细",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看看上月填了没",
+    "input": "看看上月填了没",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -740,21 +740,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_031",
+    "id": "qspm_031",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅一眼本周填报",
-    "input": "瞅一眼本周填报",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月的工时",
+    "input": "上月的工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -765,71 +765,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_032",
+    "id": "qspm_032",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化查下这周填报",
-    "input": "查下这周填报",
-    "user_context": {
-      "entity_type": "employee",
-      "user_id": "1001",
-      "user_name": "张三",
-      "department_id": "dept_01"
-    },
-    "expected": {
-      "intent": "tool_execution",
-      "tool_name": "query_timesheet",
-      "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
-      },
-      "params_fuzzy": [],
-      "params_exists": ["user_id"],
-      "date_relative": true
-    },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
-  },
-  {
-    "id": "qsw_033",
-    "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句查看本周工时记录",
-    "input": "请帮我查看一下本周的工时记录",
-    "user_context": {
-      "entity_type": "employee",
-      "user_id": "1001",
-      "user_name": "张三",
-      "department_id": "dept_01"
-    },
-    "expected": {
-      "intent": "tool_execution",
-      "tool_name": "query_timesheet",
-      "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
-      },
-      "params_fuzzy": [],
-      "params_exists": ["user_id"],
-      "date_relative": true
-    },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
-  },
-  {
-    "id": "qsw_034",
-    "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅瞅本周工时",
-    "input": "瞅瞅本周工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化查查看上月",
+    "input": "查查看上月填了多少",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -840,21 +790,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_035",
+    "id": "qspm_033",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "短句本周填报",
-    "input": "本周填报",
+    "sub_type": "query_self_last_month",
+    "description": "长句查询上月填报情况",
+    "input": "请帮我查询上月填报的工时情况",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -865,21 +815,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_036",
+    "id": "qspm_034",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化看看这周填了啥",
-    "input": "看看这周填了啥",
+    "sub_type": "query_self_last_month",
+    "description": "口语化瞄一眼上月",
+    "input": "瞄一眼上月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -890,21 +840,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_037",
+    "id": "qspm_035",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句查询本周工作时间",
-    "input": "请查询一下我本周的工作时间",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月填报",
+    "input": "上月填报",
     "user_context": {
       "entity_type": "companyAdmin",
       "user_id": "1001",
@@ -915,21 +865,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_038",
+    "id": "qspm_036",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅一眼这周工时",
-    "input": "瞅一眼这周工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看看上月的工作时长",
+    "input": "看看上月的工作时长",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -940,21 +890,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_039",
+    "id": "qspm_037",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化查下本周填报情况",
-    "input": "查下本周填报情况",
+    "sub_type": "query_self_last_month",
+    "description": "长句查看上月工时",
+    "input": "请查看一下我上月的工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -965,21 +915,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_040",
+    "id": "qspm_038",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句查看本周填报记录",
-    "input": "帮我查看一下本周的填报记录",
+    "sub_type": "query_self_last_month",
+    "description": "口语化瞧一下上月",
+    "input": "瞧一下上月工时",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -990,21 +940,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_041",
+    "id": "qspm_039",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅瞅这周填报",
-    "input": "瞅瞅这周填报",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月工作量",
+    "input": "上月工作量",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1015,21 +965,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_042",
+    "id": "qspm_040",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "短句这周填报",
-    "input": "这周填报",
+    "sub_type": "query_self_last_month",
+    "description": "口语化瞅一眼上月记录",
+    "input": "瞅一眼上月记录",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1040,21 +990,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_043",
+    "id": "qspm_041",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化看看本周工时",
-    "input": "看看本周工时",
+    "sub_type": "query_self_last_month",
+    "description": "长句查询上月的工时",
+    "input": "我想查询一下上月的工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1065,21 +1015,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_044",
+    "id": "qspm_042",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句统计本周工作时间",
-    "input": "请帮我统计一下本周的工作时间",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看看上月填的工时",
+    "input": "看看上月填的工时",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -1090,21 +1040,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_045",
+    "id": "qspm_043",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅一眼本周工时",
-    "input": "瞅一眼本周工时",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月数据",
+    "input": "上月数据",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1115,46 +1065,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_046",
+    "id": "qspm_044",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化查下这周工时",
-    "input": "查下这周工时",
-    "user_context": {
-      "entity_type": "employee",
-      "user_id": "1001",
-      "user_name": "张三",
-      "department_id": "dept_01"
-    },
-    "expected": {
-      "intent": "tool_execution",
-      "tool_name": "query_timesheet",
-      "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
-      },
-      "params_fuzzy": [],
-      "params_exists": ["user_id"],
-      "date_relative": true
-    },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
-  },
-  {
-    "id": "qsw_047",
-    "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句查询本周工时明细",
-    "input": "请帮我查询本周的工时明细",
+    "sub_type": "query_self_last_month",
+    "description": "口语化查下上月填了多少",
+    "input": "查下上月填了多少",
     "user_context": {
       "entity_type": "companyAdmin",
       "user_id": "1001",
@@ -1165,21 +1090,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_048",
+    "id": "qspm_045",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅瞅本周填报",
-    "input": "瞅瞅本周填报",
+    "sub_type": "query_self_last_month",
+    "description": "长句查看上月填报记录",
+    "input": "请查看上月填报的记录",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1190,21 +1115,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_049",
+    "id": "qspm_046",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "短句本周工时",
-    "input": "本周工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化瞅瞅上月的工时",
+    "input": "瞅瞅上月的工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1215,21 +1140,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_050",
+    "id": "qspm_047",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化看看这周填报",
-    "input": "看看这周填报",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月工时情况",
+    "input": "上月工时情况",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -1240,21 +1165,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_051",
+    "id": "qspm_048",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句查看本周工时统计",
-    "input": "请帮我查看本周的工时统计",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看看上月工作量",
+    "input": "看看上月工作量",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1265,21 +1190,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_052",
+    "id": "qspm_049",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅一眼这周填报",
-    "input": "瞅一眼这周填报",
+    "sub_type": "query_self_last_month",
+    "description": "长句统计上月的工时",
+    "input": "帮我统计一下上月的工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1290,21 +1215,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_053",
+    "id": "qspm_050",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化查下本周工时",
-    "input": "查下本周工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化查查看上月工时",
+    "input": "查查看上月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1315,21 +1240,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_054",
+    "id": "qspm_051",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句查询本周工时情况",
-    "input": "请帮我查询一下本周的工时情况",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月工时明细",
+    "input": "上月工时明细",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -1340,21 +1265,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_055",
+    "id": "qspm_052",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅瞅这周工时",
-    "input": "瞅瞅这周工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看一下上月",
+    "input": "看一下上月填报",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1365,21 +1290,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_056",
+    "id": "qspm_053",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "短句这周工时",
-    "input": "这周工时",
+    "sub_type": "query_self_last_month",
+    "description": "长句查询上月工时详情",
+    "input": "请帮我查询上月的工时详情",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1390,21 +1315,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_057",
+    "id": "qspm_054",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化看看本周填报",
-    "input": "看看本周填报",
+    "sub_type": "query_self_last_month",
+    "description": "口语化浏览一下上月",
+    "input": "浏览一下上月工时",
     "user_context": {
       "entity_type": "companyAdmin",
       "user_id": "1001",
@@ -1415,21 +1340,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_058",
+    "id": "qspm_055",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句统计本周工时总数",
-    "input": "请帮我统计一下本周的工时总数",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月的记录",
+    "input": "上月的记录",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1440,21 +1365,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_059",
+    "id": "qspm_056",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅一眼本周填报",
-    "input": "瞅一眼本周填报",
+    "sub_type": "query_self_last_month",
+    "description": "口语化翻翻上月",
+    "input": "翻翻上月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1465,46 +1390,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_060",
+    "id": "qspm_057",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化查下这周填报",
-    "input": "查下这周填报",
-    "user_context": {
-      "entity_type": "employee",
-      "user_id": "1001",
-      "user_name": "张三",
-      "department_id": "dept_01"
-    },
-    "expected": {
-      "intent": "tool_execution",
-      "tool_name": "query_timesheet",
-      "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
-      },
-      "params_fuzzy": [],
-      "params_exists": ["user_id"],
-      "date_relative": true
-    },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
-  },
-  {
-    "id": "qsw_061",
-    "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句查看本周填报明细",
-    "input": "请帮我查看本周填报的明细",
+    "sub_type": "query_self_last_month",
+    "description": "长句获取上月工时",
+    "input": "请获取我上月的工时数据",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -1515,21 +1415,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_062",
+    "id": "qspm_058",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅瞅本周工时",
-    "input": "瞅瞅本周工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化核对上月",
+    "input": "核对一下上月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1540,21 +1440,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_063",
+    "id": "qspm_059",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "短句本周填报",
-    "input": "本周填报",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月情况",
+    "input": "上月情况",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1565,21 +1465,46 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_064",
+    "id": "qspm_060",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化看看这周工时",
-    "input": "看看这周工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化检查上月",
+    "input": "检查一下上月工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qspm_061",
+    "category": "query_timesheet",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月工时汇总",
+    "input": "上月工时汇总",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1590,21 +1515,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_065",
+    "id": "qspm_062",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句查询本周工时记录",
-    "input": "请帮我查询本周的工时记录",
+    "sub_type": "query_self_last_month",
+    "description": "口语化汇总一下上月",
+    "input": "汇总一下上月工时",
     "user_context": {
       "entity_type": "companyAdmin",
       "user_id": "1001",
@@ -1615,21 +1540,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_066",
+    "id": "qspm_063",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅一眼这周工时",
-    "input": "瞅一眼这周工时",
+    "sub_type": "query_self_last_month",
+    "description": "长句查询上月汇总",
+    "input": "请查询一下上月的工时汇总",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1640,46 +1565,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_067",
+    "id": "qspm_064",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化查下本周填报",
-    "input": "查下本周填报",
-    "user_context": {
-      "entity_type": "employee",
-      "user_id": "1001",
-      "user_name": "张三",
-      "department_id": "dept_01"
-    },
-    "expected": {
-      "intent": "tool_execution",
-      "tool_name": "query_timesheet",
-      "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
-      },
-      "params_fuzzy": [],
-      "params_exists": ["user_id"],
-      "date_relative": true
-    },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
-  },
-  {
-    "id": "qsw_068",
-    "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句查看本周工时明细",
-    "input": "请帮我查看本周的工时明细",
+    "sub_type": "query_self_last_month",
+    "description": "口语化算一下上月",
+    "input": "算一下上月工时",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -1690,21 +1590,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_069",
+    "id": "qspm_065",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅瞅这周填报",
-    "input": "瞅瞅这周填报",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月总工时",
+    "input": "上月总工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1715,21 +1615,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_070",
+    "id": "qspm_066",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "短句这周填报",
-    "input": "这周填报",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看看上个月",
+    "input": "看看上个月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1740,46 +1640,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_071",
+    "id": "qspm_067",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化看看本周工时",
-    "input": "看看本周工时",
-    "user_context": {
-      "entity_type": "employee",
-      "user_id": "1001",
-      "user_name": "张三",
-      "department_id": "dept_01"
-    },
-    "expected": {
-      "intent": "tool_execution",
-      "tool_name": "query_timesheet",
-      "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
-      },
-      "params_fuzzy": [],
-      "params_exists": ["user_id"],
-      "date_relative": true
-    },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
-  },
-  {
-    "id": "qsw_072",
-    "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句统计本周工时数据",
-    "input": "请帮我统计一下本周的工时数据",
+    "sub_type": "query_self_last_month",
+    "description": "长句查看上个月的",
+    "input": "请查看上个月的工时",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -1790,71 +1665,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_073",
+    "id": "qspm_068",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅一眼本周工时",
-    "input": "瞅一眼本周工时",
-    "user_context": {
-      "entity_type": "employee",
-      "user_id": "1001",
-      "user_name": "张三",
-      "department_id": "dept_01"
-    },
-    "expected": {
-      "intent": "tool_execution",
-      "tool_name": "query_timesheet",
-      "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
-      },
-      "params_fuzzy": [],
-      "params_exists": ["user_id"],
-      "date_relative": true
-    },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
-  },
-  {
-    "id": "qsw_074",
-    "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化查下这周工时",
-    "input": "查下这周工时",
-    "user_context": {
-      "entity_type": "employee",
-      "user_id": "1001",
-      "user_name": "张三",
-      "department_id": "dept_01"
-    },
-    "expected": {
-      "intent": "tool_execution",
-      "tool_name": "query_timesheet",
-      "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
-      },
-      "params_fuzzy": [],
-      "params_exists": ["user_id"],
-      "date_relative": true
-    },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
-  },
-  {
-    "id": "qsw_075",
-    "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句查询本周工时明细",
-    "input": "请帮我查询本周的工时明细",
+    "sub_type": "query_self_last_month",
+    "description": "口语化查一下上个月",
+    "input": "查一下上个月工时",
     "user_context": {
       "entity_type": "companyAdmin",
       "user_id": "1001",
@@ -1865,21 +1690,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_076",
+    "id": "qspm_069",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅瞅本周填报",
-    "input": "瞅瞅本周填报",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月统计",
+    "input": "上月统计",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1890,21 +1715,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_077",
+    "id": "qspm_070",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "短句本周工时",
-    "input": "本周工时",
+    "sub_type": "query_self_last_month",
+    "description": "口语化统计一下上月",
+    "input": "统计一下上月工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1915,21 +1740,46 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_078",
+    "id": "qspm_071",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化看看这周填报",
-    "input": "看看这周填报",
+    "sub_type": "query_self_last_month",
+    "description": "长句查询上月工时记录",
+    "input": "请查询我上月填报的工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qspm_072",
+    "category": "query_timesheet",
+    "sub_type": "query_self_last_month",
+    "description": "口语化拉一下上月",
+    "input": "拉一下上月工时数据",
     "user_context": {
       "entity_type": "deptAdmin",
       "user_id": "1001",
@@ -1940,21 +1790,21 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_079",
+    "id": "qspm_073",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "长句查看本周工时统计",
-    "input": "请帮我查看本周的工时统计",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月填报记录",
+    "input": "上月填报记录",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1965,21 +1815,46 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   },
   {
-    "id": "qsw_080",
+    "id": "qspm_074",
     "category": "query_timesheet",
-    "sub_type": "query_self_this_week",
-    "description": "口语化瞅一眼这周填报",
-    "input": "瞅一眼这周填报",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看一下上月填报",
+    "input": "看一下上月填报",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qspm_075",
+    "category": "query_timesheet",
+    "sub_type": "query_self_last_month",
+    "description": "长句检索上月工时",
+    "input": "请检索上月填报的工时",
     "user_context": {
       "entity_type": "employee",
       "user_id": "1001",
@@ -1990,13 +1865,138 @@
       "intent": "tool_execution",
       "tool_name": "query_timesheet",
       "params": {
-        "start_date": "2026-03-30",
-        "end_date": "2026-04-05"
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
       },
       "params_fuzzy": [],
       "params_exists": ["user_id"],
       "date_relative": true
     },
-    "notes": "本周=2026-03-30至2026-04-05；必须传user_id"
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qspm_076",
+    "category": "query_timesheet",
+    "sub_type": "query_self_last_month",
+    "description": "口语化翻一下上月",
+    "input": "翻一下上月记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qspm_077",
+    "category": "query_timesheet",
+    "sub_type": "query_self_last_month",
+    "description": "短句上月工时数据",
+    "input": "上月工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qspm_078",
+    "category": "query_timesheet",
+    "sub_type": "query_self_last_month",
+    "description": "口语化查查上月的",
+    "input": "查查上月的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qspm_079",
+    "category": "query_timesheet",
+    "sub_type": "query_self_last_month",
+    "description": "长句展示上月工时",
+    "input": "请展示一下我上月填报的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
+  },
+  {
+    "id": "qspm_080",
+    "category": "query_timesheet",
+    "sub_type": "query_self_last_month",
+    "description": "口语化看一下上月数据",
+    "input": "看一下上月工时数据",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "上月=2026-03-01至2026-03-31；必须传user_id，不得返回全员数据"
   }
 ]

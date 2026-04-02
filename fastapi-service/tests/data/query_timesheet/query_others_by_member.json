@@ -1,0 +1,1442 @@
+[
+  {
+    "id": "qobm_001",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员只按姓名查询员工工时",
+    "input": "李四的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_002",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查询员工所有工时",
+    "input": "查一下王五的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_003",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员看看员工工时",
+    "input": "看看赵六的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_004",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员瞅一眼员工工时",
+    "input": "瞅一眼孙七的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_005",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "公司管理员查询员工",
+    "input": "查询周八的工时记录",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_006",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "区域管理员查员工工时",
+    "input": "帮我查一下吴九的工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_007",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "超级管理员查员工",
+    "input": "查看郑十的工时情况",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_008",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工填报",
+    "input": "李四的填报",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_009",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工数据",
+    "input": "王五的数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_010",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工填了啥",
+    "input": "赵六填了啥",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_011",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员看看员工工作量",
+    "input": "看看孙七的工作量",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_012",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "公司管理员查员工填报",
+    "input": "查一下周八的填报记录",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_013",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工工时情况",
+    "input": "吴九工时情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_014",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员瞅瞅员工工时",
+    "input": "瞅瞅郑十的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_015",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工工时记录",
+    "input": "查询李四的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_016",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "区域管理员查员工",
+    "input": "王五工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_017",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员看一眼员工",
+    "input": "看一眼赵六的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_018",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员浏览员工工时",
+    "input": "浏览一下孙七的工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_019",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "公司管理员统计员工",
+    "input": "统计周八的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_020",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员核对员工工时",
+    "input": "核对吴九的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_021",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员看一下员工",
+    "input": "看一下郑十的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_022",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员获取员工数据",
+    "input": "获取李四的工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_023",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员检查员工填报",
+    "input": "检查王五的填报情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_024",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "超级管理员查员工",
+    "input": "帮我看看赵六的工时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_025",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员翻一下员工",
+    "input": "翻一下孙七的工时记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_026",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工工时明细",
+    "input": "查周八的工时明细",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_027",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员检索员工",
+    "input": "检索吴九的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_028",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员展示员工",
+    "input": "展示郑十的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_029",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员拉一下员工",
+    "input": "拉一下李四的工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_030",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "公司管理员翻翻员工",
+    "input": "翻翻王五的工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_031",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工工时统计",
+    "input": "赵六工时统计",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_032",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员算一下员工",
+    "input": "算一下孙七的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_033",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员汇总员工",
+    "input": "汇总周八的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_034",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "区域管理员瞅瞅员工",
+    "input": "瞅瞅吴九的工时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_035",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查查看员工",
+    "input": "查查看郑十的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_036",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员瞧一下员工",
+    "input": "瞧一下李四的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_037",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员瞄一眼员工",
+    "input": "瞄一眼王五的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_038",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "超级管理员查员工填报",
+    "input": "查赵六的填报",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_039",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员了解员工工时",
+    "input": "了解一下孙七的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_040",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员确认员工工时",
+    "input": "确认周八的工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_041",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工总工时",
+    "input": "吴九总工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_042",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工记录",
+    "input": "郑十的记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_043",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "公司管理员查员工明细",
+    "input": "李四的工时明细",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_044",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工详情",
+    "input": "王五的工时详情",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_045",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "区域管理员查员工汇总",
+    "input": "赵六的工时汇总",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_046",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工情况",
+    "input": "孙七的情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_047",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工数据",
+    "input": "周八的数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_048",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "超级管理员查员工填报",
+    "input": "吴九填报",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_049",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工工时列表",
+    "input": "郑十的工时列表",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_050",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工全部工时",
+    "input": "李四的全部工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_051",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "公司管理员查员工工作时长",
+    "input": "王五的工作时长",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_052",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工工时表",
+    "input": "赵六的工时表",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_053",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "区域管理员查员工时间",
+    "input": "孙七的时间",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_054",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工填报记录",
+    "input": "周八的填报记录",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "周八"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_055",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工填报明细",
+    "input": "吴九的填报明细",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "吴九"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_056",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "超级管理员查员工工作记录",
+    "input": "郑十的工作记录",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "郑十"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_057",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工工时数据",
+    "input": "李四的工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "李四"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_058",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工工时信息",
+    "input": "王五的工时信息",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "王五"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_059",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "公司管理员查员工工时",
+    "input": "赵六工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "赵六"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  },
+  {
+    "id": "qobm_060",
+    "category": "query_timesheet",
+    "sub_type": "query_others_by_member",
+    "description": "管理员查员工工时",
+    "input": "孙七工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {
+        "member_name": "孙七"
+      },
+      "params_fuzzy": ["member_name"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "只提供成员姓名，无日期范围；查询他人需要member_name；必须传user_id"
+  }
+]
