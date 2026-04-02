@@ -5,9 +5,9 @@
 并输出每个文件的质量报告。
 
 用法：
-    python tests/validate_test_data.py              # 验证全部
-    python tests/validate_test_data.py --fix        # 验证 + 自动修复可修复的问题
-    python tests/validate_test_data.py --file tests/data/query_timesheet/query_self_today.json
+    python tests/utils/validate_test_data.py              # 验证全部
+    python tests/utils/validate_test_data.py --fix        # 验证 + 自动修复可修复的问题
+    python tests/utils/validate_test_data.py --file tests/data/query_timesheet/query_self_today.json
 """
 
 import json
@@ -166,7 +166,7 @@ def validate_file(path: Path, fix: bool = False) -> dict[str, Any]:
     fix=True 时自动修复可修复问题（去除重复 input，补全缺失的 params_fuzzy）。
     """
     report: dict[str, Any] = {
-        "file": str(path.relative_to(Path(__file__).parent)),
+        "file": str(path.relative_to(Path(__file__).parent.parent)),
         "count": 0,
         "errors": [],
         "warnings": [],
@@ -253,7 +253,7 @@ def main():
     parser.add_argument("--file", type=str, help="只验证指定文件")
     args = parser.parse_args()
 
-    data_dir = Path(__file__).parent / "data"
+    data_dir = Path(__file__).parent.parent / "data"
 
     if args.file:
         files = [Path(args.file)]
