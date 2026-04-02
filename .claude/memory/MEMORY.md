@@ -13,5 +13,8 @@
 ## 接口参考
 - [SpringBoot API 参考](reference_springboot_api.md) — 工时/项目/用户接口路径、字段名、查询参数（2026-04-01 整理自源码）
 
+## 精度测试
+- [Layer1 精度路线图](project_accuracy_roadmap.md) — v1=70.2%、v2=70.9%、失败根因分析、v3 Prompt改进方案（3项改动）、PlannerAgent架构方向（2026-04-02）
+
 ## 踩坑记录
 - [RAG/Milvus 兼容性修复经验](feedback_rag_milvus_fixes.md) — pymilvus 2.6 ORM bug、DashScope embedding 兼容、langchain包结构变化（2026-03-31）
