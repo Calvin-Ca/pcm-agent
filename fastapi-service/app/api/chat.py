@@ -233,43 +233,48 @@ async def chat_stream(request: ChatRequest, http_request: Request):
 @router.post("/chat")
 async def chat_non_stream(request: ChatRequest, http_request: Request):
     """
-    非流式AI聊天接口
-    
+    非流式AI聊天接口（使用 Function Calling 架构）
+
     Args:
         request: 聊天请求
         http_request: HTTP请求对象
-        
+
     Returns:
         ChatResponse: 聊天响应
     """
     if not intent_router:
         raise HTTPException(status_code=500, detail="AI Chat components not initialized")
-    
+
     from datetime import datetime
     from app.services.conversation_logger import get_conversation_logger
-    
+
     start_time = datetime.now()
     status = "success"
     error_message = None
     route_type = None
     intent_value = None
-    
+    tool_name = None
+    response_message = None
+
     try:
         # 构建用户上下文
         user_context = request.user_context or {}
-        
+
         # 从请求头中提取用户信息
         user_id = http_request.headers.get("X-User-ID", "anonymous")
         entity_type = http_request.headers.get("X-Entity-Type")
         department_id = http_request.headers.get("X-Department-ID")
-        
+        auth_token = http_request.headers.get("Authorization", "")
+
         if user_id:
             user_context["user_id"] = user_id
         if entity_type:
             user_context["entity_type"] = entity_type
         if department_id:
             user_context["department_id"] = department_id
-        
+        if auth_token:
+            user_context["auth_token"] = auth_token
+
         # 构建权限上下文
         if user_id and entity_type:
             permission_context = PermissionContext(
@@ -278,49 +283,110 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
                 department_id=department_id
             )
             user_context["permission_context"] = permission_context
-        
+
         logger.info(f"处理非流式聊天请求: {request.message[:100]}...")
-        
-        # 意图识别和路由决策
-        route_decision = await intent_router.make_route_decision(
-            request.message, user_context
-        )
-        
-        route_type = route_decision.target.value
-        intent_value = route_decision.intent_result.intent_type.value
-        
-        # 执行路由
-        result = await intent_router.execute_route(route_decision, user_context)
-        
-        response = ChatResponse(
-            success=True,
-            message="请求处理完成",
+
+        # 使用 LangGraph Agent 处理请求（收集流式输出）
+        collected_events = []
+        final_response = None
+        detected_intent = None
+        detected_tool = None
+        tool_result = None
+
+        async for event_str in stream_agent_response(
+            message=request.message,
+            user_context=user_context,
             session_id=request.session_id,
-            result=result
+        ):
+            # 解析 SSE 事件
+            if event_str.startswith("event:"):
+                lines = event_str.strip().split("\n")
+                event_type = lines[0].replace("event:", "").strip()
+                if len(lines) > 1 and lines[1].startswith("data:"):
+                    data_str = lines[1].replace("data:", "").strip()
+                    try:
+                        data = json.loads(data_str)
+                    except json.JSONDecodeError:
+                        data = {}
+
+                    collected_events.append({"event": event_type, "data": data})
+
+                    # 提取关键信息
+                    if event_type == "tool_call":
+                        detected_tool = data.get("tool_name")
+                        tool_name = detected_tool
+                    elif event_type == "response":
+                        final_response = data.get("message") or data.get("result", {}).get("response", "")
+                        if data.get("result"):
+                            tool_result = data.get("result")
+                    elif event_type == "error":
+                        final_response = data.get("message", "处理请求时发生错误")
+                        status = "error"
+
+        # 根据事件推断意图类型
+        for event in collected_events:
+            if event["event"] == "tool_call":
+                detected_intent = "tool_execution"
+                route_type = "tool_executor"
+                break
+            elif event["event"] == "thinking":
+                msg = event["data"].get("message", "")
+                if "搜索知识库" in msg:
+                    detected_intent = "knowledge_qa"
+                    route_type = "rag_engine"
+                    break
+
+        if not detected_intent:
+            detected_intent = "general_chat"
+            route_type = "llm_service"
+
+        intent_value = detected_intent
+
+        # 构建与旧格式兼容的 result
+        result = {
+            "route_info": {
+                "target": route_type,
+                "intent_type": detected_intent,
+                "confidence": 0.9,  # Function Calling 通常有高置信度
+            },
+            "message": final_response or "请求处理完成",
+        }
+
+        if detected_tool:
+            result["tool_name"] = detected_tool
+        if tool_result:
+            result["result"] = tool_result
+
+        response = ChatResponse(
+            success=status != "error",
+            message=final_response or "请求处理完成",
+            session_id=request.session_id,
+            result=result,
+            error=error_message if status == "error" else None,
         )
-        
+
         return response
-        
+
     except Exception as e:
         logger.error(f"非流式聊天接口异常: {e}", exc_info=True)
         status = "error"
         error_message = str(e)
-        
+
         return ChatResponse(
             success=False,
             session_id=request.session_id,
             error=f"处理聊天请求失败: {str(e)}"
         )
-    
+
     finally:
         # 记录会话日志
         try:
             duration_ms = int((datetime.now() - start_time).total_seconds() * 1000)
             conv_logger = get_conversation_logger()
-            
+
             conv_logger.log_conversation(
                 session_id=request.session_id or "unknown",
-                user_id=user_id,
+                user_id=user_id if 'user_id' in locals() else "anonymous",
                 user_message=request.message,
                 route_type=route_type or "unknown",
                 intent=intent_value,
