@@ -1,0 +1,1322 @@
+[
+  {
+    "id": "swhm_001",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天和昨天各8小时",
+    "input": "今天填8小时，昨天也填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "系统暂不支持一次填报多日，应提示用户分次填报"
+  },
+  {
+    "id": "swhm_002",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "本周一到周三每天6小时",
+    "input": "帮我报一下本周一到周三每天6小时的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "多日期填报需澄清"
+  },
+  {
+    "id": "swhm_003",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "周一到周五每天8小时",
+    "input": "周一到周五每天填报8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "跨多天的批量填报需澄清"
+  },
+  {
+    "id": "swhm_004",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天和明天各4小时",
+    "input": "今天和明天各填4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天各4小时，需分次填报"
+  },
+  {
+    "id": "swhm_005",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "本周每天8小时",
+    "input": "帮我报一下这周每天的工时，都是8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "整周批量填报需澄清"
+  },
+  {
+    "id": "swhm_006",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "昨天和前天各7小时",
+    "input": "昨天和前天各填7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天填报需澄清"
+  },
+  {
+    "id": "swhm_007",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "周二周三各6小时",
+    "input": "周二和周三各报6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "赵六",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天各6小时"
+  },
+  {
+    "id": "swhm_008",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天明天后天各8小时",
+    "input": "今天明天后天各填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "三天连续填报需澄清"
+  },
+  {
+    "id": "swhm_009",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "上周一到周五每天8小时",
+    "input": "补报一下上周一到周五的工时，每天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "上周整周补报需澄清"
+  },
+  {
+    "id": "swhm_010",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天和昨天各5小时",
+    "input": "今天和昨天各填报5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天各5小时"
+  },
+  {
+    "id": "swhm_011",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "本周二到周四每天7小时",
+    "input": "填报本周二到周四的工时，每天7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "三天连续填报"
+  },
+  {
+    "id": "swhm_012",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "昨天今天明天各6小时",
+    "input": "昨天今天明天各报6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "三天跨昨天今天明天"
+  },
+  {
+    "id": "swhm_013",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "周四周五各8小时",
+    "input": "周四周五各填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "赵六",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天各8小时"
+  },
+  {
+    "id": "swhm_014",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "上周三到周五每天8小时",
+    "input": "补报上周三到周五的工时，每天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "上周三天补报"
+  },
+  {
+    "id": "swhm_015",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天和昨天各填项目工时",
+    "input": "今天和昨天各填8小时项目工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天填报需澄清"
+  },
+  {
+    "id": "swhm_016",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "下周一到周三每天8小时",
+    "input": "预约填报下周一到周三的工时，每天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "未来三天预约填报需澄清"
+  },
+  {
+    "id": "swhm_017",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "本周每天不同工时",
+    "input": "填报本周工时，周一8小时周二7小时周三6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "多天不同工时"
+  },
+  {
+    "id": "swhm_018",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "昨天前天大前天各8小时",
+    "input": "补报昨天前天大前天的工时，各8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "三天补报需澄清"
+  },
+  {
+    "id": "swhm_019",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "周五和周一各8小时",
+    "input": "周五和下周一周各填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "赵六",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "跨周末两天填报"
+  },
+  {
+    "id": "swhm_020",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天和昨天各3小时",
+    "input": "今天和昨天各填报3小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天各3小时"
+  },
+  {
+    "id": "swhm_021",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "本周一到周五每天8小时带项目",
+    "input": "AI平台项目本周一到周五每天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "整周带项目批量填报需澄清"
+  },
+  {
+    "id": "swhm_022",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "明天后天各6小时",
+    "input": "明天和后天各报6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "未来两天填报"
+  },
+  {
+    "id": "swhm_023",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "上周二周三各7小时",
+    "input": "补报上周二和周三的工时，各7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "上周两天补报"
+  },
+  {
+    "id": "swhm_024",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天昨天前天各4小时",
+    "input": "今天昨天前天各填4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "三天各4小时"
+  },
+  {
+    "id": "swhm_025",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "本周三周四周五各8小时",
+    "input": "填报本周三四五的工时，各8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "赵六",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "三天连续填报"
+  },
+  {
+    "id": "swhm_026",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "昨天和上周各8小时",
+    "input": "昨天填8小时，上周也每天填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "昨天加整周需澄清"
+  },
+  {
+    "id": "swhm_027",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天明天各7小时",
+    "input": "今天和明天各填报7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天各7小时"
+  },
+  {
+    "id": "swhm_028",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "周一到周四每天6小时",
+    "input": "周一到周四每天报6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "四天连续填报"
+  },
+  {
+    "id": "swhm_029",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "上周今天各8小时",
+    "input": "上周和今天各填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "上周和今天表述不清需澄清"
+  },
+  {
+    "id": "swhm_030",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "本周每天8小时",
+    "input": "把本周每天的工时都报一下，8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "整周批量填报"
+  },
+  {
+    "id": "swhm_031",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "周二周四各8小时",
+    "input": "周二和周四各填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "赵六",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "间隔两天填报"
+  },
+  {
+    "id": "swhm_032",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "昨天今天各5小时",
+    "input": "昨天今天各报5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天各5小时"
+  },
+  {
+    "id": "swhm_033",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "下周一到周五每天8小时",
+    "input": "下周一周到周五每天8小时提前报一下",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "下周整周提前填报需澄清"
+  },
+  {
+    "id": "swhm_034",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天明天后天大后天各6小时",
+    "input": "今天到后天各填6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "今天到后天共三天"
+  },
+  {
+    "id": "swhm_035",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "上周四周五各7小时",
+    "input": "补报上周四周五的工时，各7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "上周两天补报"
+  },
+  {
+    "id": "swhm_036",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "本周和上周各8小时",
+    "input": "本周和上周每天都填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两周批量填报需澄清"
+  },
+  {
+    "id": "swhm_037",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天昨天各8小时带项目",
+    "input": "AI平台今天昨天各8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "赵六",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天带项目填报"
+  },
+  {
+    "id": "swhm_038",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "周三到周五每天8小时",
+    "input": "周三到周五每天填报8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "三天连续填报"
+  },
+  {
+    "id": "swhm_039",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "大前天前天昨天各6小时",
+    "input": "大前天前天昨天各报6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "三天连续补报"
+  },
+  {
+    "id": "swhm_040",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天和明天各2小时",
+    "input": "今天明天各填2小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天各2小时"
+  },
+  {
+    "id": "swhm_041",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "本周一到周四每天7小时",
+    "input": "填报本周一到周四，每天7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "四天连续填报"
+  },
+  {
+    "id": "swhm_042",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "上周五本周一各8小时",
+    "input": "上周五和本周一各填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "跨周末两天填报"
+  },
+  {
+    "id": "swhm_043",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "明天大后天各8小时",
+    "input": "明天和大后天各报8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "赵六",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "间隔两天未来填报"
+  },
+  {
+    "id": "swhm_044",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "昨天前天各4小时",
+    "input": "昨天和前天各填报4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天各4小时"
+  },
+  {
+    "id": "swhm_045",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "本周五和下周一各8小时",
+    "input": "本周五和下周一周各填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "跨周末两天填报"
+  },
+  {
+    "id": "swhm_046",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "周一二三各6小时",
+    "input": "周一二三各报6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "三天连续填报"
+  },
+  {
+    "id": "swhm_047",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天和昨天各填报工时",
+    "input": "今天和昨天的工时都报一下",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天填报未说明工时数需澄清"
+  },
+  {
+    "id": "swhm_048",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "本周每天不同项目",
+    "input": "本周一AI平台8小时，周二智慧园区7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天不同项目需澄清"
+  },
+  {
+    "id": "swhm_049",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "上周一二三各8小时",
+    "input": "补报上周一二三的工时，各8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "赵六",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "上周三天补报"
+  },
+  {
+    "id": "swhm_050",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天明天各3小时",
+    "input": "今天明天各填3小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "两天各3小时"
+  },
+  {
+    "id": "swhm_051",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "周二到周五每天8小时",
+    "input": "周二到周五每天报8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "四天连续填报"
+  },
+  {
+    "id": "swhm_052",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "昨天今天明天各7小时",
+    "input": "昨天今天明天各填报7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "三天各7小时"
+  },
+  {
+    "id": "swhm_053",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "本周和今天各8小时",
+    "input": "本周每天还有今天都填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "表述重复需澄清"
+  },
+  {
+    "id": "swhm_054",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "下周一二三各6小时",
+    "input": "下周一周二周三各报6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "未来三天填报"
+  },
+  {
+    "id": "swhm_055",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "周四周五周六各8小时",
+    "input": "周四周五周六各填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "赵六",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "含周六需确认是否工作日"
+  },
+  {
+    "id": "swhm_056",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "大前天和昨天各5小时",
+    "input": "大前天和昨天各报5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "间隔两天补报"
+  },
+  {
+    "id": "swhm_057",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "本周一到周三每天不同工时",
+    "input": "本周一8小时周二7小时周三6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "三天不同工时"
+  },
+  {
+    "id": "swhm_058",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "今天和后天各8小时",
+    "input": "今天和后天各填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "间隔一天填报"
+  },
+  {
+    "id": "swhm_059",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "上周今天明天各7小时",
+    "input": "上周和今天明天都填7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "上周加今天明天需澄清"
+  },
+  {
+    "id": "swhm_060",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_multi_days",
+    "description": "周一到周日每天8小时",
+    "input": "周一到周日每天填报8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": "整周含周末需澄清"
+  }
+]

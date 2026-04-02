@@ -1,0 +1,2054 @@
+[
+  {
+    "id": "swhp_001",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定AI平台项目填报今天8小时",
+    "input": "填报AI平台项目今天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "AI平台",
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报今天8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_002",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定智慧园区项目填报今天8小时",
+    "input": "智慧园区项目今天填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "智慧园区",
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报今天8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_003",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定数字化转型项目填报今天6小时",
+    "input": "数字化转型今天6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "数字化转型",
+        "work_date": "2026-04-01",
+        "work_hours": 6
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报今天6小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_004",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定ERP升级项目填报今天4小时",
+    "input": "ERP升级项目今天填4个小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "ERP升级",
+        "work_date": "2026-04-01",
+        "work_hours": 4
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报今天4小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_005",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定移动端改版项目填报昨天8小时",
+    "input": "移动端改版昨天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "移动端改版",
+        "work_date": "2026-03-31",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报昨天8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_006",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定云迁移项目填报昨天7小时",
+    "input": "云迁移项目昨天7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "云迁移项目",
+        "work_date": "2026-03-31",
+        "work_hours": 7
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报昨天7小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_007",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定AI平台项目填报昨天5小时",
+    "input": "AI平台昨天5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "AI平台",
+        "work_date": "2026-03-31",
+        "work_hours": 5
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报昨天5小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_008",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定智慧园区项目填报3月31日8小时",
+    "input": "智慧园区3月31日8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "智慧园区",
+        "work_date": "2026-03-31",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "指定项目填报3月31日8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_009",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定数字化转型项目填报3月30日6小时",
+    "input": "数字化转型3月30日填了6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "数字化转型",
+        "work_date": "2026-03-30",
+        "work_hours": 6
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "指定项目填报3月30日6小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_010",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定ERP升级项目填报4月1日8小时",
+    "input": "ERP升级4月1日8小时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "ERP升级",
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "指定项目填报4月1日8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_011",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "口语化指定AI平台项目填报今天",
+    "input": "帮我在AI平台填一下今天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "AI平台",
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "口语化指定项目填报今天8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_012",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "口语化指定智慧园区填报昨天",
+    "input": "智慧园区昨天干了7小时，记一下",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "智慧园区",
+        "work_date": "2026-03-31",
+        "work_hours": 7
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "口语化指定项目填报昨天7小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_013",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "短句指定项目填报",
+    "input": "数字化转型今天4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "数字化转型",
+        "work_date": "2026-04-01",
+        "work_hours": 4
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "短句指定项目填报今天4小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_014",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "长句正式指定项目填报",
+    "input": "请帮我在移动端改版项目中填报2026年4月1日的工时，共计8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "移动端改版",
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "长句正式指定项目填报；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_015",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定云迁移填报0.5小时",
+    "input": "云迁移项目今天填0.5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "云迁移项目",
+        "work_date": "2026-04-01",
+        "work_hours": 0.5
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报0.5小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_016",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定AI平台填报1小时",
+    "input": "AI平台今天1小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "AI平台",
+        "work_date": "2026-04-01",
+        "work_hours": 1
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报1小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_017",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定智慧园区填报1.5小时",
+    "input": "智慧园区昨天1.5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "智慧园区",
+        "work_date": "2026-03-31",
+        "work_hours": 1.5
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报1.5小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_018",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定数字化转型填报2小时",
+    "input": "数字化转型今天2个小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "数字化转型",
+        "work_date": "2026-04-01",
+        "work_hours": 2
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报2小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_019",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定ERP升级填报2.5小时",
+    "input": "ERP升级今天2.5小时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "ERP升级",
+        "work_date": "2026-04-01",
+        "work_hours": 2.5
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报2.5小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_020",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定移动端改版填报3小时",
+    "input": "移动端改版昨天3小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "移动端改版",
+        "work_date": "2026-03-31",
+        "work_hours": 3
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报3小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_021",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定云迁移填报3.5小时",
+    "input": "云迁移项目今天填3.5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "云迁移项目",
+        "work_date": "2026-04-01",
+        "work_hours": 3.5
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报3.5小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_022",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定AI平台填报5小时",
+    "input": "AI平台今天5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "AI平台",
+        "work_date": "2026-04-01",
+        "work_hours": 5
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报5小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_023",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定智慧园区填报6小时",
+    "input": "智慧园区昨天6个小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "智慧园区",
+        "work_date": "2026-03-31",
+        "work_hours": 6
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报6小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_024",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定数字化转型填报7小时",
+    "input": "数字化转型今天7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "数字化转型",
+        "work_date": "2026-04-01",
+        "work_hours": 7
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报7小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_025",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定ERP升级填报明天8小时",
+    "input": "ERP升级明天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "ERP升级",
+        "work_date": "2026-04-02",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报明天8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_026",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定移动端改版填报明天4小时",
+    "input": "移动端改版明天4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "移动端改版",
+        "work_date": "2026-04-02",
+        "work_hours": 4
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报明天4小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_027",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定云迁移填报前天6小时",
+    "input": "云迁移项目前天6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "云迁移项目",
+        "work_date": "2026-03-30",
+        "work_hours": 6
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报前天6小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_028",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定AI平台填报大前天8小时",
+    "input": "AI平台大前天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "AI平台",
+        "work_date": "2026-03-29",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报大前天8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_029",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定智慧园区填报本周一",
+    "input": "智慧园区本周一8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "智慧园区",
+        "work_date": "2026-03-30",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报本周一8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_030",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定数字化转型填报本周三",
+    "input": "数字化转型本周三7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "数字化转型",
+        "work_date": "2026-04-01",
+        "work_hours": 7
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报本周三7小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_031",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定ERP升级填报下周一",
+    "input": "ERP升级下周一8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "ERP升级",
+        "work_date": "2026-04-06",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报下周一8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_032",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定移动端改版填报上周一",
+    "input": "移动端改版上周一5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "移动端改版",
+        "work_date": "2026-03-23",
+        "work_hours": 5
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报上周一5小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_033",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定云迁移填报上周三",
+    "input": "云迁移项目上周三6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "云迁移项目",
+        "work_date": "2026-03-25",
+        "work_hours": 6
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报上周三6小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_034",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定AI平台填报上周四",
+    "input": "AI平台上周四8小时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "AI平台",
+        "work_date": "2026-03-26",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报上周四8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_035",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定智慧园区填报上周五",
+    "input": "智慧园区上周五4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "智慧园区",
+        "work_date": "2026-03-27",
+        "work_hours": 4
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报上周五4小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_036",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定数字化转型填报本月1日",
+    "input": "数字化转型本月1号8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "数字化转型",
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报本月1日8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_037",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定ERP升级填报上月最后一天",
+    "input": "ERP升级3月31日3小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "ERP升级",
+        "work_date": "2026-03-31",
+        "work_hours": 3
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "指定项目填报3月31日3小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_038",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定移动端改版填报3月25日",
+    "input": "移动端改版3月25日7.5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "移动端改版",
+        "work_date": "2026-03-25",
+        "work_hours": 7.5
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "指定项目填报3月25日7.5小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_039",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定云迁移填报3月28日",
+    "input": "云迁移项目3月28日6.5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "云迁移项目",
+        "work_date": "2026-03-28",
+        "work_hours": 6.5
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "指定项目填报3月28日6.5小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_040",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定AI平台填报4月5日",
+    "input": "AI平台4月5日8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "AI平台",
+        "work_date": "2026-04-05",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "指定项目填报4月5日8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_041",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "正式长句指定智慧园区填报",
+    "input": "请帮我在智慧园区项目中填报今天的工时，工作时长为8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "智慧园区",
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "正式长句指定项目填报今天8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_042",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "口语化长句指定数字化转型填报",
+    "input": "数字化转型那边今天干了6个小时，帮我记一下",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "数字化转型",
+        "work_date": "2026-04-01",
+        "work_hours": 6
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "口语化指定项目填报今天6小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_043",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "祈使句指定ERP升级填报",
+    "input": "记一下ERP升级今天的工作时间，8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "ERP升级",
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "祈使句指定项目填报今天8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_044",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "请求式指定移动端改版填报",
+    "input": "帮我填报一下移动端改版昨天的工时，一共7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "移动端改版",
+        "work_date": "2026-03-31",
+        "work_hours": 7
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "请求式指定项目填报昨天7小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_045",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "简洁指定云迁移填报",
+    "input": "云迁移今天8h",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "云迁移项目",
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简洁指定项目填报今天8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_046",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定AI平台填报带h单位",
+    "input": "AI平台昨天5h",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "AI平台",
+        "work_date": "2026-03-31",
+        "work_hours": 5
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报昨天5小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_047",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定智慧园区填报带H单位",
+    "input": "智慧园区今天3H",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "智慧园区",
+        "work_date": "2026-04-01",
+        "work_hours": 3
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报今天3小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_048",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定数字化转型填报带小时",
+    "input": "数字化转型今天2个小时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "数字化转型",
+        "work_date": "2026-04-01",
+        "work_hours": 2
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报今天2小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_049",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定ERP升级填报带个",
+    "input": "ERP升级今天4个小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "ERP升级",
+        "work_date": "2026-04-01",
+        "work_hours": 4
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报今天4小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_050",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定移动端改版填报带工时",
+    "input": "移动端改版今天填6个工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "移动端改版",
+        "work_date": "2026-04-01",
+        "work_hours": 6
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报今天6小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_051",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "短句指定云迁移填报",
+    "input": "云迁移8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": "只指定项目和时间，缺日期，应触发追问"
+  },
+  {
+    "id": "swhp_052",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "短句指定AI平台填报",
+    "input": "AI平台今天",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": "只指定项目和日期，缺时长，应触发追问"
+  },
+  {
+    "id": "swhp_053",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定智慧园区填报缺日期",
+    "input": "智慧园区8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": "只指定项目和时长，缺日期，应触发追问"
+  },
+  {
+    "id": "swhp_054",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定数字化转型填报缺时长",
+    "input": "数字化转型今天",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": "只指定项目和日期，缺时长，应触发追问"
+  },
+  {
+    "id": "swhp_055",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "口语化指定ERP升级缺参",
+    "input": "帮我填一下ERP升级",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": "只指定项目，缺日期和时长，应触发追问"
+  },
+  {
+    "id": "swhp_056",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "口语化指定移动端改版缺参",
+    "input": "移动端改版报一下",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": "只指定项目，缺日期和时长，应触发追问"
+  },
+  {
+    "id": "swhp_057",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "疑问式指定云迁移填报缺参",
+    "input": "云迁移项目怎么填",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": "询问如何填报，意图不明确，可能需要澄清"
+  },
+  {
+    "id": "swhp_058",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "deptAdmin指定AI平台填报",
+    "input": "AI平台今天8小时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "AI平台",
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "deptAdmin指定项目填报今天8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_059",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "companyAdmin指定智慧园区填报",
+    "input": "智慧园区昨天7小时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "智慧园区",
+        "work_date": "2026-03-31",
+        "work_hours": 7
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "companyAdmin指定项目填报昨天7小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_060",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "regionAdmin指定数字化转型填报",
+    "input": "数字化转型今天6小时",
+    "user_context": {
+      "entity_type": "regionAdmin",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "数字化转型",
+        "work_date": "2026-04-01",
+        "work_hours": 6
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "regionAdmin指定项目填报今天6小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_061",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "superAdmin指定ERP升级填报",
+    "input": "ERP升级今天8小时",
+    "user_context": {
+      "entity_type": "superAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "ERP升级",
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "superAdmin指定项目填报今天8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_062",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定移动端改版填报带全天",
+    "input": "移动端改版今天全天",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "移动端改版",
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "全天应解析为8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_063",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定云迁移填报带半天",
+    "input": "云迁移项目今天半天",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "云迁移项目",
+        "work_date": "2026-04-01",
+        "work_hours": 4
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "半天应解析为4小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_064",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定AI平台填报带大半天",
+    "input": "AI平台今天大半天",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "AI平台",
+        "work_date": "2026-04-01",
+        "work_hours": 6
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "大半天应解析为6小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_065",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定智慧园区填报带小半天",
+    "input": "智慧园区今天小半天",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "智慧园区",
+        "work_date": "2026-04-01",
+        "work_hours": 2
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "小半天应解析为2小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_066",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定数字化转型填报带上午",
+    "input": "数字化转型今天上午",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "数字化转型",
+        "work_date": "2026-04-01",
+        "work_hours": 4
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "上午应解析为4小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_067",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定ERP升级填报带下午",
+    "input": "ERP升级今天下午",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "ERP升级",
+        "work_date": "2026-04-01",
+        "work_hours": 4
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "下午应解析为4小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_068",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定移动端改版填报2026-03-30",
+    "input": "移动端改版2026-03-30填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "移动端改版",
+        "work_date": "2026-03-30",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "指定项目填报2026-03-30；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_069",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定云迁移填报2026-04-02",
+    "input": "云迁移项目2026-04-02填7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "云迁移项目",
+        "work_date": "2026-04-02",
+        "work_hours": 7
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "指定项目填报2026-04-02；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_070",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定AI平台填报2026/03/31",
+    "input": "AI平台2026/03/31填6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "AI平台",
+        "work_date": "2026-03-31",
+        "work_hours": 6
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "指定项目填报2026/03/31；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_071",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定智慧园区填报3/30",
+    "input": "智慧园区3/30填5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "智慧园区",
+        "work_date": "2026-03-30",
+        "work_hours": 5
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "指定项目填报3/30；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_072",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定数字化转型填报4/1",
+    "input": "数字化转型4/1填8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "数字化转型",
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "指定项目填报4/1；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_073",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定ERP升级填报昨天8小时",
+    "input": "ERP升级项目昨天8小时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "ERP升级",
+        "work_date": "2026-03-31",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报昨天8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_074",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定移动端改版填报前天7小时",
+    "input": "移动端改版前天7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "移动端改版",
+        "work_date": "2026-03-30",
+        "work_hours": 7
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报前天7小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_075",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定云迁移填报大前天6小时",
+    "input": "云迁移大前天6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "云迁移项目",
+        "work_date": "2026-03-29",
+        "work_hours": 6
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报大前天6小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_076",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定AI平台填报本周五8小时",
+    "input": "AI平台本周五8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王五",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "AI平台",
+        "work_date": "2026-04-03",
+        "work_hours": 8
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报本周五8小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_077",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定智慧园区填报下周五4小时",
+    "input": "智慧园区下周五4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "智慧园区",
+        "work_date": "2026-04-10",
+        "work_hours": 4
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报下周五4小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_078",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定数字化转型填报上周二3小时",
+    "input": "数字化转型上周二3小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李四",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "数字化转型",
+        "work_date": "2026-03-24",
+        "work_hours": 3
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报上周二3小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_079",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定ERP升级填报上周六2小时",
+    "input": "ERP升级上周六2小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "ERP升级",
+        "work_date": "2026-03-28",
+        "work_hours": 2
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报上周六2小时；project_id需要解析；必须传user_id"
+  },
+  {
+    "id": "swhp_080",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_with_project",
+    "description": "指定移动端改版填报上周日1小时",
+    "input": "移动端改版上周日1小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "project_id": "移动端改版",
+        "work_date": "2026-03-29",
+        "work_hours": 1
+      },
+      "params_fuzzy": ["project_id"],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "指定项目填报上周日1小时；project_id需要解析；必须传user_id"
+  }
+]

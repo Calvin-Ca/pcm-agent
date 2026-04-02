@@ -1,0 +1,1252 @@
+[
+  {
+    "id": "swhs_001",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "短句填报今天8小时",
+    "input": "填报今天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_002",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "长句填报今天8小时工时",
+    "input": "我要填报今天8小时的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_003",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "口语化填一下今天8小时",
+    "input": "填一下今天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_004",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报今天4小时",
+    "input": "填报今天4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 4
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天4小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_005",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报今天6小时",
+    "input": "填报今天6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 6
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天6小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_006",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报今天2小时",
+    "input": "填报今天2小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 2
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天2小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_007",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报昨天8小时",
+    "input": "填报昨天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "填报昨天8小时；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_008",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报昨天6小时",
+    "input": "填报昨天6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 6
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "填报昨天6小时；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_009",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报昨天4小时",
+    "input": "填报昨天4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 4
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "填报昨天4小时；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_010",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报昨天2小时",
+    "input": "填报昨天2小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 2
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "填报昨天2小时；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_011",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报2026-04-01的8小时",
+    "input": "填报2026-04-01的8小时工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期填报；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_012",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报3月31日的6小时",
+    "input": "填报3月31日的6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 6
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期填报；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_013",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报4月1日8小时",
+    "input": "填报4月1日8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期填报；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_014",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "口语化帮我填今天8小时",
+    "input": "帮我填一下今天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_015",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "口语化记一下今天8小时",
+    "input": "记一下今天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_016",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "长句我要填报今天的工作时长8小时",
+    "input": "我要填报今天的工作时长8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_017",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "长句请帮我记录今天8小时工时",
+    "input": "请帮我记录今天8小时工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_018",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报今天1小时",
+    "input": "填报今天1小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 1
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天1小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_019",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报今天3小时",
+    "input": "填报今天3小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 3
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天3小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_020",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报今天5小时",
+    "input": "填报今天5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 5
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天5小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_021",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报今天7小时",
+    "input": "填报今天7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 7
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天7小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_022",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报昨天1小时",
+    "input": "填报昨天1小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 1
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "填报昨天1小时；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_023",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报昨天3小时",
+    "input": "填报昨天3小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 3
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "填报昨天3小时；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_024",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报昨天5小时",
+    "input": "填报昨天5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 5
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "填报昨天5小时；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_025",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报昨天7小时",
+    "input": "填报昨天7小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 7
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "填报昨天7小时；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_026",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报3月30日8小时",
+    "input": "填报3月30日8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-30",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期填报；work_date=2026-03-30；必须传user_id"
+  },
+  {
+    "id": "swhs_027",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报3月30日4小时",
+    "input": "填报3月30日4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-30",
+        "work_hours": 4
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期填报；work_date=2026-03-30；必须传user_id"
+  },
+  {
+    "id": "swhs_028",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报3月29日8小时",
+    "input": "填报3月29日8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-29",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期填报；work_date=2026-03-29；必须传user_id"
+  },
+  {
+    "id": "swhs_029",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报3月29日6小时",
+    "input": "填报3月29日6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-29",
+        "work_hours": 6
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期填报；work_date=2026-03-29；必须传user_id"
+  },
+  {
+    "id": "swhs_030",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报4月2日8小时",
+    "input": "填报4月2日8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-02",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期填报；work_date=2026-04-02；必须传user_id"
+  },
+  {
+    "id": "swhs_031",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "口语化记一下昨天8小时",
+    "input": "记一下昨天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "填报昨天8小时；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_032",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "口语化帮忙填今天8小时",
+    "input": "帮忙填一下今天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_033",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "口语化帮忙记今天8小时",
+    "input": "帮忙记一下今天8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_034",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "长句请帮我填报今天的工时8小时",
+    "input": "请帮我填报今天的工时8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_035",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "长句我想记录今天8小时的工时",
+    "input": "我想记录今天8小时的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_036",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "长句我需要填报今天的工时8小时",
+    "input": "我需要填报今天的工时8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_037",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报今天0.5小时",
+    "input": "填报今天0.5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 0.5
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天0.5小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_038",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报今天1.5小时",
+    "input": "填报今天1.5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 1.5
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天1.5小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_039",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报今天2.5小时",
+    "input": "填报今天2.5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 2.5
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天2.5小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_040",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报今天3.5小时",
+    "input": "填报今天3.5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 3.5
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天3.5小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_041",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报昨天0.5小时",
+    "input": "填报昨天0.5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 0.5
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "填报昨天0.5小时；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_042",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报昨天1.5小时",
+    "input": "填报昨天1.5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 1.5
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "填报昨天1.5小时；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_043",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报昨天2.5小时",
+    "input": "填报昨天2.5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 2.5
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "填报昨天2.5小时；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_044",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报昨天3.5小时",
+    "input": "填报昨天3.5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-31",
+        "work_hours": 3.5
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "填报昨天3.5小时；work_date=2026-03-31；必须传user_id"
+  },
+  {
+    "id": "swhs_045",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报2026-03-30的4小时",
+    "input": "填报2026-03-30的4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-30",
+        "work_hours": 4
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期填报；work_date=2026-03-30；必须传user_id"
+  },
+  {
+    "id": "swhs_046",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报2026-03-29的6小时",
+    "input": "填报2026-03-29的6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-03-29",
+        "work_hours": 6
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期填报；work_date=2026-03-29；必须传user_id"
+  },
+  {
+    "id": "swhs_047",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "填报2026-04-02的8小时",
+    "input": "填报2026-04-02的8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-02",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": false
+    },
+    "notes": "固定日期填报；work_date=2026-04-02；必须传user_id"
+  },
+  {
+    "id": "swhs_048",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "长句我要填今天的工时8小时",
+    "input": "我要填今天的工时8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_049",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "长句我想填报今天的工时",
+    "input": "我想填报今天的工时8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  },
+  {
+    "id": "swhs_050",
+    "category": "save_workhour",
+    "sub_type": "save_workhour_simple",
+    "description": "长句我需要记录今天的工时",
+    "input": "我需要记录今天的工时8小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "work_date": "2026-04-01",
+        "work_hours": 8
+      },
+      "params_fuzzy": [],
+      "params_exists": ["user_id"],
+      "date_relative": true
+    },
+    "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
+  }
+]

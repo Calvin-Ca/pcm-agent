@@ -1,0 +1,1424 @@
+[
+  {
+    "id": "swh_301",
+    "category": "save_workhour",
+    "sub_type": "fill_all_params",
+    "description": "完整-今天AI平台5小时",
+    "input": "今天在AI平台干了5小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张三",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 5,
+        "project_id": "p001"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_302",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_project",
+    "description": "缺项目-今天填报工时",
+    "input": "今天填报工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "date": "2026-04-01"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "date"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_303",
+    "category": "save_workhour",
+    "sub_type": "fill_with_description",
+    "description": "完整带描述-智慧园区4小时施工",
+    "input": "今天智慧园区4小时，现场施工",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 4,
+        "description": "现场施工",
+        "project_id": "p002"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_304",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_duration",
+    "description": "缺时长-今天ERP升级",
+    "input": "今天在ERP升级项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "date": "2026-04-01",
+        "project_id": "p004"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_305",
+    "category": "save_workhour",
+    "sub_type": "fill_project_by_name",
+    "description": "项目简称-云迁移今天3h",
+    "input": "云迁移今天3h",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 3,
+        "project_id": "p006"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_306",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_date",
+    "description": "缺日期-数字化转型4小时",
+    "input": "数字化转型4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "duration": 4,
+        "project_id": "p003"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "duration"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_307",
+    "category": "save_workhour",
+    "sub_type": "fill_all_params",
+    "description": "完整-移动端改版昨天3小时",
+    "input": "昨天移动端改版3小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-03-31",
+        "duration": 3,
+        "project_id": "p005"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_308",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_two",
+    "description": "缺项目和时长-今天填报",
+    "input": "今天填报",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1008",
+      "user_name": "周建国",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "date": "2026-04-01"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "date"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_309",
+    "category": "save_workhour",
+    "sub_type": "fill_with_description",
+    "description": "完整带描述-AI平台5小时培训",
+    "input": "今天AI平台5小时，内部培训",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "吴晓燕",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 5,
+        "description": "内部培训",
+        "project_id": "p001"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_310",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_project",
+    "description": "缺项目-昨天工作6小时",
+    "input": "昨天工作了6小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "duration": 6,
+        "date": "2026-03-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "duration",
+        "date"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_311",
+    "category": "save_workhour",
+    "sub_type": "fill_all_params",
+    "description": "完整-智慧园区今天4小时",
+    "input": "请填智慧园区今天4小时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 4,
+        "project_id": "p002"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_312",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_duration",
+    "description": "缺时长-今天ERP升级",
+    "input": "今天在ERP升级",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "date": "2026-04-01",
+        "project_id": "p004"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_313",
+    "category": "save_workhour",
+    "sub_type": "fill_project_by_name",
+    "description": "项目全称-云迁移今天5小时",
+    "input": "云迁移项目今天5小时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1003",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 5,
+        "project_id": "p006"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_314",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_date",
+    "description": "缺日期-移动端改版3小时",
+    "input": "移动端改版填3小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "刘工",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "duration": 3,
+        "project_id": "p005"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "duration"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_315",
+    "category": "save_workhour",
+    "sub_type": "fill_with_description",
+    "description": "完整带描述-数字化转型4小时汇报",
+    "input": "今天数字化转型4小时，向上级汇报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1005",
+      "user_name": "陈经理",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 4,
+        "description": "向上级汇报",
+        "project_id": "p003"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_316",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_two",
+    "description": "缺项目和时长-填报",
+    "input": "填报工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1006",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_317",
+    "category": "save_workhour",
+    "sub_type": "fill_all_params",
+    "description": "完整-ERP升级昨天4小时",
+    "input": "昨天ERP升级填4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "周建国",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-03-31",
+        "duration": 4,
+        "project_id": "p004"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_318",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_project",
+    "description": "缺项目-这周填报",
+    "input": "这周填报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1008",
+      "user_name": "吴晓燕",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_319",
+    "category": "save_workhour",
+    "sub_type": "fill_project_by_name",
+    "description": "项目简称-AI平台今天5h",
+    "input": "AI平台今天5h",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1009",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 5,
+        "project_id": "p001"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_320",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_duration",
+    "description": "缺时长-今天云迁移",
+    "input": "今天在云迁移项目干活",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "date": "2026-04-01",
+        "project_id": "p006"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_321",
+    "category": "save_workhour",
+    "sub_type": "fill_all_params",
+    "description": "完整-智慧园区昨天5小时",
+    "input": "昨天智慧园区5小时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-03-31",
+        "duration": 5,
+        "project_id": "p002"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_322",
+    "category": "save_workhour",
+    "sub_type": "fill_with_description",
+    "description": "完整带描述-移动端改版3小时修复",
+    "input": "今天移动端改版3小时，修复线上问题",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 3,
+        "description": "修复线上问题",
+        "project_id": "p005"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_323",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_date",
+    "description": "缺日期-ERP升级4小时",
+    "input": "ERP升级4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "刘工",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "duration": 4,
+        "project_id": "p004"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "duration"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_324",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_two",
+    "description": "缺项目和日期-填报",
+    "input": "填报",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1004",
+      "user_name": "陈经理",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_325",
+    "category": "save_workhour",
+    "sub_type": "fill_project_by_name",
+    "description": "项目全称-数字化转型今天4小时",
+    "input": "数字化转型项目今天4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1005",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 4,
+        "project_id": "p003"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_326",
+    "category": "save_workhour",
+    "sub_type": "fill_all_params",
+    "description": "完整-AI平台昨天3小时",
+    "input": "昨天AI平台3小时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1006",
+      "user_name": "周建国",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-03-31",
+        "duration": 3,
+        "project_id": "p001"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_327",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_duration",
+    "description": "缺时长-今天智慧园区",
+    "input": "今天在智慧园区项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "吴晓燕",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "date": "2026-04-01",
+        "project_id": "p002"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_328",
+    "category": "save_workhour",
+    "sub_type": "fill_with_description",
+    "description": "完整带描述-云迁移4小时联调",
+    "input": "今天云迁移4小时，接口联调",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1008",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 4,
+        "description": "接口联调",
+        "project_id": "p006"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_329",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_project",
+    "description": "缺项目-今天填报",
+    "input": "今天填报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "date": "2026-04-01"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "date"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_330",
+    "category": "save_workhour",
+    "sub_type": "fill_all_params",
+    "description": "完整-移动端改版今天4小时",
+    "input": "移动端改版今天4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 4,
+        "project_id": "p005"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_331",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_date",
+    "description": "缺日期-AI平台3小时",
+    "input": "AI平台3小时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "duration": 3,
+        "project_id": "p001"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "duration"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_332",
+    "category": "save_workhour",
+    "sub_type": "fill_project_by_name",
+    "description": "项目简称-ERP升级今天3h",
+    "input": "ERP升级今天3h",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "刘工",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 3,
+        "project_id": "p004"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_333",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_two",
+    "description": "缺项目和时长-今天工时",
+    "input": "今天工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1003",
+      "user_name": "陈经理",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "date": "2026-04-01"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "date"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_334",
+    "category": "save_workhour",
+    "sub_type": "fill_with_description",
+    "description": "完整带描述-智慧园区5小时验收",
+    "input": "今天智慧园区5小时，项目验收",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 5,
+        "description": "项目验收",
+        "project_id": "p002"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_335",
+    "category": "save_workhour",
+    "sub_type": "fill_all_params",
+    "description": "完整-数字化转型昨天5小时",
+    "input": "昨天数字化转型5小时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1005",
+      "user_name": "周建国",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-03-31",
+        "duration": 5,
+        "project_id": "p003"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_336",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_duration",
+    "description": "缺时长-今天ERP升级",
+    "input": "今天在ERP升级项目干活",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "吴晓燕",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "date": "2026-04-01",
+        "project_id": "p004"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_337",
+    "category": "save_workhour",
+    "sub_type": "fill_project_by_name",
+    "description": "项目全称-云迁移今天5小时",
+    "input": "云迁移项目今天5小时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1007",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 5,
+        "project_id": "p006"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_338",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_date",
+    "description": "缺日期-移动端改版4小时",
+    "input": "移动端改版4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1008",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "duration": 4,
+        "project_id": "p005"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "duration"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_339",
+    "category": "save_workhour",
+    "sub_type": "fill_with_description",
+    "description": "完整带描述-AI平台4小时重构",
+    "input": "今天AI平台4小时，代码重构",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 4,
+        "description": "代码重构",
+        "project_id": "p001"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_340",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_two",
+    "description": "缺项目和日期-填报",
+    "input": "工时填报",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1010",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_341",
+    "category": "save_workhour",
+    "sub_type": "fill_all_params",
+    "description": "完整-智慧园区今天4小时",
+    "input": "请帮我填智慧园区今天4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 4,
+        "project_id": "p002"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_342",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_project",
+    "description": "缺项目-昨天填报",
+    "input": "昨天填报",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1002",
+      "user_name": "陈经理",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "date": "2026-03-31"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "date"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_343",
+    "category": "save_workhour",
+    "sub_type": "fill_project_by_name",
+    "description": "项目简称-AI平台今天3h",
+    "input": "AI平台今天3h",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 3,
+        "project_id": "p001"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_344",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_duration",
+    "description": "缺时长-今天数字化转型",
+    "input": "今天在数字化转型项目",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1004",
+      "user_name": "周建国",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "date": "2026-04-01",
+        "project_id": "p003"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_345",
+    "category": "save_workhour",
+    "sub_type": "fill_all_params",
+    "description": "完整-ERP升级昨天4小时",
+    "input": "昨天ERP升级4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1005",
+      "user_name": "吴晓燕",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-03-31",
+        "duration": 4,
+        "project_id": "p004"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_346",
+    "category": "save_workhour",
+    "sub_type": "fill_with_description",
+    "description": "完整带描述-云迁移4小时监控",
+    "input": "今天云迁移4小时，部署监控",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1006",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 4,
+        "description": "部署监控",
+        "project_id": "p006"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_347",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_date",
+    "description": "缺日期-智慧园区3小时",
+    "input": "智慧园区3小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {
+        "duration": 3,
+        "project_id": "p002"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "duration"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_348",
+    "category": "save_workhour",
+    "sub_type": "fill_missing_two",
+    "description": "缺项目和时长-填报",
+    "input": "填报工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1008",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_349",
+    "category": "save_workhour",
+    "sub_type": "fill_project_by_name",
+    "description": "项目全称-移动端改版今天5小时",
+    "input": "移动端改版项目今天5小时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1009",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 5,
+        "project_id": "p005"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "swh_350",
+    "category": "save_workhour",
+    "sub_type": "fill_all_params",
+    "description": "完整-数字化转型今天4小时",
+    "input": "今天数字化转型4小时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "刘工",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "save_workhour",
+      "params": {
+        "date": "2026-04-01",
+        "duration": 4,
+        "project_id": "p003"
+      },
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id",
+        "date",
+        "duration"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  }
+]
