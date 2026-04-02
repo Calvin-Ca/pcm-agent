@@ -23,14 +23,30 @@ from tests.utils.test_data_loader import load_all_cases
 
 def build_state(case: dict[str, Any]) -> dict:
     ctx = case["user_context"]
-    today = __import__("datetime").date.today().strftime("%Y-%m-%d")
 
     from datetime import date, timedelta
     t = date.today()
-    ws = t - __import__("datetime").timedelta(days=t.weekday())
-    we = ws + __import__("datetime").timedelta(days=6)
-    lws = ws - __import__("datetime").timedelta(weeks=1)
-    lwe = lws + __import__("datetime").timedelta(days=6)
+    ws = t - timedelta(days=t.weekday())
+    we = ws + timedelta(days=6)
+    lws = ws - timedelta(weeks=1)
+    lwe = lws + timedelta(days=6)
+    today = t.strftime("%Y-%m-%d")
+
+    # 使用真实的 system.yaml（与生产环境一致）
+    from app.services.prompt_manager import get_prompt_manager
+    pm = get_prompt_manager()
+    system_content = pm.format(
+        "system",
+        user_id=ctx.get("user_id", "1001"),
+        user_name=ctx.get("user_name", "测试用户"),
+        entity_type=ctx.get("entity_type", "employee"),
+        department_id=ctx.get("department_id", "dept_01"),
+        today=today,
+        week_start=ws.strftime("%Y-%m-%d"),
+        week_end=we.strftime("%Y-%m-%d"),
+        last_week_start=lws.strftime("%Y-%m-%d"),
+        last_week_end=lwe.strftime("%Y-%m-%d"),
+    )
 
     return {
         "user_message": case["input"],
@@ -43,16 +59,7 @@ def build_state(case: dict[str, Any]) -> dict:
         },
         "session_id": "test-layer1-session",
         "conversation_history": [
-            {
-                "role": "system",
-                "content": (
-                    f"你是工时管理智能助手。今天：{today}，"
-                    f"本周 {ws} 至 {we}，上周 {lws} 至 {lwe}。"
-                    f"用户ID：{ctx.get('user_id', '1001')}，"
-                    f"姓名：{ctx.get('user_name', '测试用户')}，"
-                    f"角色：{ctx.get('entity_type', 'employee')}"
-                ),
-            },
+            {"role": "system", "content": system_content},
             {"role": "user", "content": case["input"]},
         ],
         "intent": None,
