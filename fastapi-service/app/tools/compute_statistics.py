@@ -430,7 +430,7 @@ def register_compute_statistics_tool():
     try:
         tool_registry.register_tool(
             name="compute_statistics",
-            description="计算各种工时统计数据，支持用户、项目、部门等多维度统计",
+            description="对工时数据进行汇总统计分析（总工时、排名、部门对比、趋势等）。若需查看原始工时明细记录，请用 query_timesheet",
             json_schema=COMPUTE_STATISTICS_SCHEMA,
             handler=compute_statistics_handler,
             category=ToolCategory.STATISTICS,

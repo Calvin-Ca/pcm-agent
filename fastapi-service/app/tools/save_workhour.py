@@ -246,7 +246,7 @@ def register_save_workhour_tool():
     try:
         tool_registry.register_tool(
             name="save_workhour",
-            description="填报工时记录，将指定项目的工时保存到系统，支持时长校验（0.5h 步长，日合计 ≤ 24h）",
+            description="新增/填报工时记录（适用：填工时/记录工时/登记今天工作时间）。project_id 可直接填项目名称（系统内部自动解析为ID），无需先调用 query_project",
             json_schema=SAVE_WORKHOUR_SCHEMA,
             handler=save_workhour_handler,
             category=ToolCategory.WORKHOUR,

@@ -314,7 +314,7 @@ def register_query_timesheet_tool():
     try:
         tool_registry.register_tool(
             name="query_timesheet",
-            description="查询用户工时记录，支持按时间范围和项目筛选",
+            description="查询已填报的工时明细记录（适用：查我的工时/查某人工时/查某段时间工时明细）。若需汇总统计总工时或数据分析，请用 compute_statistics",
             json_schema=QUERY_TIMESHEET_SCHEMA,
             handler=query_timesheet_handler,
             category=ToolCategory.DATA_QUERY,
