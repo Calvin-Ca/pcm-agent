@@ -2,7 +2,7 @@
 # 将下面这一段复制进去
 # 然后. $PROFILE
 # use kimi
-# 或 use cluade
+# 或 use claude
 # 最后启动cluade  
 
 function use {
@@ -42,10 +42,41 @@ fs.writeFileSync(filePath, JSON.stringify(content, null, 2), 'utf-8');
         # Remove-Item Env:ANTHROPIC_API_KEY -ErrorAction SilentlyContinue
 
         Ensure-ClaudeOnboarding
+	$env:LLM_MODE = "kimi"
 
         Write-Host "[OK] Using Kimi"
 
     }
+
+    elseif ($mode -eq "kimi2") {
+
+        # 👉 关键：用 Kimi 专用变量
+        $env:ANTHROPIC_API_KEY = "sk-kimi-t6LXUidOfepZrGnjbkaLbh4QdHbF01SpWFlyzMKpQ4clwnu3cT6JxgaseJoyJfD6"
+        $env:ANTHROPIC_BASE_URL = "https://api.kimi.com/coding/"
+
+        # 👉 强制清掉 Claude 影响
+        # Remove-Item Env:ANTHROPIC_API_KEY -ErrorAction SilentlyContinue
+
+        Ensure-ClaudeOnboarding
+	$env:LLM_MODE = "kimi"
+
+        Write-Host "[OK] Using Kimi2"
+
+    }
+
+    # ===== MiniMax =====
+    elseif ($mode -eq "minimax") {
+        $env:ANTHROPIC_AUTH_TOKEN = "sk-cp-LTbwdPMYZBHl8AgV9slE8Ipj639PpVM1Jq-dgm-_iisgkUyTCcOe5bUIs7863HLcsB9CfDa2UibcZrZJ53fHOygEezWICbDTdKLz3dHRsDo4Bc4VaNVt00c"
+        $env:ANTHROPIC_BASE_URL = "https://api.minimaxi.com/anthropic"
+
+        $env:ANTHROPIC_MODEL = "MiniMax-M2.7"
+
+        Ensure-ClaudeOnboarding
+        $env:LLM_MODE = "minimax"
+
+        Write-Host "[OK] Using MiniMax"
+    }
+
     elseif ($mode -eq "claude") {
 
         # 👉 清掉 Kimi
