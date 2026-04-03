@@ -138,6 +138,15 @@ async def node_llm_with_tools(state: AgentState) -> dict:
         if user_ctx.get("auth_token"):
             tool_params["auth_token"] = user_ctx["auth_token"]
 
+        # knowledge_qa 工具：路由到 execute_rag，不走 execute_tool
+        if tool_name == "knowledge_qa":
+            return {
+                "intent": "knowledge_qa",
+                "tool_name": None,
+                "tool_params": {},
+                "query": tool_params.get("query", state["user_message"]),
+            }
+
         if tool_name == "save_workhour":
             missing = []
             if not tool_params.get("project_id"):
@@ -163,20 +172,9 @@ async def node_llm_with_tools(state: AgentState) -> dict:
             "query": state["user_message"],
         }
 
-    # finish_reason == "stop"：LLM 返回文字（追问/闲聊/知识问答）
+    # finish_reason == "stop"：LLM 返回文字（闲聊/general_chat）
     content = result.get("content", "")
     user_message = state.get("user_message", "")
-    knowledge_keywords = [
-        # 规则/制度类
-        "截止", "规定", "制度", "流程", "政策", "规则", "要求", "规范", "标准",
-        # 疑问/解释类
-        "什么是", "如何", "怎么", "怎样", "怎么办", "怎么处理", "怎么算", "是什么意思", "注意事项",
-        # 工时政策特有问法
-        "算吗", "算工时", "需要填", "要填吗", "可以填", "能填吗", "补填", "补录",
-        "几号", "几点前", "什么时候", "时限", "期限",
-    ]
-    if any(kw in user_message for kw in knowledge_keywords):
-        return {"intent": "knowledge_qa", "tool_name": None, "tool_params": {}, "query": user_message}
 
     # general_chat：预填 llm_result，避免再调一次 LLM
     return {
