@@ -73,6 +73,9 @@ class AgentState(TypedDict):
     rag_result: Optional[Dict[str, Any]]
     llm_result: Optional[str]
     error: Optional[str]
+    # 多步规划
+    task_plan: Optional[Dict[str, Any]]          # 序列化的 TaskPlan（plan_and_execute 使用）
+    plan_results: Optional[Dict[str, Any]]       # 各任务执行结果 {task_id: result}
 
 
 # ─── 节点函数 ─────────────────────────────────────────────────────────────────
@@ -128,17 +131,50 @@ async def node_llm_with_tools(state: AgentState) -> dict:
         if not tool_calls:
             return await node_classify_intent(state)
 
+        user_ctx = state.get("user_context") or {}
+
+        # ── 多工具调用：构建并行 TaskPlan ──────────────────────────────────────
+        if len(tool_calls) >= 2:
+            tasks = []
+            for i, tc in enumerate(tool_calls):
+                t_name = tc["name"]
+                t_params = dict(tc.get("arguments", {}))
+                if t_name == "knowledge_qa":
+                    continue
+                if user_ctx.get("user_id") and "user_id" not in t_params and "member_name" not in t_params:
+                    t_params["user_id"] = user_ctx["user_id"]
+                if user_ctx.get("auth_token"):
+                    t_params["auth_token"] = user_ctx["auth_token"]
+                tasks.append({
+                    "task_id": f"t{i+1}",
+                    "task_type": "tool_call",
+                    "tool_name": t_name,
+                    "parameters": t_params,
+                    "dependencies": [],
+                })
+            if tasks:
+                return {
+                    "intent": "complex_request",
+                    "tool_name": None,
+                    "tool_params": {},
+                    "query": state["user_message"],
+                    "task_plan": {
+                        "plan_name": "多工具并行执行",
+                        "tasks": tasks,
+                        "source": "multi_tool_calls",
+                    },
+                }
+
+        # ── 单工具调用：原有逻辑不变 ─────────────────────────────────────────
         tc = tool_calls[0]
         tool_name = tc["name"]
         tool_params = dict(tc.get("arguments", {}))
 
-        user_ctx = state.get("user_context") or {}
         if user_ctx.get("user_id") and "user_id" not in tool_params and "member_name" not in tool_params:
             tool_params["user_id"] = user_ctx["user_id"]
         if user_ctx.get("auth_token"):
             tool_params["auth_token"] = user_ctx["auth_token"]
 
-        # knowledge_qa 工具：路由到 execute_rag，不走 execute_tool
         if tool_name == "knowledge_qa":
             return {
                 "intent": "knowledge_qa",
@@ -328,6 +364,139 @@ async def node_clarify(state: AgentState) -> dict:
     return {"llm_result": state.get("clarify_message", "请提供更多信息以便完成工时填报。")}
 
 
+async def node_plan_and_execute(state: AgentState) -> dict:
+    """
+    节点：多步任务规划 + 并行执行
+
+    两条入口：
+    A. state["task_plan"]["source"] == "multi_tool_calls"
+       → LLM 已返回多个 tool_calls，直接执行，跳过 PlannerAgent
+    B. intent == "complex_request"（来自规则路由降级）
+       → 调用 PlannerAgent 生成 TaskPlan，再执行
+    """
+    from app.models.task_plan import TaskPlan, TaskNode, TaskType, PlannerAgent
+
+    user_ctx = state.get("user_context") or {}
+    permission_ctx = user_ctx.get("permission_context")
+
+    raw_plan = state.get("task_plan")
+
+    # ── 路径 A：multi_tool_calls，直接构建 TaskPlan ─────────────────────────
+    if raw_plan and raw_plan.get("source") == "multi_tool_calls":
+        task_plan = TaskPlan(
+            name=raw_plan.get("plan_name", "多工具执行"),
+            description="LLM 多工具调用自动规划",
+            user_request=state["user_message"],
+        )
+        for t in raw_plan.get("tasks", []):
+            node = TaskNode(
+                task_id=t["task_id"],
+                task_type=TaskType.TOOL_CALL,
+                tool_name=t["tool_name"],
+                parameters=t["parameters"],
+                dependencies=t.get("dependencies", []),
+            )
+            task_plan.add_task(node)
+
+    # ── 路径 B：complex_request，调用 PlannerAgent ──────────────────────────
+    else:
+        if not _llm_client or not _tool_registry:
+            return {"llm_result": "抱歉，多步规划功能暂时不可用。", "error": "规划组件未初始化"}
+
+        planner = PlannerAgent(
+            tool_registry=_tool_registry,
+            llm_client=_llm_client,
+        )
+        try:
+            task_plan = await planner.plan_tasks(
+                user_request=state["user_message"],
+                user_context=user_ctx,
+            )
+        except Exception as e:
+            logger.error(f"PlannerAgent 规划失败: {e}")
+            return {"llm_result": "抱歉，任务规划失败，请尝试更简单的问题描述。", "error": str(e)}
+
+    # ── 执行 TaskPlan ────────────────────────────────────────────────────────
+    if not _task_executor:
+        return {"llm_result": "任务执行器未初始化。", "error": "TaskExecutor 未初始化"}
+
+    try:
+        summary = await _task_executor.execute_plan(
+            task_plan=task_plan,
+            permission_context=permission_ctx,
+            timeout=120,
+        )
+        plan_results = summary.get("task_results", {})
+        return {
+            "plan_results": plan_results,
+            "task_plan": {"plan_name": task_plan.name, "status": str(task_plan.status)},
+        }
+    except Exception as e:
+        logger.error(f"TaskPlan 执行失败: {e}", exc_info=True)
+        return {"llm_result": f"任务执行失败: {e}", "error": str(e)}
+
+
+async def node_summarize(state: AgentState) -> dict:
+    """
+    节点：多步执行结果汇总
+
+    将 plan_results 中的各工具执行结果交给 LLM 综合分析，
+    生成面向用户的自然语言回答。
+    """
+    plan_results = state.get("plan_results") or {}
+    user_message = state.get("user_message", "")
+
+    if not plan_results:
+        return {"llm_result": "所有任务均已完成，但未产生可汇总的结果。"}
+
+    if not _llm_client:
+        # 降级：直接拼接各工具结果
+        parts = []
+        for task_id, result in plan_results.items():
+            r = result.get("result", result)
+            if isinstance(r, dict) and r.get("success"):
+                parts.append(str(r))
+        return {"llm_result": "\n\n".join(parts) if parts else "任务已完成。"}
+
+    # 构建汇总 prompt
+    results_text = ""
+    for task_id, result in plan_results.items():
+        tool_name = result.get("tool_name", task_id)
+        r = result.get("result", result)
+        results_text += f"\n【{tool_name}】执行结果：\n{json.dumps(r, ensure_ascii=False, indent=2)}\n"
+
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "你是工时管理系统的智能助手。"
+                "用户提出了一个需要多步操作的请求，系统已自动执行了多个工具并收集到结果。"
+                "请将这些结果综合分析，用简洁、友好的语言回答用户的原始问题。"
+                "如果有数据对比或排名，请用表格或列表呈现。"
+            ),
+        },
+        {
+            "role": "user",
+            "content": (
+                f"用户原始问题：{user_message}\n\n"
+                f"各工具执行结果如下：{results_text}\n\n"
+                "请根据以上结果，综合回答用户问题。"
+            ),
+        },
+    ]
+
+    try:
+        answer = await _llm_client.generate(
+            messages=messages,
+            temperature=0.3,
+            max_tokens=1500,
+        )
+        return {"llm_result": answer}
+    except Exception as e:
+        logger.error(f"汇总节点 LLM 调用失败: {e}")
+        return {"llm_result": f"结果已收集，但汇总生成失败：{e}"}
+
+
 async def node_execute_rag(state: AgentState) -> dict:
     """节点：LangChain RAG 知识库查询（混合检索 + LLM 生成）"""
     from app.services.langchain_rag import langchain_rag_query
@@ -391,9 +560,9 @@ def _route_by_intent(state: AgentState) -> str:
     return {
         "knowledge_qa": "execute_rag",
         "tool_execution": "execute_tool",
-        "complex_request": "execute_llm",   # Phase 3: 改为独立规划节点
+        "complex_request": "plan_and_execute",   # 多步规划 + 并行执行
         "general_chat": "execute_llm",
-        "clarify": "clarify_node",           # 工时填报引导对话
+        "clarify": "clarify_node",
     }.get(intent, "execute_llm")
 
 
@@ -409,6 +578,8 @@ def _build_graph():
     builder.add_node("execute_rag", node_execute_rag)
     builder.add_node("execute_llm", node_execute_llm)
     builder.add_node("clarify_node", node_clarify)
+    builder.add_node("plan_and_execute", node_plan_and_execute)   # 多步规划执行
+    builder.add_node("summarize", node_summarize)                 # 结果汇总
 
     # 入口：Function Calling 节点
     builder.add_edge(START, "llm_with_tools")
@@ -422,14 +593,17 @@ def _build_graph():
             "execute_rag": "execute_rag",
             "execute_llm": "execute_llm",
             "clarify_node": "clarify_node",
+            "plan_and_execute": "plan_and_execute",
         },
     )
 
-    # 所有执行节点 → END
+    # 所有执行节点 → END（plan_and_execute → summarize → END）
     builder.add_edge("execute_tool", END)
     builder.add_edge("execute_rag", END)
     builder.add_edge("execute_llm", END)
     builder.add_edge("clarify_node", END)
+    builder.add_edge("plan_and_execute", "summarize")
+    builder.add_edge("summarize", END)
 
     return builder.compile()
 
@@ -551,6 +725,8 @@ async def stream_agent_response(
         "rag_result": None,
         "llm_result": None,
         "error": None,
+        "task_plan": None,
+        "plan_results": None,
     }
 
     yield _format_sse("start", {
@@ -644,6 +820,42 @@ async def stream_agent_response(
                     _collected_assistant_response = clarify_text
                     log_ai_response = clarify_text
                     yield _format_sse("response", {"message": clarify_text})
+
+                elif node_name == "plan_and_execute":
+                    # 多步执行：发送各工具调用进度事件
+                    plan_results = state_delta.get("plan_results") or {}
+                    error = state_delta.get("error")
+                    if error:
+                        log_status = "error"
+                        log_error = error
+                        yield _format_sse("error", {"message": error})
+                    else:
+                        log_intent = "complex_request"
+                        log_route_type = "plan_executor"
+                        log_tools_called = []
+                        for task_id, res in plan_results.items():
+                            tool_name = res.get("tool_name", task_id)
+                            success = res.get("result", {}).get("success", True) if isinstance(res.get("result"), dict) else True
+                            log_tools_called.append({"tool_name": tool_name, "success": success})
+                            yield _format_sse("tool_call", {
+                                "tool": tool_name,
+                                "status": "success" if success else "error",
+                                "task_id": task_id,
+                            })
+                        if not plan_results:
+                            yield _format_sse("thinking", {"message": "多步任务执行中..."})
+
+                elif node_name == "summarize":
+                    llm_result = state_delta.get("llm_result")
+                    error = state_delta.get("error")
+                    if error and not llm_result:
+                        log_status = "error"
+                        log_error = error
+                        yield _format_sse("error", {"message": error})
+                    else:
+                        _collected_assistant_response = llm_result or ""
+                        log_ai_response = _collected_assistant_response
+                        yield _format_sse("response", {"message": llm_result or ""})
 
     except PermissionError as e:
         logger.warning(f"权限拒绝: {e}")

@@ -671,8 +671,8 @@ class PlannerAgent:
                     tools_info.append({
                         "name": tool_def.name,
                         "description": tool_def.description,
-                        "parameters": tool_def.parameters,
-                        "required": tool_def.required_params
+                        "parameters": tool_def.json_schema.get("properties", {}),
+                        "required": tool_def.json_schema.get("required", []),
                     })
             except Exception:
                 continue
