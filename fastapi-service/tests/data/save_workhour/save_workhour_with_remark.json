@@ -16,12 +16,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "需求分析"
+        "description": "需求分析",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为需求分析"
@@ -43,12 +47,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-01",
-        "work_hours": 7,
-        "description": "代码开发"
+        "description": "代码开发",
+        "date": "2026-04-01",
+        "duration": 7
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为代码开发"
@@ -70,12 +78,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-02",
-        "work_hours": 6,
-        "description": "测试用例编写"
+        "description": "测试用例编写",
+        "date": "2026-04-02",
+        "duration": 6
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为测试用例编写"
@@ -97,12 +109,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "会议讨论"
+        "description": "会议讨论",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为会议讨论"
@@ -124,12 +140,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-02",
-        "work_hours": 7,
-        "description": "文档整理"
+        "description": "文档整理",
+        "date": "2026-04-02",
+        "duration": 7
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为文档整理"
@@ -151,12 +171,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-01",
-        "work_hours": 6,
-        "description": "需求分析"
+        "description": "需求分析",
+        "date": "2026-04-01",
+        "duration": 6
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为需求分析"
@@ -178,12 +202,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "代码开发"
+        "description": "代码开发",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为代码开发"
@@ -205,12 +233,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "测试用例编写"
+        "description": "测试用例编写",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为测试用例编写"
@@ -232,12 +264,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-01",
-        "work_hours": 7,
-        "description": "会议讨论"
+        "description": "会议讨论",
+        "date": "2026-04-01",
+        "duration": 7
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为会议讨论"
@@ -259,12 +295,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "文档整理"
+        "description": "文档整理",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为文档整理"
@@ -286,12 +326,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-01",
-        "work_hours": 6,
-        "description": "需求分析"
+        "description": "需求分析",
+        "date": "2026-04-01",
+        "duration": 6
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为需求分析"
@@ -313,12 +357,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "代码开发"
+        "description": "代码开发",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为代码开发"
@@ -340,12 +388,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-02",
-        "work_hours": 7,
-        "description": "测试用例编写"
+        "description": "测试用例编写",
+        "date": "2026-04-02",
+        "duration": 7
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为测试用例编写"
@@ -367,12 +419,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "会议讨论"
+        "description": "会议讨论",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为会议讨论"
@@ -394,12 +450,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "文档整理"
+        "description": "文档整理",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为文档整理"
@@ -421,12 +481,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 6,
-        "description": "需求分析"
+        "description": "需求分析",
+        "date": "2026-04-01",
+        "duration": 6
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为需求分析"
@@ -448,12 +512,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "代码开发"
+        "description": "代码开发",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为代码开发"
@@ -475,12 +543,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-01",
-        "work_hours": 7,
-        "description": "测试用例编写"
+        "description": "测试用例编写",
+        "date": "2026-04-01",
+        "duration": 7
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为测试用例编写"
@@ -502,12 +574,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "会议讨论"
+        "description": "会议讨论",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为会议讨论"
@@ -529,12 +605,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-02",
-        "work_hours": 6,
-        "description": "文档整理"
+        "description": "文档整理",
+        "date": "2026-04-02",
+        "duration": 6
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为文档整理"
@@ -556,12 +636,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "需求分析"
+        "description": "需求分析",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为需求分析"
@@ -583,12 +667,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-02",
-        "work_hours": 7,
-        "description": "代码开发"
+        "description": "代码开发",
+        "date": "2026-04-02",
+        "duration": 7
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为代码开发"
@@ -610,12 +698,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "测试用例编写"
+        "description": "测试用例编写",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为测试用例编写"
@@ -637,12 +729,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "会议讨论"
+        "description": "会议讨论",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为会议讨论"
@@ -664,12 +760,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-01",
-        "work_hours": 6,
-        "description": "文档整理"
+        "description": "文档整理",
+        "date": "2026-04-01",
+        "duration": 6
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为文档整理"
@@ -691,12 +791,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "需求分析"
+        "description": "需求分析",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为需求分析"
@@ -718,12 +822,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-02",
-        "work_hours": 7,
-        "description": "代码开发"
+        "description": "代码开发",
+        "date": "2026-04-02",
+        "duration": 7
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为代码开发"
@@ -745,12 +853,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "测试用例编写"
+        "description": "测试用例编写",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为测试用例编写"
@@ -772,12 +884,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "会议讨论"
+        "description": "会议讨论",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为会议讨论"
@@ -799,12 +915,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-01",
-        "work_hours": 6,
-        "description": "文档整理"
+        "description": "文档整理",
+        "date": "2026-04-01",
+        "duration": 6
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为文档整理"
@@ -826,12 +946,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "需求分析"
+        "description": "需求分析",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为需求分析"
@@ -853,12 +977,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-01",
-        "work_hours": 7,
-        "description": "代码开发"
+        "description": "代码开发",
+        "date": "2026-04-01",
+        "duration": 7
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为代码开发"
@@ -880,12 +1008,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "测试用例编写"
+        "description": "测试用例编写",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为测试用例编写"
@@ -907,12 +1039,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "会议讨论"
+        "description": "会议讨论",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为会议讨论"
@@ -934,12 +1070,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-02",
-        "work_hours": 6,
-        "description": "文档整理"
+        "description": "文档整理",
+        "date": "2026-04-02",
+        "duration": 6
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为文档整理"
@@ -961,12 +1101,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "需求分析"
+        "description": "需求分析",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为需求分析"
@@ -988,12 +1132,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-02",
-        "work_hours": 7,
-        "description": "代码开发"
+        "description": "代码开发",
+        "date": "2026-04-02",
+        "duration": 7
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为代码开发"
@@ -1015,12 +1163,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "测试用例编写"
+        "description": "测试用例编写",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为测试用例编写"
@@ -1042,12 +1194,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "会议讨论"
+        "description": "会议讨论",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为会议讨论"
@@ -1069,12 +1225,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 6,
-        "description": "文档整理"
+        "description": "文档整理",
+        "date": "2026-04-01",
+        "duration": 6
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为文档整理"
@@ -1096,12 +1256,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "需求分析"
+        "description": "需求分析",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为需求分析"
@@ -1123,12 +1287,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-01",
-        "work_hours": 7,
-        "description": "代码开发"
+        "description": "代码开发",
+        "date": "2026-04-01",
+        "duration": 7
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为代码开发"
@@ -1150,12 +1318,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "测试用例编写"
+        "description": "测试用例编写",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为测试用例编写"
@@ -1177,12 +1349,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "会议讨论"
+        "description": "会议讨论",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为会议讨论"
@@ -1204,12 +1380,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-02",
-        "work_hours": 6,
-        "description": "文档整理"
+        "description": "文档整理",
+        "date": "2026-04-02",
+        "duration": 6
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为文档整理"
@@ -1231,12 +1411,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "需求分析"
+        "description": "需求分析",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为需求分析"
@@ -1258,12 +1442,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "代码开发"
+        "description": "代码开发",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为代码开发"
@@ -1285,12 +1473,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-01",
-        "work_hours": 7,
-        "description": "测试用例编写"
+        "description": "测试用例编写",
+        "date": "2026-04-01",
+        "duration": 7
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为测试用例编写"
@@ -1312,12 +1504,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "会议讨论"
+        "description": "会议讨论",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为会议讨论"
@@ -1339,12 +1535,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-01",
-        "work_hours": 6,
-        "description": "文档整理"
+        "description": "文档整理",
+        "date": "2026-04-01",
+        "duration": 6
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为文档整理"
@@ -1366,12 +1566,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "需求分析"
+        "description": "需求分析",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为需求分析"
@@ -1393,12 +1597,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "代码开发"
+        "description": "代码开发",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为代码开发"
@@ -1420,12 +1628,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-02",
-        "work_hours": 7,
-        "description": "测试用例编写"
+        "description": "测试用例编写",
+        "date": "2026-04-02",
+        "duration": 7
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为测试用例编写"
@@ -1447,12 +1659,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "会议讨论"
+        "description": "会议讨论",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为会议讨论"
@@ -1474,12 +1690,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-02",
-        "work_hours": 6,
-        "description": "文档整理"
+        "description": "文档整理",
+        "date": "2026-04-02",
+        "duration": 6
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为文档整理"
@@ -1501,12 +1721,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-01",
-        "work_hours": 8,
-        "description": "需求分析"
+        "description": "需求分析",
+        "date": "2026-04-01",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为需求分析"
@@ -1528,12 +1752,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "代码开发"
+        "description": "代码开发",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为代码开发"
@@ -1555,12 +1783,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 7,
-        "description": "测试用例编写"
+        "description": "测试用例编写",
+        "date": "2026-04-01",
+        "duration": 7
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为测试用例编写"
@@ -1582,12 +1814,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-02",
-        "work_hours": 8,
-        "description": "会议讨论"
+        "description": "会议讨论",
+        "date": "2026-04-02",
+        "duration": 8
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为会议讨论"
@@ -1609,12 +1845,16 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-01",
-        "work_hours": 6,
-        "description": "文档整理"
+        "description": "文档整理",
+        "date": "2026-04-01",
+        "duration": 6
       },
-      "params_fuzzy": ["project_id"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id"
+      ],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "项目名称需解析，描述为文档整理"

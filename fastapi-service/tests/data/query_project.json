@@ -1,202 +1,4682 @@
 [
-  {"id": "qp_001", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "查一下AI平台项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_002", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "看看智慧园区的情況", "user_context": {"entity_type": "employee", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_003", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询数字化转型项目信息", "input": "数字化转型项目信息", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_004", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询ERP升级项目信息", "input": "我想了解ERP升级", "user_context": {"entity_type": "deptAdmin", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_005", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询移动端改版项目信息", "input": "查移动端改版", "user_context": {"entity_type": "employee", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_006", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询云迁移项目信息", "input": "帮我看看云迁移项目", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_007", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "瞅一眼AI平台项目", "user_context": {"entity_type": "companyAdmin", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_008", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "智慧园区项目咋样了", "user_context": {"entity_type": "employee", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_009", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询数字化转型项目信息", "input": "看下数字化转型", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_010", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询ERP升级项目信息", "input": "ERP升级的详情", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_011", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询移动端改版项目信息", "input": "看看移动端改版项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_012", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询云迁移项目信息", "input": "查查云迁移项目的信息", "user_context": {"entity_type": "deptAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_013", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "AI平台项目查一下", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_014", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "帮我查下智慧园区", "user_context": {"entity_type": "companyAdmin", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_015", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询数字化转型项目信息", "input": "数字化转型是什么情况", "user_context": {"entity_type": "employee", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_016", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询ERP升级项目信息", "input": "了解下ERP升级项目", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_017", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询移动端改版项目信息", "input": "查下移动端改版", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_018", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询云迁移项目信息", "input": "看看云迁移", "user_context": {"entity_type": "deptAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_019", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "AI平台项目", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_020", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "智慧园区咋样", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_021", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询数字化转型项目信息", "input": "数字化转型看看", "user_context": {"entity_type": "companyAdmin", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_022", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询ERP升级项目信息", "input": "查ERP升级", "user_context": {"entity_type": "employee", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_023", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询移动端改版项目信息", "input": "瞅一眼移动端改版", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_024", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询云迁移项目信息", "input": "查一下云迁移项目", "user_context": {"entity_type": "deptAdmin", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_025", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "看看AI平台", "user_context": {"entity_type": "employee", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_026", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "智慧园区项目信息", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_027", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询数字化转型项目信息", "input": "查下数字化转型", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_028", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询ERP升级项目信息", "input": "ERP升级项目信息", "user_context": {"entity_type": "companyAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_029", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询移动端改版项目信息", "input": "我想了解移动端改版", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_030", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询云迁移项目信息", "input": "查云迁移", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_031", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "帮我看看AI平台项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_032", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "AI平台项目咋样了", "user_context": {"entity_type": "deptAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_033", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询数字化转型项目信息", "input": "看下数字化转型项目", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_034", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询ERP升级项目信息", "input": "数字化转型的详情", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_035", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询移动端改版项目信息", "input": "看看移动端改版的情况", "user_context": {"entity_type": "companyAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_036", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询云迁移项目信息", "input": "查查云迁移项目的信息", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_037", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "AI平台项目查一下", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_038", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "帮我查下智慧园区项目", "user_context": {"entity_type": "deptAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_039", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询数字化转型项目信息", "input": "数字化转型是什么情况", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_040", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询ERP升级项目信息", "input": "了解下ERP升级", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_041", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询移动端改版项目信息", "input": "查下移动端改版", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_042", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询云迁移项目信息", "input": "看看云迁移项目", "user_context": {"entity_type": "companyAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_043", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "AI平台", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_044", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "智慧园区", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_045", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询数字化转型项目信息", "input": "数字化转型", "user_context": {"entity_type": "deptAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_046", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询ERP升级项目信息", "input": "ERP升级", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_047", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询移动端改版项目信息", "input": "移动端改版", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_048", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询云迁移项目信息", "input": "云迁移项目", "user_context": {"entity_type": "employee", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_049", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "帮我查下AI平台", "user_context": {"entity_type": "companyAdmin", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_050", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "瞅一眼智慧园区项目", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_051", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询数字化转型项目信息", "input": "查查数字化转型", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_052", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询ERP升级项目信息", "input": "看看ERP升级项目", "user_context": {"entity_type": "deptAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_053", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询移动端改版项目信息", "input": "移动端改版项目情况", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_054", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询云迁移项目信息", "input": "云迁移项目详情", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_055", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "AI平台项目是什么情况", "user_context": {"entity_type": "companyAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_056", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "了解下智慧园区项目", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_057", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询数字化转型项目信息", "input": "查下数字化转型项目信息", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_058", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询ERP升级项目信息", "input": "ERP升级项目查一下", "user_context": {"entity_type": "deptAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_059", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询移动端改版项目信息", "input": "移动端改版项目详情", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_060", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询云迁移项目信息", "input": "我想知道云迁移项目的状况", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_061", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "看看AI平台项目情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_062", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "智慧园区项目信息查查", "user_context": {"entity_type": "companyAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_063", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询数字化转型项目信息", "input": "查一下数字化转型项目的详情", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_064", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询ERP升级项目信息", "input": "ERP升级项目情况如何", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_065", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询移动端改版项目信息", "input": "移动端改版项目查查", "user_context": {"entity_type": "deptAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_066", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询云迁移项目信息", "input": "云迁移项目情况怎么样", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_067", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "帮我查AI平台项目信息", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_068", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "智慧园区项目情况如何", "user_context": {"entity_type": "employee", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_069", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询数字化转型项目信息", "input": "查一下数字化转型项目", "user_context": {"entity_type": "companyAdmin", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_070", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询ERP升级项目信息", "input": "ERP升级情况怎么样", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_071", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询移动端改版项目信息", "input": "移动端改版项目信息", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_072", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询云迁移项目信息", "input": "看看云迁移项目情况", "user_context": {"entity_type": "deptAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_073", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "AI平台项目详情如何", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_074", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "智慧园区项目详情查下", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_075", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询数字化转型项目信息", "input": "数字化转型项目详情怎么样", "user_context": {"entity_type": "companyAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_076", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询ERP升级项目信息", "input": "帮我了解下ERP升级项目", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_077", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询移动端改版项目信息", "input": "查查移动端改版项目详情", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_078", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询云迁移项目信息", "input": "云迁移项目查一下", "user_context": {"entity_type": "deptAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_079", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询AI平台项目信息", "input": "AI平台项目情况怎么样", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_080", "category": "query_project", "sub_type": "query_by_name", "description": "按名称查询智慧园区项目信息", "input": "帮我看看智慧园区项目", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_081", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "有哪些项目可以填报", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_082", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "我能填哪些项目", "user_context": {"entity_type": "employee", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_083", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "查看可填报项目", "user_context": {"entity_type": "deptAdmin", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_084", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "哪些项目可以填报工时", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_085", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "现在能填报的项目有哪些", "user_context": {"entity_type": "companyAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_086", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "查一下可以填报的项目", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_087", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "可以填报的项目列表", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_088", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "工时可填报的项目", "user_context": {"entity_type": "deptAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_089", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "有哪些项目能填工时", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_090", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "能填报的项目有哪些", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_091", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "看看能填报的项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_092", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "哪些项目现在可以填报", "user_context": {"entity_type": "companyAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_093", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "我现在能填哪些项目", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_094", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "查下能填报的项目", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_095", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "可填报项目有哪些", "user_context": {"entity_type": "deptAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_096", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "查看能填报工时的项目", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_097", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "项目列表，只看能填报的", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_098", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "哪些项目能填报", "user_context": {"entity_type": "companyAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_099", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "有没有能填报的项目", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_100", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "我想查能填报的项目", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_101", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "能填工时的项目有哪些", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_102", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "查下能填工时的项目", "user_context": {"entity_type": "deptAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_103", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "现在能填工时的项目", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_104", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "查看可以填报的项目", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_105", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "看看能填报工时的项目", "user_context": {"entity_type": "companyAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_106", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "哪些项目现在能填报工时", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_107", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "能填报的项目列表给我看看", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_108", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "查询可填报项目", "user_context": {"entity_type": "deptAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_109", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "帮我查下能填报的项目", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_110", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "哪些项目可以填报", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_111", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "显示能填报的项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_112", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "列出能填报的项目", "user_context": {"entity_type": "companyAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_113", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "我想填报工时，有哪些项目", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_114", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "工时填报可以选哪些项目", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_115", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "查查能填报的项目有哪些", "user_context": {"entity_type": "deptAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_116", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "能填报的项目都哪些", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_117", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "看看现在能填报的项目", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_118", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "现在有哪些项目能填报工时", "user_context": {"entity_type": "companyAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_119", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "查询现在能填报的项目", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_120", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "哪些项目可以填报工时呢", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_121", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "想查下能填报工时的项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_122", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "给我看看可填报项目", "user_context": {"entity_type": "deptAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_123", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "工时能填报哪些项目", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_124", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "查看工时可填报的项目", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_125", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "我想知道哪些项目能填报", "user_context": {"entity_type": "companyAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_126", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "能填报工时的项目列表", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_127", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "能填报的项目给我看下", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_128", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "哪些能填报工时", "user_context": {"entity_type": "deptAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_129", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "我现在能填报哪些项目", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_130", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "瞅瞅能填报的项目", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_131", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "查能填报的项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_132", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "能填报的项目都有哪些", "user_context": {"entity_type": "companyAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_133", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "显示能填报的项目列表", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_134", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "我能填报工时的项目", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_135", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "查询可填报工时的项目", "user_context": {"entity_type": "deptAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_136", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "帮我看看哪些项目能填报", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_137", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "哪些项目现在能填报", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_138", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "项目可填报列表", "user_context": {"entity_type": "companyAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_139", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "能填报工时的项目有哪些", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_140", "category": "query_project", "sub_type": "query_list_fillable", "description": "查询可填报项目列表", "input": "现在能填报工时的项目有哪些", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["fillable_only"], "date_relative": false}, "notes": ""},
-  {"id": "qp_141", "category": "query_project", "sub_type": "query_project_info", "description": "查询AI平台项目详细信息", "input": "AI平台项目的负责人是谁", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_142", "category": "query_project", "sub_type": "query_project_info", "description": "查询智慧园区项目详细信息", "input": "智慧园区项目状态", "user_context": {"entity_type": "employee", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_143", "category": "query_project", "sub_type": "query_project_info", "description": "查询数字化转型项目详细信息", "input": "数字化转型项目详情", "user_context": {"entity_type": "deptAdmin", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_144", "category": "query_project", "sub_type": "query_project_info", "description": "查询ERP升级项目详细信息", "input": "ERP升级的负责人", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_145", "category": "query_project", "sub_type": "query_project_info", "description": "查询移动端改版项目详细信息", "input": "移动端改版开始时间", "user_context": {"entity_type": "companyAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_146", "category": "query_project", "sub_type": "query_project_info", "description": "查询云迁移项目详细信息", "input": "云迁移项目结束时间", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_147", "category": "query_project", "sub_type": "query_project_info", "description": "查询AI平台项目详细信息", "input": "AI平台项目周期", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_148", "category": "query_project", "sub_type": "query_project_info", "description": "查询智慧园区项目详细信息", "input": "智慧园区的成员有哪些", "user_context": {"entity_type": "deptAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_149", "category": "query_project", "sub_type": "query_project_info", "description": "查询数字化转型项目详细信息", "input": "数字化转型有多少人", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_150", "category": "query_project", "sub_type": "query_project_info", "description": "查询ERP升级项目详细信息", "input": "ERP升级的进度", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_151", "category": "query_project", "sub_type": "query_project_info", "description": "查询移动端改版项目详细信息", "input": "移动端改版项目目前什么状态", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_152", "category": "query_project", "sub_type": "query_project_info", "description": "查询云迁移项目详细信息", "input": "云迁移项目负责人叫什么", "user_context": {"entity_type": "companyAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_153", "category": "query_project", "sub_type": "query_project_info", "description": "查询AI平台项目详细信息", "input": "谁负责AI平台", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_154", "category": "query_project", "sub_type": "query_project_info", "description": "查询智慧园区项目详细信息", "input": "智慧园区是谁负责的", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_155", "category": "query_project", "sub_type": "query_project_info", "description": "查询数字化转型项目详细信息", "input": "AI平台项目什么时候开始的", "user_context": {"entity_type": "deptAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_156", "category": "query_project", "sub_type": "query_project_info", "description": "查询ERP升级项目详细信息", "input": "ERP升级项目哪天结束", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_157", "category": "query_project", "sub_type": "query_project_info", "description": "查询移动端改版项目详细信息", "input": "移动端改版项目什么时候结束", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_158", "category": "query_project", "sub_type": "query_project_info", "description": "查询云迁移项目详细信息", "input": "云迁移项目开始时间", "user_context": {"entity_type": "companyAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_159", "category": "query_project", "sub_type": "query_project_info", "description": "查询AI平台项目详细信息", "input": "AI平台项目详情信息", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_160", "category": "query_project", "sub_type": "query_project_info", "description": "查询智慧园区项目详细信息", "input": "智慧园区项目成员", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_161", "category": "query_project", "sub_type": "query_project_info", "description": "查询数字化转型项目详细信息", "input": "数字化转型项目负责人", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_162", "category": "query_project", "sub_type": "query_project_info", "description": "查询ERP升级项目详细信息", "input": "ERP升级项目状态", "user_context": {"entity_type": "deptAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_163", "category": "query_project", "sub_type": "query_project_info", "description": "查询移动端改版项目详细信息", "input": "移动端改版项目负责人是谁", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_164", "category": "query_project", "sub_type": "query_project_info", "description": "查询云迁移项目详细信息", "input": "云迁移项目进度", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_165", "category": "query_project", "sub_type": "query_project_info", "description": "查询AI平台项目详细信息", "input": "AI平台项目成员有哪些", "user_context": {"entity_type": "companyAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_166", "category": "query_project", "sub_type": "query_project_info", "description": "查询智慧园区项目详细信息", "input": "智慧园区项目什么时候开始", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_167", "category": "query_project", "sub_type": "query_project_info", "description": "查询数字化转型项目详细信息", "input": "数字化转型项目哪天开始的", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_168", "category": "query_project", "sub_type": "query_project_info", "description": "查询ERP升级项目详细信息", "input": "ERP升级项目详细信息", "user_context": {"entity_type": "deptAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_169", "category": "query_project", "sub_type": "query_project_info", "description": "查询移动端改版项目详细信息", "input": "移动端改版项目多少人", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_170", "category": "query_project", "sub_type": "query_project_info", "description": "查询云迁移项目详细信息", "input": "云迁移项目什么时候结束的", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_171", "category": "query_project", "sub_type": "query_project_info", "description": "查询AI平台项目详细信息", "input": "AI平台项目哪天结束", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_172", "category": "query_project", "sub_type": "query_project_info", "description": "查询智慧园区项目详细信息", "input": "智慧园区项目周期多久", "user_context": {"entity_type": "companyAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_173", "category": "query_project", "sub_type": "query_project_info", "description": "查询数字化转型项目详细信息", "input": "谁负责数字化转型项目", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_174", "category": "query_project", "sub_type": "query_project_info", "description": "查询ERP升级项目详细信息", "input": "ERP升级项目成员", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_175", "category": "query_project", "sub_type": "query_project_info", "description": "查询移动端改版项目详细信息", "input": "移动端改版项目负责人", "user_context": {"entity_type": "deptAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_176", "category": "query_project", "sub_type": "query_project_info", "description": "查询云迁移项目详细信息", "input": "云迁移项目详情信息", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_177", "category": "query_project", "sub_type": "query_project_info", "description": "查询AI平台项目详细信息", "input": "AI平台项目进度如何", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_178", "category": "query_project", "sub_type": "query_project_info", "description": "查询智慧园区项目详细信息", "input": "智慧园区项目负责人", "user_context": {"entity_type": "companyAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_179", "category": "query_project", "sub_type": "query_project_info", "description": "查询数字化转型项目详细信息", "input": "数字化转型什么时候结束", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_180", "category": "query_project", "sub_type": "query_project_info", "description": "查询ERP升级项目详细信息", "input": "ERP升级项目什么时候开始的", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_181", "category": "query_project", "sub_type": "query_project_info", "description": "查询移动端改版项目详细信息", "input": "移动端改版项目什么时候开始的", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_182", "category": "query_project", "sub_type": "query_project_info", "description": "查询云迁移项目详细信息", "input": "云迁移项目负责人是谁", "user_context": {"entity_type": "deptAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_183", "category": "query_project", "sub_type": "query_project_info", "description": "查询AI平台项目详细信息", "input": "AI平台项目有多少人", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_184", "category": "query_project", "sub_type": "query_project_info", "description": "查询智慧园区项目详细信息", "input": "智慧园区项目状态如何", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_185", "category": "query_project", "sub_type": "query_project_info", "description": "查询数字化转型项目详细信息", "input": "数字化转型项目状态如何", "user_context": {"entity_type": "companyAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_186", "category": "query_project", "sub_type": "query_project_info", "description": "查询ERP升级项目详细信息", "input": "ERP升级项目成员有哪些", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_187", "category": "query_project", "sub_type": "query_project_info", "description": "查询移动端改版项目详细信息", "input": "移动端改版项目周期多久", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_188", "category": "query_project", "sub_type": "query_project_info", "description": "查询云迁移项目详细信息", "input": "云迁移项目多少人", "user_context": {"entity_type": "deptAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_189", "category": "query_project", "sub_type": "query_project_info", "description": "查询AI平台项目详细信息", "input": "AI平台项目什么时候结束的", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_190", "category": "query_project", "sub_type": "query_project_info", "description": "查询智慧园区项目详细信息", "input": "智慧园区项目哪天结束的", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_191", "category": "query_project", "sub_type": "query_project_info", "description": "查询数字化转型项目详细信息", "input": "数字化转型项目什么时候开始的", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_192", "category": "query_project", "sub_type": "query_project_info", "description": "查询ERP升级项目详细信息", "input": "ERP升级项目什么时候结束", "user_context": {"entity_type": "companyAdmin", "user_id": "1002", "user_name": "李明", "department_id": "dept_02"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_193", "category": "query_project", "sub_type": "query_project_info", "description": "查询移动端改版项目详细信息", "input": "移动端改版项目状态如何", "user_context": {"entity_type": "employee", "user_id": "1003", "user_name": "王芳", "department_id": "dept_03"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_194", "category": "query_project", "sub_type": "query_project_info", "description": "查询云迁移项目详细信息", "input": "谁负责云迁移项目", "user_context": {"entity_type": "employee", "user_id": "1004", "user_name": "张总", "department_id": "dept_04"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_195", "category": "query_project", "sub_type": "query_project_info", "description": "查询AI平台项目详细信息", "input": "AI平台项目成员", "user_context": {"entity_type": "deptAdmin", "user_id": "1005", "user_name": "刘工", "department_id": "dept_05"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_196", "category": "query_project", "sub_type": "query_project_info", "description": "查询智慧园区项目详细信息", "input": "智慧园区项目进度如何", "user_context": {"entity_type": "employee", "user_id": "1006", "user_name": "陈经理", "department_id": "dept_06"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_197", "category": "query_project", "sub_type": "query_project_info", "description": "查询数字化转型项目详细信息", "input": "数字化转型项目多少人参与", "user_context": {"entity_type": "employee", "user_id": "1007", "user_name": "赵丽", "department_id": "dept_07"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_198", "category": "query_project", "sub_type": "query_project_info", "description": "查询ERP升级项目详细信息", "input": "ERP升级项目负责人是谁", "user_context": {"entity_type": "companyAdmin", "user_id": "1008", "user_name": "孙涛", "department_id": "dept_08"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_199", "category": "query_project", "sub_type": "query_project_info", "description": "查询移动端改版项目详细信息", "input": "移动端改版项目哪天开始的", "user_context": {"entity_type": "employee", "user_id": "1009", "user_name": "周建国", "department_id": "dept_09"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""},
-  {"id": "qp_200", "category": "query_project", "sub_type": "query_project_info", "description": "查询云迁移项目详细信息", "input": "云迁移项目周期多长", "user_context": {"entity_type": "employee", "user_id": "1010", "user_name": "吴晓燕", "department_id": "dept_10"}, "expected": {"intent": "tool_execution", "tool_name": "query_project", "params": {}, "params_fuzzy": [], "params_exists": ["project_name"], "date_relative": false}, "notes": ""}
+  {
+    "id": "qp_001",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "查一下AI平台项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_002",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "看看智慧园区的情況",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_003",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询数字化转型项目信息",
+    "input": "数字化转型项目信息",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_004",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询ERP升级项目信息",
+    "input": "我想了解ERP升级",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_005",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询移动端改版项目信息",
+    "input": "查移动端改版",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_006",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询云迁移项目信息",
+    "input": "帮我看看云迁移项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_007",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "瞅一眼AI平台项目",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_008",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "智慧园区项目咋样了",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_009",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询数字化转型项目信息",
+    "input": "看下数字化转型",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_010",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询ERP升级项目信息",
+    "input": "ERP升级的详情",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_011",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询移动端改版项目信息",
+    "input": "看看移动端改版项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_012",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询云迁移项目信息",
+    "input": "查查云迁移项目的信息",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_013",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "AI平台项目查一下",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_014",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "帮我查下智慧园区",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_015",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询数字化转型项目信息",
+    "input": "数字化转型是什么情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_016",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询ERP升级项目信息",
+    "input": "了解下ERP升级项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_017",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询移动端改版项目信息",
+    "input": "查下移动端改版",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_018",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询云迁移项目信息",
+    "input": "看看云迁移",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_019",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "AI平台项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_020",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "智慧园区咋样",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_021",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询数字化转型项目信息",
+    "input": "数字化转型看看",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_022",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询ERP升级项目信息",
+    "input": "查ERP升级",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_023",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询移动端改版项目信息",
+    "input": "瞅一眼移动端改版",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_024",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询云迁移项目信息",
+    "input": "查一下云迁移项目",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_025",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "看看AI平台",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_026",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "智慧园区项目信息",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_027",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询数字化转型项目信息",
+    "input": "查下数字化转型",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_028",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询ERP升级项目信息",
+    "input": "ERP升级项目信息",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_029",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询移动端改版项目信息",
+    "input": "我想了解移动端改版",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_030",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询云迁移项目信息",
+    "input": "查云迁移",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_031",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "帮我看看AI平台项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_032",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "AI平台项目咋样了",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_033",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询数字化转型项目信息",
+    "input": "看下数字化转型项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_034",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询ERP升级项目信息",
+    "input": "数字化转型的详情",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_035",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询移动端改版项目信息",
+    "input": "看看移动端改版的情况",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_036",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询云迁移项目信息",
+    "input": "查查云迁移项目的信息",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_037",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "AI平台项目查一下",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_038",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "帮我查下智慧园区项目",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_039",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询数字化转型项目信息",
+    "input": "数字化转型是什么情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_040",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询ERP升级项目信息",
+    "input": "了解下ERP升级",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_041",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询移动端改版项目信息",
+    "input": "查下移动端改版",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_042",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询云迁移项目信息",
+    "input": "看看云迁移项目",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_043",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "AI平台",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_044",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "智慧园区",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_045",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询数字化转型项目信息",
+    "input": "数字化转型",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_046",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询ERP升级项目信息",
+    "input": "ERP升级",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_047",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询移动端改版项目信息",
+    "input": "移动端改版",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_048",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询云迁移项目信息",
+    "input": "云迁移项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_049",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "帮我查下AI平台",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_050",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "瞅一眼智慧园区项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_051",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询数字化转型项目信息",
+    "input": "查查数字化转型",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_052",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询ERP升级项目信息",
+    "input": "看看ERP升级项目",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_053",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询移动端改版项目信息",
+    "input": "移动端改版项目情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_054",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询云迁移项目信息",
+    "input": "云迁移项目详情",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_055",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "AI平台项目是什么情况",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_056",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "了解下智慧园区项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_057",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询数字化转型项目信息",
+    "input": "查下数字化转型项目信息",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_058",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询ERP升级项目信息",
+    "input": "ERP升级项目查一下",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_059",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询移动端改版项目信息",
+    "input": "移动端改版项目详情",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_060",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询云迁移项目信息",
+    "input": "我想知道云迁移项目的状况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_061",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "看看AI平台项目情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_062",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "智慧园区项目信息查查",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_063",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询数字化转型项目信息",
+    "input": "查一下数字化转型项目的详情",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_064",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询ERP升级项目信息",
+    "input": "ERP升级项目情况如何",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_065",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询移动端改版项目信息",
+    "input": "移动端改版项目查查",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_066",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询云迁移项目信息",
+    "input": "云迁移项目情况怎么样",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_067",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "帮我查AI平台项目信息",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_068",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "智慧园区项目情况如何",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_069",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询数字化转型项目信息",
+    "input": "查一下数字化转型项目",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_070",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询ERP升级项目信息",
+    "input": "ERP升级情况怎么样",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_071",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询移动端改版项目信息",
+    "input": "移动端改版项目信息",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_072",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询云迁移项目信息",
+    "input": "看看云迁移项目情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_073",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "AI平台项目详情如何",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_074",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "智慧园区项目详情查下",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_075",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询数字化转型项目信息",
+    "input": "数字化转型项目详情怎么样",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_076",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询ERP升级项目信息",
+    "input": "帮我了解下ERP升级项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_077",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询移动端改版项目信息",
+    "input": "查查移动端改版项目详情",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_078",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询云迁移项目信息",
+    "input": "云迁移项目查一下",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_079",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询AI平台项目信息",
+    "input": "AI平台项目情况怎么样",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_080",
+    "category": "query_project",
+    "sub_type": "query_by_name",
+    "description": "按名称查询智慧园区项目信息",
+    "input": "帮我看看智慧园区项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_081",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "有哪些项目可以填报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_082",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "我能填哪些项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_083",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "查看可填报项目",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_084",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "哪些项目可以填报工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_085",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "现在能填报的项目有哪些",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_086",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "查一下可以填报的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_087",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "可以填报的项目列表",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_088",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "工时可填报的项目",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_089",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "有哪些项目能填工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_090",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "能填报的项目有哪些",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_091",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "看看能填报的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_092",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "哪些项目现在可以填报",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_093",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "我现在能填哪些项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_094",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "查下能填报的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_095",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "可填报项目有哪些",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_096",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "查看能填报工时的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_097",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "项目列表，只看能填报的",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_098",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "哪些项目能填报",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_099",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "有没有能填报的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_100",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "我想查能填报的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_101",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "能填工时的项目有哪些",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_102",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "查下能填工时的项目",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_103",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "现在能填工时的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_104",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "查看可以填报的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_105",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "看看能填报工时的项目",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_106",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "哪些项目现在能填报工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_107",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "能填报的项目列表给我看看",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_108",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "查询可填报项目",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_109",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "帮我查下能填报的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_110",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "哪些项目可以填报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_111",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "显示能填报的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_112",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "列出能填报的项目",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_113",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "我想填报工时，有哪些项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_114",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "工时填报可以选哪些项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_115",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "查查能填报的项目有哪些",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_116",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "能填报的项目都哪些",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_117",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "看看现在能填报的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_118",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "现在有哪些项目能填报工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_119",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "查询现在能填报的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_120",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "哪些项目可以填报工时呢",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_121",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "想查下能填报工时的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_122",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "给我看看可填报项目",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_123",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "工时能填报哪些项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_124",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "查看工时可填报的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_125",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "我想知道哪些项目能填报",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_126",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "能填报工时的项目列表",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_127",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "能填报的项目给我看下",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_128",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "哪些能填报工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_129",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "我现在能填报哪些项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_130",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "瞅瞅能填报的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_131",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "查能填报的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_132",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "能填报的项目都有哪些",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_133",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "显示能填报的项目列表",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_134",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "我能填报工时的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_135",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "查询可填报工时的项目",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_136",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "帮我看看哪些项目能填报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_137",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "哪些项目现在能填报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_138",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "项目可填报列表",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_139",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "能填报工时的项目有哪些",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_140",
+    "category": "query_project",
+    "sub_type": "query_list_fillable",
+    "description": "查询可填报项目列表",
+    "input": "现在能填报工时的项目有哪些",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_141",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询AI平台项目详细信息",
+    "input": "AI平台项目的负责人是谁",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_142",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询智慧园区项目详细信息",
+    "input": "智慧园区项目状态",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_143",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询数字化转型项目详细信息",
+    "input": "数字化转型项目详情",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_144",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询ERP升级项目详细信息",
+    "input": "ERP升级的负责人",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_145",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询移动端改版项目详细信息",
+    "input": "移动端改版开始时间",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_146",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询云迁移项目详细信息",
+    "input": "云迁移项目结束时间",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_147",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询AI平台项目详细信息",
+    "input": "AI平台项目周期",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_148",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询智慧园区项目详细信息",
+    "input": "智慧园区的成员有哪些",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_149",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询数字化转型项目详细信息",
+    "input": "数字化转型有多少人",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_150",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询ERP升级项目详细信息",
+    "input": "ERP升级的进度",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_151",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询移动端改版项目详细信息",
+    "input": "移动端改版项目目前什么状态",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_152",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询云迁移项目详细信息",
+    "input": "云迁移项目负责人叫什么",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_153",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询AI平台项目详细信息",
+    "input": "谁负责AI平台",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_154",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询智慧园区项目详细信息",
+    "input": "智慧园区是谁负责的",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_155",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询数字化转型项目详细信息",
+    "input": "AI平台项目什么时候开始的",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_156",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询ERP升级项目详细信息",
+    "input": "ERP升级项目哪天结束",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_157",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询移动端改版项目详细信息",
+    "input": "移动端改版项目什么时候结束",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_158",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询云迁移项目详细信息",
+    "input": "云迁移项目开始时间",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_159",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询AI平台项目详细信息",
+    "input": "AI平台项目详情信息",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_160",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询智慧园区项目详细信息",
+    "input": "智慧园区项目成员",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_161",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询数字化转型项目详细信息",
+    "input": "数字化转型项目负责人",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_162",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询ERP升级项目详细信息",
+    "input": "ERP升级项目状态",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_163",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询移动端改版项目详细信息",
+    "input": "移动端改版项目负责人是谁",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_164",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询云迁移项目详细信息",
+    "input": "云迁移项目进度",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_165",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询AI平台项目详细信息",
+    "input": "AI平台项目成员有哪些",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_166",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询智慧园区项目详细信息",
+    "input": "智慧园区项目什么时候开始",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_167",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询数字化转型项目详细信息",
+    "input": "数字化转型项目哪天开始的",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_168",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询ERP升级项目详细信息",
+    "input": "ERP升级项目详细信息",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_169",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询移动端改版项目详细信息",
+    "input": "移动端改版项目多少人",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_170",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询云迁移项目详细信息",
+    "input": "云迁移项目什么时候结束的",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_171",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询AI平台项目详细信息",
+    "input": "AI平台项目哪天结束",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_172",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询智慧园区项目详细信息",
+    "input": "智慧园区项目周期多久",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_173",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询数字化转型项目详细信息",
+    "input": "谁负责数字化转型项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_174",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询ERP升级项目详细信息",
+    "input": "ERP升级项目成员",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_175",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询移动端改版项目详细信息",
+    "input": "移动端改版项目负责人",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_176",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询云迁移项目详细信息",
+    "input": "云迁移项目详情信息",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_177",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询AI平台项目详细信息",
+    "input": "AI平台项目进度如何",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_178",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询智慧园区项目详细信息",
+    "input": "智慧园区项目负责人",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_179",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询数字化转型项目详细信息",
+    "input": "数字化转型什么时候结束",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_180",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询ERP升级项目详细信息",
+    "input": "ERP升级项目什么时候开始的",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_181",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询移动端改版项目详细信息",
+    "input": "移动端改版项目什么时候开始的",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_182",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询云迁移项目详细信息",
+    "input": "云迁移项目负责人是谁",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_183",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询AI平台项目详细信息",
+    "input": "AI平台项目有多少人",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_184",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询智慧园区项目详细信息",
+    "input": "智慧园区项目状态如何",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_185",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询数字化转型项目详细信息",
+    "input": "数字化转型项目状态如何",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_186",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询ERP升级项目详细信息",
+    "input": "ERP升级项目成员有哪些",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_187",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询移动端改版项目详细信息",
+    "input": "移动端改版项目周期多久",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_188",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询云迁移项目详细信息",
+    "input": "云迁移项目多少人",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_189",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询AI平台项目详细信息",
+    "input": "AI平台项目什么时候结束的",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_190",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询智慧园区项目详细信息",
+    "input": "智慧园区项目哪天结束的",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_191",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询数字化转型项目详细信息",
+    "input": "数字化转型项目什么时候开始的",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_192",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询ERP升级项目详细信息",
+    "input": "ERP升级项目什么时候结束",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1002",
+      "user_name": "李明",
+      "department_id": "dept_02"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_193",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询移动端改版项目详细信息",
+    "input": "移动端改版项目状态如何",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1003",
+      "user_name": "王芳",
+      "department_id": "dept_03"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_194",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询云迁移项目详细信息",
+    "input": "谁负责云迁移项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1004",
+      "user_name": "张总",
+      "department_id": "dept_04"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_195",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询AI平台项目详细信息",
+    "input": "AI平台项目成员",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1005",
+      "user_name": "刘工",
+      "department_id": "dept_05"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_196",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询智慧园区项目详细信息",
+    "input": "智慧园区项目进度如何",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1006",
+      "user_name": "陈经理",
+      "department_id": "dept_06"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_197",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询数字化转型项目详细信息",
+    "input": "数字化转型项目多少人参与",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1007",
+      "user_name": "赵丽",
+      "department_id": "dept_07"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_198",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询ERP升级项目详细信息",
+    "input": "ERP升级项目负责人是谁",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1008",
+      "user_name": "孙涛",
+      "department_id": "dept_08"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_199",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询移动端改版项目详细信息",
+    "input": "移动端改版项目哪天开始的",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1009",
+      "user_name": "周建国",
+      "department_id": "dept_09"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "qp_200",
+    "category": "query_project",
+    "sub_type": "query_project_info",
+    "description": "查询云迁移项目详细信息",
+    "input": "云迁移项目周期多长",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1010",
+      "user_name": "吴晓燕",
+      "department_id": "dept_10"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_project",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "project_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  }
 ]

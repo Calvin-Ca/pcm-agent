@@ -1,202 +1,4742 @@
 [
-  {"id": "ec_001", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "短句-查工时", "input": "查工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_002", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "短句-工时呢", "input": "工时呢", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_003", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "短句-瞅瞅工时", "input": "瞅瞅工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_004", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "短句-我的工时", "input": "我的工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_005", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "短句-工时情况", "input": "工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_006", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "短句-工时多少", "input": "工时多少", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_007", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "短句-填报情况", "input": "填报情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_008", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "短句-有工时吗", "input": "有工时吗", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_009", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "短句-工时记录", "input": "工时记录", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_010", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "短句-工时数据", "input": "工时数据", "user_context": {"entity_type": "deptAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_011", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-帮我查下工时", "input": "帮我查下工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_012", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-查一下工时情况", "input": "查一下工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_013", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-我的工时怎么样", "input": "我的工时怎么样", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_014", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-工时填报了多少", "input": "工时填报了多少", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_015", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-最近工时怎么样", "input": "最近工时怎么样", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_016", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-帮我看看工时", "input": "帮我看看工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_017", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-查下工时记录", "input": "查下工时记录", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_018", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-工时录入多少了", "input": "工时录入多少了", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_019", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-瞅瞅工时情况", "input": "瞅瞅工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_020", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-工时报了多少", "input": "工时报了多少", "user_context": {"entity_type": "deptAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_021", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-我填的工时", "input": "我填的工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_022", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-查查工时数据", "input": "查查工时数据", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_023", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-帮我查查工时", "input": "帮我查查工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_024", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-工时有多少", "input": "工时有多少", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_025", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-查下我的工时", "input": "查下我的工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_026", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-看看我的工时情况", "input": "看看我的工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_027", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-工时怎么样啊", "input": "工时怎么样啊", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_028", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-工时录入情况如何", "input": "工时录入情况如何", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_029", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-查下填报的工时", "input": "查下填报的工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_030", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-我报了多少工时", "input": "我报了多少工时", "user_context": {"entity_type": "deptAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_031", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-工时填了多少啊", "input": "工时填了多少啊", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_032", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-帮我看看工时数据", "input": "帮我看看工时数据", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_033", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-工时情况怎么样", "input": "工时情况怎么样", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_034", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-我的工时录入如何", "input": "我的工时录入如何", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_035", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-查下个人工时", "input": "查下个人工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_036", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-最近填报情况", "input": "最近填报情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_037", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-工时录入数据", "input": "工时录入数据", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_038", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-看看填报情况", "input": "看看填报情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_039", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-个人工时情况", "input": "个人工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_040", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "中等-我的填报记录", "input": "我的填报记录", "user_context": {"entity_type": "companyAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_041", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "长句-帮我瞅瞅最近工时填报情况怎么样", "input": "帮我瞅瞅最近工时填报情况怎么样", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_042", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "长句-请问一下我的工时录入数据是多少", "input": "请问一下我的工时录入数据是多少", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_043", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "长句-帮我查一下工时录入情况谢谢", "input": "帮我查一下工时录入情况谢谢", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_044", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "长句-我的工时填报情况怎么样了啊", "input": "我的工时填报情况怎么样了啊", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_045", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "长句-最近这段时间工时填了多少", "input": "最近这段时间工时填了多少", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_046", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "长句-帮我看看我的工时记录还有多少", "input": "帮我看看我的工时记录还有多少", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_047", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "长句-请问我的工时录入情况如何", "input": "请问我的工时录入情况如何", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_048", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "长句-麻烦帮我查下工时情况好吗", "input": "麻烦帮我查下工时情况好吗", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_049", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "长句-帮我过一遍工时录入的数据", "input": "帮我过一遍工时录入的数据", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_050", "category": "edge_cases", "sub_type": "ambiguous_query_timesheet", "description": "长句-最近工时填报情况怎么样了呢", "input": "最近工时填报情况怎么样了呢", "user_context": {"entity_type": "deptAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_051", "category": "edge_cases", "sub_type": "implicit_self", "description": "短-查一下", "input": "查一下", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_052", "category": "edge_cases", "sub_type": "implicit_self", "description": "短-统计下", "input": "统计下", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_053", "category": "edge_cases", "sub_type": "implicit_self", "description": "短-看看", "input": "看看", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_054", "category": "edge_cases", "sub_type": "implicit_self", "description": "短-查查", "input": "查查", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_055", "category": "edge_cases", "sub_type": "implicit_self", "description": "短-帮我查", "input": "帮我查", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_056", "category": "edge_cases", "sub_type": "implicit_self", "description": "短-帮我看看", "input": "帮我看看", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_057", "category": "edge_cases", "sub_type": "implicit_self", "description": "短-帮我统计", "input": "帮我统计", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_058", "category": "edge_cases", "sub_type": "implicit_self", "description": "短-理一理", "input": "理一理", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_059", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-帮我查一下工时", "input": "帮我查一下工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_060", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-查查工时情况", "input": "查查工时情况", "user_context": {"entity_type": "deptAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_061", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-看看工时数据", "input": "看看工时数据", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_062", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-统计下工时", "input": "统计下工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_063", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-查下填报情况", "input": "查下填报情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_064", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-帮我过一遍", "input": "帮我过一遍", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_065", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-翻翻工时记录", "input": "翻翻工时记录", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_066", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-瞄一眼工时", "input": "瞄一眼工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_067", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-扫一眼工时情况", "input": "扫一眼工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_068", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-理一理工时数据", "input": "理一理工时数据", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_069", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-查下个人工时情况", "input": "查下个人工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_070", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-帮我查查填报记录", "input": "帮我查查填报记录", "user_context": {"entity_type": "companyAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_071", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-看看录入多少了", "input": "看看录入多少了", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_072", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-统计下填报数据", "input": "统计下填报数据", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_073", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-查查我的工时", "input": "查查我的工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_074", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-帮我看看数据", "input": "帮我看看数据", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_075", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-过一遍填报情况", "input": "过一遍填报情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_076", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-翻翻记录情况", "input": "翻翻记录情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_077", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-瞄一眼录入", "input": "瞄一眼录入", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_078", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-扫一眼填报", "input": "扫一眼填报", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_079", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-理一理工时", "input": "理一理工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_080", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-查下情况", "input": "查下情况", "user_context": {"entity_type": "deptAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_081", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-帮我查下数据", "input": "帮我查下数据", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_082", "category": "edge_cases", "sub_type": "implicit_self", "description": "中-看看我的情况", "input": "看看我的情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_083", "category": "edge_cases", "sub_type": "implicit_self", "description": "长-帮我过一遍填报的工时情况", "input": "帮我过一遍填报的工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_084", "category": "edge_cases", "sub_type": "implicit_self", "description": "长-查查我最近这段时间的工时录入", "input": "查查我最近这段时间的工时录入", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_085", "category": "edge_cases", "sub_type": "implicit_self", "description": "长-帮我看看工时录入数据有多少", "input": "帮我看看工时录入数据有多少", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_086", "category": "edge_cases", "sub_type": "implicit_self", "description": "长-统计一下填报了多少工时", "input": "统计一下填报了多少工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_087", "category": "edge_cases", "sub_type": "implicit_self", "description": "长-帮我瞄一眼工时记录情况", "input": "帮我瞄一眼工时记录情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_088", "category": "edge_cases", "sub_type": "implicit_self", "description": "长-过一遍最近工时填报情况怎么样", "input": "过一遍最近工时填报情况怎么样", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_089", "category": "edge_cases", "sub_type": "implicit_self", "description": "长-翻翻我报的工时还有多少", "input": "翻翻我报的工时还有多少", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_090", "category": "edge_cases", "sub_type": "implicit_self", "description": "长-帮我扫一眼工时数据怎么样", "input": "帮我扫一眼工时数据怎么样", "user_context": {"entity_type": "deptAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_091", "category": "edge_cases", "sub_type": "mixed_intent", "description": "短-工时和项目", "input": "工时和项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_092", "category": "edge_cases", "sub_type": "mixed_intent", "description": "短-项目和工时", "input": "项目和工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_093", "category": "edge_cases", "sub_type": "mixed_intent", "description": "短-查工时看项目", "input": "查工时看项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_094", "category": "edge_cases", "sub_type": "mixed_intent", "description": "短-周报和工时", "input": "周报和工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_095", "category": "edge_cases", "sub_type": "mixed_intent", "description": "短-工时统计周报", "input": "工时统计周报", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_096", "category": "edge_cases", "sub_type": "mixed_intent", "description": "短-查下也看看", "input": "查下也看看", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_097", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-查下工时顺便看看项目", "input": "查下工时顺便看看项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_098", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-工时情况怎么样项目有哪些", "input": "工时情况怎么样项目有哪些", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_099", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-帮我看看工时和项目情况", "input": "帮我看看工时和项目情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_100", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-查查工时再看看项目", "input": "查查工时再看看项目", "user_context": {"entity_type": "deptAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_101", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-我的工时和负责的项目", "input": "我的工时和负责的项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_102", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-查下工时和项目进度", "input": "查下工时和项目进度", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_103", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-帮我统计下工时和项目情况", "input": "帮我统计下工时和项目情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_104", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-看看我的工时顺便查下项目", "input": "看看我的工时顺便查下项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_105", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-工时多少和项目列表", "input": "工时多少和项目列表", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_106", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-查工时也看下周报", "input": "查工时也看下周报", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_107", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-我的工时情况以及周报", "input": "我的工时情况以及周报", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_108", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-帮我看看工时顺便生成周报", "input": "帮我看看工时顺便生成周报", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_109", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-查下填报情况还有项目", "input": "查下填报情况还有项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_110", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-工时录入和项目情况", "input": "工时录入和项目情况", "user_context": {"entity_type": "companyAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_111", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-看看工时数据及项目列表", "input": "看看工时数据及项目列表", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_112", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-查查工时也看看项目情况", "input": "查查工时也看看项目情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_113", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-工时和项目都帮我看看", "input": "工时和项目都帮我看看", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_114", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-查下工时也查下项目", "input": "查下工时也查下项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_115", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-瞅瞅工时和项目情况", "input": "瞅瞅工时和项目情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_116", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-工时录入和周报情况", "input": "工时录入和周报情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_117", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-查查填报和项目信息", "input": "查查填报和项目信息", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_118", "category": "edge_cases", "sub_type": "mixed_intent", "description": "中-帮我看看周报和工时", "input": "帮我看看周报和工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_119", "category": "edge_cases", "sub_type": "mixed_intent", "description": "长-帮我查查工时情况也顺便看看项目的进度", "input": "帮我查查工时情况也顺便看看项目的进度", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_120", "category": "edge_cases", "sub_type": "mixed_intent", "description": "长-查下我的工时录入再看看项目列表情况", "input": "查下我的工时录入再看看项目列表情况", "user_context": {"entity_type": "deptAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_121", "category": "edge_cases", "sub_type": "informal_date", "description": "短-前天工时", "input": "前天工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_122", "category": "edge_cases", "sub_type": "informal_date", "description": "中-查前天工时", "input": "查前天工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_123", "category": "edge_cases", "sub_type": "informal_date", "description": "长-帮我查前天工时情况", "input": "帮我查前天工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_124", "category": "edge_cases", "sub_type": "informal_date", "description": "短-大前天工时", "input": "大前天工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_125", "category": "edge_cases", "sub_type": "informal_date", "description": "中-看看大前天工时情况", "input": "看看大前天工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_126", "category": "edge_cases", "sub_type": "informal_date", "description": "长-帮我看看大前天工时情况", "input": "帮我看看大前天工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_127", "category": "edge_cases", "sub_type": "informal_date", "description": "短-上上周工时", "input": "上上周工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_128", "category": "edge_cases", "sub_type": "informal_date", "description": "中-查下上上周工时", "input": "查下上上周工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_129", "category": "edge_cases", "sub_type": "informal_date", "description": "长-帮我查下上上周工时情况", "input": "帮我查下上上周工时情况", "user_context": {"entity_type": "deptAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_130", "category": "edge_cases", "sub_type": "informal_date", "description": "短-上个月工时", "input": "上个月工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_131", "category": "edge_cases", "sub_type": "informal_date", "description": "中-瞅瞅上个月工时", "input": "瞅瞅上个月工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_132", "category": "edge_cases", "sub_type": "informal_date", "description": "长-帮我瞅瞅上个月工时情况", "input": "帮我瞅瞅上个月工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_133", "category": "edge_cases", "sub_type": "informal_date", "description": "短-这个季度工时", "input": "这个季度工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_134", "category": "edge_cases", "sub_type": "informal_date", "description": "中-查查这个季度工时", "input": "查查这个季度工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_135", "category": "edge_cases", "sub_type": "informal_date", "description": "长-帮我查查这个季度工时情况", "input": "帮我查查这个季度工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_136", "category": "edge_cases", "sub_type": "informal_date", "description": "短-上周工时", "input": "上周工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_137", "category": "edge_cases", "sub_type": "informal_date", "description": "中-统计上周工时", "input": "统计上周工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_138", "category": "edge_cases", "sub_type": "informal_date", "description": "长-帮我统计上周工时情况", "input": "帮我统计上周工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_139", "category": "edge_cases", "sub_type": "informal_date", "description": "短-上个月中旬工时", "input": "上个月中旬工时", "user_context": {"entity_type": "companyAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_140", "category": "edge_cases", "sub_type": "informal_date", "description": "中-看看上个月中旬工时", "input": "看看上个月中旬工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_141", "category": "edge_cases", "sub_type": "informal_date", "description": "长-帮我看看上个月中旬工时情况", "input": "帮我看看上个月中旬工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_142", "category": "edge_cases", "sub_type": "informal_date", "description": "短-上上个月工时", "input": "上上个月工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_143", "category": "edge_cases", "sub_type": "informal_date", "description": "中-查下上上个月工时", "input": "查下上上个月工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_144", "category": "edge_cases", "sub_type": "informal_date", "description": "长-帮我查下上上个月工时情况", "input": "帮我查下上上个月工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_145", "category": "edge_cases", "sub_type": "informal_date", "description": "短-这周工时", "input": "这周工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_146", "category": "edge_cases", "sub_type": "informal_date", "description": "中-瞅瞅这周工时", "input": "瞅瞅这周工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_147", "category": "edge_cases", "sub_type": "informal_date", "description": "长-帮我瞅瞅这周工时情况", "input": "帮我瞅瞅这周工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_148", "category": "edge_cases", "sub_type": "informal_date", "description": "短-这月工时", "input": "这月工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_149", "category": "edge_cases", "sub_type": "informal_date", "description": "中-查查这月工时", "input": "查查这月工时", "user_context": {"entity_type": "deptAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_150", "category": "edge_cases", "sub_type": "informal_date", "description": "长-帮我查查这月工时情况", "input": "帮我查查这月工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_151", "category": "edge_cases", "sub_type": "informal_date", "description": "短-本季度工时", "input": "本季度工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_152", "category": "edge_cases", "sub_type": "informal_date", "description": "中-统计本季度工时", "input": "统计本季度工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_153", "category": "edge_cases", "sub_type": "informal_date", "description": "长-帮我统计本季度工时情况", "input": "帮我统计本季度工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_154", "category": "edge_cases", "sub_type": "informal_date", "description": "短-前两天工时", "input": "前两天工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_155", "category": "edge_cases", "sub_type": "informal_date", "description": "中-看看前两天工时", "input": "看看前两天工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_156", "category": "edge_cases", "sub_type": "informal_date", "description": "长-帮我看看前两天工时情况", "input": "帮我看看前两天工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_157", "category": "edge_cases", "sub_type": "informal_date", "description": "短-前几天工时", "input": "前几天工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_158", "category": "edge_cases", "sub_type": "informal_date", "description": "中-查下前几天工时", "input": "查下前几天工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_159", "category": "edge_cases", "sub_type": "informal_date", "description": "长-帮我查下前几天工时情况", "input": "帮我查下前几天工时情况", "user_context": {"entity_type": "companyAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_160", "category": "edge_cases", "sub_type": "informal_date", "description": "短-近几天工时", "input": "近几天工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": true}, "notes": ""},
-  {"id": "ec_161", "category": "edge_cases", "sub_type": "name_with_title", "description": "短-张总工时", "input": "张总工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_162", "category": "edge_cases", "sub_type": "name_with_title", "description": "短-李经理的工时", "input": "李经理的工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_163", "category": "edge_cases", "sub_type": "name_with_title", "description": "短-何工填报", "input": "何工填报", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_164", "category": "edge_cases", "sub_type": "name_with_title", "description": "短-查王工工时", "input": "查王工工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_165", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-看看张总填报的工时", "input": "看看张总填报的工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_166", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-李经理的工时情况", "input": "李经理的工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_167", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-查下何工录入的工时", "input": "查下何工录入的工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_168", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-张总这周工时多少", "input": "张总这周工时多少", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_169", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-帮我看看李经理工时", "input": "帮我看看李经理工时", "user_context": {"entity_type": "deptAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_170", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-查查王工填报情况", "input": "查查王工填报情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_171", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-赵总上个月工时", "input": "赵总上个月工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_172", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-刘经理工时怎么样", "input": "刘经理工时怎么样", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_173", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-周工最近工时情况", "input": "周工最近工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_174", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-陈经理的工时录入", "input": "陈经理的工时录入", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_175", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-张总工时数据多少", "input": "张总工时数据多少", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_176", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-李经理填报了多少", "input": "李经理填报了多少", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_177", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-王工工时记录", "input": "王工工时记录", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_178", "category": "edge_cases", "sub_type": "name_with_title", "description": "中-赵总工时情况", "input": "赵总工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_179", "category": "edge_cases", "sub_type": "name_with_title", "description": "长-帮我查下张总上个月的工时情况", "input": "帮我查下张总上个月的工时情况", "user_context": {"entity_type": "companyAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_180", "category": "edge_cases", "sub_type": "name_with_title", "description": "长-看看李经理这个季度填报了多少工时", "input": "看看李经理这个季度填报了多少工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_181", "category": "edge_cases", "sub_type": "short_input", "description": "clarify-工时", "input": "工时", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "clarify", "tool_name": null, "params": {}, "params_fuzzy": [], "params_exists": [], "date_relative": false}, "notes": ""},
-  {"id": "ec_182", "category": "edge_cases", "sub_type": "short_input", "description": "clarify-填报", "input": "填报", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "clarify", "tool_name": null, "params": {}, "params_fuzzy": [], "params_exists": [], "date_relative": false}, "notes": ""},
-  {"id": "ec_183", "category": "edge_cases", "sub_type": "short_input", "description": "clarify-周报", "input": "周报", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "clarify", "tool_name": null, "params": {}, "params_fuzzy": [], "params_exists": [], "date_relative": false}, "notes": ""},
-  {"id": "ec_184", "category": "edge_cases", "sub_type": "short_input", "description": "clarify-项目", "input": "项目", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "clarify", "tool_name": null, "params": {}, "params_fuzzy": [], "params_exists": [], "date_relative": false}, "notes": ""},
-  {"id": "ec_185", "category": "edge_cases", "sub_type": "short_input", "description": "clarify-工时情况", "input": "工时情况", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "clarify", "tool_name": null, "params": {}, "params_fuzzy": [], "params_exists": [], "date_relative": false}, "notes": ""},
-  {"id": "ec_186", "category": "edge_cases", "sub_type": "short_input", "description": "clarify-录入", "input": "录入", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "clarify", "tool_name": null, "params": {}, "params_fuzzy": [], "params_exists": [], "date_relative": false}, "notes": ""},
-  {"id": "ec_187", "category": "edge_cases", "sub_type": "short_input", "description": "clarify-统计", "input": "统计", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "clarify", "tool_name": null, "params": {}, "params_fuzzy": [], "params_exists": [], "date_relative": false}, "notes": ""},
-  {"id": "ec_188", "category": "edge_cases", "sub_type": "short_input", "description": "clarify-查询", "input": "查询", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "clarify", "tool_name": null, "params": {}, "params_fuzzy": [], "params_exists": [], "date_relative": false}, "notes": ""},
-  {"id": "ec_189", "category": "edge_cases", "sub_type": "short_input", "description": "clarify-情况", "input": "情况", "user_context": {"entity_type": "deptAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "clarify", "tool_name": null, "params": {}, "params_fuzzy": [], "params_exists": [], "date_relative": false}, "notes": ""},
-  {"id": "ec_190", "category": "edge_cases", "sub_type": "short_input", "description": "clarify-数据", "input": "数据", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "clarify", "tool_name": null, "params": {}, "params_fuzzy": [], "params_exists": [], "date_relative": false}, "notes": ""},
-  {"id": "ec_191", "category": "edge_cases", "sub_type": "short_input", "description": "tool-查一下", "input": "查一下", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "李明", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_192", "category": "edge_cases", "sub_type": "short_input", "description": "tool-统计下", "input": "统计下", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "王芳", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_193", "category": "edge_cases", "sub_type": "short_input", "description": "tool-看看", "input": "看看", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "张总", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_194", "category": "edge_cases", "sub_type": "short_input", "description": "tool-查查", "input": "查查", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "刘工", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_195", "category": "edge_cases", "sub_type": "short_input", "description": "tool-瞅瞅", "input": "瞅瞅", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "陈经理", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_196", "category": "edge_cases", "sub_type": "short_input", "description": "tool-瞧瞧", "input": "瞧瞧", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "赵丽", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_197", "category": "edge_cases", "sub_type": "short_input", "description": "tool-帮我查", "input": "帮我查", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "孙涛", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_198", "category": "edge_cases", "sub_type": "short_input", "description": "tool-帮我看", "input": "帮我看", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "周建国", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_199", "category": "edge_cases", "sub_type": "short_input", "description": "tool-查下", "input": "查下", "user_context": {"entity_type": "companyAdmin", "user_id": "1001", "user_name": "吴晓燕", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""},
-  {"id": "ec_200", "category": "edge_cases", "sub_type": "short_input", "description": "tool-查", "input": "查", "user_context": {"entity_type": "employee", "user_id": "1001", "user_name": "何思思", "department_id": "dept_01"}, "expected": {"intent": "tool_execution", "tool_name": "query_timesheet", "params": {}, "params_fuzzy": [], "params_exists": ["user_id"], "date_relative": false}, "notes": ""}
+  {
+    "id": "ec_001",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "短句-查工时",
+    "input": "查工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_002",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "短句-工时呢",
+    "input": "工时呢",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_003",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "短句-瞅瞅工时",
+    "input": "瞅瞅工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_004",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "短句-我的工时",
+    "input": "我的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_005",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "短句-工时情况",
+    "input": "工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_006",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "短句-工时多少",
+    "input": "工时多少",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_007",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "短句-填报情况",
+    "input": "填报情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_008",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "短句-有工时吗",
+    "input": "有工时吗",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_009",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "短句-工时记录",
+    "input": "工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_010",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "短句-工时数据",
+    "input": "工时数据",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_011",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-帮我查下工时",
+    "input": "帮我查下工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_012",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-查一下工时情况",
+    "input": "查一下工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_013",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-我的工时怎么样",
+    "input": "我的工时怎么样",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_014",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-工时填报了多少",
+    "input": "工时填报了多少",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_015",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-最近工时怎么样",
+    "input": "最近工时怎么样",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_016",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-帮我看看工时",
+    "input": "帮我看看工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_017",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-查下工时记录",
+    "input": "查下工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_018",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-工时录入多少了",
+    "input": "工时录入多少了",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_019",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-瞅瞅工时情况",
+    "input": "瞅瞅工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_020",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-工时报了多少",
+    "input": "工时报了多少",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_021",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-我填的工时",
+    "input": "我填的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_022",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-查查工时数据",
+    "input": "查查工时数据",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_023",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-帮我查查工时",
+    "input": "帮我查查工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_024",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-工时有多少",
+    "input": "工时有多少",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_025",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-查下我的工时",
+    "input": "查下我的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_026",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-看看我的工时情况",
+    "input": "看看我的工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_027",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-工时怎么样啊",
+    "input": "工时怎么样啊",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_028",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-工时录入情况如何",
+    "input": "工时录入情况如何",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_029",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-查下填报的工时",
+    "input": "查下填报的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_030",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-我报了多少工时",
+    "input": "我报了多少工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_031",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-工时填了多少啊",
+    "input": "工时填了多少啊",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_032",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-帮我看看工时数据",
+    "input": "帮我看看工时数据",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_033",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-工时情况怎么样",
+    "input": "工时情况怎么样",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_034",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-我的工时录入如何",
+    "input": "我的工时录入如何",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_035",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-查下个人工时",
+    "input": "查下个人工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_036",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-最近填报情况",
+    "input": "最近填报情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_037",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-工时录入数据",
+    "input": "工时录入数据",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_038",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-看看填报情况",
+    "input": "看看填报情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_039",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-个人工时情况",
+    "input": "个人工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_040",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "中等-我的填报记录",
+    "input": "我的填报记录",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_041",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "长句-帮我瞅瞅最近工时填报情况怎么样",
+    "input": "帮我瞅瞅最近工时填报情况怎么样",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_042",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "长句-请问一下我的工时录入数据是多少",
+    "input": "请问一下我的工时录入数据是多少",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_043",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "长句-帮我查一下工时录入情况谢谢",
+    "input": "帮我查一下工时录入情况谢谢",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_044",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "长句-我的工时填报情况怎么样了啊",
+    "input": "我的工时填报情况怎么样了啊",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_045",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "长句-最近这段时间工时填了多少",
+    "input": "最近这段时间工时填了多少",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_046",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "长句-帮我看看我的工时记录还有多少",
+    "input": "帮我看看我的工时记录还有多少",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_047",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "长句-请问我的工时录入情况如何",
+    "input": "请问我的工时录入情况如何",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_048",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "长句-麻烦帮我查下工时情况好吗",
+    "input": "麻烦帮我查下工时情况好吗",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_049",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "长句-帮我过一遍工时录入的数据",
+    "input": "帮我过一遍工时录入的数据",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_050",
+    "category": "edge_cases",
+    "sub_type": "ambiguous_query_timesheet",
+    "description": "长句-最近工时填报情况怎么样了呢",
+    "input": "最近工时填报情况怎么样了呢",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_051",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "短-查一下",
+    "input": "查一下",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_052",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "短-统计下",
+    "input": "统计下",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_053",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "短-看看",
+    "input": "看看",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_054",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "短-查查",
+    "input": "查查",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_055",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "短-帮我查",
+    "input": "帮我查",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_056",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "短-帮我看看",
+    "input": "帮我看看",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_057",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "短-帮我统计",
+    "input": "帮我统计",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_058",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "短-理一理",
+    "input": "理一理",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_059",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-帮我查一下工时",
+    "input": "帮我查一下工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_060",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-查查工时情况",
+    "input": "查查工时情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_061",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-看看工时数据",
+    "input": "看看工时数据",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_062",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-统计下工时",
+    "input": "统计下工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_063",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-查下填报情况",
+    "input": "查下填报情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_064",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-帮我过一遍",
+    "input": "帮我过一遍",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_065",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-翻翻工时记录",
+    "input": "翻翻工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_066",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-瞄一眼工时",
+    "input": "瞄一眼工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_067",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-扫一眼工时情况",
+    "input": "扫一眼工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_068",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-理一理工时数据",
+    "input": "理一理工时数据",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_069",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-查下个人工时情况",
+    "input": "查下个人工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_070",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-帮我查查填报记录",
+    "input": "帮我查查填报记录",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_071",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-看看录入多少了",
+    "input": "看看录入多少了",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_072",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-统计下填报数据",
+    "input": "统计下填报数据",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_073",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-查查我的工时",
+    "input": "查查我的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_074",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-帮我看看数据",
+    "input": "帮我看看数据",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_075",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-过一遍填报情况",
+    "input": "过一遍填报情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_076",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-翻翻记录情况",
+    "input": "翻翻记录情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_077",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-瞄一眼录入",
+    "input": "瞄一眼录入",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_078",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-扫一眼填报",
+    "input": "扫一眼填报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_079",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-理一理工时",
+    "input": "理一理工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_080",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-查下情况",
+    "input": "查下情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_081",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-帮我查下数据",
+    "input": "帮我查下数据",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_082",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "中-看看我的情况",
+    "input": "看看我的情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_083",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "长-帮我过一遍填报的工时情况",
+    "input": "帮我过一遍填报的工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_084",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "长-查查我最近这段时间的工时录入",
+    "input": "查查我最近这段时间的工时录入",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_085",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "长-帮我看看工时录入数据有多少",
+    "input": "帮我看看工时录入数据有多少",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_086",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "长-统计一下填报了多少工时",
+    "input": "统计一下填报了多少工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_087",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "长-帮我瞄一眼工时记录情况",
+    "input": "帮我瞄一眼工时记录情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_088",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "长-过一遍最近工时填报情况怎么样",
+    "input": "过一遍最近工时填报情况怎么样",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_089",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "长-翻翻我报的工时还有多少",
+    "input": "翻翻我报的工时还有多少",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_090",
+    "category": "edge_cases",
+    "sub_type": "implicit_self",
+    "description": "长-帮我扫一眼工时数据怎么样",
+    "input": "帮我扫一眼工时数据怎么样",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_091",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "短-工时和项目",
+    "input": "工时和项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_092",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "短-项目和工时",
+    "input": "项目和工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_093",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "短-查工时看项目",
+    "input": "查工时看项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_094",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "短-周报和工时",
+    "input": "周报和工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_095",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "短-工时统计周报",
+    "input": "工时统计周报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_096",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "短-查下也看看",
+    "input": "查下也看看",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_097",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-查下工时顺便看看项目",
+    "input": "查下工时顺便看看项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_098",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-工时情况怎么样项目有哪些",
+    "input": "工时情况怎么样项目有哪些",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_099",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-帮我看看工时和项目情况",
+    "input": "帮我看看工时和项目情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_100",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-查查工时再看看项目",
+    "input": "查查工时再看看项目",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_101",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-我的工时和负责的项目",
+    "input": "我的工时和负责的项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_102",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-查下工时和项目进度",
+    "input": "查下工时和项目进度",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_103",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-帮我统计下工时和项目情况",
+    "input": "帮我统计下工时和项目情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_104",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-看看我的工时顺便查下项目",
+    "input": "看看我的工时顺便查下项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_105",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-工时多少和项目列表",
+    "input": "工时多少和项目列表",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_106",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-查工时也看下周报",
+    "input": "查工时也看下周报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_107",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-我的工时情况以及周报",
+    "input": "我的工时情况以及周报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_108",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-帮我看看工时顺便生成周报",
+    "input": "帮我看看工时顺便生成周报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_109",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-查下填报情况还有项目",
+    "input": "查下填报情况还有项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_110",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-工时录入和项目情况",
+    "input": "工时录入和项目情况",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_111",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-看看工时数据及项目列表",
+    "input": "看看工时数据及项目列表",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_112",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-查查工时也看看项目情况",
+    "input": "查查工时也看看项目情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_113",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-工时和项目都帮我看看",
+    "input": "工时和项目都帮我看看",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_114",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-查下工时也查下项目",
+    "input": "查下工时也查下项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_115",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-瞅瞅工时和项目情况",
+    "input": "瞅瞅工时和项目情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_116",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-工时录入和周报情况",
+    "input": "工时录入和周报情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_117",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-查查填报和项目信息",
+    "input": "查查填报和项目信息",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_118",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "中-帮我看看周报和工时",
+    "input": "帮我看看周报和工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_119",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "长-帮我查查工时情况也顺便看看项目的进度",
+    "input": "帮我查查工时情况也顺便看看项目的进度",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_120",
+    "category": "edge_cases",
+    "sub_type": "mixed_intent",
+    "description": "长-查下我的工时录入再看看项目列表情况",
+    "input": "查下我的工时录入再看看项目列表情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_121",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-前天工时",
+    "input": "前天工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_122",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "中-查前天工时",
+    "input": "查前天工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_123",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "长-帮我查前天工时情况",
+    "input": "帮我查前天工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_124",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-大前天工时",
+    "input": "大前天工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_125",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "中-看看大前天工时情况",
+    "input": "看看大前天工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_126",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "长-帮我看看大前天工时情况",
+    "input": "帮我看看大前天工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_127",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-上上周工时",
+    "input": "上上周工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_128",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "中-查下上上周工时",
+    "input": "查下上上周工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_129",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "长-帮我查下上上周工时情况",
+    "input": "帮我查下上上周工时情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_130",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-上个月工时",
+    "input": "上个月工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_131",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "中-瞅瞅上个月工时",
+    "input": "瞅瞅上个月工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_132",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "长-帮我瞅瞅上个月工时情况",
+    "input": "帮我瞅瞅上个月工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_133",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-这个季度工时",
+    "input": "这个季度工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_134",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "中-查查这个季度工时",
+    "input": "查查这个季度工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_135",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "长-帮我查查这个季度工时情况",
+    "input": "帮我查查这个季度工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_136",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-上周工时",
+    "input": "上周工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_137",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "中-统计上周工时",
+    "input": "统计上周工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_138",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "长-帮我统计上周工时情况",
+    "input": "帮我统计上周工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_139",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-上个月中旬工时",
+    "input": "上个月中旬工时",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_140",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "中-看看上个月中旬工时",
+    "input": "看看上个月中旬工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_141",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "长-帮我看看上个月中旬工时情况",
+    "input": "帮我看看上个月中旬工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_142",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-上上个月工时",
+    "input": "上上个月工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_143",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "中-查下上上个月工时",
+    "input": "查下上上个月工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_144",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "长-帮我查下上上个月工时情况",
+    "input": "帮我查下上上个月工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_145",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-这周工时",
+    "input": "这周工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_146",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "中-瞅瞅这周工时",
+    "input": "瞅瞅这周工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_147",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "长-帮我瞅瞅这周工时情况",
+    "input": "帮我瞅瞅这周工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_148",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-这月工时",
+    "input": "这月工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_149",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "中-查查这月工时",
+    "input": "查查这月工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_150",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "长-帮我查查这月工时情况",
+    "input": "帮我查查这月工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_151",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-本季度工时",
+    "input": "本季度工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_152",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "中-统计本季度工时",
+    "input": "统计本季度工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_153",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "长-帮我统计本季度工时情况",
+    "input": "帮我统计本季度工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_154",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-前两天工时",
+    "input": "前两天工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_155",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "中-看看前两天工时",
+    "input": "看看前两天工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_156",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "长-帮我看看前两天工时情况",
+    "input": "帮我看看前两天工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_157",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-前几天工时",
+    "input": "前几天工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_158",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "中-查下前几天工时",
+    "input": "查下前几天工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_159",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "长-帮我查下前几天工时情况",
+    "input": "帮我查下前几天工时情况",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_160",
+    "category": "edge_cases",
+    "sub_type": "informal_date",
+    "description": "短-近几天工时",
+    "input": "近几天工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": true
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_161",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "短-张总工时",
+    "input": "张总工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_162",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "短-李经理的工时",
+    "input": "李经理的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_163",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "短-何工填报",
+    "input": "何工填报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_164",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "短-查王工工时",
+    "input": "查王工工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_165",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-看看张总填报的工时",
+    "input": "看看张总填报的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_166",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-李经理的工时情况",
+    "input": "李经理的工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_167",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-查下何工录入的工时",
+    "input": "查下何工录入的工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_168",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-张总这周工时多少",
+    "input": "张总这周工时多少",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_169",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-帮我看看李经理工时",
+    "input": "帮我看看李经理工时",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_170",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-查查王工填报情况",
+    "input": "查查王工填报情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_171",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-赵总上个月工时",
+    "input": "赵总上个月工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_172",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-刘经理工时怎么样",
+    "input": "刘经理工时怎么样",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_173",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-周工最近工时情况",
+    "input": "周工最近工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_174",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-陈经理的工时录入",
+    "input": "陈经理的工时录入",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_175",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-张总工时数据多少",
+    "input": "张总工时数据多少",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_176",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-李经理填报了多少",
+    "input": "李经理填报了多少",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_177",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-王工工时记录",
+    "input": "王工工时记录",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_178",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "中-赵总工时情况",
+    "input": "赵总工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_179",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "长-帮我查下张总上个月的工时情况",
+    "input": "帮我查下张总上个月的工时情况",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_180",
+    "category": "edge_cases",
+    "sub_type": "name_with_title",
+    "description": "长-看看李经理这个季度填报了多少工时",
+    "input": "看看李经理这个季度填报了多少工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_181",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "clarify-工时",
+    "input": "工时",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_182",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "clarify-填报",
+    "input": "填报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_183",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "clarify-周报",
+    "input": "周报",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_184",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "clarify-项目",
+    "input": "项目",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_185",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "clarify-工时情况",
+    "input": "工时情况",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_186",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "clarify-录入",
+    "input": "录入",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_187",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "clarify-统计",
+    "input": "统计",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_188",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "clarify-查询",
+    "input": "查询",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_189",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "clarify-情况",
+    "input": "情况",
+    "user_context": {
+      "entity_type": "deptAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_190",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "clarify-数据",
+    "input": "数据",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "clarify",
+      "tool_name": null,
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_191",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "tool-查一下",
+    "input": "查一下",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "李明",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_192",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "tool-统计下",
+    "input": "统计下",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "王芳",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_193",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "tool-看看",
+    "input": "看看",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "张总",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_194",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "tool-查查",
+    "input": "查查",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "刘工",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_195",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "tool-瞅瞅",
+    "input": "瞅瞅",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "陈经理",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_196",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "tool-瞧瞧",
+    "input": "瞧瞧",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "赵丽",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_197",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "tool-帮我查",
+    "input": "帮我查",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "孙涛",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_198",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "tool-帮我看",
+    "input": "帮我看",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "周建国",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_199",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "tool-查下",
+    "input": "查下",
+    "user_context": {
+      "entity_type": "companyAdmin",
+      "user_id": "1001",
+      "user_name": "吴晓燕",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  },
+  {
+    "id": "ec_200",
+    "category": "edge_cases",
+    "sub_type": "short_input",
+    "description": "tool-查",
+    "input": "查",
+    "user_context": {
+      "entity_type": "employee",
+      "user_id": "1001",
+      "user_name": "何思思",
+      "department_id": "dept_01"
+    },
+    "expected": {
+      "intent": "tool_execution",
+      "tool_name": "query_timesheet",
+      "params": {},
+      "params_fuzzy": [],
+      "params_exists": [
+        "user_id"
+      ],
+      "date_relative": false
+    },
+    "notes": ""
+  }
 ]

@@ -49,17 +49,27 @@ async def test_param_extraction(case: dict[str, Any]):
     state = build_state(case)
     result = await node_llm_with_tools(state)
 
-    # 意图分类错误时跳过，不在此处报告（Layer 1 负责）
+    # 意图分类或工具名错误时跳过，不在此处报告（Layer 1 负责）
     if result.get("intent") != "tool_execution":
         pytest.skip(
             f"意图分类错误（intent={result.get('intent')!r}），由 Layer 1 负责报告"
+        )
+    expected_tool = case["expected"].get("tool_name")
+    if expected_tool and result.get("tool_name") != expected_tool:
+        pytest.skip(
+            f"工具名错误（期望={expected_tool!r}，实际={result.get('tool_name')!r}），由 Layer 1 负责报告"
         )
 
     params = result.get("tool_params", {})
     expected = case["expected"]
     sub_type = case.get("sub_type", "")
 
-    fuzzy_keys = set(expected.get("params_fuzzy", []))
+    # param_resolver 不在 Layer 2 中运行：LLM 填项目名/成员名，resolver 转 ID
+    # 这些字段只做存在性检查，不做精确值匹配
+    # description 是自然语言字段，LLM 的措辞与期望值天然存在偏差，跳过精确匹配
+    _RESOLVER_FIELDS = {"project_id", "member_id", "description"}
+
+    fuzzy_keys = set(expected.get("params_fuzzy", [])) | _RESOLVER_FIELDS
     exists_keys = set(expected.get("params_exists", []))
     expected_params = expected.get("params", {}).copy()
 

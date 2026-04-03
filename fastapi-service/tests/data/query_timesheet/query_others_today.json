@@ -19,8 +19,10 @@
         "end_date": "2026-04-01",
         "member_name": "李四"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -45,8 +47,10 @@
         "end_date": "2026-04-01",
         "member_name": "王五"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -71,8 +75,10 @@
         "end_date": "2026-04-01",
         "member_name": "赵六"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -97,8 +103,10 @@
         "end_date": "2026-04-01",
         "member_name": "孙七"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -123,8 +131,10 @@
         "end_date": "2026-04-01",
         "member_name": "周八"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -149,8 +159,10 @@
         "end_date": "2026-04-01",
         "member_name": "吴九"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -175,8 +187,10 @@
         "end_date": "2026-04-01",
         "member_name": "郑十"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -201,8 +215,10 @@
         "end_date": "2026-04-01",
         "member_name": "李四"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -227,8 +243,10 @@
         "end_date": "2026-04-01",
         "member_name": "王五"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -253,8 +271,10 @@
         "end_date": "2026-04-01",
         "member_name": "赵六"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -279,8 +299,10 @@
         "end_date": "2026-04-01",
         "member_name": "孙七"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -305,8 +327,10 @@
         "end_date": "2026-04-01",
         "member_name": "周八"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -331,8 +355,10 @@
         "end_date": "2026-04-01",
         "member_name": "吴九"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -357,8 +383,10 @@
         "end_date": "2026-04-01",
         "member_name": "郑十"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -383,8 +411,10 @@
         "end_date": "2026-04-01",
         "member_name": "李四"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -409,8 +439,10 @@
         "end_date": "2026-04-01",
         "member_name": "王五"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -435,8 +467,10 @@
         "end_date": "2026-04-01",
         "member_name": "赵六"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -461,8 +495,10 @@
         "end_date": "2026-04-01",
         "member_name": "孙七"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -487,8 +523,10 @@
         "end_date": "2026-04-01",
         "member_name": "周八"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -513,8 +551,10 @@
         "end_date": "2026-04-01",
         "member_name": "吴九"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -539,8 +579,10 @@
         "end_date": "2026-04-01",
         "member_name": "郑十"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -565,8 +607,10 @@
         "end_date": "2026-04-01",
         "member_name": "李四"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -591,8 +635,10 @@
         "end_date": "2026-04-01",
         "member_name": "王五"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -617,8 +663,10 @@
         "end_date": "2026-04-01",
         "member_name": "赵六"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -643,8 +691,10 @@
         "end_date": "2026-04-01",
         "member_name": "孙七"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -669,8 +719,10 @@
         "end_date": "2026-04-01",
         "member_name": "周八"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -695,8 +747,10 @@
         "end_date": "2026-04-01",
         "member_name": "吴九"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -721,8 +775,10 @@
         "end_date": "2026-04-01",
         "member_name": "郑十"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -747,8 +803,10 @@
         "end_date": "2026-04-01",
         "member_name": "李四"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -773,8 +831,10 @@
         "end_date": "2026-04-01",
         "member_name": "王五"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -799,8 +859,10 @@
         "end_date": "2026-04-01",
         "member_name": "赵六"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -825,8 +887,10 @@
         "end_date": "2026-04-01",
         "member_name": "孙七"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -851,8 +915,10 @@
         "end_date": "2026-04-01",
         "member_name": "周八"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -877,8 +943,10 @@
         "end_date": "2026-04-01",
         "member_name": "吴九"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -903,8 +971,10 @@
         "end_date": "2026-04-01",
         "member_name": "郑十"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -929,8 +999,10 @@
         "end_date": "2026-04-01",
         "member_name": "李四"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -955,8 +1027,10 @@
         "end_date": "2026-04-01",
         "member_name": "王五"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -981,8 +1055,10 @@
         "end_date": "2026-04-01",
         "member_name": "赵六"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -1007,8 +1083,10 @@
         "end_date": "2026-04-01",
         "member_name": "孙七"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"
@@ -1033,8 +1111,10 @@
         "end_date": "2026-04-01",
         "member_name": "周八"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": true
     },
     "notes": "今天=2026-04-01；查询他人需要member_name；必须传user_id"

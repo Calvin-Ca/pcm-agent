@@ -19,8 +19,12 @@
         "end_date": "2026-03-31",
         "member_name": "何思思"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -45,8 +49,12 @@
         "end_date": "2026-03-31",
         "member_name": "李明"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -71,8 +79,12 @@
         "end_date": "2026-03-31",
         "member_name": "王芳"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -97,8 +109,12 @@
         "end_date": "2026-03-31",
         "member_name": "张总"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -123,8 +139,12 @@
         "end_date": "2026-03-31",
         "member_name": "刘工"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -149,8 +169,12 @@
         "end_date": "2026-03-31",
         "member_name": "陈经理"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -175,8 +199,12 @@
         "end_date": "2026-03-31",
         "member_name": "赵丽"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -201,8 +229,12 @@
         "end_date": "2026-03-31",
         "member_name": "孙涛"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -227,8 +259,12 @@
         "end_date": "2026-03-31",
         "member_name": "周建国"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -253,8 +289,12 @@
         "end_date": "2026-03-31",
         "member_name": "吴晓燕"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -279,8 +319,12 @@
         "end_date": "2026-03-31",
         "member_name": "何思思"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -305,8 +349,12 @@
         "end_date": "2026-03-31",
         "member_name": "李明"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -331,8 +379,12 @@
         "end_date": "2026-03-31",
         "member_name": "王芳"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -357,8 +409,12 @@
         "end_date": "2026-03-31",
         "member_name": "张总"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -383,8 +439,12 @@
         "end_date": "2026-03-31",
         "member_name": "刘工"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -409,8 +469,12 @@
         "end_date": "2026-03-31",
         "member_name": "陈经理"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -435,8 +499,12 @@
         "end_date": "2026-03-31",
         "member_name": "赵丽"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -461,8 +529,12 @@
         "end_date": "2026-03-31",
         "member_name": "孙涛"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -487,8 +559,12 @@
         "end_date": "2026-03-31",
         "member_name": "周建国"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -513,8 +589,12 @@
         "end_date": "2026-03-31",
         "member_name": "吴晓燕"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -539,8 +619,12 @@
         "end_date": "2026-03-31",
         "member_name": "何思思"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -565,8 +649,12 @@
         "end_date": "2026-03-31",
         "member_name": "李明"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -591,8 +679,12 @@
         "end_date": "2026-03-31",
         "member_name": "王芳"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -617,8 +709,12 @@
         "end_date": "2026-03-31",
         "member_name": "张总"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -643,8 +739,12 @@
         "end_date": "2026-03-31",
         "member_name": "刘工"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -669,8 +769,12 @@
         "end_date": "2026-03-31",
         "member_name": "陈经理"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -695,8 +799,12 @@
         "end_date": "2026-03-31",
         "member_name": "赵丽"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -721,8 +829,12 @@
         "end_date": "2026-03-31",
         "member_name": "孙涛"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -747,8 +859,12 @@
         "end_date": "2026-03-31",
         "member_name": "周建国"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -773,8 +889,12 @@
         "end_date": "2026-03-31",
         "member_name": "吴晓燕"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -799,8 +919,12 @@
         "end_date": "2026-03-31",
         "member_name": "何思思"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -825,8 +949,12 @@
         "end_date": "2026-03-31",
         "member_name": "李明"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -851,8 +979,12 @@
         "end_date": "2026-03-31",
         "member_name": "王芳"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -877,8 +1009,12 @@
         "end_date": "2026-03-31",
         "member_name": "张总"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -903,8 +1039,12 @@
         "end_date": "2026-03-31",
         "member_name": "刘工"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -929,8 +1069,12 @@
         "end_date": "2026-03-31",
         "member_name": "陈经理"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -955,8 +1099,12 @@
         "end_date": "2026-03-31",
         "member_name": "赵丽"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -981,8 +1129,12 @@
         "end_date": "2026-03-31",
         "member_name": "孙涛"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1007,8 +1159,12 @@
         "end_date": "2026-03-31",
         "member_name": "周建国"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1033,8 +1189,12 @@
         "end_date": "2026-03-31",
         "member_name": "吴晓燕"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1059,8 +1219,12 @@
         "end_date": "2026-03-31",
         "member_name": "何思思"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1085,8 +1249,12 @@
         "end_date": "2026-03-31",
         "member_name": "李明"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1111,8 +1279,12 @@
         "end_date": "2026-03-31",
         "member_name": "王芳"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1137,8 +1309,12 @@
         "end_date": "2026-03-31",
         "member_name": "张总"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1163,8 +1339,12 @@
         "end_date": "2026-03-31",
         "member_name": "刘工"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1189,8 +1369,12 @@
         "end_date": "2026-03-31",
         "member_name": "陈经理"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1215,8 +1399,12 @@
         "end_date": "2026-03-31",
         "member_name": "赵丽"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1241,8 +1429,12 @@
         "end_date": "2026-03-31",
         "member_name": "孙涛"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1267,8 +1459,12 @@
         "end_date": "2026-03-31",
         "member_name": "周建国"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1293,8 +1489,12 @@
         "end_date": "2026-03-31",
         "member_name": "吴晓燕"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1319,8 +1519,12 @@
         "end_date": "2026-03-31",
         "member_name": "何思思"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1345,8 +1549,12 @@
         "end_date": "2026-03-31",
         "member_name": "李明"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1371,8 +1579,12 @@
         "end_date": "2026-03-31",
         "member_name": "王芳"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1397,8 +1609,12 @@
         "end_date": "2026-03-31",
         "member_name": "张总"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1423,8 +1639,12 @@
         "end_date": "2026-03-31",
         "member_name": "刘工"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1449,8 +1669,12 @@
         "end_date": "2026-03-31",
         "member_name": "陈经理"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1475,8 +1699,12 @@
         "end_date": "2026-03-31",
         "member_name": "赵丽"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1501,8 +1729,12 @@
         "end_date": "2026-03-31",
         "member_name": "孙涛"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1527,8 +1759,12 @@
         "end_date": "2026-03-31",
         "member_name": "周建国"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"
@@ -1553,8 +1789,12 @@
         "end_date": "2026-03-31",
         "member_name": "吴晓燕"
       },
-      "params_fuzzy": ["member_name"],
-      "params_exists": ["member_name"],
+      "params_fuzzy": [
+        "member_name"
+      ],
+      "params_exists": [
+        "member_name"
+      ],
       "date_relative": true
     },
     "notes": "上个月=2026-03-01至2026-03-31；管理员查询他人"

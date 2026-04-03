@@ -16,8 +16,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -46,8 +46,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -76,8 +76,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-01",
-        "work_hours": 6
+        "date": "2026-04-01",
+        "duration": 6
       },
       "params_fuzzy": [
         "project_id"
@@ -106,8 +106,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 4
+        "date": "2026-04-01",
+        "duration": 4
       },
       "params_fuzzy": [
         "project_id"
@@ -136,8 +136,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-03-31",
-        "work_hours": 8
+        "date": "2026-03-31",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -166,8 +166,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-03-31",
-        "work_hours": 7
+        "date": "2026-03-31",
+        "duration": 7
       },
       "params_fuzzy": [
         "project_id"
@@ -196,8 +196,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-03-31",
-        "work_hours": 5
+        "date": "2026-03-31",
+        "duration": 5
       },
       "params_fuzzy": [
         "project_id"
@@ -226,8 +226,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-03-31",
-        "work_hours": 8
+        "date": "2026-03-31",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -256,8 +256,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-03-30",
-        "work_hours": 6
+        "date": "2026-03-30",
+        "duration": 6
       },
       "params_fuzzy": [
         "project_id"
@@ -286,8 +286,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -316,8 +316,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -346,8 +346,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-03-31",
-        "work_hours": 7
+        "date": "2026-03-31",
+        "duration": 7
       },
       "params_fuzzy": [
         "project_id"
@@ -376,8 +376,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-01",
-        "work_hours": 4
+        "date": "2026-04-01",
+        "duration": 4
       },
       "params_fuzzy": [
         "project_id"
@@ -406,8 +406,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -436,8 +436,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-01",
-        "work_hours": 0.5
+        "date": "2026-04-01",
+        "duration": 0.5
       },
       "params_fuzzy": [
         "project_id"
@@ -466,8 +466,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-01",
-        "work_hours": 1
+        "date": "2026-04-01",
+        "duration": 1
       },
       "params_fuzzy": [
         "project_id"
@@ -496,8 +496,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-03-31",
-        "work_hours": 1.5
+        "date": "2026-03-31",
+        "duration": 1.5
       },
       "params_fuzzy": [
         "project_id"
@@ -526,8 +526,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-01",
-        "work_hours": 2
+        "date": "2026-04-01",
+        "duration": 2
       },
       "params_fuzzy": [
         "project_id"
@@ -556,8 +556,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 2.5
+        "date": "2026-04-01",
+        "duration": 2.5
       },
       "params_fuzzy": [
         "project_id"
@@ -586,8 +586,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-03-31",
-        "work_hours": 3
+        "date": "2026-03-31",
+        "duration": 3
       },
       "params_fuzzy": [
         "project_id"
@@ -616,8 +616,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-01",
-        "work_hours": 3.5
+        "date": "2026-04-01",
+        "duration": 3.5
       },
       "params_fuzzy": [
         "project_id"
@@ -646,8 +646,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-01",
-        "work_hours": 5
+        "date": "2026-04-01",
+        "duration": 5
       },
       "params_fuzzy": [
         "project_id"
@@ -676,8 +676,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-03-31",
-        "work_hours": 6
+        "date": "2026-03-31",
+        "duration": 6
       },
       "params_fuzzy": [
         "project_id"
@@ -706,8 +706,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-01",
-        "work_hours": 7
+        "date": "2026-04-01",
+        "duration": 7
       },
       "params_fuzzy": [
         "project_id"
@@ -736,8 +736,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-02",
-        "work_hours": 8
+        "date": "2026-04-02",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -766,8 +766,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-02",
-        "work_hours": 4
+        "date": "2026-04-02",
+        "duration": 4
       },
       "params_fuzzy": [
         "project_id"
@@ -796,8 +796,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-03-30",
-        "work_hours": 6
+        "date": "2026-03-30",
+        "duration": 6
       },
       "params_fuzzy": [
         "project_id"
@@ -826,8 +826,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-03-29",
-        "work_hours": 8
+        "date": "2026-03-29",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -856,8 +856,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-03-30",
-        "work_hours": 8
+        "date": "2026-03-30",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -886,8 +886,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-01",
-        "work_hours": 7
+        "date": "2026-04-01",
+        "duration": 7
       },
       "params_fuzzy": [
         "project_id"
@@ -916,8 +916,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-06",
-        "work_hours": 8
+        "date": "2026-04-06",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -946,8 +946,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-03-23",
-        "work_hours": 5
+        "date": "2026-03-23",
+        "duration": 5
       },
       "params_fuzzy": [
         "project_id"
@@ -976,8 +976,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-03-25",
-        "work_hours": 6
+        "date": "2026-03-25",
+        "duration": 6
       },
       "params_fuzzy": [
         "project_id"
@@ -1006,8 +1006,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-03-26",
-        "work_hours": 8
+        "date": "2026-03-26",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -1036,8 +1036,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-03-27",
-        "work_hours": 4
+        "date": "2026-03-27",
+        "duration": 4
       },
       "params_fuzzy": [
         "project_id"
@@ -1066,8 +1066,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -1096,8 +1096,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-03-31",
-        "work_hours": 3
+        "date": "2026-03-31",
+        "duration": 3
       },
       "params_fuzzy": [
         "project_id"
@@ -1126,8 +1126,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-03-25",
-        "work_hours": 7.5
+        "date": "2026-03-25",
+        "duration": 7.5
       },
       "params_fuzzy": [
         "project_id"
@@ -1156,8 +1156,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-03-28",
-        "work_hours": 6.5
+        "date": "2026-03-28",
+        "duration": 6.5
       },
       "params_fuzzy": [
         "project_id"
@@ -1186,8 +1186,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-05",
-        "work_hours": 8
+        "date": "2026-04-05",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -1216,8 +1216,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -1246,8 +1246,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-01",
-        "work_hours": 6
+        "date": "2026-04-01",
+        "duration": 6
       },
       "params_fuzzy": [
         "project_id"
@@ -1276,8 +1276,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -1306,8 +1306,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-03-31",
-        "work_hours": 7
+        "date": "2026-03-31",
+        "duration": 7
       },
       "params_fuzzy": [
         "project_id"
@@ -1336,8 +1336,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -1366,8 +1366,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-03-31",
-        "work_hours": 5
+        "date": "2026-03-31",
+        "duration": 5
       },
       "params_fuzzy": [
         "project_id"
@@ -1396,8 +1396,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-01",
-        "work_hours": 3
+        "date": "2026-04-01",
+        "duration": 3
       },
       "params_fuzzy": [
         "project_id"
@@ -1426,8 +1426,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-01",
-        "work_hours": 2
+        "date": "2026-04-01",
+        "duration": 2
       },
       "params_fuzzy": [
         "project_id"
@@ -1456,8 +1456,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 4
+        "date": "2026-04-01",
+        "duration": 4
       },
       "params_fuzzy": [
         "project_id"
@@ -1486,8 +1486,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-01",
-        "work_hours": 6
+        "date": "2026-04-01",
+        "duration": 6
       },
       "params_fuzzy": [
         "project_id"
@@ -1670,8 +1670,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -1700,8 +1700,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-03-31",
-        "work_hours": 7
+        "date": "2026-03-31",
+        "duration": 7
       },
       "params_fuzzy": [
         "project_id"
@@ -1730,8 +1730,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-01",
-        "work_hours": 6
+        "date": "2026-04-01",
+        "duration": 6
       },
       "params_fuzzy": [
         "project_id"
@@ -1760,8 +1760,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -1790,8 +1790,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -1820,8 +1820,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-01",
-        "work_hours": 4
+        "date": "2026-04-01",
+        "duration": 4
       },
       "params_fuzzy": [
         "project_id"
@@ -1850,8 +1850,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-01",
-        "work_hours": 6
+        "date": "2026-04-01",
+        "duration": 6
       },
       "params_fuzzy": [
         "project_id"
@@ -1880,8 +1880,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-01",
-        "work_hours": 2
+        "date": "2026-04-01",
+        "duration": 2
       },
       "params_fuzzy": [
         "project_id"
@@ -1910,8 +1910,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-01",
-        "work_hours": 4
+        "date": "2026-04-01",
+        "duration": 4
       },
       "params_fuzzy": [
         "project_id"
@@ -1940,8 +1940,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-04-01",
-        "work_hours": 4
+        "date": "2026-04-01",
+        "duration": 4
       },
       "params_fuzzy": [
         "project_id"
@@ -1970,8 +1970,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-03-30",
-        "work_hours": 8
+        "date": "2026-03-30",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -2000,8 +2000,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-04-02",
-        "work_hours": 7
+        "date": "2026-04-02",
+        "duration": 7
       },
       "params_fuzzy": [
         "project_id"
@@ -2030,8 +2030,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-03-31",
-        "work_hours": 6
+        "date": "2026-03-31",
+        "duration": 6
       },
       "params_fuzzy": [
         "project_id"
@@ -2060,8 +2060,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-03-30",
-        "work_hours": 5
+        "date": "2026-03-30",
+        "duration": 5
       },
       "params_fuzzy": [
         "project_id"
@@ -2090,8 +2090,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -2120,8 +2120,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-03-31",
-        "work_hours": 8
+        "date": "2026-03-31",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -2150,8 +2150,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-03-30",
-        "work_hours": 7
+        "date": "2026-03-30",
+        "duration": 7
       },
       "params_fuzzy": [
         "project_id"
@@ -2180,8 +2180,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "云迁移项目",
-        "work_date": "2026-03-29",
-        "work_hours": 6
+        "date": "2026-03-29",
+        "duration": 6
       },
       "params_fuzzy": [
         "project_id"
@@ -2210,8 +2210,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "AI平台",
-        "work_date": "2026-04-03",
-        "work_hours": 8
+        "date": "2026-04-03",
+        "duration": 8
       },
       "params_fuzzy": [
         "project_id"
@@ -2240,8 +2240,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "智慧园区",
-        "work_date": "2026-04-10",
-        "work_hours": 4
+        "date": "2026-04-10",
+        "duration": 4
       },
       "params_fuzzy": [
         "project_id"
@@ -2270,8 +2270,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "数字化转型",
-        "work_date": "2026-03-24",
-        "work_hours": 3
+        "date": "2026-03-24",
+        "duration": 3
       },
       "params_fuzzy": [
         "project_id"
@@ -2300,8 +2300,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "ERP升级",
-        "work_date": "2026-03-28",
-        "work_hours": 2
+        "date": "2026-03-28",
+        "duration": 2
       },
       "params_fuzzy": [
         "project_id"
@@ -2330,8 +2330,8 @@
       "tool_name": "save_workhour",
       "params": {
         "project_id": "移动端改版",
-        "work_date": "2026-03-29",
-        "work_hours": 1
+        "date": "2026-03-29",
+        "duration": 1
       },
       "params_fuzzy": [
         "project_id"

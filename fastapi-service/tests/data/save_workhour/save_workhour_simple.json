@@ -15,11 +15,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -40,11 +42,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -65,11 +69,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -90,11 +96,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 4
+        "date": "2026-04-01",
+        "duration": 4
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天4小时；work_date=2026-04-01；必须传user_id"
@@ -115,11 +123,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 6
+        "date": "2026-04-01",
+        "duration": 6
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天6小时；work_date=2026-04-01；必须传user_id"
@@ -140,11 +150,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 2
+        "date": "2026-04-01",
+        "duration": 2
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天2小时；work_date=2026-04-01；必须传user_id"
@@ -165,11 +177,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 8
+        "date": "2026-03-31",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "填报昨天8小时；work_date=2026-03-31；必须传user_id"
@@ -190,11 +204,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 6
+        "date": "2026-03-31",
+        "duration": 6
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "填报昨天6小时；work_date=2026-03-31；必须传user_id"
@@ -215,11 +231,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 4
+        "date": "2026-03-31",
+        "duration": 4
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "填报昨天4小时；work_date=2026-03-31；必须传user_id"
@@ -240,11 +258,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 2
+        "date": "2026-03-31",
+        "duration": 2
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "填报昨天2小时；work_date=2026-03-31；必须传user_id"
@@ -265,11 +285,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": false
     },
     "notes": "固定日期填报；work_date=2026-04-01；必须传user_id"
@@ -290,11 +312,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 6
+        "date": "2026-03-31",
+        "duration": 6
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": false
     },
     "notes": "固定日期填报；work_date=2026-03-31；必须传user_id"
@@ -315,11 +339,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": false
     },
     "notes": "固定日期填报；work_date=2026-04-01；必须传user_id"
@@ -340,11 +366,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -365,11 +393,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -390,11 +420,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -415,11 +447,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -440,11 +474,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 1
+        "date": "2026-04-01",
+        "duration": 1
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天1小时；work_date=2026-04-01；必须传user_id"
@@ -465,11 +501,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 3
+        "date": "2026-04-01",
+        "duration": 3
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天3小时；work_date=2026-04-01；必须传user_id"
@@ -490,11 +528,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 5
+        "date": "2026-04-01",
+        "duration": 5
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天5小时；work_date=2026-04-01；必须传user_id"
@@ -515,11 +555,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 7
+        "date": "2026-04-01",
+        "duration": 7
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天7小时；work_date=2026-04-01；必须传user_id"
@@ -540,11 +582,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 1
+        "date": "2026-03-31",
+        "duration": 1
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "填报昨天1小时；work_date=2026-03-31；必须传user_id"
@@ -565,11 +609,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 3
+        "date": "2026-03-31",
+        "duration": 3
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "填报昨天3小时；work_date=2026-03-31；必须传user_id"
@@ -590,11 +636,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 5
+        "date": "2026-03-31",
+        "duration": 5
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "填报昨天5小时；work_date=2026-03-31；必须传user_id"
@@ -615,11 +663,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 7
+        "date": "2026-03-31",
+        "duration": 7
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "填报昨天7小时；work_date=2026-03-31；必须传user_id"
@@ -640,11 +690,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-30",
-        "work_hours": 8
+        "date": "2026-03-30",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": false
     },
     "notes": "固定日期填报；work_date=2026-03-30；必须传user_id"
@@ -665,11 +717,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-30",
-        "work_hours": 4
+        "date": "2026-03-30",
+        "duration": 4
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": false
     },
     "notes": "固定日期填报；work_date=2026-03-30；必须传user_id"
@@ -690,11 +744,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-29",
-        "work_hours": 8
+        "date": "2026-03-29",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": false
     },
     "notes": "固定日期填报；work_date=2026-03-29；必须传user_id"
@@ -715,11 +771,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-29",
-        "work_hours": 6
+        "date": "2026-03-29",
+        "duration": 6
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": false
     },
     "notes": "固定日期填报；work_date=2026-03-29；必须传user_id"
@@ -740,11 +798,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-02",
-        "work_hours": 8
+        "date": "2026-04-02",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": false
     },
     "notes": "固定日期填报；work_date=2026-04-02；必须传user_id"
@@ -765,11 +825,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 8
+        "date": "2026-03-31",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "填报昨天8小时；work_date=2026-03-31；必须传user_id"
@@ -790,11 +852,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -815,11 +879,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -840,11 +906,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -865,11 +933,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -890,11 +960,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -915,11 +987,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 0.5
+        "date": "2026-04-01",
+        "duration": 0.5
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天0.5小时；work_date=2026-04-01；必须传user_id"
@@ -940,11 +1014,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 1.5
+        "date": "2026-04-01",
+        "duration": 1.5
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天1.5小时；work_date=2026-04-01；必须传user_id"
@@ -965,11 +1041,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 2.5
+        "date": "2026-04-01",
+        "duration": 2.5
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天2.5小时；work_date=2026-04-01；必须传user_id"
@@ -990,11 +1068,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 3.5
+        "date": "2026-04-01",
+        "duration": 3.5
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天3.5小时；work_date=2026-04-01；必须传user_id"
@@ -1015,11 +1095,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 0.5
+        "date": "2026-03-31",
+        "duration": 0.5
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "填报昨天0.5小时；work_date=2026-03-31；必须传user_id"
@@ -1040,11 +1122,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 1.5
+        "date": "2026-03-31",
+        "duration": 1.5
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "填报昨天1.5小时；work_date=2026-03-31；必须传user_id"
@@ -1065,11 +1149,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 2.5
+        "date": "2026-03-31",
+        "duration": 2.5
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "填报昨天2.5小时；work_date=2026-03-31；必须传user_id"
@@ -1090,11 +1176,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-31",
-        "work_hours": 3.5
+        "date": "2026-03-31",
+        "duration": 3.5
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "填报昨天3.5小时；work_date=2026-03-31；必须传user_id"
@@ -1115,11 +1203,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-30",
-        "work_hours": 4
+        "date": "2026-03-30",
+        "duration": 4
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": false
     },
     "notes": "固定日期填报；work_date=2026-03-30；必须传user_id"
@@ -1140,11 +1230,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-03-29",
-        "work_hours": 6
+        "date": "2026-03-29",
+        "duration": 6
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": false
     },
     "notes": "固定日期填报；work_date=2026-03-29；必须传user_id"
@@ -1165,11 +1257,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-02",
-        "work_hours": 8
+        "date": "2026-04-02",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": false
     },
     "notes": "固定日期填报；work_date=2026-04-02；必须传user_id"
@@ -1190,11 +1284,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -1215,11 +1311,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"
@@ -1240,11 +1338,13 @@
       "intent": "tool_execution",
       "tool_name": "save_workhour",
       "params": {
-        "work_date": "2026-04-01",
-        "work_hours": 8
+        "date": "2026-04-01",
+        "duration": 8
       },
       "params_fuzzy": [],
-      "params_exists": ["user_id"],
+      "params_exists": [
+        "user_id"
+      ],
       "date_relative": true
     },
     "notes": "简单填报今天8小时；work_date=2026-04-01；必须传user_id"

@@ -18,8 +18,11 @@
         "project_id": "AI平台",
         "member_name": "李四"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -43,8 +46,11 @@
         "project_id": "智慧办公",
         "member_name": "王五"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -68,8 +74,11 @@
         "project_id": "数据中台",
         "member_name": "赵六"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -93,8 +102,11 @@
         "project_id": "智能客服",
         "member_name": "孙七"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -118,8 +130,11 @@
         "project_id": "云原生平台",
         "member_name": "周八"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -143,8 +158,11 @@
         "project_id": "区块链平台",
         "member_name": "吴九"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -168,8 +186,11 @@
         "project_id": "物联网平台",
         "member_name": "郑十"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -193,8 +214,11 @@
         "project_id": "AI平台",
         "member_name": "李四"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -218,8 +242,11 @@
         "project_id": "智慧办公",
         "member_name": "王五"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -243,8 +270,11 @@
         "project_id": "数据中台",
         "member_name": "赵六"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -268,8 +298,11 @@
         "project_id": "智能客服",
         "member_name": "孙七"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -293,8 +326,11 @@
         "project_id": "云原生平台",
         "member_name": "周八"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -318,8 +354,11 @@
         "project_id": "区块链平台",
         "member_name": "吴九"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -343,8 +382,11 @@
         "project_id": "物联网平台",
         "member_name": "郑十"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -368,8 +410,11 @@
         "project_id": "AI平台",
         "member_name": "李四"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -393,8 +438,11 @@
         "project_id": "智慧办公",
         "member_name": "王五"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -418,8 +466,11 @@
         "project_id": "数据中台",
         "member_name": "赵六"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -443,8 +494,11 @@
         "project_id": "智能客服",
         "member_name": "孙七"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -468,8 +522,11 @@
         "project_id": "云原生平台",
         "member_name": "周八"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -493,8 +550,11 @@
         "project_id": "区块链平台",
         "member_name": "吴九"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -518,8 +578,11 @@
         "project_id": "物联网平台",
         "member_name": "郑十"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -543,8 +606,11 @@
         "project_id": "AI平台",
         "member_name": "李四"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -568,8 +634,11 @@
         "project_id": "智慧办公",
         "member_name": "王五"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -593,8 +662,11 @@
         "project_id": "数据中台",
         "member_name": "赵六"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -618,8 +690,11 @@
         "project_id": "智能客服",
         "member_name": "孙七"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -643,8 +718,11 @@
         "project_id": "云原生平台",
         "member_name": "周八"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -668,8 +746,11 @@
         "project_id": "区块链平台",
         "member_name": "吴九"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -693,8 +774,11 @@
         "project_id": "物联网平台",
         "member_name": "郑十"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -718,8 +802,11 @@
         "project_id": "AI平台",
         "member_name": "李四"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"
@@ -743,8 +830,11 @@
         "project_id": "智慧办公",
         "member_name": "王五"
       },
-      "params_fuzzy": ["project_id", "member_name"],
-      "params_exists": ["user_id"],
+      "params_fuzzy": [
+        "project_id",
+        "member_name"
+      ],
+      "params_exists": [],
       "date_relative": false
     },
     "notes": "按项目和成员查询；需要解析project_id和member_name；必须传user_id"

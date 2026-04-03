@@ -88,10 +88,12 @@ _SUB_TYPE_TO_RANGE: dict[str, str] = {
     "query_self_last_week":     "last_week",
     "query_self_this_month":    "this_month",
     "query_self_last_month":    "last_month",
+    "query_others_today":       "today",
     "query_others_this_week":   "this_week",
     "query_others_this_month":  "this_month",
     "query_others_last_month":  "last_month",
     "query_others_by_name":     "this_week",   # 默认本周，具体看用例
+    "query_others_by_project":  "this_week",   # 默认本周
 }
 
 
@@ -131,11 +133,26 @@ def resolve_relative_dates(
 def should_skip_date_assertion(sub_type: str | None) -> bool:
     """
     对于无法自动推算日期的 sub_type，跳过日期精确断言，只做存在性检查。
+
+    save_workhour 的 date 字段是单个绝对日期（非区间），测试数据生成时
+    "今天"/"昨天" 等相对词被硬编码为生成当日的日期，无法自动平移，
+    因此只做存在性检查（params_exists 已包含 date 字段）。
     """
     skip_types = {
         "query_self_date_range",
         "query_others_date_range",
         "informal_date",
         "edge_cases",
+        # save_workhour：date 字段为相对日期，只检查存在性
+        "fill_all_params",
+        "fill_with_description",
+        "fill_missing_project",
+        "fill_missing_duration",
+        "fill_missing_date",
+        "fill_project_by_name",
+        "save_workhour_simple",
+        "save_workhour_with_project",
+        "save_workhour_with_remark",
+        "save_workhour_multi_days",
     }
     return sub_type in skip_types

@@ -32,6 +32,14 @@ def build_state(case: dict[str, Any]) -> dict:
     lwe = lws + timedelta(days=6)
     today = t.strftime("%Y-%m-%d")
 
+    ms = t.replace(day=1)
+    if t.month == 12:
+        me = t.replace(year=t.year + 1, month=1, day=1) - timedelta(days=1)
+    else:
+        me = t.replace(month=t.month + 1, day=1) - timedelta(days=1)
+    lme = ms - timedelta(days=1)
+    lms = lme.replace(day=1)
+
     # 使用真实的 system.yaml（与生产环境一致）
     from app.services.prompt_manager import get_prompt_manager
     pm = get_prompt_manager()
@@ -46,6 +54,10 @@ def build_state(case: dict[str, Any]) -> dict:
         week_end=we.strftime("%Y-%m-%d"),
         last_week_start=lws.strftime("%Y-%m-%d"),
         last_week_end=lwe.strftime("%Y-%m-%d"),
+        month_start=ms.strftime("%Y-%m-%d"),
+        month_end=me.strftime("%Y-%m-%d"),
+        last_month_start=lms.strftime("%Y-%m-%d"),
+        last_month_end=lme.strftime("%Y-%m-%d"),
     )
 
     return {
