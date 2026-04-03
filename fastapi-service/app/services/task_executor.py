@@ -290,7 +290,20 @@ class TaskExecutor:
                     result = self.permission_validator.can_access_user_data(permission_context, target_user_id)
                     if not result.allowed:
                         raise PermissionError(f"无权限操作用户 {target_user_id} 的工时数据：{result.reason}")
-        
+
+            elif task.tool_name == 'approve_workhour':
+                # 工时审核权限：以下两类用户可调用：
+                #   A. 部门管理员及以上角色（deptAdmin / regionAdmin / companyAdmin / superAdmin）
+                #   B. 项目负责人（entity_type 为 employee，但 managed_projects 非空）
+                #      ——具体到某条工时是否属于其负责项目，由后端 SpringBoot 二次校验（会返回 403）
+                ADMIN_ROLES = {"deptAdmin", "regionAdmin", "companyAdmin", "superAdmin"}
+                is_admin = permission_context.entity_type in ADMIN_ROLES
+                is_project_manager = bool(permission_context.managed_projects)
+                if not is_admin and not is_project_manager:
+                    raise PermissionError(
+                        "工时审核权限不足：需要部门管理员角色，或担任至少一个项目的项目负责人"
+                    )
+
         # 执行工具
         logger.info(f"执行工具: {task.tool_name}, 参数: {processed_params}")
         

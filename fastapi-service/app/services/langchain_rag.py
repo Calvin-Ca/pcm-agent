@@ -244,10 +244,16 @@ class LangChainRAGService:
         # 4. 初始化 BM25 检索器（纯内存，无需外部依赖）
         from langchain_community.retrievers import BM25Retriever
 
+        def _jieba_tokenizer(text: str):
+            """使用 jieba 分词，提升中文专业词汇的 BM25 召回率。"""
+            import jieba
+            return list(jieba.cut(text))
+
         self.bm25_retriever = await asyncio.to_thread(
-            BM25Retriever.from_documents, documents, k=5
+            BM25Retriever.from_documents, documents, k=5,
+            preprocess_func=_jieba_tokenizer,
         )
-        logger.info("BM25 检索器初始化完成")
+        logger.info("BM25 检索器初始化完成（jieba 分词）")
 
         # 5. 混合检索（向量 60% + BM25 40%）
         from langchain_classic.retrievers import EnsembleRetriever

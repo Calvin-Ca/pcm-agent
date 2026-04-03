@@ -227,19 +227,19 @@ class UserMemoryService:
         return matched / len(query_tokens) if query_tokens else 0.0
 
     def _tokenize(self, text: str) -> List[str]:
-        """
-        简单中文分词（按字符/标点分割）。
-        生产环境可替换为 jieba 等分词器。
-        """
-        import re
-        # 去除标点，按空格/标点切分，保留中文字符（每个字为一个 token）
-        tokens = []
-        for char in text:
-            if '\u4e00' <= char <= '\u9fff':
-                tokens.append(char)
-            elif char.isalnum():
-                tokens.append(char.lower())
-        return tokens
+        """使用 jieba 分词（中文词语级别切分，提升专业术语匹配率）。"""
+        try:
+            import jieba
+            return [t for t in jieba.cut(text) if t.strip()]
+        except ImportError:
+            # jieba 未安装时降级为逐字切分
+            tokens = []
+            for char in text:
+                if '\u4e00' <= char <= '\u9fff':
+                    tokens.append(char)
+                elif char.isalnum():
+                    tokens.append(char.lower())
+            return tokens
 
     def _score_memories(
         self,

@@ -11,6 +11,7 @@ from . import compute_statistics
 from . import generate_weekly_report
 from . import save_workhour
 from . import knowledge_qa
+from . import approve_workhour
 
 __all__ = [
     "query_timesheet",
@@ -19,4 +20,5 @@ __all__ = [
     "generate_weekly_report",
     "save_workhour",
     "knowledge_qa",
+    "approve_workhour",
 ]
