@@ -393,12 +393,20 @@ qwen-plus 支持 OpenAI 兼容的 `tools` 参数（函数调用），可以在 *
   ├── 精度 v2 回归测试（已有改进：关键词扩展+描述消歧+System Prompt）
   ├── 分析 191 条 clarify 失败用例，调整测试期望或补 Few-shot
   ├── 目标：整体精度 85%+（不含 clarify 争议项达 90%+）
-  ├── 工时审核 Tool — approve_workhour（3h，仅 deptAdmin+）
-  └── jieba 中文分词接入 BM25 + 补充知识库文档（1h）
+  ├── ✅ 工时审核 Tool — approve_workhour（2026-04-03）
+  │   调用 POST /api/workhour/batch-approve，支持 deptAdmin+ 及项目负责人
+  └── ✅ jieba 中文分词接入 BM25 + 补充知识库文档（2026-04-03）
+      ├── langchain_rag.py: BM25Retriever preprocess_func=jieba
+      ├── user_memory.py: _tokenize 换 jieba（含 ImportError 降级）
+      └── knowledge-base/: 新增《工时审核流程》《假期与加班政策》
 
 🟡 第二阶段（4.7 ~ 4.11）— L3：DeepSearch / 多步推理
-  ├── 激活 PlannerAgent + execution loop（1.5d）
-  │   让"查各项目工时 → 找异常 → 生成报告"成为可能
+  ├── ✅ 激活 PlannerAgent + execution loop（2026-04-03）
+  │   ├── node_llm_with_tools: ≥2 个 tool_calls → TaskPlan 并行执行
+  │   ├── node_plan_and_execute: 路径A(multi_tool_calls直接执行)/路径B(PlannerAgent生成计划)
+  │   ├── node_summarize: plan_results → LLM 综合分析 → 自然语言回答
+  │   ├── AgentState: task_plan / plan_results 字段
+  │   └── system.yaml: multi_tool_guidance 引导 LLM 一次调用多工具
   ├── Tool 组合执行 + 结构化中间状态 context（1d）
   │   一个问题 → 多个 Tool 串联，中间结果可追溯
   ├── SQL Agent — 只读连接 + SQL 白名单（1.5d）
@@ -427,8 +435,9 @@ qwen-plus 支持 OpenAI 兼容的 `tools` 参数（函数调用），可以在 *
 
 ```
 L1  RAG 问答           ← 已完成
-L2  Tool Agent         ← 当前（Function Calling + 5 个工具 + RAG）
-L3  DeepSearch Agent   ← 第二阶段目标（多步推理 + Tool 组合 + SQL）
+L2  Tool Agent         ← 已完成（Function Calling + 5 个工具 + RAG）
+L3  DeepSearch Agent   ← 已完成（PlannerAgent 激活 + 多步规划 + 并行执行）
+                       剩余：SQL Agent / 导出报表 Tool
 L4  Multi-Agent        ← 中长期（等业务场景驱动，不提前做）
 L5  Autonomous Agent   ← 远期（定时任务 + 自动执行 + 通知）
 ```
@@ -442,9 +451,10 @@ L5  Autonomous Agent   ← 远期（定时任务 + 自动执行 + 通知）
 | ~~Function Calling 改造~~ | ★★★★★ | ~~2-3天~~ | ✅ 已完成 |
 | ~~增强 System Prompt~~ | ★★★★ | ~~0.5天~~ | ✅ 已完成 |
 | ~~统一参数校验层~~ | ★★★ | ~~1天~~ | ✅ 已完成 |
+| ~~工时审核 Tool~~ | ★★★ | ~~3h~~ | ✅ 已完成 |
+| ~~jieba 接入 BM25~~ | ★★ | ~~1h~~ | ✅ 已完成 |
+| ~~PlannerAgent + loop~~ | ★★★★★ | ~~已完成~~ | ✅ 已完成 |
 | **精度调优（v2 回归）** | ★★★★ | 2天 | **🔴 当前** |
-| **工时审核 Tool** | ★★★ | 3h | **🔴 当前** |
-| **PlannerAgent + loop** | ★★★★★ | 1.5天 | **🟡 第二阶段** |
 | **SQL Agent（DeepSearch）** | ★★★★★ | 1.5天 | **🟡 第二阶段** |
 | **LLM 本地部署（vLLM）** | ★★★★ | 0.5-1天 | **🟢 第三阶段** |
 | Self-Reflection | ★★★ | 0.5天 | 🟢 第三阶段 |
