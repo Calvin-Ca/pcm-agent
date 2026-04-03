@@ -484,6 +484,13 @@ async def stream_agent_response(
             from datetime import timedelta as _timedelta
             _today = datetime.now().date()
             _week_start = _today - _timedelta(days=_today.weekday())
+            _month_start = _today.replace(day=1)
+            if _today.month == 12:
+                _month_end = _today.replace(year=_today.year + 1, month=1, day=1) - _timedelta(days=1)
+            else:
+                _month_end = _today.replace(month=_today.month + 1, day=1) - _timedelta(days=1)
+            _last_month_end = _month_start - _timedelta(days=1)
+            _last_month_start = _last_month_end.replace(day=1)
             try:
                 base_system = get_prompt_manager().format(
                     "system",
@@ -496,6 +503,10 @@ async def stream_agent_response(
                     week_end=str(_week_start + _timedelta(days=6)),
                     last_week_start=str(_week_start - _timedelta(weeks=1)),
                     last_week_end=str(_week_start - _timedelta(days=1)),
+                    month_start=str(_month_start),
+                    month_end=str(_month_end),
+                    last_month_start=str(_last_month_start),
+                    last_month_end=str(_last_month_end),
                 ) or "你是一个专业的企业工时管理助手。请用简洁、友好的方式回答用户问题。"
             except Exception:
                 base_system = "你是一个专业的企业工时管理助手。请用简洁、友好的方式回答用户问题。"

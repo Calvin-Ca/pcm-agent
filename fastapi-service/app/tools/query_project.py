@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 class ProjectQueryParams(BaseModel):
     """项目查询参数"""
-    project_id: str = Field(..., description="项目ID")
+    project_id: Optional[str] = Field(None, description="项目ID（查询指定项目时填写）")
 
 
 class ProjectMember(BaseModel):
@@ -59,10 +59,10 @@ QUERY_PROJECT_SCHEMA = {
     "properties": {
         "project_id": {
             "type": "string",
-            "description": "项目ID，必填"
+            "description": "项目ID或名称（查询指定项目详情时填写，系统自动解析名称为ID；若查询项目列表则不填）"
         }
     },
-    "required": ["project_id"],
+    "required": [],
     "additionalProperties": False
 }
 
@@ -78,27 +78,49 @@ async def query_project_handler(**kwargs) -> Dict[str, Any]:
         Dict[str, Any]: 查询结果
     """
     try:
+        auth_token = kwargs.pop("auth_token", None)
+
         # 参数验证和解析
-        params = ProjectQueryParams(**kwargs)
-        
-        # 构建查询URL
-        base_url = "http://localhost:8080"  # SpringBoot服务地址
+        params = ProjectQueryParams(**{k: v for k, v in kwargs.items()
+                                       if k in ["project_id"]})
+
+        import os
+        base_url = os.getenv("SPRINGBOOT_BASE_URL") or f"http://{os.getenv('SPRINGBOOT_HOST', 'host.docker.internal')}:8080"
+
+        request_headers = {}
+        if auth_token:
+            request_headers["Authorization"] = auth_token
+
+        if not params.project_id:
+            # 无 project_id，返回项目列表（含可填报项目）
+            url = f"{base_url}/api/project/list"
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.get(url, headers=request_headers)
+                response.raise_for_status()
+                api_data = response.json()
+            return {
+                "success": True,
+                "projects": api_data if isinstance(api_data, list) else api_data.get("data", []),
+                "error": None
+            }
+
+        # 构建查询URL（指定项目）
         url = f"{base_url}/api/projects/{params.project_id}"
-        
+
         # 调用SpringBoot API
         async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.get(url)
-            
+            response = await client.get(url, headers=request_headers)
+
             if response.status_code == 404:
                 return {
                     "success": False,
                     "project": None,
                     "error": f"项目 {params.project_id} 不存在"
                 }
-            
+
             response.raise_for_status()
             api_data = response.json()
-            
+
             # 处理API响应
             if not api_data.get("success", False):
                 return {
@@ -106,7 +128,7 @@ async def query_project_handler(**kwargs) -> Dict[str, Any]:
                     "project": None,
                     "error": api_data.get("message", "查询失败")
                 }
-            
+
             # 格式化项目信息
             project_data = api_data.get("data", {})
             
@@ -172,7 +194,7 @@ def register_query_project_tool():
     try:
         tool_registry.register_tool(
             name="query_project",
-            description="查询项目详细信息，包括项目基本信息、成员列表、进度等",
+            description="查询项目信息（适用：查项目详情/成员/进度、查哪些项目可以填工时、项目列表、某项目什么时候开始）。当用户说'有哪些项目'/'可填报的项目'/'项目列表'/'查一下XX项目'时调用。",
             json_schema=QUERY_PROJECT_SCHEMA,
             handler=query_project_handler,
             category=ToolCategory.DATA_QUERY,

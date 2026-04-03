@@ -33,7 +33,7 @@ SAVE_WORKHOUR_SCHEMA = {
         },
         "date": {
             "type": "string",
-            "description": "工时日期，格式 YYYY-MM-DD（必填）",
+            "description": "工时日期，格式 YYYY-MM-DD（必填；用户未提及具体日期时，默认填今天的日期）",
         },
         "duration": {
             "type": "number",
@@ -246,7 +246,7 @@ def register_save_workhour_tool():
     try:
         tool_registry.register_tool(
             name="save_workhour",
-            description="新增/填报工时记录（适用：填工时/记录工时/登记今天工作时间）。project_id 可直接填项目名称（系统内部自动解析为ID），无需先调用 query_project",
+            description="填报/记录工时（适用：填工时/记录工时/登记工作时间/帮我填）。即使参数不完整也应调用，系统会自动处理缺失参数。project_id 可直接填项目名称，系统内部自动解析为ID。",
             json_schema=SAVE_WORKHOUR_SCHEMA,
             handler=save_workhour_handler,
             category=ToolCategory.WORKHOUR,
