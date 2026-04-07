@@ -50,21 +50,40 @@ def chat(message: str, entity_type: str = None) -> dict:
     return response.json()
 
 
+# ─── 辅助断言 ─────────────────────────────────────────────────────────────────
+
+def get_intent(result: dict) -> str:
+    """从响应中提取 intent"""
+    route_info = result.get("result", {}).get("route_info", {})
+    return route_info.get("intent_type", "general_chat")
+
+
+def get_tool_name(result: dict) -> str:
+    """从响应中提取 tool_name"""
+    return result.get("result", {}).get("tool_name")
+
+
+def get_message(result: dict) -> str:
+    """从响应中提取 message"""
+    return result.get("message", "") or result.get("result", {}).get("message", "")
+
+
 # ─── 基础路由测试 ──────────────────────────────────────────────────────────────
 
 class TestBasicRouting:
     def test_general_chat(self):
         """闲聊路由"""
         result = chat("你好")
-        assert result.get("intent") in ("general_chat", None)
-        assert result.get("response"), "应有回复内容"
+        assert get_message(result), "应有回复内容"
+        # 闲聊不走工具，intent 为 None 或 general_chat
+        intent = get_intent(result)
+        assert intent in (None, "general_chat"), f"闲聊应为 general_chat，实际：{intent}"
 
     def test_knowledge_qa_routing(self):
         """知识问答路由"""
         result = chat("加班算工时吗")
-        # 路由到 knowledge_qa 或 general_chat 均可，关键是有实质性回答
-        assert result.get("response"), "应有回复内容"
-        assert len(result["response"]) > 10, "回答不应为空或过短"
+        assert get_message(result), "应有回复内容"
+        assert len(get_message(result)) > 10, "回答不应为空或过短"
 
 
 # ─── 工时查询测试 ──────────────────────────────────────────────────────────────
@@ -73,15 +92,15 @@ class TestQueryTimesheet:
     def test_query_self_this_week(self):
         """查自己本周工时"""
         result = chat("查一下我本周工时")
-        assert result.get("intent") == "tool_execution"
-        assert result.get("tool_name") == "query_timesheet"
-        assert result.get("response"), "应有工时查询结果"
+        assert get_intent(result) == "tool_execution", f"应为 tool_execution，实际：{get_intent(result)}"
+        assert get_tool_name(result) == "query_timesheet", f"应为 query_timesheet，实际：{get_tool_name(result)}"
+        assert get_message(result), "应有工时查询结果"
 
     def test_query_self_this_month(self):
         """查本月工时"""
         result = chat("查本月工时")
-        assert result.get("intent") == "tool_execution"
-        assert result.get("tool_name") == "query_timesheet"
+        assert get_intent(result) == "tool_execution", f"应为 tool_execution，实际：{get_intent(result)}"
+        assert get_tool_name(result) == "query_timesheet", f"应为 query_timesheet，实际：{get_tool_name(result)}"
 
 
 # ─── 工时填报测试 ──────────────────────────────────────────────────────────────
@@ -90,14 +109,16 @@ class TestSaveWorkhour:
     def test_save_with_project_name(self):
         """填报工时时传项目名，验证 param_resolver 将其转为 projectId"""
         result = chat("帮我填今天工时8小时，项目是AI助手")
-        # 因为项目名可能不存在，接受 tool_execution 或追问
-        assert result.get("intent") in ("tool_execution", "clarify")
+        intent = get_intent(result)
+        # 接受 tool_execution（参数完整）或 clarify（参数不完整）
+        assert intent in ("tool_execution", "clarify"), f"应为 tool_execution 或 clarify，实际：{intent}"
 
     def test_save_missing_project(self):
         """缺少项目时，行为取决于 LLM 判断（追问或尝试执行）"""
         result = chat("填今天8小时")
-        assert result.get("intent") in ("tool_execution", "clarify")
-        assert result.get("response"), "应有回复"
+        intent = get_intent(result)
+        assert intent in ("tool_execution", "clarify"), f"应为 tool_execution 或 clarify，实际：{intent}"
+        assert get_message(result), "应有回复"
 
 
 # ─── 项目查询测试 ──────────────────────────────────────────────────────────────
@@ -106,19 +127,19 @@ class TestQueryProject:
     def test_query_fillable_projects(self):
         """查询可填报项目列表"""
         result = chat("我可以填报哪些项目")
-        assert result.get("intent") == "tool_execution"
-        assert result.get("tool_name") == "query_project"
-        assert result.get("response"), "应返回项目列表"
+        assert get_intent(result) == "tool_execution", f"应为 tool_execution，实际：{get_intent(result)}"
+        assert get_tool_name(result) == "query_project", f"应为 query_project，实际：{get_tool_name(result)}"
+        assert get_message(result), "应返回项目列表"
 
 
-# ─── 多工具并行测试 ────────────────────────────────────────────────────────────
+# ─── 多工具并行测试 ───────────────────────────────────────────────────────────
 
 class TestMultiTool:
     def test_query_two_members(self):
         """查询两人工时，验证并行执行"""
         result = chat("查张三和李四本月工时")
         # 期望有汇总回复
-        assert result.get("response"), "应有汇总回复"
+        assert get_message(result), "应有汇总回复"
 
 
 # ─── 权限测试 ──────────────────────────────────────────────────────────────────
@@ -127,9 +148,11 @@ class TestPermission:
     def test_export_report_employee_forbidden(self):
         """普通员工不能导出报表"""
         result = chat("导出本月工时报表", entity_type="employee")
-        assert "权限" in result.get("response", "") or "管理员" in result.get("response", "")
+        msg = get_message(result)
+        assert "权限" in msg or "管理员" in msg or "不足" in msg, f"应返回权限不足提示，实际：{msg}"
 
     def test_approve_workhour_employee_forbidden(self):
         """普通员工不能审核工时"""
         result = chat("审核工时记录 12345", entity_type="employee")
-        assert "权限" in result.get("response", "") or "管理员" in result.get("response", "")
+        msg = get_message(result)
+        assert "权限" in msg or "管理员" in msg or "不足" in msg, f"应返回权限不足提示，实际：{msg}"
