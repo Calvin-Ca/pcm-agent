@@ -8,6 +8,7 @@ LLM Client - 大语言模型客户端
 import os
 import json
 import logging
+import time
 from typing import AsyncGenerator, Dict, Any, List, Optional
 
 import aiohttp
@@ -85,16 +86,37 @@ class LLMClient:
             "Content-Type": "application/json",
         }
 
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=payload) as resp:
-                if resp.status == 200:
-                    data = await resp.json()
-                    return data["choices"][0]["message"]["content"]
-                else:
-                    error_text = await resp.text()
-                    raise ValueError(
-                        f"LLM API 错误 ({self.model}): {resp.status} - {error_text}"
-                    )
+        _start = time.monotonic()
+        _status = "success"
+
+        # Lazy import to avoid circular dependency at module load
+        try:
+            from app.core.metrics import LLM_CALL_COUNT, LLM_CALL_LATENCY, LLM_TOKENS
+            _has_metrics = True
+        except ImportError:
+            _has_metrics = False
+
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url, headers=headers, json=payload) as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        usage = data.get("usage", {})
+                        if _has_metrics:
+                            LLM_TOKENS.labels(model=self.model, token_type="prompt").inc(usage.get("prompt_tokens", 0))
+                            LLM_TOKENS.labels(model=self.model, token_type="completion").inc(usage.get("completion_tokens", 0))
+                        return data["choices"][0]["message"]["content"]
+                    else:
+                        _status = "error"
+                        error_text = await resp.text()
+                        raise ValueError(
+                            f"LLM API 错误 ({self.model}): {resp.status} - {error_text}"
+                        )
+        finally:
+            if _has_metrics:
+                duration = time.monotonic() - _start
+                LLM_CALL_COUNT.labels(model=self.model, call_type="generate", status=_status).inc()
+                LLM_CALL_LATENCY.labels(model=self.model, call_type="generate").observe(duration)
 
     async def stream_generate(
         self,
@@ -193,26 +215,42 @@ class LLMClient:
             "Content-Type": "application/json",
         }
 
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=payload) as resp:
-                if resp.status == 200:
-                    data = await resp.json()
-                    choice = data["choices"][0]
-                    finish_reason = choice.get("finish_reason")
-                    msg = choice.get("message", {})
-                    if finish_reason == "tool_calls":
-                        calls = [
-                            {
-                                "name": tc["function"]["name"],
-                                "arguments": json.loads(tc["function"]["arguments"]),
-                            }
-                            for tc in msg.get("tool_calls", [])
-                        ]
-                        return {"finish_reason": "tool_calls", "content": None, "tool_calls": calls}
-                    return {"finish_reason": "stop", "content": msg.get("content", ""), "tool_calls": []}
-                else:
-                    err = await resp.text()
-                    raise ValueError(f"Function Calling API 错误 ({self.model}): {resp.status} - {err}")
+        _start = time.monotonic()
+        _status = "success"
+
+        try:
+            from app.core.metrics import LLM_CALL_COUNT, LLM_CALL_LATENCY
+            _has_metrics = True
+        except ImportError:
+            _has_metrics = False
+
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url, headers=headers, json=payload) as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        choice = data["choices"][0]
+                        finish_reason = choice.get("finish_reason")
+                        msg = choice.get("message", {})
+                        if finish_reason == "tool_calls":
+                            calls = [
+                                {
+                                    "name": tc["function"]["name"],
+                                    "arguments": json.loads(tc["function"]["arguments"]),
+                                }
+                                for tc in msg.get("tool_calls", [])
+                            ]
+                            return {"finish_reason": "tool_calls", "content": None, "tool_calls": calls}
+                        return {"finish_reason": "stop", "content": msg.get("content", ""), "tool_calls": []}
+                    else:
+                        _status = "error"
+                        err = await resp.text()
+                        raise ValueError(f"Function Calling API 错误 ({self.model}): {resp.status} - {err}")
+        finally:
+            if _has_metrics:
+                duration = time.monotonic() - _start
+                LLM_CALL_COUNT.labels(model=self.model, call_type="function_calling", status=_status).inc()
+                LLM_CALL_LATENCY.labels(model=self.model, call_type="function_calling").observe(duration)
 
     def _build_messages(
         self,

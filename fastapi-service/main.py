@@ -35,6 +35,7 @@ from app.services.langchain_rag import initialize_langchain_rag
 from app.services.session_memory import initialize_session_memory
 from app.services.user_memory import initialize_user_memory
 from app.services.prompt_builder import initialize_prompt_builder, get_prompt_builder
+from prometheus_client import make_asgi_app as make_metrics_app
 
 # 配置日志
 setup_logging()
@@ -133,6 +134,14 @@ async def lifespan(app: FastAPI):
 
         logger.info("🎉 AI Service startup completed successfully")
 
+        # 注册服务信息指标
+        from app.core.metrics import SERVICE_INFO
+        SERVICE_INFO.info({
+            "version": "1.2",
+            "phase": "3",
+            "llm_model": settings.CHAT_LLM_MODEL,
+        })
+
     except Exception as e:
         logger.error(f"❌ Failed to initialize AI Service: {e}", exc_info=True)
         raise
@@ -176,6 +185,10 @@ app = FastAPI(
     lifespan=lifespan,
     contact={"name": "技术支持", "email": "support@thsware.com"},
 )
+
+# Prometheus metrics 端点
+metrics_app = make_metrics_app()
+app.mount("/metrics", metrics_app)
 
 # CORS配置
 app.add_middleware(

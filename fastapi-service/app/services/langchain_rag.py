@@ -11,7 +11,7 @@ import asyncio
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, AsyncGenerator
 
 from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
@@ -358,7 +358,22 @@ class LangChainRAGService:
                 "retrieved_count": int,
             }
         """
+        import time as _time_module
+
+        # Lazy import metrics (avoid circular dependency)
+        try:
+            from app.core.metrics import RAG_QUERY_COUNT, RAG_QUERY_LATENCY
+            _has_metrics = True
+        except ImportError:
+            _has_metrics = False
+
+        _start = _time_module.monotonic()
+        _query_status = "success"
+
         if not self._initialized:
+            if _has_metrics:
+                RAG_QUERY_COUNT.labels(status="error").inc()
+                RAG_QUERY_LATENCY.observe(_time_module.monotonic() - _start)
             return {
                 "success": False,
                 "response": "RAG 服务未初始化，请稍后重试。",
@@ -384,6 +399,9 @@ class LangChainRAGService:
                     logger.warning(f"重排序失败，使用原始检索结果: {e}")
 
             if not docs:
+                if _has_metrics:
+                    RAG_QUERY_COUNT.labels(status="no_results").inc()
+                    RAG_QUERY_LATENCY.observe(_time_module.monotonic() - _start)
                 return {
                     "success": True,
                     "response": "抱歉，我在知识库中没有找到相关信息。您可以尝试换个问法或联系管理员。",
@@ -425,6 +443,9 @@ class LangChainRAGService:
                     )
                     seen.add(src)
 
+            if _has_metrics:
+                RAG_QUERY_COUNT.labels(status="success").inc()
+                RAG_QUERY_LATENCY.observe(_time_module.monotonic() - _start)
             return {
                 "success": True,
                 "response": answer,
@@ -434,13 +455,92 @@ class LangChainRAGService:
             }
 
         except Exception as e:
+            _query_status = "error"
             logger.error(f"RAG 查询失败: {e}", exc_info=True)
+            if _has_metrics:
+                RAG_QUERY_COUNT.labels(status="error").inc()
+                RAG_QUERY_LATENCY.observe(_time_module.monotonic() - _start)
             return {
                 "success": False,
                 "error": str(e),
                 "response": "抱歉，生成回答时出现错误，请稍后重试。",
                 "sources": [],
             }
+
+    async def stream_query(self, question: str) -> AsyncGenerator[Dict[str, Any], None]:
+        """
+        流式 RAG 查询：检索阶段同步完成，生成阶段逐 token 流式输出。
+
+        Yields:
+            {"type": "retrieval", "message": "正在查询知识库..."}
+            {"type": "chunk", "content": "一小段文字"}
+            {"type": "done", "sources": [...], "retrieved_count": int}
+            或
+            {"type": "error", "message": "错误信息"}
+        """
+        if not self._initialized:
+            yield {"type": "error", "message": "RAG 服务未初始化，请稍后重试。"}
+            return
+
+        try:
+            # 1. 检索阶段（同步，通常 <1s）
+            yield {"type": "retrieval", "message": "正在查询知识库..."}
+
+            retriever = self.multi_query_retriever or self.ensemble_retriever
+            docs: List[Document] = await asyncio.to_thread(retriever.invoke, question)
+
+            if self._reranker_enabled and self.reranker and docs:
+                try:
+                    docs = await asyncio.to_thread(
+                        self.reranker.compress_documents, docs, question
+                    )
+                except Exception as e:
+                    logger.warning(f"重排序失败，使用原始检索结果: {e}")
+
+            if not docs:
+                yield {
+                    "type": "chunk",
+                    "content": "抱歉，我在知识库中没有找到相关信息。您可以尝试换个问法或联系管理员。",
+                }
+                yield {"type": "done", "sources": [], "retrieved_count": 0}
+                return
+
+            # 2. 构建上下文
+            context = "\n\n".join(doc.page_content for doc in docs[:5])
+
+            # 3. 流式生成（使用 self.llm.astream()）
+            prompt = get_prompt_manager().get_chat_template("rag") or ChatPromptTemplate.from_messages([
+                (
+                    "system",
+                    "你是工时管理系统的AI助手。请根据以下知识库内容回答用户的问题，"
+                    "回答要简洁、准确。如果知识库内容不足以完整回答，请如实说明。\n\n"
+                    "知识库内容：\n{context}",
+                ),
+                ("human", "{question}"),
+            ])
+            chain = prompt | self.llm | StrOutputParser()
+
+            async for chunk in chain.astream({"context": context, "question": question}):
+                if chunk:
+                    yield {"type": "chunk", "content": chunk}
+
+            # 4. 来源信息
+            sources: List[Dict[str, str]] = []
+            seen: set = set()
+            for doc in docs:
+                src = doc.metadata.get("source", "未知来源")
+                if src not in seen:
+                    sources.append({
+                        "source": Path(src).name if src != "未知来源" else src,
+                        "type": doc.metadata.get("type", "document"),
+                    })
+                    seen.add(src)
+
+            yield {"type": "done", "sources": sources, "retrieved_count": len(docs)}
+
+        except Exception as e:
+            logger.error(f"流式 RAG 查询失败: {e}", exc_info=True)
+            yield {"type": "error", "message": f"生成回答时出现错误：{str(e)}"}
 
 
 # ─── 模块级便捷接口 ─────────────────────────────────────────────────────────────
@@ -499,3 +599,13 @@ async def langchain_rag_query(question: str) -> Dict[str, Any]:
             "sources": [],
         }
     return await _rag_service.query(question)
+
+
+async def langchain_rag_stream_query(question: str) -> AsyncGenerator[Dict[str, Any], None]:
+    """流式 RAG 查询（全局便捷函数）"""
+    global _rag_service
+    if not _rag_service:
+        yield {"type": "error", "message": "RAG 服务未初始化，请先调用 initialize_langchain_rag()"}
+        return
+    async for item in _rag_service.stream_query(question):
+        yield item

@@ -314,8 +314,13 @@ class TaskExecutor:
 
         # 执行工具
         logger.info(f"执行工具: {task.tool_name}, 参数: {processed_params}")
-        
-        start_time = datetime.now()
+
+        from app.core.metrics import TOOL_CALL_COUNT, TOOL_CALL_LATENCY
+        import time as _time_module
+        _tool_start = _time_module.monotonic()
+        start_time = datetime.now()  # 被后续 except 块引用，保留
+
+        _call_status = "success"
         try:
             # 使用asyncio.wait_for确保工具执行也有超时控制
             import asyncio as _asyncio
@@ -327,10 +332,10 @@ class TaskExecutor:
                     None, lambda: handler(**processed_params)
                 )
             result = await asyncio.wait_for(coro, timeout=task.timeout)
-            
+
             execution_time = (datetime.now() - start_time).total_seconds()
             logger.info(f"工具执行完成: {task.tool_name}, 耗时: {execution_time:.2f}秒")
-            
+
             return {
                 "tool_name": task.tool_name,
                 "parameters": processed_params,
@@ -339,14 +344,26 @@ class TaskExecutor:
                 "success": True
             }
         except asyncio.TimeoutError:
+            _call_status = "error"
             execution_time = (datetime.now() - start_time).total_seconds()
             error_msg = f"工具执行超时: {task.tool_name} (超时时间: {task.timeout}秒)"
             logger.error(error_msg)
             raise TimeoutError(error_msg)
+        except PermissionError:
+            _call_status = "permission_denied"
+            execution_time = (datetime.now() - start_time).total_seconds()
+            logger.error(f"工具执行权限拒绝: {task.tool_name}, 耗时: {execution_time:.2f}秒")
+            raise
         except Exception as e:
+            _call_status = "error"
             execution_time = (datetime.now() - start_time).total_seconds()
             logger.error(f"工具执行失败: {task.tool_name}, 耗时: {execution_time:.2f}秒, 错误: {e}")
             raise
+        finally:
+            TOOL_CALL_COUNT.labels(tool_name=task.tool_name, status=_call_status).inc()
+            TOOL_CALL_LATENCY.labels(tool_name=task.tool_name).observe(
+                _time_module.monotonic() - _tool_start
+            )
     
     async def _execute_general_chat(
         self, 

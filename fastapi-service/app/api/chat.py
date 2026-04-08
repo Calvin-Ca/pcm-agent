@@ -153,17 +153,24 @@ def initialize_chat_components(
 async def chat_stream(request: ChatRequest, http_request: Request):
     """
     流式AI聊天接口
-    
+
     Args:
         request: 聊天请求
         http_request: HTTP请求对象
-        
+
     Returns:
         StreamingResponse: SSE流式响应
     """
     if not intent_router:
         raise HTTPException(status_code=500, detail="AI Chat components not initialized")
-    
+
+    from app.core.metrics import ACTIVE_REQUESTS, REQUEST_COUNT, REQUEST_LATENCY
+    import time
+
+    ACTIVE_REQUESTS.inc()
+    _start = time.monotonic()
+    _intent = "unknown"
+
     try:
         # 构建用户上下文
         user_context = request.user_context or {}
@@ -199,12 +206,21 @@ async def chat_stream(request: ChatRequest, http_request: Request):
         
         # 生成流式响应（LangGraph Agent）
         async def generate_stream():
+            nonlocal _intent
             try:
                 async for event in stream_agent_response(
                     message=request.message,
                     user_context=user_context,
                     session_id=request.session_id,
                 ):
+                    # 提取 intent 标签
+                    if "tool_call" in event:
+                        _intent = "tool_execution"
+                    elif "thinking" in event and "knowledge" in event.lower():
+                        _intent = "knowledge_qa"
+                    elif "response" in event:
+                        if _intent == "unknown":
+                            _intent = "general_chat"
                     yield event
             except Exception as e:
                 logger.error(f"流式响应生成异常: {e}", exc_info=True)
@@ -213,7 +229,7 @@ async def chat_stream(request: ChatRequest, http_request: Request):
                     f"event: error\n"
                     f"data: {json.dumps({'message': f'处理请求时发生错误: {str(e)}'}, ensure_ascii=False)}\n\n"
                 )
-        
+
         return StreamingResponse(
             generate_stream(),
             media_type="text/event-stream",
@@ -224,10 +240,16 @@ async def chat_stream(request: ChatRequest, http_request: Request):
                 "Access-Control-Allow-Headers": "*"
             }
         )
-        
+
     except Exception as e:
         logger.error(f"聊天接口异常: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"处理聊天请求失败: {str(e)}")
+
+    finally:
+        duration = time.monotonic() - _start
+        REQUEST_COUNT.labels(intent=_intent, status="success").inc()
+        REQUEST_LATENCY.labels(intent=_intent).observe(duration)
+        ACTIVE_REQUESTS.dec()
 
 
 @router.post("/chat")
@@ -379,7 +401,7 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
         )
 
     finally:
-        # 记录会话日志
+        # 记录会话日志 + Prometheus 指标
         try:
             duration_ms = int((datetime.now() - start_time).total_seconds() * 1000)
             conv_logger = get_conversation_logger()
@@ -396,6 +418,16 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
             )
         except Exception as log_error:
             logger.error(f"Failed to log conversation: {log_error}")
+
+        # Prometheus 指标
+        try:
+            from app.core.metrics import REQUEST_COUNT, REQUEST_LATENCY
+            import time as _time_module
+            duration_sec = (datetime.now() - start_time).total_seconds()
+            REQUEST_COUNT.labels(intent=intent_value or "unknown", status=status).inc()
+            REQUEST_LATENCY.labels(intent=intent_value or "unknown").observe(duration_sec)
+        except Exception as metric_err:
+            logger.warning(f"Failed to record metrics: {metric_err}")
 
 
 @router.get("/health")
