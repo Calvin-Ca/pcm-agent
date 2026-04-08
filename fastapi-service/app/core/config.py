@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     MYSQL_PORT: int = 3306
     MYSQL_DATABASE: str = "workhour"
     MYSQL_USER: str = "root"
-    MYSQL_PASSWORD: str = "19990512"
+    MYSQL_PASSWORD: str = ""
     
     # Redis配置
     REDIS_HOST: str = "localhost"
