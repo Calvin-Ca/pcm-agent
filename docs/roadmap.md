@@ -400,28 +400,31 @@ qwen-plus 支持 OpenAI 兼容的 `tools` 参数（函数调用），可以在 *
       ├── user_memory.py: _tokenize 换 jieba（含 ImportError 降级）
       └── knowledge-base/: 新增《工时审核流程》《假期与加班政策》
 
-🟡 第二阶段（4.7 ~ 4.11）— L3：DeepSearch / 多步推理
+✅ 第二阶段（4.7 ~ 4.11）— L3：DeepSearch / 多步推理（已完成）
   ├── ✅ 激活 PlannerAgent + execution loop（2026-04-03）
   │   ├── node_llm_with_tools: ≥2 个 tool_calls → TaskPlan 并行执行
   │   ├── node_plan_and_execute: 路径A(multi_tool_calls直接执行)/路径B(PlannerAgent生成计划)
   │   ├── node_summarize: plan_results → LLM 综合分析 → 自然语言回答
   │   ├── AgentState: task_plan / plan_results 字段
   │   └── system.yaml: multi_tool_guidance 引导 LLM 一次调用多工具
-  ├── Tool 组合执行 + 结构化中间状态 context（1d）
-  │   一个问题 → 多个 Tool 串联，中间结果可追溯
-  ├── SQL Agent — 只读连接 + SQL 白名单（1.5d）
-  │   "统计各部门近三月工时趋势并排序"
-  └── 导出报表 Tool — export_report（2h）
+  ├── ✅ export_report Tool — 工时报表导出（2026-04-07）
+  │   调用 GET /api/workhour/export/project-simple，存 /tmp/workhour_exports/
+  ├── ✅ knowledge_qa / export_report / approve_workhour few-shot 消歧（2026-04-07）
+  └── ✅ Layer 3 集成测试（2026-04-07）
+      fastapi-service/tests/test_layer3_integration.py，8 个场景，通过 8/8
 
-🟢 第三阶段（4.14 ~ 4.18）— 稳定性 + 本地部署 + 监控
-  ├── LLM 本地部署 — vLLM + Qwen2.5（0.5-1d）
-  │   GPU 服务器部署推理服务，代码零改动（仅改 .env 指向本地地址）
-  │   需验证 Function Calling 兼容性（vLLM tool_calls 格式）
-  │   优势：无 API 调用成本、低延迟、数据不出内网
-  ├── Self-Reflection 机制（工具结果合理性校验，0.5d）
-  ├── Prometheus 指标收集（Task 50.1-50.3，0.5d）
-  ├── 修复数据库密码硬编码（安全风险，0.5h）
-  └── 流式 RAG 输出（知识问答不再"卡住"，0.5d）
+✅ 第三阶段（4.8）— 稳定性 + 监控 + 体验（已完成）
+  ├── ✅ 修复数据库密码硬编码（2026-04-08）
+  │   config.py MYSQL_PASSWORD 默认值清空，强制 .env 注入
+  ├── ✅ Prometheus 指标收集 + Grafana 看板（2026-04-08）
+  │   /metrics 端点 + 11 项指标 + Grafana 8 面板看板
+  │   埋点：chat.py / task_executor.py / llm_client.py / langchain_rag.py
+  ├── ✅ 流式 RAG 输出（2026-04-08）
+  │   stream_query() + langchain_rag_stream_query()
+  │   langgraph_agent 检测 execute_rag 节点时拦截改为流式输出
+  │   ⚠ 当前为"伪流式"（双次查询），后续可用 astream_events 彻底优化
+  └── ⏳ vLLM 本地部署 — 待 GPU 服务器就绪后实施
+      代码零改动，仅改 .env CHAT_LLM_API_BASE 指向本地推理服务
 
 🔵 中长期（按需）— L4/L5 方向
   ├── MCP Server 接入（工具 > 10 个时，自动发现 SpringBoot 接口）
