@@ -10,7 +10,9 @@ RUN apt-get update && apt-get install -y \
 
 # 先复制依赖文件，利用 Docker 层缓存（依赖不变时跳过 pip install）
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+# RUN pip install --no-cache-dir -default-timeout=120 --retries 10 -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+# RUN pip install --no-cache-dir -default-timeout=120 --retries 10 -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+RUN pip install -default-timeout=120 --retries 10 -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 # 复制应用代码
 COPY . .
