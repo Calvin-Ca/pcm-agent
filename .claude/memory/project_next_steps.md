@@ -1,40 +1,41 @@
 ---
 name: 当前开发优先级
-description: roadmap.md 中的修订执行顺序，截至 2026-04-01 的完成状态
+description: roadmap.md 中的修订执行顺序，截至 2026-04-07 的完成状态
 type: project
+updated: 2026-04-07
 ---
 
-参考 `docs/roadmap.md` 和 `docs/testing-plan.md`（2026-04-01 更新）：
+## ✅ 已完成 — 第一阶段（精度达标 + 业务补齐）
 
-**🟢 已完成 — 框架升级（Function Calling 改造）**
-- [x] 增强 System Prompt — 注入用户身份、强制工具调用规则（2026-04-01 加强）
-- [x] 实现 Function Calling：`llm_client.generate_with_tools()` + `node_llm_with_tools` 节点
-- [x] 简化 LangGraph 流程：图入口改为 `llm_with_tools`，`classify_intent` 降为 fallback
-- [x] 启动入口整理 + 双 env 文件支持
+- [x] Function Calling 架构改造（2026-03-31）
+- [x] System Prompt 增强、param_resolver.py、Bug 修复（2026-04-01）
+- [x] approve_workhour Tool（deptAdmin+，2026-04-03）
+- [x] jieba 中文分词接入 BM25 + 知识库新增《工时审核流程》《假期与加班政策》（2026-04-03）
+- [x] Layer 1 精度迭代至 v5：82.6%（2026-04-03）
+- [x] Layer 2 参数提取精度 v4：86.9%，有效精度 99.7%（2026-04-03）
 
-**🟢 已完成 — RAG/Milvus 修复（2026-03-31）**
-- [x] pymilvus 2.6 兼容性 monkey-patch
-- [x] DashScope embedding check_embedding_ctx_length=False
-- [x] langchain_classic.retrievers 包路径修复
+## ✅ 已完成 — 第二阶段部分（L3 DeepSearch）
 
-**🟢 已完成 — 工具级修复（2026-04-01）**
-- [x] 统一参数解析层 `param_resolver.py`（项目名→ID、成员名→ID，带进程级缓存）
-- [x] `save_workhour.py` 接入 param_resolver，修复 LLM 传项目名导致找不到项目的 bug
-- [x] `query_timesheet.py` 修复不传 memberId 返回全员数据的 bug
-- [x] `task_executor.py` 权限拒绝错误不再暴露内部 UUID
+- [x] 激活 PlannerAgent + execution loop（2026-04-03）
+  - ≥2 个 tool_calls → TaskPlan 并行执行
+  - node_plan_and_execute：路径A(multi_tool_calls直接执行)/路径B(PlannerAgent生成计划)
+  - node_summarize：plan_results → LLM 综合分析
 
-**🔴 第一优先（进行中）— 测试覆盖**
-- [ ] 生成 2000 条测试用例（用另一个模型，见 `docs/testing-plan.md` 第五节生成 Prompt）
-- [ ] 运行 Layer 1 意图分类测试，建立精度基线
-- [ ] jieba 中文分词接入 BM25（1小时，低风险）
+## 🔴 当前待做 — 第二阶段剩余（4.7 ~ 4.11）
 
-**🟡 第二优先 — 能力扩展**
-- [ ] 工时审核 Tool（approve_workhour）
-- [ ] 导出报表 Tool（export_report）
+- [ ] SQL Agent（只读连接 + SQL 白名单，1.5d）
+  "统计各部门近三月工时趋势并排序"
+- [ ] 导出报表 Tool export_report（2h）
+- [ ] Layer 1 收尾：knowledge_qa 含人名 few-shot（+2~3%，约 1h）
+- [ ] Layer 3 端到端测试（接 SpringBoot 做完整链路测试）
+
+## 🟢 第三阶段（4.14 ~ 4.18）
+
+- [ ] LLM 本地部署（vLLM + Qwen2.5）
+- [ ] Self-Reflection 机制
 - [ ] Prometheus 指标收集（Task 50.1-50.3）
-- [ ] 多轮引导式 Skill 优化（Tool 层稳定后再做）
+- [ ] 修复数据库密码硬编码（安全风险）
+- [ ] 流式 RAG 输出
 
-**数据库问题**：`ai_sessions` 表不存在 → 调用 `POST /api/init-db` 接口或启动时自动建表（待修复）
-
-**Why:** 助手"笨"的根因是意图分类架构，Function Calling 改造从根本解决了这个问题。当前重点是测试验证精度，再扩展能力。
+**Why:** Layer 2 有效精度 99.7%，主流场景（查工时/填工时/查项目）均已超 90%，系统已具备生产可用条件。
 **How to apply:** 新对话时直接按此优先级推进，不要重复已完成的工作。

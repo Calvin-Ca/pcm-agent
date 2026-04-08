@@ -139,7 +139,7 @@ services:
       - ./prompts:/app/prompts
       - ./knowledge-base:/app/knowledge-base
       - ai-service-logs:/app/logs
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     networks:
       - ai-network
     extra_hosts:
