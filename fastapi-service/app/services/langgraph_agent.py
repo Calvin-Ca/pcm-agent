@@ -646,6 +646,7 @@ async def stream_agent_response(
     log_tool_name: str = ""           # 运行时从 classify_intent 节点获取
     log_tools_called: list = []       # 记录工具调用列表，用于 tool_count
     log_ai_response: str = ""         # 收集完整的 AI 响应文本
+    _streaming_rag_active = False      # 知识问答时流式 RAG 标志
 
     # ── Task 40: 如果没有 session_id，自动生成一个 ─────────────────────────────
     from app.services.session_memory import generate_session_id
@@ -761,6 +762,7 @@ async def stream_agent_response(
                             "message": f"正在调用工具: {tool_name}...",
                         })
                     elif intent == "knowledge_qa":
+                        _streaming_rag_active = True
                         yield _format_sse("thinking", {"message": "正在搜索知识库..."})
                     else:
                         yield _format_sse("thinking", {"message": "正在生成回复..."})
@@ -784,6 +786,46 @@ async def stream_agent_response(
                         })
 
                 elif node_name == "execute_rag":
+                    # 流式 RAG：当 intent 阶段检测到 knowledge_qa 时，
+                    # 在此处拦截，改为直接流式输出 RAG 内容
+                    if _streaming_rag_active:
+                        from app.services.langchain_rag import langchain_rag_stream_query
+                        _full_response = ""
+                        _final_sources = []
+                        _final_retrieved_count = 0
+                        try:
+                            async for item in langchain_rag_stream_query(message):
+                                if item.get("type") == "chunk":
+                                    text = item.get("content", "")
+                                    _full_response += text
+                                    yield _format_sse("response", {"message": text})
+                                elif item.get("type") == "done":
+                                    _final_sources = item.get("sources", [])
+                                    _final_retrieved_count = item.get("retrieved_count", 0)
+                                elif item.get("type") == "error":
+                                    _full_response = item.get("message", "RAG 查询失败")
+                                    log_status = "error"
+                                    log_error = _full_response
+                                    yield _format_sse("error", {"message": _full_response})
+                                    break
+                        except Exception as rag_err:
+                            log_status = "error"
+                            log_error = str(rag_err)
+                            yield _format_sse("error", {"message": f"RAG 查询异常: {rag_err}"})
+                        else:
+                            # 流式结束后，附加来源信息
+                            if _final_sources:
+                                source_names = [s.get("source", "") for s in _final_sources if s.get("source")]
+                                if source_names:
+                                    yield _format_sse("response", {
+                                        "message": f"\n\n---\n📚 **来源：** " + " | ".join(source_names)
+                                    })
+                                    _full_response += f"\n\n---\n📚 **来源：** " + " | ".join(source_names)
+                            _collected_assistant_response = _full_response
+                            log_ai_response = _full_response
+                        _streaming_rag_active = False
+                        continue  # 跳过后续的普通 rag_result 处理
+
                     result = state_delta.get("rag_result")
                     error = state_delta.get("error")
                     if error or (result and not result.get("success", True)):
