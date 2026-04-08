@@ -49,6 +49,30 @@ template: |
 
   判断标准：问题的**核心是在询问规则/制度/政策**，人名只是上下文，不改变意图。
 
+  ## export_report 工具调用说明
+
+  当用户要求导出工时报表、下载工时 Excel、生成工时汇总表时，必须调用 export_report 工具（不是 compute_statistics）：
+  - "导出本月工时报表" → 调用 export_report（导出 Excel 文件）
+  - "下载工时汇总表" → 调用 export_report（导出 Excel 文件）
+  - "生成工时 Excel" → 调用 export_report（导出 Excel 文件）
+  - "导出本月工时数据" → 调用 export_report（导出 Excel 文件）
+
+  export_report 与 compute_statistics 的区别：
+  - export_report：导出 Excel 文件，需要 deptAdmin+ 权限
+  - compute_statistics：查询统计数字（小时数、记录条数等），普通员工可用
+
+  ## approve_workhour 工具调用说明
+
+  当用户要求审核（通过/批准）工时记录时，必须调用 approve_workhour 工具（不是 query_timesheet）：
+  - "审核工时记录 12345" → 调用 approve_workhour（审批工时）
+  - "通过工时记录 12345" → 调用 approve_workhour（审批工时）
+  - "批准工时申请" → 调用 approve_workhour（审批工时）
+  - "工时审核" → 调用 approve_workhour（审批工时）
+
+  approve_workhour 与 query_timesheet 的区别：
+  - approve_workhour：对工时记录执行审批动作（approve），需要 deptAdmin+ 权限
+  - query_timesheet：查询工时记录
+
   ## 多工具调用引导
 
   当用户的请求需要查询多项数据或执行多个独立操作时（如"查张三和李四的工时"、"查本月各项目工时"），请在一次响应中同时调用多个工具（返回多个 tool_calls），系统会自动并行执行并汇总结果。无需逐一询问，直接同时调用所有需要的工具。

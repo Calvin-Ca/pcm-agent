@@ -2,7 +2,7 @@
 Layer 3 集成测试
 
 前提条件：
-1. FastAPI 服务已启动（http://localhost:8000）
+1. FastAPI 服务已启动（http://localhost:8000 或自定义端口，通过 L3_BASE_URL 指定）
 2. SpringBoot 服务已启动（http://localhost:8080）
 3. .env 文件已配置 DASHSCOPE_API_KEY
 
@@ -29,18 +29,21 @@ TEST_ENTITY_TYPE = os.getenv("L3_ENTITY_TYPE", "employee")
 
 
 def make_headers(entity_type: str = None) -> dict:
-    return {
+    headers = {
         "Content-Type": "application/json",
         "X-User-ID": TEST_USER_ID,
         "X-Entity-Type": entity_type or TEST_ENTITY_TYPE,
         "X-Department-ID": "1",
-        "Authorization": f"Bearer {TEST_TOKEN}",
     }
+    if TEST_TOKEN:
+        headers["Authorization"] = f"Bearer {TEST_TOKEN}"
+    return headers
 
 
 def chat(message: str, entity_type: str = None) -> dict:
     """发送聊天请求（非流式）并返回响应"""
-    with httpx.Client(timeout=60.0) as client:
+    # trust_env=False 确保测试绕过 HTTP_PROXY，直接连接 localhost
+    with httpx.Client(timeout=60.0, trust_env=False) as client:
         response = client.post(
             f"{BASE_URL}/api/ai/chat",
             headers=make_headers(entity_type),

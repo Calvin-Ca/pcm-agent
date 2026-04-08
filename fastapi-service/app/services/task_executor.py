@@ -304,6 +304,14 @@ class TaskExecutor:
                         "工时审核权限不足：需要部门管理员角色，或担任至少一个项目的项目负责人"
                     )
 
+            elif task.tool_name == 'export_report':
+                # 导出报表权限：仅部门管理员及以上角色可调用
+                ADMIN_ROLES = {"deptAdmin", "regionAdmin", "companyAdmin", "superAdmin"}
+                if permission_context.entity_type not in ADMIN_ROLES:
+                    raise PermissionError(
+                        "权限不足：导出报表需要部门管理员及以上角色"
+                    )
+
         # 执行工具
         logger.info(f"执行工具: {task.tool_name}, 参数: {processed_params}")
         

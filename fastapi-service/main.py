@@ -59,9 +59,13 @@ async def lifespan(app: FastAPI):
     # 启动时初始化
     try:
         # 初始化数据库表（幂等，表已存在时不报错）
-        from app.services.database import get_db_service
-        get_db_service().create_tables()
-        logger.info("✅ Database tables ready")
+        # 数据库不可用时降级，不影响核心 AI 功能
+        try:
+            from app.services.database import get_db_service
+            get_db_service().create_tables()
+            logger.info("✅ Database tables ready")
+        except Exception as db_err:
+            logger.warning(f"⚠️  数据库不可用，审计日志功能将降级: {db_err}")
 
         # 初始化工具注册中心
         tool_registry = ToolRegistry()
@@ -116,8 +120,8 @@ async def lifespan(app: FastAPI):
         logger.info("✅ Chat components initialized")
 
         # 初始化 LangChain RAG 服务（混合检索：Milvus + BM25）
-        # knowledge-base 相对于本文件所在目录的上一层（ai-service/）
-        _kb_path = os.path.join(os.path.dirname(__file__), "..", "knowledge-base")
+        # knowledge-base 在本文件所在目录的子目录（ai-service/fastapi-service/knowledge-base）
+        _kb_path = os.path.join(os.path.dirname(__file__), "knowledge-base")
         kb_result = await initialize_langchain_rag(kb_path=_kb_path)
         if kb_result.get("success"):
             logger.info(
