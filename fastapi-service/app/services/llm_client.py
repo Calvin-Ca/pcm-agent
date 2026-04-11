@@ -34,6 +34,7 @@ class LLMClient:
         temperature: float = 0.7,
         max_tokens: int = 2000,
         env_prefix: str = "CHAT_LLM",
+        extra: dict = None,
     ):
         self.api_key = api_key or os.getenv(f"{env_prefix}_API_KEY", "")
         self.api_base = api_base or os.getenv(
@@ -41,6 +42,7 @@ class LLMClient:
             "https://dashscope.aliyuncs.com/compatible-mode/v1",
         )
         self.model = model or os.getenv(f"{env_prefix}_MODEL", "qwen-plus")
+        self.extra = extra or {}
         self.default_temperature = temperature
         self.default_max_tokens = max_tokens
 
@@ -54,6 +56,7 @@ class LLMClient:
         temperature: float = None,
         max_tokens: int = None,
         system_prompt: str = None,
+        extra: dict = None,
     ) -> str:
         """
         非流式调用 LLM。
@@ -64,6 +67,7 @@ class LLMClient:
             temperature: 温度参数
             max_tokens: 最大 token 数
             system_prompt: 系统提示词
+            extra: 额外参数（如 num_ctx、think 等）
 
         Returns:
             str: LLM 返回的文本
@@ -79,6 +83,8 @@ class LLMClient:
             "messages": msgs,
             "temperature": temperature if temperature is not None else self.default_temperature,
             "max_tokens": max_tokens or self.default_max_tokens,
+            **self.extra,
+            **(extra or {}),
         }
 
         headers = {
@@ -125,6 +131,7 @@ class LLMClient:
         temperature: float = None,
         max_tokens: int = None,
         system_prompt: str = None,
+        extra: dict = None,
     ) -> AsyncGenerator[str, None]:
         """
         流式调用 LLM，逐 token 返回。
@@ -151,6 +158,8 @@ class LLMClient:
             "temperature": temperature if temperature is not None else self.default_temperature,
             "max_tokens": max_tokens or self.default_max_tokens,
             "stream": True,
+            **self.extra,
+            **(extra or {}),
         }
 
         headers = {
@@ -189,6 +198,7 @@ class LLMClient:
         tool_choice: str = "auto",
         temperature: float = 0.1,
         max_tokens: int = 500,
+        extra: dict = None,
     ) -> Dict[str, Any]:
         """
         Function Calling 调用，一次完成意图识别 + 参数提取。
@@ -209,6 +219,8 @@ class LLMClient:
             "tool_choice": tool_choice,
             "temperature": temperature,
             "max_tokens": max_tokens,
+            **self.extra,
+            **(extra or {}),
         }
         headers = {
             "Authorization": f"Bearer {self.api_key}",

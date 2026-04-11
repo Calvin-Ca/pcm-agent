@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     CHAT_LLM_MODEL: str = "qwen-plus"
     CHAT_LLM_TEMPERATURE: float = 0.7
     CHAT_LLM_MAX_TOKENS: int = 2000
+    LLM_NUM_CTX_SHORT: int = 4096   # 短对话（历史 ≤2000 字）
+    LLM_NUM_CTX_LONG: int = 8192    # 长对话（历史 >2000 字）
 
     # 任务规划 LLM配置（可选，默认复用主对话配置）
     PLANNER_LLM_API_KEY: str = ""

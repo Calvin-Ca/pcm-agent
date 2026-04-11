@@ -129,7 +129,8 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
     )
     request_headers: Dict[str, str] = {}
     if auth_token:
-        request_headers["Authorization"] = auth_token
+        token = auth_token if auth_token.startswith("Bearer ") else f"Bearer {auth_token}"
+        request_headers["Authorization"] = token
 
     # 2a. 解析 project_id：LLM 可能填入项目名称（如"AI平台"），需转换为数字 ID
     resolved_project_id, project_err = await resolve_project_id(project_id, auth_token, base_url)

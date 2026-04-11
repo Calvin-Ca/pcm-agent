@@ -136,7 +136,8 @@ async def _search_project_by_name(
     """
     headers: Dict[str, str] = {}
     if auth_token:
-        headers["Authorization"] = auth_token
+        token = auth_token if auth_token.startswith("Bearer ") else f"Bearer {auth_token}"
+        headers["Authorization"] = token
 
     try:
         url = f"{base_url}/api/project-infos"
@@ -196,7 +197,8 @@ async def _lookup_member_by_name(
     """
     headers: Dict[str, str] = {}
     if auth_token:
-        headers["Authorization"] = auth_token
+        token = auth_token if auth_token.startswith("Bearer ") else f"Bearer {auth_token}"
+        headers["Authorization"] = token
 
     try:
         url = f"{base_url}/thsuaa/api/sys-users"

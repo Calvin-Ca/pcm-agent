@@ -124,12 +124,22 @@ services:
       - MYSQL_DATABASE=workhour
       - MYSQL_USER=root
       - MYSQL_PASSWORD=19990512
-      - INTENT_LLM_API_KEY=${INTENT_LLM_API_KEY}
-      - INTENT_LLM_API_BASE=${INTENT_LLM_API_BASE}
-      - INTENT_LLM_MODEL=${INTENT_LLM_MODEL}
-      - CHAT_LLM_API_KEY=${CHAT_LLM_API_KEY}
-      - CHAT_LLM_API_BASE=${CHAT_LLM_API_BASE}
-      - CHAT_LLM_MODEL=${CHAT_LLM_MODEL}
+      # Ollama 本地部署（切换到此处并注释 DashScope）
+      - INTENT_LLM_API_KEY=ollama
+      - INTENT_LLM_API_BASE=http://172.19.3.136:11434/v1
+      - INTENT_LLM_MODEL=qwen3:4b
+      - CHAT_LLM_API_KEY=ollama
+      - CHAT_LLM_API_BASE=http://172.19.3.136:11434/v1
+      - CHAT_LLM_MODEL=qwen3:8b
+      # RAG Embedding 专用（固定用 DashScope，Ollama 量化 embedding 质量不足）
+      - DASHSCOPE_API_KEY=sk-73e6c97a1fec4192af6258102603da5f
+      # DashScope 云端（切换到此处并注释 Ollama）
+      # - INTENT_LLM_API_KEY=${INTENT_LLM_API_KEY}
+      # - INTENT_LLM_API_BASE=${INTENT_LLM_API_BASE}
+      # - INTENT_LLM_MODEL=${INTENT_LLM_MODEL}
+      # - CHAT_LLM_API_KEY=${CHAT_LLM_API_KEY}
+      # - CHAT_LLM_API_BASE=${CHAT_LLM_API_BASE}
+      # - CHAT_LLM_MODEL=${CHAT_LLM_MODEL}
       - SPRINGBOOT_BASE_URL=https://gst.thsware.com
       # - SPRINGBOOT_BASE_URL=http://host.docker.internal:8080  # 本地开发时切换此行
     ports:

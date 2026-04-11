@@ -110,7 +110,9 @@ async def query_timesheet_handler(**kwargs) -> Dict[str, Any]:
         # 构建请求头（含认证 token）
         request_headers = {}
         if auth_token:
-            request_headers["Authorization"] = auth_token
+            # 避免重复的 "Bearer " 前缀
+            token = auth_token if auth_token.startswith("Bearer ") else f"Bearer {auth_token}"
+            request_headers["Authorization"] = token
 
         # Docker 容器内访问宿主机 SpringBoot 服务
         import os
@@ -314,7 +316,7 @@ def register_query_timesheet_tool():
     try:
         tool_registry.register_tool(
             name="query_timesheet",
-            description="查询某人或某时间段的工时记录明细（适用：查工时/看工时/工时情况/统计某人工时/查某项目工时）。project_id 和 member_name 可直接填名称，系统自动解析。若需跨多人/多部门对比统计，请用 compute_statistics。",
+            description="查询工时填报明细记录，返回具体的每条工时条目（日期、项目、小时数）。适用于：查某人/自己的工时记录明细、查某个时间段的填报情况。不返回汇总统计数字。",
             json_schema=QUERY_TIMESHEET_SCHEMA,
             handler=query_timesheet_handler,
             category=ToolCategory.DATA_QUERY,

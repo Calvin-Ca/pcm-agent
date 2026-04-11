@@ -89,7 +89,8 @@ async def query_project_handler(**kwargs) -> Dict[str, Any]:
 
         request_headers = {}
         if auth_token:
-            request_headers["Authorization"] = auth_token
+            token = auth_token if auth_token.startswith("Bearer ") else f"Bearer {auth_token}"
+            request_headers["Authorization"] = token
 
         if not params.project_id:
             # 无 project_id，返回项目列表（含可填报项目）

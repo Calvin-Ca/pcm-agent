@@ -214,18 +214,50 @@ class LangChainRAGService:
             logger.warning("未配置 CHAT_LLM_API_KEY，RAG 服务不可用")
             return
 
-        # 1. 初始化 Embeddings（DashScope text-embedding-v2，OpenAI 兼容）
+        # 1. 初始化 Embeddings
         from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
-        # langchain-openai: OpenAIEmbeddings 用 openai_api_key / openai_api_base
-        self.embeddings = OpenAIEmbeddings(
-            model="text-embedding-v2",
-            openai_api_key=api_key,
-            openai_api_base=api_base,
-            chunk_size=20,                    # DashScope 单批最多 25 条
-            check_embedding_ctx_length=False, # DashScope 不接受 token ID 数组，必须发原始文本
-        )
-        logger.info("Embeddings 初始化完成（DashScope text-embedding-v2）")
+        # ── Embedding 模型选择（"ollama" / "vllm" / "dashscope"）───────────────
+        # vLLM bge-large-zh-v1.5（推荐）：Recall@5=100%，冷启动 0.07s，18ms/query
+        # Ollama qwen3-embedding:8b：Recall@5=75%，冷启动 2.6s，155ms/query（不推荐）
+        # DashScope text-embedding-v2：FP16，1536 维，云端 API 无冷启动
+        USE_EMBEDDING = "vllm"   # ← 切换时改这里
+
+        if USE_EMBEDDING == "vllm":
+            self.embeddings = OpenAIEmbeddings(
+                model="/model",
+                openai_api_key="EMPTY",
+                openai_api_base="http://172.19.3.136:8097/v1",
+                chunk_size=100,
+                check_embedding_ctx_length=False,
+            )
+            logger.info("Embeddings 初始化完成（vLLM bge-large-zh-v1.5, dim=1024）")
+        elif USE_EMBEDDING == "ollama":
+            ollama_api_key = os.getenv("CHAT_LLM_API_KEY", "ollama")
+            ollama_api_base = os.getenv("CHAT_LLM_API_BASE", "http://172.19.3.136:11434/v1")
+            self.embeddings = OpenAIEmbeddings(
+                model="qwen3-embedding:8b",
+                openai_api_key=ollama_api_key,
+                openai_api_base=ollama_api_base,
+                chunk_size=100,
+                check_embedding_ctx_length=False,
+            )
+            logger.info("Embeddings 初始化完成（Ollama qwen3-embedding:8b, dim=4096）")
+        else:
+            dashscope_api_key = os.getenv("DASHSCOPE_API_KEY", "")
+            dashscope_api_base = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+            if dashscope_api_key:
+                self.embeddings = OpenAIEmbeddings(
+                    model="text-embedding-v2",
+                    openai_api_key=dashscope_api_key,
+                    openai_api_base=dashscope_api_base,
+                    chunk_size=20,
+                    check_embedding_ctx_length=False,
+                )
+                logger.info("Embeddings 初始化完成（DashScope text-embedding-v2, dim=1536）")
+            else:
+                logger.warning("未配置 Embedding API Key，RAG 服务降级")
+                return
 
         # 2. 初始化 LLM
         # langchain-openai: ChatOpenAI 用 openai_api_key / openai_api_base
@@ -264,36 +296,53 @@ class LangChainRAGService:
         )
         logger.info("混合检索器（EnsembleRetriever）初始化完成")
 
-        # 6. MultiQueryRetriever：让 LLM 将用户问题改写为多种表述，提升召回率
-        try:
-            from langchain_classic.retrievers.multi_query import MultiQueryRetriever
+        # ── MultiQueryRetriever 开关 ───────────────────────────────────────────
+        # 设置为 True 启用多查询检索（提升召回率，但显著增加 TTFT）
+        # 设置为 False 跳过 LLM 改写，直接用 EnsembleRetriever（TTFT 更低）
+        USE_MULTI_QUERY = False  # ← 切换时改这里
 
-            self.multi_query_retriever = MultiQueryRetriever.from_llm(
-                retriever=self.ensemble_retriever,
-                llm=self.llm,
-            )
-            logger.info("MultiQueryRetriever 初始化完成（基于混合检索器）")
-        except Exception as e:
-            logger.warning(f"MultiQueryRetriever 初始化失败，降级为普通混合检索: {e}")
+        if USE_MULTI_QUERY:
+            try:
+                from langchain_classic.retrievers.multi_query import MultiQueryRetriever
+
+                self.multi_query_retriever = MultiQueryRetriever.from_llm(
+                    retriever=self.ensemble_retriever,
+                    llm=self.llm,
+                )
+                logger.info("MultiQueryRetriever 初始化完成（基于混合检索器）")
+            except Exception as e:
+                logger.warning(f"MultiQueryRetriever 初始化失败，降级为普通混合检索: {e}")
+                self.multi_query_retriever = None
+        else:
             self.multi_query_retriever = None
+            logger.info("MultiQueryRetriever 已禁用（USE_MULTI_QUERY=False），直接使用 EnsembleRetriever")
 
         self._initialized = True
         backend = "Milvus" if self._use_milvus else "FAISS"
         logger.info(f"✅ LangChain RAG 服务初始化完成（向量后端: {backend}，文档块: {len(documents)}）")
 
-        # 7. 初始化 CrossEncoderReranker（精排）
-        try:
-            from langchain_classic.retrievers.document_compressors import CrossEncoderReranker
-            from langchain_community.cross_encoders import HuggingFaceCrossEncoder
+        # ── CrossEncoder Reranker（精排）切换开关 ──────────────────────────────────
+        # 设置为 True 启用精排（提升答案质量，但增加 TTFT）
+        # 设置为 False 跳过精排，直接用 EnsembleRetriever 结果（TTFT 更低）
+        USE_RERANKER = False  # ← 切换时改这里
 
-            model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-base")
-            self.reranker = CrossEncoderReranker(model=model, top_n=5)
-            self._reranker_enabled = True
-            logger.info("CrossEncoderReranker 初始化完成（BAAI/bge-reranker-base）")
-        except Exception as e:
-            logger.warning(f"CrossEncoderReranker 初始化失败，降级为无重排序: {e}")
+        if USE_RERANKER:
+            try:
+                from langchain_classic.retrievers.document_compressors import CrossEncoderReranker
+                from langchain_community.cross_encoders import HuggingFaceCrossEncoder
+
+                model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-base")
+                self.reranker = CrossEncoderReranker(model=model, top_n=5)
+                self._reranker_enabled = True
+                logger.info("CrossEncoderReranker 初始化完成（BAAI/bge-reranker-base）")
+            except Exception as e:
+                logger.warning(f"CrossEncoderReranker 初始化失败，降级为无重排序: {e}")
+                self.reranker = None
+                self._reranker_enabled = False
+        else:
             self.reranker = None
             self._reranker_enabled = False
+            logger.info("CrossEncoderReranker 已禁用（USE_RERANKER=False）")
 
     async def _init_vector_store(self, documents: List[Document]):
         """初始化向量存储，Milvus 优先，降级 FAISS"""
@@ -384,9 +433,12 @@ class LangChainRAGService:
         try:
             # 1. 混合检索（优先 MultiQuery，降级为普通 Ensemble）
             retriever = self.multi_query_retriever or self.ensemble_retriever
+            _t0 = _time_module.monotonic()
             docs: List[Document] = await asyncio.to_thread(
                 retriever.invoke, question
             )
+            _t1 = _time_module.monotonic()
+            logger.info(f"[RAG-Timing] 检索阶段耗时: {_t1 - _t0:.3f}s")
 
             # 2. 重排序（如果启用了 Reranker）
             if self._reranker_enabled and self.reranker and docs:
@@ -425,9 +477,12 @@ class LangChainRAGService:
                 ]
             )
             chain = prompt | self.llm | StrOutputParser()
+            _t2 = _time_module.monotonic()
             answer: str = await asyncio.to_thread(
                 chain.invoke, {"context": context, "question": question}
             )
+            _t3 = _time_module.monotonic()
+            logger.info(f"[RAG-Timing] 生成阶段耗时: {_t3 - _t2:.3f}s | 总耗时: {_t3 - _start:.3f}s")
 
             # 4. 来源去重
             sources: List[Dict[str, str]] = []
@@ -483,11 +538,17 @@ class LangChainRAGService:
             return
 
         try:
+            import time as _time_module
+            _rag_start = _time_module.monotonic()
+
             # 1. 检索阶段（同步，通常 <1s）
             yield {"type": "retrieval", "message": "正在查询知识库..."}
 
             retriever = self.multi_query_retriever or self.ensemble_retriever
+            _t0 = _time_module.monotonic()
             docs: List[Document] = await asyncio.to_thread(retriever.invoke, question)
+            _t1 = _time_module.monotonic()
+            logger.info(f"[RAG-Timing] 检索阶段耗时: {_t1 - _t0:.3f}s")
 
             if self._reranker_enabled and self.reranker and docs:
                 try:
@@ -520,9 +581,12 @@ class LangChainRAGService:
             ])
             chain = prompt | self.llm | StrOutputParser()
 
+            _t2 = _time_module.monotonic()
             async for chunk in chain.astream({"context": context, "question": question}):
                 if chunk:
                     yield {"type": "chunk", "content": chunk}
+            _t3 = _time_module.monotonic()
+            logger.info(f"[RAG-Timing] 生成阶段耗时: {_t3 - _t2:.3f}s | 流式总耗时: {_t3 - _rag_start:.3f}s")
 
             # 4. 来源信息
             sources: List[Dict[str, str]] = []

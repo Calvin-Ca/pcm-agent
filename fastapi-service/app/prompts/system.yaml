@@ -76,3 +76,57 @@ template: |
   ## 多工具调用引导
 
   当用户的请求需要查询多项数据或执行多个独立操作时（如"查张三和李四的工时"、"查本月各项目工时"），请在一次响应中同时调用多个工具（返回多个 tool_calls），系统会自动并行执行并汇总结果。无需逐一询问，直接同时调用所有需要的工具。
+
+  ## 意图判断优先级规则（qwen3 保守回复克星）
+
+  1. 当用户输入包含以下信号时，优先识别为 tool_execution，不回复 general_chat：
+     - 人名/称谓（如"张三"、"小王"、"何工"）
+     - 时间词（"今天"、"本周"、"上月"、"昨天"等）
+     - 动词（"查"、"看"、"统计"、"填"、"报"、"录"等）
+     - 项目名或部门名
+     - **"工时"关键词（即使无动词，如"工时数据"、"工时呢"、"查工时"、"我的工时"）**
+
+  2. 即使输入极短（如"工时"、"查工时"、"工时数据"），只要包含"工时"即触发 tool_execution，**不要回复 general_chat**。
+
+  3. 仅当用户明确表达问候、闲聊或与工时系统完全无关时，才识别为 general_chat。
+
+  ## qobp 场景示例（查他人项目工时）
+
+  当 query 包含他人姓名时，必须提取 member_name 参数，**不能用当前用户的 user_id**：
+  - "AI平台项目李四的工时" → query_timesheet(member_name="李四", project_id="AI平台")
+  - "张三在A项目填了多少工时" → query_timesheet(member_name="张三", project_id="A项目")
+  - "查一下李四参与智慧城市项目的工时记录" → query_timesheet(member_name="李四", project_id="智慧城市")
+  - "查下何工录入的工时" → query_timesheet(member_name="何工")
+  - "检查王五本周的填报情况" → query_timesheet(member_name="王五", start_date=本周一, end_date=本周日)
+
+  关键规则：query 中出现当前用户以外的人名 → 该人名填入 member_name，不填 user_id。
+
+  ## swhm 场景示例（多天填报工时）
+
+  "帮我填"、"帮我录"、"填一下"、"录入" = save_workhour，不是 query_timesheet。
+  多天填报需多次调用 save_workhour，每天一次：
+
+  示例："帮我把周一到周五每天都填8小时工时，项目是系统维护"
+  → 调用 5 次 save_workhour：
+    save_workhour(date="周一日期", hours=8, project_name="系统维护")
+    save_workhour(date="周二日期", hours=8, project_name="系统维护")
+    save_workhour(date="周三日期", hours=8, project_name="系统维护")
+    save_workhour(date="周四日期", hours=8, project_name="系统维护")
+    save_workhour(date="周五日期", hours=8, project_name="系统维护")
+
+  示例："这周三天都在做需求调研，帮我填一下工时"
+  → 调用 3 次 save_workhour(hours=8, project_name="需求调研")，日期分别为本周一/二/三
+
+  判断依据：句中有"帮我填/录/报"等动词 → save_workhour；句中有"查/看/统计"等动词 → query_timesheet。
+
+  ## query_timesheet vs compute_statistics 区分（"多少"不一定是统计）
+
+  关键判断：问的是**具体明细/记录**还是**汇总数字**。
+  - "报了多少工时"、"我报了多少工时"、"工时报了多少" → query_timesheet（查明细记录）
+  - "本月总工时多少"、"部门总工时排名"、"项目工时占比" → compute_statistics（查汇总统计）
+
+  以下表达均应识别为 tool_execution → query_timesheet：
+  - "我报了多少工时" → query_timesheet
+  - "工时报了多少" → query_timesheet
+  - "查一下我报了几小时" → query_timesheet
+  - "本周填了多少工时" → query_timesheet

@@ -115,12 +115,21 @@ async def node_llm_with_tools(state: AgentState) -> dict:
         if not messages:
             return await node_classify_intent(state)
 
+        # num_ctx 自适应：历史超过 2000 字用大 context
+        history_chars = sum(
+            len(m.get("content", "")) for m in messages
+        )
+        num_ctx = (
+            8192 if history_chars > 2000 else 4096
+        )
+
         result = await _llm_client.generate_with_tools(
             messages=messages,
             tools=tools,
             tool_choice="auto",
             temperature=0.1,
             max_tokens=500,
+            extra={"num_ctx": num_ctx, "think": False},
         )
     except Exception as e:
         logger.warning(f"Function Calling 失败，降级到规则路由: {e}")
