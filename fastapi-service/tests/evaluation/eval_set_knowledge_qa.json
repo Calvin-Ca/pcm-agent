@@ -1,0 +1,237 @@
+{
+  "description": "Embedding 模型对比评估集（基于 knowledge-base/*.md + knowledge_qa.json）",
+  "version": "draft-2026-04-10",
+  "notes": [
+    "本评估集用于对比不同 embedding 模型在知识库检索任务上的召回率",
+    "原则：只选'答案确实在 knowledge-base/*.md 里能找到'的 query",
+    "判命中规则：top-k 内出现至少一个 chunk 来自 expected_doc 即算命中",
+    "reviewer_confirmed: 人工 review 后设为 true；未 review 或存疑的条目会被排除",
+    "expected_keywords 是辅助人工判断用的，脚本不使用"
+  ],
+  "knowledge_base_files": [
+    "工时填报管理制度.md",
+    "假期与加班政策.md",
+    "工时审核流程.md",
+    "常见问题FAQ.md"
+  ],
+  "cases": [
+    {
+      "id": "kq_001",
+      "sub_type": "policy_deadline",
+      "query": "工时截止日期是哪天",
+      "expected_doc": "工时填报管理制度.md",
+      "expected_section": "2.1 填报时间",
+      "expected_keywords": ["次日上午10:00", "当日结束前"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_004",
+      "sub_type": "policy_deadline",
+      "query": "工时最晚几点提交",
+      "expected_doc": "工时填报管理制度.md",
+      "expected_section": "2.1 填报时间",
+      "expected_keywords": ["次日上午10:00"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_005",
+      "sub_type": "policy_deadline",
+      "query": "工时什么时候必须填完",
+      "expected_doc": "工时填报管理制度.md",
+      "expected_section": "2.1 填报时间",
+      "expected_keywords": ["工作日结束前", "次日10:00"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_008",
+      "sub_type": "policy_deadline",
+      "query": "工时填报截止时间是什么时候",
+      "expected_doc": "工时填报管理制度.md",
+      "expected_section": "2.1 填报时间",
+      "expected_keywords": ["填报时间"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_014",
+      "sub_type": "policy_deadline",
+      "query": "本月工时最晚提交日期是哪天",
+      "expected_doc": "工时填报管理制度.md",
+      "expected_section": "工时填报要求",
+      "expected_keywords": ["次月 5 日前"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_021",
+      "sub_type": "policy_deadline",
+      "query": "工时填报有截止时间吗",
+      "expected_doc": "工时填报管理制度.md",
+      "expected_section": "2.1 填报时间",
+      "expected_keywords": ["逾期填报", "审批"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_017",
+      "sub_type": "policy_deadline",
+      "query": "本月工时截止是哪天",
+      "expected_doc": "工时填报管理制度.md",
+      "expected_section": "2.1 填报时间",
+      "expected_keywords": ["次月 5 日前"],
+      "reviewer_confirmed": true
+    },
+
+    {
+      "id": "kq_061",
+      "sub_type": "policy_rules",
+      "query": "加班怎么算",
+      "expected_doc": "假期与加班政策.md",
+      "expected_section": "加班政策",
+      "expected_keywords": ["工作日加班", "节假日", "周末"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_063",
+      "sub_type": "policy_rules",
+      "query": "周末加班有双倍工资吗",
+      "expected_doc": "假期与加班政策.md",
+      "expected_section": "加班政策",
+      "expected_keywords": ["周末加班", "2 倍工资"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_069",
+      "sub_type": "policy_rules",
+      "query": "法定节假日上班怎么算薪资",
+      "expected_doc": "假期与加班政策.md",
+      "expected_section": "加班政策",
+      "expected_keywords": ["节假日加班", "3 倍工资"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_075",
+      "sub_type": "policy_rules",
+      "query": "加班费怎么算",
+      "expected_doc": "假期与加班政策.md",
+      "expected_section": "加班政策",
+      "expected_keywords": ["2 倍", "3 倍", "加班"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_082",
+      "sub_type": "policy_rules",
+      "query": "节假日加班是三倍工资吗",
+      "expected_doc": "假期与加班政策.md",
+      "expected_section": "加班政策",
+      "expected_keywords": ["节假日", "3 倍"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_065",
+      "sub_type": "policy_rules",
+      "query": "年假有多少天",
+      "expected_doc": "假期与加班政策.md",
+      "expected_section": "年假政策",
+      "expected_keywords": ["工龄", "年假天数"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_097",
+      "sub_type": "policy_rules",
+      "query": "调休有效期是多久",
+      "expected_doc": "假期与加班政策.md",
+      "expected_section": "调休政策",
+      "expected_keywords": ["6 个月"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_068",
+      "sub_type": "policy_rules",
+      "query": "加班可以换调休吗",
+      "expected_doc": "假期与加班政策.md",
+      "expected_section": "加班政策",
+      "expected_keywords": ["调休", "协商换"],
+      "reviewer_confirmed": true
+    },
+
+    {
+      "id": "kq_144",
+      "sub_type": "system_usage",
+      "query": "怎么填写工时",
+      "expected_doc": "常见问题FAQ.md",
+      "expected_section": "Q1: 如何填报工时",
+      "expected_keywords": ["工时填报", "选择项目"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_143",
+      "sub_type": "system_usage",
+      "query": "怎么查看工时记录",
+      "expected_doc": "常见问题FAQ.md",
+      "expected_section": "Q5: 如何查询我的工时记录",
+      "expected_keywords": ["工时查询", "日期范围"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_148",
+      "sub_type": "system_usage",
+      "query": "怎么导出工时报表",
+      "expected_doc": "常见问题FAQ.md",
+      "expected_section": "Q7: 如何导出工时报表",
+      "expected_keywords": ["导出", "Excel"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_154",
+      "sub_type": "system_usage",
+      "query": "已提交的工时还能修改吗",
+      "expected_doc": "常见问题FAQ.md",
+      "expected_section": "Q3: 可以修改已提交的工时吗",
+      "expected_keywords": ["修改", "项目经理", "管理员"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_156",
+      "sub_type": "system_usage",
+      "query": "怎么查看团队成员的工时",
+      "expected_doc": "常见问题FAQ.md",
+      "expected_section": "Q6: 可以查看其他人的工时吗",
+      "expected_keywords": ["项目经理", "管理员"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_158",
+      "sub_type": "system_usage",
+      "query": "怎么添加新项目",
+      "expected_doc": "常见问题FAQ.md",
+      "expected_section": "Q8: 如何创建新项目",
+      "expected_keywords": ["新建项目", "项目经理"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_160",
+      "sub_type": "system_usage",
+      "query": "怎么给项目分配成员",
+      "expected_doc": "常见问题FAQ.md",
+      "expected_section": "Q9: 项目成员如何分配",
+      "expected_keywords": ["项目经理", "项目详情"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_180",
+      "sub_type": "system_usage",
+      "query": "忘记密码怎么找回",
+      "expected_doc": "常见问题FAQ.md",
+      "expected_section": "Q14: 忘记密码怎么办",
+      "expected_keywords": ["忘记密码", "系统管理员"],
+      "reviewer_confirmed": true
+    },
+    {
+      "id": "kq_178",
+      "sub_type": "system_usage",
+      "query": "遇到系统问题怎么反馈",
+      "expected_doc": "常见问题FAQ.md",
+      "expected_section": "Q15: 遇到系统问题如何反馈",
+      "expected_keywords": ["意见反馈", "support@"],
+      "reviewer_confirmed": true
+    }
+  ]
+}
