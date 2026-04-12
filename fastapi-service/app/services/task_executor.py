@@ -325,11 +325,21 @@ class TaskExecutor:
             # 使用asyncio.wait_for确保工具执行也有超时控制
             import asyncio as _asyncio
             import inspect
+
+            # 为 sql_query 工具注入 permission_context（handler 需要 user_id/entity_type）
+            exec_params = dict(processed_params)
+            if task.tool_name == "sql_query" and permission_context:
+                exec_params["context"] = {
+                    "user_id": permission_context.user_id,
+                    "entity_type": permission_context.entity_type,
+                    "department_id": permission_context.department_id,
+                }
+
             if inspect.iscoroutinefunction(handler):
-                coro = handler(**processed_params)
+                coro = handler(**exec_params)
             else:
                 coro = _asyncio.get_event_loop().run_in_executor(
-                    None, lambda: handler(**processed_params)
+                    None, lambda: handler(**exec_params)
                 )
             result = await asyncio.wait_for(coro, timeout=task.timeout)
 
