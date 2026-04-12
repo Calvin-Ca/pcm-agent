@@ -30,8 +30,9 @@ from app.api.conversation_query import router as conversation_query_router
 from app.services.tool_registry import ToolRegistry
 from app.services.permission_validator import PermissionValidator
 from app.services.llm_client import LLMClient
-from app.tools import query_timesheet, query_project, compute_statistics
+from app.tools import query_timesheet, query_project, compute_statistics, sql_query
 from app.services.langchain_rag import initialize_langchain_rag
+from app.services.sql_engine import sql_engine
 from app.services.session_memory import initialize_session_memory
 from app.services.user_memory import initialize_user_memory
 from app.services.prompt_builder import initialize_prompt_builder, get_prompt_builder
@@ -51,7 +52,7 @@ async def lifespan(app: FastAPI):
     """应用生命周期管理"""
     global tool_registry, permission_validator
     
-    logger.info("🚀 AI Service starting...")
+    logger.info("[ AI Service starting...")
     logger.info(f"Environment: {settings.ENVIRONMENT}")
     logger.info(f"Chat LLM Model: {settings.CHAT_LLM_MODEL}")
 
@@ -64,24 +65,24 @@ async def lifespan(app: FastAPI):
         try:
             from app.services.database import get_db_service
             get_db_service().create_tables()
-            logger.info("✅ Database tables ready")
+            logger.info("[OK] Database tables ready")
         except Exception as db_err:
-            logger.warning(f"⚠️  数据库不可用，审计日志功能将降级: {db_err}")
+            logger.warning(f"[WARN]  数据库不可用，审计日志功能将降级: {db_err}")
 
         # 初始化工具注册中心
         tool_registry = ToolRegistry()
-        logger.info("✅ Tool Registry initialized")
+        logger.info("[OK] Tool Registry initialized")
 
         # 注册工具（导入工具模块会触发自动注册）
-        logger.info("✅ Tools registered")
+        logger.info("[OK] Tools registered")
 
         # 初始化权限验证器
         permission_validator = PermissionValidator()
-        logger.info("✅ Permission Validator initialized")
+        logger.info("[OK] Permission Validator initialized")
 
         # 初始化 LLM 客户端
         llm_client = LLMClient(env_prefix="CHAT_LLM")
-        logger.info(f"✅ LLM Client initialized (model: {llm_client.model})")
+        logger.info(f"[OK] LLM Client initialized (model: {llm_client.model})")
 
         # ── Task 37/38: 初始化 Redis 连接和记忆服务 ──────────────────────────
         try:
@@ -94,7 +95,7 @@ async def lifespan(app: FastAPI):
                 decode_responses=False,  # 保持 bytes，service 层自行解码
             )
             await redis_client.ping()
-            logger.info(f"✅ Redis 连接成功 ({settings.REDIS_HOST}:{settings.REDIS_PORT})")
+            logger.info(f"[OK] Redis 连接成功 ({settings.REDIS_HOST}:{settings.REDIS_PORT})")
 
             initialize_session_memory(
                 redis_client=redis_client,
@@ -110,7 +111,7 @@ async def lifespan(app: FastAPI):
                 user_memory_service=get_user_memory(),
             )
         except Exception as redis_err:
-            logger.warning(f"⚠️  Redis 不可用，记忆功能将降级: {redis_err}")
+            logger.warning(f"[WARN]  Redis 不可用，记忆功能将降级: {redis_err}")
 
         initialize_chat_components(
             tool_reg=tool_registry,
@@ -118,7 +119,15 @@ async def lifespan(app: FastAPI):
             llm_client=llm_client,
             prompt_builder=get_prompt_builder(),
         )
-        logger.info("✅ Chat components initialized")
+        logger.info("[OK] Chat components initialized")
+
+        # 初始化 SQL Engine（SQL Agent）
+        if settings.SQL_AGENT_ENABLED:
+            try:
+                await sql_engine.initialize()
+                logger.info("[OK] SQL Engine initialized")
+            except Exception as sql_err:
+                logger.warning(f"[WARN]  SQL Engine 初始化失败，SQL Agent 功能将不可用: {sql_err}")
 
         # 初始化 LangChain RAG 服务（混合检索：Milvus + BM25）
         # knowledge-base 在本文件所在目录的子目录（ai-service/fastapi-service/knowledge-base）
@@ -126,11 +135,11 @@ async def lifespan(app: FastAPI):
         kb_result = await initialize_langchain_rag(kb_path=_kb_path)
         if kb_result.get("success"):
             logger.info(
-                f"✅ LangChain RAG initialized: {kb_result.get('loaded_files', 0)} files, "
+                f"[OK] LangChain RAG initialized: {kb_result.get('loaded_files', 0)} files, "
                 f"{kb_result.get('total_chunks', 0)} chunks"
             )
         else:
-            logger.warning(f"⚠️  LangChain RAG init failed: {kb_result.get('error', 'unknown')}")
+            logger.warning(f"[WARN]  LangChain RAG init failed: {kb_result.get('error', 'unknown')}")
 
         logger.info("🎉 AI Service startup completed successfully")
 
@@ -143,16 +152,19 @@ async def lifespan(app: FastAPI):
         })
 
     except Exception as e:
-        logger.error(f"❌ Failed to initialize AI Service: {e}", exc_info=True)
+        logger.error(f"[ERROR] Failed to initialize AI Service: {e}", exc_info=True)
         raise
 
     yield
 
     # 关闭时清理
-    logger.info("🛑 AI Service shutting down...")
+    logger.info("[ AI Service shutting down...")
     if redis_client:
         await redis_client.aclose()
-        logger.info("✅ Redis 连接已关闭")
+        logger.info("[OK] Redis 连接已关闭")
+    if settings.SQL_AGENT_ENABLED:
+        await sql_engine.close()
+        logger.info("[OK] SQL Engine closed")
 
 
 # 创建FastAPI应用

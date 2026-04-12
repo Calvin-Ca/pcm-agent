@@ -50,6 +50,23 @@ class Settings(BaseSettings):
     # Milvus配置
     MILVUS_HOST: str = "localhost"
     MILVUS_PORT: int = 19530
+
+    # SQL Agent 数据库配置（独立于现有 MYSQL_* 配置，空 = 复用 MYSQL_*）
+    SQL_AGENT_DB_HOST: str = ""
+    SQL_AGENT_DB_PORT: int = 0
+    SQL_AGENT_DB_NAME: str = ""
+    SQL_AGENT_DB_USER: str = ""
+    SQL_AGENT_DB_PASSWORD: str = ""
+
+    # SQL Agent LLM 配置（独立于 CHAT_LLM，允许指向更强模型）
+    SQL_AGENT_LLM_API_KEY: str = ""
+    SQL_AGENT_LLM_API_BASE: str = ""
+    SQL_AGENT_LLM_MODEL: str = ""
+
+    # SQL Agent 安全配置
+    SQL_AGENT_ENABLED: bool = True
+    SQL_AGENT_MAX_ROWS: int = 500
+    SQL_AGENT_QUERY_TIMEOUT: int = 30
     
     # 会话配置
     SESSION_EXPIRE_SECONDS: int = 1800  # 30分钟
