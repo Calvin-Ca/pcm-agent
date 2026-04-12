@@ -40,14 +40,19 @@ template: |
 
   ## knowledge_qa 工具调用说明
 
-  当用户询问工时制度、政策、规则、流程时，必须调用 knowledge_qa 工具，即使问题中包含人名：
+  当用户询问工时制度、政策、规则、流程、假期福利、系统使用问题时，必须调用 knowledge_qa 工具，即使问题中包含人名：
   - "周建国，请问工时截止还剩几天" → 调用 knowledge_qa（询问截止日期规则）
   - "李明本周工时截止几号" → 调用 knowledge_qa（询问截止日期）
   - "陈经工时截止日期到了吗" → 调用 knowledge_qa（询问截止规则）
   - "张三问我加班算不算工时" → 调用 knowledge_qa（询问加班政策）
   - "帮我查一下请假期间要填工时吗" → 调用 knowledge_qa（询问请假政策）
+  - "请问陪产假有几天" → 调用 knowledge_qa（询问假期福利）
+  - "王芳，帮我瞧瞧哺乳期有什么福利呗" → 调用 knowledge_qa（询问福利政策）
+  - "请问岗位津贴多少" → 调用 knowledge_qa（询问薪酬福利规则）
+  - "李明，请问怎么登录系统" → 调用 knowledge_qa（询问系统使用）
+  - "刘工怎么申请请假" → 调用 knowledge_qa（询问请假流程）
 
-  判断标准：问题的**核心是在询问规则/制度/政策**，人名只是上下文，不改变意图。
+  判断标准：问题的**核心是在询问规则/制度/政策/流程**，人名只是上下文，不改变意图。
 
   ## export_report 工具调用说明
 
@@ -130,3 +135,100 @@ template: |
   - "工时报了多少" → query_timesheet
   - "查一下我报了几小时" → query_timesheet
   - "本周填了多少工时" → query_timesheet
+
+  ## qsm_ 场景消歧（本月工时查询，即使含"统计/汇总/算"等词）
+
+  以下表达即使含有"统计"、"汇总"、"算"、"工作量"、"工时统计"等词，只要问的是本人工时明细记录，仍归 query_timesheet（不是 compute_statistics）：
+  - "本月填报" → query_timesheet
+  - "本月工作量" → query_timesheet
+  - "本月工时汇总" → query_timesheet
+  - "汇总一下本月工时" → query_timesheet
+  - "帮我统计一下本月的工时" → query_timesheet
+  - "统计一下本月工时" → query_timesheet
+  - "本月统计" → query_timesheet
+  - "算一下本月工时" → query_timesheet
+  - "请帮我统计一下本月的工时数据" → query_timesheet
+  - "请查询我本月填报的工时统计" → query_timesheet
+  - "帮我统计一下本月的工时情况" → query_timesheet
+  - "本月总工时" → query_timesheet（注意："本月总工时多少"才归 compute_statistics）
+  - "瞅一眼本月填了多少" → query_timesheet
+  - "瞧瞧本月填了多少" → query_timesheet
+  - "帮我看看本月一共填了多少小时的工时" → query_timesheet
+  - "这月填了多少工时" → query_timesheet
+  - "查查看本月填了多少" → query_timesheet
+  - "查下本月填了多少" → query_timesheet
+  - "拉一下本月工时数据" → query_timesheet
+
+  极短查询处理（"本月"不是闲聊）：
+  - "本月" → tool_execution（查询本月工时，不是闲聊）
+  - "本月?" → tool_execution（查询本月工时）
+
+  ## qsbp_ 场景（按项目查工时，无动词短句）
+
+  以下表达即使没有明确动词，也应识别为 query_timesheet（不是 compute_statistics）：
+  - "AI平台项目工时" → query_timesheet(project_id="AI平台")
+  - "智慧办公项目工时" → query_timesheet(project_id="智慧办公")
+  - "数据中台项目工时" → query_timesheet(project_id="数据中台")
+  - "某项目工时" → query_timesheet(project_id="某项目")
+
+  关键：仅有"某项目名+工时"（无"统计/汇总/排名"等词）→ query_timesheet
+
+  ## qspm_ 场景消歧（上周/上月工时查询，即使含"统计/汇总/算/多少"等词）
+
+  以下表达即使含有"统计"、"汇总"、"算"、"工作量"、"多少"等词，只要问的是本人工时明细记录，仍归 query_timesheet（不是 compute_statistics）：
+  - "上月填报" → query_timesheet
+  - "上月工作量" → query_timesheet
+  - "上月工时汇总" → query_timesheet
+  - "汇总一下上月工时" → query_timesheet
+  - "帮我统计一下上月的工时" → query_timesheet
+  - "统计一下上月工时" → query_timesheet
+  - "上月统计" → query_timesheet
+  - "算一下上月工时" → query_timesheet
+  - "请帮我统计一下上月的工时数据" → query_timesheet
+  - "上月总工时" → query_timesheet
+  - "看看上个月的工作时长" → query_timesheet
+  - "上月填了多少" → query_timesheet
+  - "查下上月填了多少" → query_timesheet
+  - "前月填了多少工时" → query_timesheet
+  - "核对一下上月工时" → query_timesheet
+  - "检查一下上月工时" → query_timesheet
+  - "拉一下上月工时数据" → query_timesheet
+  - "帮我看看上月一共填了多少小时的工时" → query_timesheet
+  - "请查询我上月填报的工时统计" → query_timesheet
+
+  极短查询处理（"上月/上个月/前月"不是闲聊）：
+  - "上月" → tool_execution（查询上月工时，不是闲聊）
+  - "上个月" → tool_execution（查询上个月工时）
+  - "前月" → tool_execution（查询前月工时）
+
+  ## qsw_ 场景消歧（本周工时查询，即使含"统计/汇总/算/多少"等词）
+
+  以下表达即使含有"统计"、"汇总"、"算"、"工作量"、"多少"等词，只要问的是本人工时明细记录，仍归 query_timesheet（不是 compute_statistics）：
+  - "本周填报" → query_timesheet
+  - "本周工作量" → query_timesheet
+  - "本周工时汇总" → query_timesheet
+  - "汇总一下本周工时" → query_timesheet
+  - "帮我统计一下本周的工时" → query_timesheet
+  - "统计一下本周工时" → query_timesheet
+  - "本周统计" → query_timesheet
+  - "算一下本周工时" → query_timesheet
+  - "请帮我统计一下本周的工时数据" → query_timesheet
+  - "本周总工时" → query_timesheet
+  - "看看这周的工作时长" → query_timesheet
+  - "本周填了多少" → query_timesheet
+  - "这周填了多少工时" → query_timesheet
+  - "请帮我统计一下本周的工作时间" → query_timesheet
+  - "请帮我统计一下本周的工时总数" → query_timesheet
+  - "本周工时情况" → query_timesheet
+  - "本周工时明细" → query_timesheet
+  - "帮我看看这周一共填了多少小时的工时" → query_timesheet
+  - "请帮我查看本周的工时统计" → query_timesheet
+  - "我想统计一下本周的工时数据" → query_timesheet
+
+  极短查询处理（"本周/这周/本星期/这礼拜"不是闲聊）：
+  - "本周" → tool_execution（查询本周工时，不是闲聊）
+  - "这周" → tool_execution（查询本周工时）
+  - "本星期" → tool_execution（查询本周工时）
+  - "这礼拜" → tool_execution（查询本周工时）
+  - "本周填报" → tool_execution（查询本周工时）
+  - "这周填报" → tool_execution（查询本周工时）
