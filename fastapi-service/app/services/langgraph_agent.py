@@ -14,6 +14,7 @@ LangGraph Agent 编排层
 import asyncio
 import json
 import logging
+import re
 from datetime import datetime
 from typing import Any, AsyncGenerator, Dict, Optional
 
@@ -97,6 +98,104 @@ def _build_openai_tools(tool_registry) -> list:
     return tools
 
 
+def _expand_multi_day_date(date_str: str, duration: float) -> list:
+    """
+    将多天日期表达展开为多个 (date, duration) 元组列表。
+    支持格式：
+    - "周一到周五" / "周一至周五" / "周一~周五"
+    - "周一、周二、周三"
+    - "每天" / "每天都"（展开为工作日）
+    - 单个工作日："周一" / "星期三"
+    - 相对日期："今天"、"昨天"、"明天"、"后天"及组合
+    无法解析时返回空列表。
+    """
+    from datetime import date, timedelta
+    
+    today = date.today()
+    weekday_map = {"周一": 0, "周二": 1, "周三": 2, "周四": 3, "周五": 4, "周六": 5, "周日": 6}
+    
+    # 相对日期映射
+    relative_map = {
+        "今天": today,
+        "昨天": today - timedelta(days=1),
+        "明天": today + timedelta(days=1),
+        "后天": today + timedelta(days=2),
+        "大后天": today + timedelta(days=3),
+        "前天": today - timedelta(days=2),
+    }
+    
+    def get_weekday_date(weekday_name: str):
+        """获取本周指定工作日的日期"""
+        w = weekday_map.get(weekday_name)
+        if w is None:
+            return None
+        days_ahead = w - today.weekday()
+        if days_ahead < 0:
+            days_ahead += 7
+        return (today + timedelta(days=days_ahead)).strftime("%Y-%m-%d")
+    
+    date_str = date_str.strip()
+    
+    # 展开为日期列表
+    expanded = []
+    
+    # 情况1：包含"每天"（每天、工作日每天）
+    if "每天" in date_str or "每天都" in date_str:
+        # 周一到周五
+        for w in ["周一", "周二", "周三", "周四", "周五"]:
+            d = get_weekday_date(w)
+            if d:
+                expanded.append((d, duration))
+        return expanded
+    
+    # 情况2：范围格式 "周一到周五" / "周一至周五" / "周一~周五"
+    range_pattern = re.compile(r"([周拾一二三四五六日])[一到至~]([周拾一二三四五六日])")
+    m = range_pattern.search(date_str)
+    if m:
+        start_day, end_day = m.group(1), m.group(2)
+        # 转换中文数字
+        day_map = {"周": 0, "一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "日": 7, "天": 7}
+        start_w = day_map.get(start_day.replace("周", "一").replace("拾", "十")[0] if start_day in ["周", "拾"] else start_day[0])
+        end_w = day_map.get(end_day.replace("周", "一").replace("拾", "十")[0] if end_day in ["周", "拾"] else end_day[0])
+        if start_w is not None and end_w is not None:
+            # 找到本周一
+            monday = today - timedelta(days=today.weekday())
+            for delta in range(start_w, end_w + 1):
+                d = (monday + timedelta(days=delta)).strftime("%Y-%m-%d")
+                expanded.append((d, duration))
+        return expanded
+    
+    # 情况3：逗号分隔 "周一、周三、周五"
+    if "、" in date_str:
+        days = re.findall(r"[周拾一二三四五六日][一两二三四五六日]?", date_str)
+        for d in days:
+            parsed = get_weekday_date(d)
+            if parsed:
+                expanded.append((parsed, duration))
+        return expanded
+    
+    # 情况4：单个工作日
+    single_day = re.search(r"[周拾一二三四五六日][一两二三四五六日]?", date_str)
+    if single_day:
+        parsed = get_weekday_date(single_day.group())
+        if parsed:
+            return [(parsed, duration)]
+    
+    # 情况5：相对日期 "今天和昨天" / "今天明天后天"
+    rel_dates = []
+    rel_found = False
+    for rel_name, rel_date in relative_map.items():
+        if rel_name in date_str:
+            rel_dates.append(rel_date)
+            rel_found = True
+    if rel_found and rel_dates:
+        for d in rel_dates:
+            expanded.append((d.strftime("%Y-%m-%d"), duration))
+        return expanded
+
+    return []
+
+
 async def node_llm_with_tools(state: AgentState) -> dict:
     """
     节点：Function Calling 主入口
@@ -115,7 +214,7 @@ async def node_llm_with_tools(state: AgentState) -> dict:
         if not messages:
             return await node_classify_intent(state)
 
-        # num_ctx 自适应：历史超过 2000 字用大 context
+        # num_ctx 自适应：历史超过 2000 字用大 context（仅 Ollama 支持）
         history_chars = sum(
             len(m.get("content", "")) for m in messages
         )
@@ -123,13 +222,17 @@ async def node_llm_with_tools(state: AgentState) -> dict:
             8192 if history_chars > 2000 else 4096
         )
 
+        # Ollama 专属参数，vLLM 不识别会被忽略
+        is_ollama = "11434" in (_llm_client.api_base or "")
+        extra = {"num_ctx": num_ctx, "think": False} if is_ollama else {}
+
         result = await _llm_client.generate_with_tools(
             messages=messages,
             tools=tools,
             tool_choice="auto",
             temperature=0.1,
-            max_tokens=500,
-            extra={"num_ctx": num_ctx, "think": False},
+            max_tokens=1500,
+            extra=extra,
         )
     except Exception as e:
         logger.warning(f"Function Calling 失败，降级到规则路由: {e}")
@@ -193,6 +296,42 @@ async def node_llm_with_tools(state: AgentState) -> dict:
             }
 
         if tool_name == "save_workhour":
+            # ── 多天展开：检测"周一到周五"等日期范围 ─────────────────────────
+            raw_date = tool_params.get("date", "")
+            duration = tool_params.get("duration", 0)
+            expanded_dates = _expand_multi_day_date(raw_date, float(duration) if duration else 8) if raw_date else []
+            
+            if len(expanded_dates) >= 2:
+                # 展开为多工具并行调用
+                tasks = []
+                for i, (d, dur) in enumerate(expanded_dates):
+                    t_params = dict(tool_params)
+                    t_params["date"] = d
+                    t_params["duration"] = dur
+                    if user_ctx.get("user_id"):
+                        t_params["user_id"] = user_ctx["user_id"]
+                    if user_ctx.get("auth_token"):
+                        t_params["auth_token"] = user_ctx["auth_token"]
+                    tasks.append({
+                        "task_id": f"t{i+1}",
+                        "task_type": "tool_call",
+                        "tool_name": "save_workhour",
+                        "parameters": t_params,
+                        "dependencies": [],
+                    })
+                return {
+                    "intent": "complex_request",
+                    "tool_name": None,
+                    "tool_params": {},
+                    "query": state["user_message"],
+                    "task_plan": {
+                        "plan_name": "多天工时填报",
+                        "tasks": tasks,
+                        "source": "date_expansion",
+                    },
+                }
+            
+            # 单天或日期无效：走原有参数校验
             missing = []
             if not tool_params.get("project_id"):
                 missing.append("**项目名称或项目ID**")
@@ -204,7 +343,7 @@ async def node_llm_with_tools(state: AgentState) -> dict:
                 clarify_msg = _build_workhour_clarify_message(tool_params, missing)
                 return {
                     "intent": "clarify",
-                    "tool_name": None,
+                    "tool_name": tool_name,
                     "tool_params": tool_params,
                     "query": state["user_message"],
                     "clarify_message": clarify_msg,
@@ -286,6 +425,42 @@ async def node_classify_intent(state: AgentState) -> dict:
 
         # 工时填报：检测必填参数是否缺失，缺失则转为引导对话
         if tool_name == "save_workhour":
+            # ── 多天展开：检测"周一到周五"等日期范围 ─────────────────────────
+            raw_date = tool_params.get("date", "")
+            duration = tool_params.get("duration", 0)
+            expanded_dates = _expand_multi_day_date(raw_date, float(duration) if duration else 8) if raw_date else []
+            
+            if len(expanded_dates) >= 2:
+                # 展开为多工具并行调用
+                tasks = []
+                for i, (d, dur) in enumerate(expanded_dates):
+                    t_params = dict(tool_params)
+                    t_params["date"] = d
+                    t_params["duration"] = dur
+                    if user_ctx.get("user_id"):
+                        t_params["user_id"] = user_ctx["user_id"]
+                    if user_ctx.get("auth_token"):
+                        t_params["auth_token"] = user_ctx["auth_token"]
+                    tasks.append({
+                        "task_id": f"t{i+1}",
+                        "task_type": "tool_call",
+                        "tool_name": "save_workhour",
+                        "parameters": t_params,
+                        "dependencies": [],
+                    })
+                return {
+                    "intent": "complex_request",
+                    "tool_name": None,
+                    "tool_params": {},
+                    "query": state["user_message"],
+                    "task_plan": {
+                        "plan_name": "多天工时填报",
+                        "tasks": tasks,
+                        "source": "date_expansion",
+                    },
+                }
+            
+            # 单天或日期无效：走原有参数校验
             missing = []
             if not tool_params.get("project_id"):
                 missing.append("**项目名称或项目ID**")
@@ -297,7 +472,7 @@ async def node_classify_intent(state: AgentState) -> dict:
                 clarify_msg = _build_workhour_clarify_message(tool_params, missing)
                 return {
                     "intent": "clarify",
-                    "tool_name": None,
+                    "tool_name": tool_name,
                     "tool_params": tool_params,
                     "query": state["user_message"],
                     "clarify_message": clarify_msg,
