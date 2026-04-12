@@ -255,9 +255,9 @@ class IntentRouter:
                 history_section = "\n历史对话（供参考，用于解析'再查一次''上周呢'等指代）：\n" + "\n".join(lines) + "\n"
 
             tools_desc = (
-                "- query_timesheet：查询个人或团队工时记录\n"
+                "- query_timesheet：【查明细】查询工时填报明细记录，返回每条记录的日期、项目、小时数。如\"查下AI平台的工时\"、\"我在智慧办公项目填了多少\"、\"看看数据中台的工时\"、\"项目工时记录\"。不问\"多少/总计/排名\"等汇总数字。\n"
                 "- query_project：查询项目信息\n"
-                "- compute_statistics：统计分析工时数据\n"
+                "- compute_statistics：【统计】查询工时汇总数字，如\"本月总工时多少\"、\"部门工时排名\"、\"项目工时占比\"、\"平均每天几小时\"。不问具体明细记录。\n"
                 "- generate_weekly_report：生成工作周报\n"
                 "- save_workhour：填报工时记录（用户说'填工时'、'记录工时'、'报工时'等）"
             )
