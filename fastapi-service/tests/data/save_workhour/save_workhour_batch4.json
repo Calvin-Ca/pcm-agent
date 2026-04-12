@@ -157,7 +157,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "duration": 4,
@@ -388,7 +388,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "duration": 3,
@@ -640,7 +640,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "duration": 4,
@@ -865,7 +865,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "duration": 3,
@@ -1068,7 +1068,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "duration": 4,
@@ -1324,7 +1324,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "duration": 3,

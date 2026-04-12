@@ -99,7 +99,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "project_id": "p001",
@@ -214,7 +214,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "project_id": "p005",
@@ -329,7 +329,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "project_id": "p004",
@@ -444,7 +444,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "project_id": "p003",
@@ -557,7 +557,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "project_id": "p006",
@@ -672,7 +672,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "project_id": "p001",
@@ -787,7 +787,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "project_id": "p004",
@@ -902,7 +902,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "project_id": "p005",
@@ -1017,7 +1017,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "project_id": "p002",
@@ -1130,7 +1130,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "project_id": "p005",
@@ -1245,7 +1245,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "project_id": "p003",
@@ -1360,7 +1360,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "tool_execution",
       "tool_name": null,
       "params": {
         "project_id": "p004",

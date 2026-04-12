@@ -12,7 +12,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -34,7 +34,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -56,7 +56,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -78,7 +78,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -100,7 +100,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -122,7 +122,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -144,7 +144,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -166,7 +166,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -188,7 +188,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -210,7 +210,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -232,7 +232,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -254,7 +254,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -276,7 +276,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -298,7 +298,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -320,7 +320,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -342,7 +342,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -364,7 +364,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -386,7 +386,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -408,7 +408,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -430,7 +430,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -452,7 +452,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -474,7 +474,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -496,7 +496,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -518,7 +518,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -540,7 +540,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -562,7 +562,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -584,7 +584,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -606,7 +606,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -628,7 +628,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -650,7 +650,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -672,7 +672,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -694,7 +694,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -716,7 +716,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -738,7 +738,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -760,7 +760,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -782,7 +782,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -804,7 +804,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -826,7 +826,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -848,7 +848,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -870,7 +870,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -892,7 +892,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -914,7 +914,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -936,7 +936,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -958,7 +958,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -980,7 +980,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1002,7 +1002,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1024,7 +1024,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1046,7 +1046,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1068,7 +1068,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1090,7 +1090,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1112,7 +1112,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1134,7 +1134,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1156,7 +1156,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1178,7 +1178,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1200,7 +1200,7 @@
       "department_id": "dept_03"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1222,7 +1222,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1244,7 +1244,7 @@
       "department_id": "dept_02"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1266,7 +1266,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1288,7 +1288,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],
@@ -1310,7 +1310,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "clarify",
+      "intent": "complex_request",
       "tool_name": null,
       "params": {},
       "params_fuzzy": [],

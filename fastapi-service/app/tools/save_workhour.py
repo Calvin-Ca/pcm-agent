@@ -11,7 +11,7 @@ Save Workhour Tool - 工时填报工具
 import logging
 import os
 from datetime import datetime, date
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 import httpx
 
@@ -29,11 +29,11 @@ SAVE_WORKHOUR_SCHEMA = {
     "properties": {
         "project_id": {
             "type": "string",
-            "description": "项目ID（必填）",
+            "description": "项目ID（可选，不填则由系统处理）",
         },
         "date": {
             "type": "string",
-            "description": "工时日期，格式 YYYY-MM-DD（必填；用户未提及具体日期时，默认填今天的日期）",
+            "description": "工时日期，格式 YYYY-MM-DD（可选；用户未提及具体日期时，默认填今天的日期）",
         },
         "duration": {
             "type": "number",
@@ -50,7 +50,7 @@ SAVE_WORKHOUR_SCHEMA = {
             "description": "用户ID（可选，不填则使用当前登录用户）",
         },
     },
-    "required": ["project_id", "date", "duration"],
+    "required": [],
     "additionalProperties": False,
 }
 

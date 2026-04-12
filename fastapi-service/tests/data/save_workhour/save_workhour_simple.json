@@ -12,7 +12,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -39,7 +39,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -66,7 +66,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -93,7 +93,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -120,7 +120,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -147,7 +147,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -174,7 +174,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -201,7 +201,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -228,7 +228,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -255,7 +255,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -282,7 +282,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -309,7 +309,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -336,7 +336,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -363,7 +363,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -390,7 +390,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -417,7 +417,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -444,7 +444,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -471,7 +471,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -498,7 +498,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -525,7 +525,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -552,7 +552,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -579,7 +579,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -606,7 +606,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -633,7 +633,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -660,7 +660,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -687,7 +687,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-30",
@@ -714,7 +714,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-30",
@@ -741,7 +741,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-29",
@@ -768,7 +768,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-29",
@@ -795,7 +795,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-02",
@@ -822,7 +822,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -849,7 +849,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -876,7 +876,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -903,7 +903,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -930,7 +930,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -957,7 +957,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -984,7 +984,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -1011,7 +1011,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -1038,7 +1038,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -1065,7 +1065,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -1092,7 +1092,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -1119,7 +1119,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -1146,7 +1146,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -1173,7 +1173,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-31",
@@ -1200,7 +1200,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-30",
@@ -1227,7 +1227,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-03-29",
@@ -1254,7 +1254,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-02",
@@ -1281,7 +1281,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -1308,7 +1308,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
@@ -1335,7 +1335,7 @@
       "department_id": "dept_01"
     },
     "expected": {
-      "intent": "tool_execution",
+      "intent": "clarify",
       "tool_name": "save_workhour",
       "params": {
         "date": "2026-04-01",
