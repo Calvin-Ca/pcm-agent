@@ -1,0 +1,18 @@
+_type: prompt
+input_variables:
+  - table_schemas
+  - permission_constraints
+  - user_question
+template: |
+  根据问题生成MySQL SELECT语句。只输出SQL，不要解释。
+
+  表结构：
+  {table_schemas}
+
+  关联：workhour.member_id=sys_user.id | workhour.project_id=project_info.id | sys_user.dept_id=org_dept.id | project_member.member_id=sys_user.id
+
+  权限约束：{permission_constraints}
+
+  规则：仅SELECT | workhour_date是datetime用DATE()比较 | 姓名用sys_user.entity_name | 用中文别名 | 加LIMIT
+
+  问题：{user_question}
