@@ -85,6 +85,7 @@ Spring Boot (8080)
 | `app/services/task_executor.py` | 工具执行：依赖注入、权限预检、调用工具 |
 | `app/services/permission_validator.py` | 细粒度权限校验，基于 X-Entity-Type 角色 |
 | `app/services/langchain_rag.py` | RAG 管道：EnsembleRetriever + MultiQuery + Reranker |
+| `app/services/sql_engine.py` | SQL Agent 数据库连接池管理、SQL 执行、表结构缓存 |
 | `app/services/tool_registry.py` | 单例工具注册中心，负责工具注册、查询、参数验证 |
 | `app/services/prompt_manager.py` | 从 `prompts/*.yaml` 加载 Prompt，支持热更新 |
 | `app/services/session_memory.py` | 短期会话记忆（Redis，TTL 30 分钟，保留 10 轮） |
@@ -92,11 +93,14 @@ Spring Boot (8080)
 
 ### 工具层（`app/tools/`）
 
-5 个业务工具，均通过 HTTP 调用 Spring Boot API：
+6 个业务工具，5 个通过 HTTP 调用 Spring Boot API，1 个直接操作数据库：
 
 - `query_timesheet.py` — 工时查询（`memberId` 无值时回退到当前用户，已修复全员数据问题）
 - `query_project.py` — 项目查询
 - `compute_statistics.py` — 统计分析
+- `generate_weekly_report.py` — 周报生成
+- `save_workhour.py` — 工时填报（已接入 `param_resolver`，自动将项目名转换为 ID）
+- `sql_query.py` — **SQL Agent**（自然语言转 SQL，直接查询数据库，支持复杂分析场景）
 - `generate_weekly_report.py` — 周报生成
 - `save_workhour.py` — 工时填报（已接入 `param_resolver`，自动将项目名转换为 ID）
 
