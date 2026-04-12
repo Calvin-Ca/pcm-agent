@@ -13,6 +13,7 @@ from enum import Enum
 
 from app.models.tool import ToolCategory
 from app.services.tool_registry import tool_registry
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -107,13 +108,23 @@ async def compute_statistics_handler(**kwargs) -> Dict[str, Any]:
         Dict[str, Any]: 统计结果
     """
     try:
+        # 提取非业务参数，避免污染 StatisticsQueryParams
+        auth_token = kwargs.pop("auth_token", None)
+        kwargs.pop("context", None)
+
+        # 构建 Authorization header
+        headers = {}
+        if auth_token:
+            token = auth_token if auth_token.startswith("Bearer ") else f"Bearer {auth_token}"
+            headers["Authorization"] = token
+
         # 参数验证和解析
         params = StatisticsQueryParams(**kwargs)
-        
+
         # 验证日期格式和逻辑
         start_date = datetime.strptime(params.start_date, "%Y-%m-%d").date()
         end_date = datetime.strptime(params.end_date, "%Y-%m-%d").date()
-        
+
         if start_date > end_date:
             return {
                 "success": False,
@@ -125,20 +136,20 @@ async def compute_statistics_handler(**kwargs) -> Dict[str, Any]:
                 "items": [],
                 "summary": {}
             }
-        
+
         # 根据统计类型调用不同的处理函数
         if params.statistics_type == StatisticsType.USER_HOURS:
-            result = await _compute_user_hours_statistics(params, start_date, end_date)
+            result = await _compute_user_hours_statistics(params, start_date, end_date, headers)
         elif params.statistics_type == StatisticsType.PROJECT_HOURS:
-            result = await _compute_project_hours_statistics(params, start_date, end_date)
+            result = await _compute_project_hours_statistics(params, start_date, end_date, headers)
         elif params.statistics_type == StatisticsType.DEPARTMENT_HOURS:
-            result = await _compute_department_hours_statistics(params, start_date, end_date)
+            result = await _compute_department_hours_statistics(params, start_date, end_date, headers)
         elif params.statistics_type == StatisticsType.DAILY_HOURS:
-            result = await _compute_daily_hours_statistics(params, start_date, end_date)
+            result = await _compute_daily_hours_statistics(params, start_date, end_date, headers)
         elif params.statistics_type == StatisticsType.WEEKLY_HOURS:
-            result = await _compute_weekly_hours_statistics(params, start_date, end_date)
+            result = await _compute_weekly_hours_statistics(params, start_date, end_date, headers)
         elif params.statistics_type == StatisticsType.MONTHLY_HOURS:
-            result = await _compute_monthly_hours_statistics(params, start_date, end_date)
+            result = await _compute_monthly_hours_statistics(params, start_date, end_date, headers)
         else:
             return {
                 "success": False,
@@ -179,25 +190,25 @@ async def compute_statistics_handler(**kwargs) -> Dict[str, Any]:
         }
 
 
-async def _compute_user_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date) -> Dict[str, Any]:
+async def _compute_user_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
     """计算用户工时统计"""
-    base_url = "http://localhost:8080"
+    base_url = settings.SPRINGBOOT_BASE_URL
     url = f"{base_url}/api/statistics/user-hours"
-    
+
     query_params = {
         "startDate": params.start_date,
         "endDate": params.end_date
     }
-    
+
     if params.project_id:
         query_params["projectId"] = params.project_id
     if params.department_id:
         query_params["departmentId"] = params.department_id
     if params.user_id:
         query_params["userId"] = params.user_id
-    
+
     async with httpx.AsyncClient(timeout=30.0) as client:
-        response = await client.get(url, params=query_params)
+        response = await client.get(url, params=query_params, headers=headers or {})
         response.raise_for_status()
         
         api_data = response.json()
@@ -238,25 +249,25 @@ async def _compute_user_hours_statistics(params: StatisticsQueryParams, start_da
         }
 
 
-async def _compute_project_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date) -> Dict[str, Any]:
+async def _compute_project_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
     """计算项目工时统计"""
-    base_url = "http://localhost:8080"
+    base_url = settings.SPRINGBOOT_BASE_URL
     url = f"{base_url}/api/statistics/project-hours"
-    
+
     query_params = {
         "startDate": params.start_date,
         "endDate": params.end_date
     }
-    
+
     if params.user_id:
         query_params["userId"] = params.user_id
     if params.department_id:
         query_params["departmentId"] = params.department_id
     if params.project_id:
         query_params["projectId"] = params.project_id
-    
+
     async with httpx.AsyncClient(timeout=30.0) as client:
-        response = await client.get(url, params=query_params)
+        response = await client.get(url, params=query_params, headers=headers or {})
         response.raise_for_status()
         
         api_data = response.json()
@@ -298,21 +309,21 @@ async def _compute_project_hours_statistics(params: StatisticsQueryParams, start
         }
 
 
-async def _compute_department_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date) -> Dict[str, Any]:
+async def _compute_department_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
     """计算部门工时统计"""
-    base_url = "http://localhost:8080"
+    base_url = settings.SPRINGBOOT_BASE_URL
     url = f"{base_url}/api/statistics/department-hours"
-    
+
     query_params = {
         "startDate": params.start_date,
         "endDate": params.end_date
     }
-    
+
     if params.department_id:
         query_params["departmentId"] = params.department_id
-    
+
     async with httpx.AsyncClient(timeout=30.0) as client:
-        response = await client.get(url, params=query_params)
+        response = await client.get(url, params=query_params, headers=headers or {})
         response.raise_for_status()
         
         api_data = response.json()
@@ -353,25 +364,25 @@ async def _compute_department_hours_statistics(params: StatisticsQueryParams, st
         }
 
 
-async def _compute_daily_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date) -> Dict[str, Any]:
+async def _compute_daily_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
     """计算每日工时统计"""
-    base_url = "http://localhost:8080"
+    base_url = settings.SPRINGBOOT_BASE_URL
     url = f"{base_url}/api/statistics/daily-hours"
-    
+
     query_params = {
         "startDate": params.start_date,
         "endDate": params.end_date
     }
-    
+
     if params.user_id:
         query_params["userId"] = params.user_id
     if params.project_id:
         query_params["projectId"] = params.project_id
     if params.department_id:
         query_params["departmentId"] = params.department_id
-    
+
     async with httpx.AsyncClient(timeout=30.0) as client:
-        response = await client.get(url, params=query_params)
+        response = await client.get(url, params=query_params, headers=headers or {})
         response.raise_for_status()
         
         api_data = response.json()
@@ -413,16 +424,16 @@ async def _compute_daily_hours_statistics(params: StatisticsQueryParams, start_d
         }
 
 
-async def _compute_weekly_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date) -> Dict[str, Any]:
+async def _compute_weekly_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
     """计算每周工时统计"""
     # 简化实现，实际应该按周分组
-    return await _compute_daily_hours_statistics(params, start_date, end_date)
+    return await _compute_daily_hours_statistics(params, start_date, end_date, headers)
 
 
-async def _compute_monthly_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date) -> Dict[str, Any]:
+async def _compute_monthly_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
     """计算每月工时统计"""
     # 简化实现，实际应该按月分组
-    return await _compute_daily_hours_statistics(params, start_date, end_date)
+    return await _compute_daily_hours_statistics(params, start_date, end_date, headers)
 
 
 def register_compute_statistics_tool():
