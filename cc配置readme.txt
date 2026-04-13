@@ -70,6 +70,12 @@ fs.writeFileSync(filePath, JSON.stringify(content, null, 2), 'utf-8');
         $env:ANTHROPIC_BASE_URL = "https://api.minimaxi.com/anthropic"
 
         $env:ANTHROPIC_MODEL = "MiniMax-M2.7"
+        $env:ANTHROPIC_SMALL_FAST_MODEL= "MiniMax-M2.7"
+        $env:ANTHROPIC_DEFAULT_SONNET_MODEL = "MiniMax-M2.7"
+        $env:ANTHROPIC_DEFAULT_OPUS_MODEL = "MiniMax-M2.7"
+        $env:ANTHROPIC_DEFAULT_HAIKU_MODEL = "MiniMax-M2.7"
+        $env:CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = 1
+        $env:API_TIMEOUT_MS = "3000000"
 
         Ensure-ClaudeOnboarding
         $env:LLM_MODE = "minimax"
@@ -84,6 +90,12 @@ fs.writeFileSync(filePath, JSON.stringify(content, null, 2), 'utf-8');
         Remove-Item Env:ANTHROPIC_BASE_URL -ErrorAction SilentlyContinue
         Remove-Item Env:ANTHROPIC_MODEL -ErrorAction SilentlyContinue
         Remove-Item Env:ANTHROPIC_AUTH_TOKEN -ErrorAction SilentlyContinue
+        Remove-Item Env:ANTHROPIC_SMALL_FAST_MODEL -ErrorAction SilentlyContinue
+        Remove-Item Env:ANTHROPIC_DEFAULT_SONNET_MODEL -ErrorAction SilentlyContinue
+        Remove-Item Env:ANTHROPIC_DEFAULT_OPUS_MODEL -ErrorAction SilentlyContinue
+        Remove-Item Env:ANTHROPIC_DEFAULT_HAIKU_MODEL -ErrorAction SilentlyContinue
+        Remove-Item Env:CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC -ErrorAction SilentlyContinue
+        Remove-Item Env:API_TIMEOUT_MS -ErrorAction SilentlyContinue
 
         $env:LLM_MODE = "claude-pro"
 
