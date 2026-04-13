@@ -246,6 +246,13 @@ MILVUS_PORT=19530
 # === Spring Boot 后端（同机内网） ===
 SPRINGBOOT_BASE_URL=http://127.0.0.1:9900
 
+# === SQL Agent 只读账号（禁止使用 root） ===
+SQL_AGENT_DB_HOST=192.168.0.94
+SQL_AGENT_DB_PORT=3306
+SQL_AGENT_DB_NAME=workhour
+SQL_AGENT_DB_USER=read_only_ai
+SQL_AGENT_DB_PASSWORD=read_only_ai
+
 # === MinIO 密码（如通过 docker-compose 启动 Milvus 时填写） ===
 MINIO_ROOT_USER=minioadmin
 MINIO_ROOT_PASSWORD=<自定义强密码>

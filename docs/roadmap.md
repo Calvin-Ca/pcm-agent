@@ -272,10 +272,11 @@ Code Interpreter Python 沙箱（让 LLM 生成 Python 代码处理复杂数据�
       layer1_v6: 87.0%（2000 case），与 v5 持平，无回归
 
 🟡 上线准备（4.14 ~）
-  ├── 创建 ai_readonly 只读数据库账号（依赖 DBA）
-  ├── 生产环境部署验证（ai-service 容器化部署到 192 服务器）
-  ├── 生产 .env 配置确认（LLM/DB/Redis/Milvus 地址）
-  └── 上线后观察：Grafana 看板监控 + 日志排查
+  ├── ✅ 创建只读数据库账号（2026-04-14）
+  │   账号 read_only_ai，.env SQL_AGENT_DB_* 已配置
+  ├── ⬜ 生产环境部署（ai-service 部署到 116 服务器）
+  ├── ⬜ 生产 .env 配置确认（LLM/DB/Redis/Milvus 地址）
+  └── ⬜ 上线后观察：Grafana 看板监控 + 日志排查
 
 🔵 上线后持续迭代
   ├── ec 类别精度提升（当前 61%，不阻塞上线）
