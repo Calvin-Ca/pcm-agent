@@ -35,7 +35,7 @@ services:
       - ./knowledge-base:/app/knowledge-base
       - ai-service-logs:/app/logs
     # 生产环境：去掉 --reload，使用多 worker 提升并发
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --workers 2
     environment:
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
     # 资源限制：防止单个服务耗尽宿主机资源

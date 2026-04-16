@@ -1,4 +1,4 @@
-# 环境变量（含密钥，不提交）
+# 环境变量（含密钥，不提交；模板见 .env.example）
 .env
 .env.local
 
@@ -11,6 +11,7 @@ __pycache__/
 # IDE
 .idea/
 .vscode/
+.kiro/
 
 # 日志
 *.log
@@ -24,8 +25,15 @@ package.json
 # Hypothesis 测试
 fastapi-service/.hypothesis/
 
-# Claude Code 本地配置
+# Claude Code 本地配置（memory/ 目录除外，用于跨机器同步）
 .claude/settings.local.json
+.claude/settings.json
 
 # Docker 本地覆盖（使用 docker-compose.prod.yml）
 docker-compose.override.yml
+
+# 本地工具配置脚本（含 API Key，不进 git）
+cc配置readme.txt
+
+# 测试报告（体积大，不进 git）
+fastapi-service/reports/
