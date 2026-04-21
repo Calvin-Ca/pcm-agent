@@ -73,6 +73,7 @@ services:
       MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
     volumes:
       - milvus-data:/var/lib/milvus
+      - ./milvus.yaml:/milvus/configs/milvus.yaml
     ports:
       - "29530:19530"
       - "19091:9091"
