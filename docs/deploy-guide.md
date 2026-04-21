@@ -12,8 +12,8 @@ LLM 推理服务器（vLLM / Ollama）的详细操作命令见 [deploy-model-ser
 
 | 服务器 | 角色 |
 |--------|------|
-| 116.205.174.57 | 公网应用服务器（前端、Spring Boot、ai-service、Redis、Milvus） |
-| 172.19.3.136 | 内网 GPU 服务器（vLLM、Ollama，4x RTX 4090） |
+| 116.205.174.57 | 公网应用服务器（前端、Spring Boot、nginx） |
+| 172.19.3.136 | 内网 GPU + 服务服务器（vLLM、Ollama、ai-service、Redis、Milvus、MinIO） |
 | 192.168.0.94 | 数据库服务器（MySQL 3306，库名 workhour） |
 
 ### 网络拓扑
@@ -23,39 +23,64 @@ LLM 推理服务器（vLLM / Ollama）的详细操作命令见 [deploy-model-ser
     |
     v
 gst.thsware.com (116.205.174.57)
-    |-- nginx (80/443, /usr/local/nginx)
-    |     |-- /api/ai/  -->  ai-service (127.0.0.1:8000, 端口待确认)
+    |-- nginx (80/443)
+    |     |-- /api/ai/  -->  ai-service (172.19.3.136:8000, SSH 隧道)
     |     |-- /api/ /thsuaa/ /thsadmin/  -->  Spring Boot (127.0.0.1:9900)
     |
-    |-- Spring Boot (9900, WAR, nohup 启动)
-    |-- ai-service (8000, 待部署, nohup 启动)
-    |-- Redis (6379, apt 安装)
-    |-- Milvus (19530, Docker 单容器)
-         |
-         +--> HTTP 调用 Spring Boot 业务接口 (127.0.0.1:9900)
-         |
-         +--> MySQL (192.168.0.94:3306, 库名 workhour)
-         |
-         +--> LLM 推理 (172.19.3.136, 内网)
-                |-- vLLM qwen3-8b  (8099)  主力对话 LLM
-                |-- vLLM bge-large (8097)  Embedding
-                `-- Ollama         (11434) 备用
+    |-- Spring Boot (9900, nohup 启动)
+
+172.19.3.136（内网 GPU + 服务服务器）
+    |-- vLLM qwen3-8b  (8099)  主力对话 LLM
+    |-- vLLM bge-large (8097)  Embedding
+    |-- Ollama         (11434) 备用
+    |
+    |-- Docker 部署（ai-assistant-*）
+    |     |-- ai-service  (8000)
+    |     |-- redis       (16379)
+    |     |-- milvus      (29530)
+    |     |-- minio       (29000/29001)
+    |     |-- etcd        (2379)
+    |
+    +--> HTTP 调用 Spring Boot 业务接口 (116.205.174.57:9900)
+    +--> MySQL (192.168.0.94:3306, 库名 workhour)
+    +--> LLM 推理（本地 vLLM/Ollama）
 ```
 
 ### 端口速查
 
-| 服务器 | 端口 | 服务 |
-|--------|------|------|
-| 116.205.174.57 | 80/443 | nginx (公网入口) |
-| 116.205.174.57 | 9900 | Spring Boot (内网) |
-| 116.205.174.57 | 8000 | ai-service (内网，端口待确认) |
-| 116.205.174.57 | 6379 | Redis |
-| 116.205.174.57 | 19530 | Milvus |
-| 192.168.0.94 | 3306 | MySQL |
-| 172.19.3.136 | 8099 | vLLM qwen3-8b |
-| 172.19.3.136 | 8097 | vLLM bge-large-zh-v1.5 |
-| 172.19.3.136 | 8098 | vLLM bge-base-zh-v1.5 |
-| 172.19.3.136 | 11434 | Ollama |
+**172.19.3.136（Docker 部署，ai-assistant-* 容器）**：
+
+| 宿主机端口 | 容器端口 | 服务 |
+|-----------|---------|------|
+| 8000 | 8000 | ai-service |
+| 16379 | 6379 | Redis |
+| 29530 | 19530 | Milvus |
+| 29000 | 9000 | MinIO API |
+| 29001 | 9001 | MinIO Console |
+| 19091 | 9091 | Milvus Console |
+| 2379 | 2379 | etcd |
+
+**172.19.3.136（LLM 推理服务）**：
+
+| 端口 | 服务 |
+|------|------|
+| 8099 | vLLM qwen3-8b |
+| 8097 | vLLM bge-large-zh-v1.5 |
+| 8098 | vLLM bge-base-zh-v1.5 |
+| 11434 | Ollama |
+
+**116.205.174.57（公网应用服务器）**：
+
+| 端口 | 服务 |
+|------|------|
+| 80/443 | nginx |
+| 9900 | Spring Boot |
+
+**192.168.0.94（数据库服务器）**：
+
+| 端口 | 服务 |
+|------|------|
+| 3306 | MySQL (workhour) |
 
 ---
 
@@ -169,159 +194,187 @@ pytest tests/test_langchain_rag_retrieval.py -v # RAG 检索测试
 
 ## 四、生产环境
 
-生产服务器：116.205.174.57，域名 gst.thsware.com（已有 SSL 证书）。
+生产环境部署在 **172.19.3.136**（内网 GPU + 服务服务器）。
 
-ai-service 与 Spring Boot 部署方式保持一致，使用 `nohup + 管理脚本` 方式运行，不使用 Docker 运行 ai-service 本身。
+ai-service 与依赖服务（Redis、Milvus、MinIO）通过 Docker Compose 部署，vLLM/Ollama 独立部署。
 
-### 4.1 安装 Redis
+### 4.1 部署架构
 
-```bash
-apt install -y redis-server
-systemctl enable redis --now
-systemctl status redis
+```
+172.19.3.136
+├── Docker（ai-assistant-* 容器）
+│     ├── ai-service      (127.0.0.1:8000)
+│     ├── redis           (16379)
+│     ├── milvus          (29530)
+│     ├── minio           (29000/29001)
+│     └── etcd            (2379)
+│
+├── vLLM 服务（Docker 独立部署）
+│     ├── vllm-qwen3-8b   (8099)
+│     ├── vllm-bge-large  (8097)
+│     └── vllm-bge-base   (8098)
+│
+└── Ollama 服务（Docker 独立部署）
+      └── ollama           (11434)
+
+116.205.174.57
+├── nginx (80/443) → 反向代理到 172.19.3.136:8000
+└── Spring Boot     (9900)
 ```
 
-### 4.2 部署 Milvus（Docker 单容器）
+### 4.2 部署方式
+
+#### 方式一：Docker Compose 部署（推荐）
 
 ```bash
-docker run -d \
-  --name milvus-standalone \
-  --restart always \
-  -p 19530:19530 \
-  -v /data/milvus:/var/lib/milvus \
-  milvusdb/milvus:v2.3.3 milvus run standalone
+# 在 172 服务器上操作
+cd ~/code/workhour/workhour_agent
+
+# 启动所有服务
+docker compose up -d
+
+# 查看服务状态
+docker compose ps
+
+# 查看日志
+docker compose logs -f ai-service
 ```
 
-### 4.3 部署 ai-service 代码
+#### 方式二：nohup 部署（传统方式，已不推荐）
 
 ```bash
-# 拉取代码
-git clone <repo-url> /home/gongshi/ai-service
-cd /home/gongshi/ai-service
-
 # 创建 Python 环境
 conda create -n workhour python=3.11 -y
 conda activate workhour
 pip install -r fastapi-service/requirements.txt
+
+# 启动服务
+nohup uvicorn main:app --host 127.0.0.1 --port 8000 --workers 2 &
+```
+
+### 4.3 SSH 隧道配置
+
+从 116 服务器访问 172 的 ai-service，通过 nginx 代理或 SSH 隧道。
+
+#### SSH 密钥配置
+
+```bash
+# 在 172 服务器上生成 SSH 密钥（如果还没有）
+ssh-keygen -t rsa -b 4096 -C "yunzuku@116" -f ~/.ssh/id_rsa
+
+# 将公钥复制到 172 服务器
+ssh-copy-id -i ~/.ssh/id_rsa.pub caic@172.19.3.136
+
+# 或手动添加公钥到 172 服务器的 ~/.ssh/authorized_keys
+cat ~/.ssh/id_rsa.pub | ssh caic@172.19.3.136 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+```
+
+#### SSH 隧道命令
+
+```bash
+# 建立 SSH 隧道（本地端口转发）
+# 将 172:8000 映射到本地 8000
+ssh -L 8000:127.0.0.1:8000 caic@172.19.3.136 -fN
+
+# 建立持久化隧道（后台运行）
+ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 \
+    -L 8000:127.0.0.1:8000 \
+    -L 16379:127.0.0.1:16379 \
+    -L 29530:127.0.0.1:29530 \
+    caic@172.19.3.136 -fN
+
+# 查看已建立的隧道
+ps aux | grep ssh | grep -v grep
+
+# 关闭隧道
+pkill -f "ssh -L.*172.19.3.136"
+```
+
+#### SSH Config 配置（简化连接）
+
+在 `~/.ssh/config` 中添加：
+
+```
+Host 172
+    HostName 172.19.3.136
+    User caic
+    ForwardAgent yes
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+
+Host 172-tunnel
+    HostName 172.19.3.136
+    User caic
+    LocalForward 8000 127.0.0.1:8000
+    LocalForward 16379 127.0.0.1:16379
+    LocalForward 29530 127.0.0.1:29530
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+```
+
+之后可以用简化命令：
+```bash
+ssh 172-tunnel -fN   # 建立隧道
+ssh 172              # 直接连接
 ```
 
 ### 4.4 配置 .env
 
-```bash
-cp .env.example /home/gongshi/ai-service/.env
-vi /home/gongshi/ai-service/.env
-```
-
 生产环境 `.env` 关键配置：
 
 ```bash
-# === 意图识别 LLM ===
-INTENT_LLM_API_KEY=ollama
-INTENT_LLM_API_BASE=http://172.19.3.136:8099/v1
+# === LLM（使用本地 vLLM）===
+INTENT_LLM_API_KEY=EMPTY
+INTENT_LLM_API_BASE=http://127.0.0.1:8099/v1
 INTENT_LLM_MODEL=qwen3-8b
 
-# === 主对话 LLM ===
-CHAT_LLM_API_KEY=ollama
-CHAT_LLM_API_BASE=http://172.19.3.136:8099/v1
+CHAT_LLM_API_KEY=EMPTY
+CHAT_LLM_API_BASE=http://127.0.0.1:8099/v1
 CHAT_LLM_MODEL=qwen3-8b
 
-# === RAG Embedding（DashScope，不可省略） ===
+# === RAG Embedding（DashScope 专用）===
 DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxxxxx
 
-# === MySQL（数据库服务器） ===
+# === MySQL（数据库服务器）===
 MYSQL_HOST=192.168.0.94
 MYSQL_PORT=3306
 MYSQL_DATABASE=workhour
 MYSQL_USER=yunzuku
 MYSQL_PASSWORD=yunzuku2021
 
-# === Redis（本机） ===
+# === Redis（Docker 容器，端口映射）===
 REDIS_HOST=127.0.0.1
-REDIS_PORT=6379
+REDIS_PORT=16379
 
-# === Milvus（本机 Docker） ===
+# === Milvus（Docker 容器，端口映射）===
 MILVUS_HOST=127.0.0.1
-MILVUS_PORT=19530
+MILVUS_PORT=29530
 
-# === Spring Boot 后端（同机内网） ===
-SPRINGBOOT_BASE_URL=http://127.0.0.1:9900
+# === MinIO ===
+MINIO_ROOT_USER=minioadmin
+MINIO_ROOT_PASSWORD=minioadmin123
 
-# === SQL Agent 只读账号（禁止使用 root） ===
+# === Spring Boot 后端（116 服务器）===
+SPRINGBOOT_BASE_URL=http://116.205.174.57:9900
+
+# === SQL Agent 只读账号 ===
 SQL_AGENT_DB_HOST=192.168.0.94
 SQL_AGENT_DB_PORT=3306
 SQL_AGENT_DB_NAME=workhour
 SQL_AGENT_DB_USER=read_only_ai
 SQL_AGENT_DB_PASSWORD=read_only_ai
 
-# === MinIO 密码（如通过 docker-compose 启动 Milvus 时填写） ===
-MINIO_ROOT_USER=minioadmin
-MINIO_ROOT_PASSWORD=<自定义强密码>
-
 # === 日志 ===
 LOG_LEVEL=INFO
 ```
 
-### 4.5 创建启动管理脚本
+### 4.5 配置 nginx（116 服务器）
 
-在 `/home/gongshi/` 下创建 `ai-service.sh`（与 `gongshi-ht.sh` 风格一致）：
-
-```bash
-#!/bin/bash
-APP_DIR=/home/gongshi/ai-service/fastapi-service
-LOG_DIR=/home/gongshi/logs
-PID_FILE=/home/gongshi/ai-service.pid
-CONDA_ENV=workhour
-
-case "$1" in
-  start)
-    source $(conda info --base)/etc/profile.d/conda.sh
-    conda activate $CONDA_ENV
-    mkdir -p $LOG_DIR
-    cd $APP_DIR
-    nohup uvicorn main:app --host 127.0.0.1 --port 8000 --workers 2 \
-      >> $LOG_DIR/ai-service.log 2>&1 &
-    echo $! > $PID_FILE
-    echo "ai-service 已启动，PID=$(cat $PID_FILE)"
-    ;;
-  stop)
-    if [ -f $PID_FILE ]; then
-      kill $(cat $PID_FILE) && rm $PID_FILE
-      echo "ai-service 已停止"
-    else
-      echo "ai-service 未运行（PID 文件不存在）"
-    fi
-    ;;
-  restart)
-    $0 stop
-    sleep 2
-    $0 start
-    ;;
-  status)
-    if [ -f $PID_FILE ] && kill -0 $(cat $PID_FILE) 2>/dev/null; then
-      echo "ai-service 运行中，PID=$(cat $PID_FILE)"
-    else
-      echo "ai-service 未运行"
-    fi
-    ;;
-  *)
-    echo "用法: $0 {start|stop|restart|status}"
-    ;;
-esac
-```
-
-```bash
-chmod +x /home/gongshi/ai-service.sh
-sh /home/gongshi/ai-service.sh start
-sh /home/gongshi/ai-service.sh status
-```
-
-### 4.6 配置 nginx
-
-编辑 `/usr/local/nginx/conf/nginx.conf`，在 `gst.thsware.com` server 块内，**在 `location /api/` 前面**插入 AI 接口专用 location（SSE 长连接需禁用缓冲）：
+在 116 服务器上编辑 `/usr/local/nginx/conf/nginx.conf`，添加 AI 服务反向代理：
 
 ```nginx
 location /api/ai/ {
-    proxy_pass http://127.0.0.1:8000/api/ai/;
+    proxy_pass http://172.19.3.136:8000/api/ai/;
     proxy_set_header Host $http_host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_http_version 1.1;
@@ -338,9 +391,7 @@ location /api/ai/ {
 /usr/local/nginx/sbin/nginx -s reload
 ```
 
-> ai-service 监听 `127.0.0.1:8000`，不对外暴露，仅 nginx 内部转发。实际端口以部署时确认为准。
-
-### 4.7 初始化知识库索引
+### 4.6 初始化知识库索引
 
 首次部署后需构建 Milvus 向量索引。修改 `knowledge-base/*.md` 后也需重建。
 
@@ -348,18 +399,25 @@ location /api/ai/ {
 curl -X POST http://127.0.0.1:8000/api/rag/reload
 ```
 
-或：
+或进入容器执行：
 
 ```bash
-conda activate workhour
-cd /home/gongshi/ai-service/fastapi-service
-python -c "from app.services.langchain_rag import build_index; build_index()"
+docker exec -it ai-assistant-service python -c "from app.services.langchain_rag import build_index; build_index()"
 ```
 
-### 4.8 健康检查
+### 4.7 健康检查
 
 ```bash
+# ai-service 健康检查
 curl http://127.0.0.1:8000/api/ai/health
+
+# Docker 服务状态
+docker compose ps
+
+# 查看服务日志
+docker compose logs -f ai-service
+docker compose logs -f milvus
+docker compose logs -f redis
 ```
 
 预期响应：
@@ -368,10 +426,11 @@ curl http://127.0.0.1:8000/api/ai/health
 {
   "status": "healthy",
   "components": {
-    "llm": true,
-    "redis": true,
-    "milvus": true,
-    "database": true
+    "intent_router": true,
+    "task_executor": true,
+    "tool_registry": true,
+    "permission_validator": true,
+    "planner_agent": true
   }
 }
 ```
@@ -452,20 +511,146 @@ curl http://172.19.3.136:11434/api/tags
 
 ## 七、常用运维命令
 
-### ai-service（生产）
+### Docker Compose（生产）
 
 ```bash
-# 启停
-sh /home/gongshi/ai-service.sh start
-sh /home/gongshi/ai-service.sh stop
-sh /home/gongshi/ai-service.sh restart
-sh /home/gongshi/ai-service.sh status
+# 查看所有服务状态
+docker compose ps
+
+# 启动所有服务
+docker compose up -d
+
+# 重启 ai-service
+docker compose restart ai-service
+
+# 停止所有服务
+docker compose down
 
 # 实时日志
-tail -f /home/gongshi/logs/ai-service.log
+docker compose logs -f ai-service
+docker compose logs -f milvus
+docker compose logs -f redis
+
+# 查看服务日志（指定行数）
+docker compose logs --tail=100 ai-service
 
 # 健康检查
 curl http://127.0.0.1:8000/api/ai/health
+```
+
+### 服务单独管理
+
+```bash
+# 查看某个服务状态
+docker ps | grep ai-assistant
+
+# 重启单个服务
+docker restart ai-assistant-service
+docker restart ai-assistant-milvus
+docker restart ai-assistant-redis
+docker restart ai-assistant-minio
+
+# 进入容器调试
+docker exec -it ai-assistant-service bash
+docker exec -it ai-assistant-redis redis-cli -p 16379
+
+# 查看容器内进程
+docker exec ai-assistant-service ps aux
+```
+
+### Milvus 运维
+
+```bash
+# Milvus 健康检查
+curl http://127.0.0.1:29530/healthz
+
+# Attu Web UI（Milvus 管理界面）
+# 访问 http://172.19.3.136:8088
+# 默认账号：root / milvus
+docker ps | grep attu
+
+# 重建 Milvus 索引（知识库重建）
+curl -X POST http://127.0.0.1:8000/api/rag/reload
+
+# 或进入容器重建
+docker exec -it ai-assistant-service python -c "from app.services.langchain_rag import build_index; build_index()"
+```
+
+### Redis 运维
+
+```bash
+# Redis 连接测试
+docker exec -it ai-assistant-redis redis-cli -p 16379 ping
+
+# 查看 key 数量
+docker exec -it ai-assistant-redis redis-cli -p 16379 dbsize
+
+# 清空会话缓存（谨慎）
+docker exec -it ai-assistant-redis redis-cli -p 16379 flushdb
+
+# 手动执行 Redis 命令
+docker exec -it ai-assistant-redis redis-cli -p 16379
+```
+
+### MinIO 运维
+
+```bash
+# MinIO Console
+# 访问 http://172.19.3.136:29001
+# 默认账号：minioadmin / minioadmin123
+
+# MinIO 健康检查
+curl http://127.0.0.1:29000/minio/health/live
+
+# 使用 mc 命令行工具（需要安装）
+mc alias set local http://127.0.0.1:29000 minioadmin minioadmin123
+mc ls local/
+```
+
+### nginx（116 服务器）
+
+```bash
+# 测试配置
+/usr/local/nginx/sbin/nginx -t
+
+# 重载配置（不中断连接）
+/usr/local/nginx/sbin/nginx -s reload
+
+# 查看错误日志
+tail -f /usr/local/nginx/logs/error.log
+```
+
+### LLM 服务运维
+
+```bash
+# 查看 LLM 服务状态
+docker ps | grep -E "vllm|ollama"
+
+# 查看 vLLM 日志
+docker logs vllm-qwen3-8b --tail 50
+
+# 检查 vLLM 模型列表
+curl http://127.0.0.1:8099/v1/models
+
+# 检查 Ollama 模型
+curl http://127.0.0.1:11434/api/tags
+
+# 重启 LLM 服务
+docker restart vllm-qwen3-8b
+docker restart ollama
+```
+
+### 日志管理
+
+```bash
+# 查看 ai-service 日志
+docker compose logs -f ai-service
+
+# 查看错误日志
+docker compose logs ai-service | grep -i error
+
+# 导出日志到文件
+docker compose logs ai-service > ai-service-$(date +%Y%m%d).log
 ```
 
 ### ai-service（开发，Docker）
