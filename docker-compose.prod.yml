@@ -13,8 +13,8 @@
 services:
   redis:
     restart: unless-stopped
-    # 生产环境建议设置持久化和访问密码
-    # command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "16379:6379"
 
   etcd:
     restart: unless-stopped

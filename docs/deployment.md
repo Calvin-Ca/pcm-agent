@@ -140,14 +140,25 @@
                  │ 向量存储│
                  └─────────┘
                  ┌────────────────────────────────────────┐
-                 │  GPU 服务器 172.19.3.136（内网）        │
+                 │  172.19.3.136（内网 GPU 服务器）          │
                  │  vLLM 推理服务：                        │
                  │  • qwen3-8b :8099 （主对话+工具+SQL）   │
                  │  • bge-large-zh :8097 （Embedding）     │
-                 │                                        │
-                 │  备选：                                 │
                  │  • Ollama :11434                        │
+                 │                                        │
+                 │  Docker 部署（ai-assistant-*）：        │
+                 │  • ai-service :8000                    │
+                 │  • redis :16379                        │
+                 │  • milvus :29530                       │
+                 │  • minio :29000/29001                  │
+                 │                                        │
+                 │  备选 LLM：                             │
                  │  • 阿里云 DashScope（外网，降级路径）   │
+                 └────────────────────────────────────────┘
+                 ┌────────────────────────────────────────┐
+                 │  116.205.174.57（公网应用服务器）        │
+                 │  • Spring Boot :9900                   │
+                 │  • nginx :80/:443                      │
                  └────────────────────────────────────────┘
 ```
 
@@ -223,15 +234,19 @@
 
 ### 1.4 服务列表
 
-| 服务 | 镜像 | 端口 | 用途 |
-|------|------|------|------|
-| ai-service | 本地构建 | 8000 | FastAPI AI 核心服务 |
-| redis | redis:7-alpine | 6379 | 短期会话记忆 + 长期用户记忆 |
-| milvus | milvusdb/milvus:v2.3.3 | 19530 | 知识库向量存储（降级 FAISS） |
-| etcd | quay.io/coreos/etcd:v3.5.5 | 2379 | Milvus 元数据存储 |
-| minio | minio/minio | 9000/9001 | Milvus 对象存储 |
-| prometheus *(可选)* | prom/prometheus:v2.48.0 | 9090 | 监控指标收集 |
-| grafana *(可选)* | grafana/grafana:10.2.2 | 3000 | 监控可视化 |
+**开发环境**（docker-compose）：
+
+| 服务 | 镜像 | 端口（宿主机） | 容器内部端口 | 用途 |
+|------|------|---------------|-------------|------|
+| ai-service | 本地构建 | 127.0.0.1:8000 | 8000 | FastAPI AI 核心服务 |
+| redis | redis:7-alpine | 16379 | 6379 | 短期会话记忆 + 长期用户记忆 |
+| milvus | milvusdb/milvus:v2.3.3 | 29530 | 19530 | 知识库向量存储（降级 FAISS） |
+| etcd | quay.io/coreos/etcd:v3.5.5 | - | 2379 | Milvus 元数据存储 |
+| minio | minio/minio | 29000/29001 | 9000/9001 | Milvus 对象存储 |
+| prometheus *(可选)* | prom/prometheus:v2.48.0 | 9090 | 9090 | 监控指标收集 |
+| grafana *(可选)* | grafana/grafana:10.2.2 | 3000 | 3000 | 监控可视化 |
+
+> **生产环境端口**（172.19.3.136 服务器）：与开发环境一致，见下方「生产环境部署」章节。
 
 ### 1.5 技术栈速查
 
@@ -272,8 +287,9 @@
 
 - **MySQL 8.0**：业务数据库（workhour），地址 192.168.0.94:3306
 - **vLLM 推理服务**：GPU 服务器 172.19.3.136:8099（qwen3-8b）+ :8097（bge-large Embedding）
-- **SpringBoot 后端**：提供工时/项目查询接口（生产地址 gst.thsware.com）
-- **阿里云 DashScope API Key**：降级路径（vLLM 不可用时）
+- **Redis/Milvus/MinIO**：同 GPU 服务器 172.19.3.136（Docker 部署，ai-assistant-* 容器）
+- **SpringBoot 后端**：提供工时/项目查询接口（生产地址 gst.thsware.com，端口 9900）
+- **阿里云 DashScope API Key**：RAG Embedding 专用（DashScope text-embedding-v2）
 
 ---
 
@@ -419,6 +435,7 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml down
 | `SQL_AGENT_LLM_API_KEY` | SQL Agent LLM Key（空=复用 CHAT） | `EMPTY` |
 | `SQL_AGENT_LLM_API_BASE` | SQL Agent LLM 地址（空=复用 CHAT） | （复用 CHAT_LLM） |
 | `SQL_AGENT_LLM_MODEL` | SQL Agent 模型（空=复用 CHAT） | （复用 CHAT_LLM） |
+| `DASHSCOPE_API_KEY` | DashScope API Key（RAG Embedding 专用） | `sk-xxxx` |
 
 > 当前全部使用 vLLM 本地部署的 qwen3-8b。如 SQL 生成质量不足，可单独将 SQL_AGENT_LLM_* 指向 DashScope qwen-plus。
 
