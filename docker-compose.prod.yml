@@ -42,7 +42,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 4G
           cpus: '1.5'
         reservations:
           memory: 512M
@@ -53,9 +53,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-
-  web:
-    restart: unless-stopped
 
   # 监控服务：默认不启动，需要时加 --profile monitoring
   prometheus:

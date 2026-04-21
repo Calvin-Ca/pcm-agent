@@ -4,7 +4,8 @@
 
 echo "🛑 停止AI智能助手开发环境..."
 
-docker-compose down
+# docker-compose down
+docker compose -f docker-compose.yml -f docker-compose.prod.yml down
 
 echo "✅ 服务已停止"
 echo ""

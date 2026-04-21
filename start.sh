@@ -27,7 +27,8 @@ export $(cat .env | grep -v '^#' | xargs)
 
 # 启动服务
 echo "📦 启动Docker容器..."
-docker-compose up -d
+# docker-compose up -d
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 
 # 等待服务就绪
 echo "⏳ 等待服务启动..."

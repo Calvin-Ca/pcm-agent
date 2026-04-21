@@ -7,7 +7,7 @@ services:
     image: redis:7-alpine
     container_name: ai-assistant-redis
     ports:
-      - "6379:6379"
+      - "16379:6379"
     volumes:
       - redis-data:/data
     command: redis-server --appendonly yes
@@ -44,8 +44,8 @@ services:
     image: minio/minio:RELEASE.2023-03-20T20-16-18Z
     container_name: ai-assistant-minio
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
       - minio-data:/minio_data
     command: minio server /minio_data --console-address ":9001"
@@ -55,8 +55,8 @@ services:
       timeout: 20s
       retries: 3
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "29000:9000"
+      - "29001:9001"
     networks:
       - ai-network
 
@@ -69,11 +69,13 @@ services:
     environment:
       ETCD_ENDPOINTS: etcd:2379
       MINIO_ADDRESS: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
     volumes:
       - milvus-data:/var/lib/milvus
     ports:
-      - "19530:19530"
-      - "9091:9091"
+      - "29530:19530"
+      - "19091:9091"
     command: ["milvus", "run", "standalone"]
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
@@ -119,7 +121,7 @@ services:
     environment:
       # 容器内网通信（覆盖 .env 中的 127.0.0.1，使用 Docker 内部服务名）
       - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - REDIS_PORT=16379
       - MILVUS_HOST=milvus
       - MILVUS_PORT=19530
       # Spring Boot 在宿主机运行，通过 host.docker.internal 访问
@@ -138,15 +140,15 @@ services:
       - "host.docker.internal:host-gateway"
 
   # 前端 Web 服务
-  web:
-    build:
-      context: ../web
-      dockerfile: Dockerfile
-    container_name: ai-assistant-web
-    ports:
-      - "80:80"
-    networks:
-      - ai-network
+  # web:
+  #   build:
+  #     context: ../web
+  #     dockerfile: Dockerfile
+  #   container_name: ai-assistant-web
+  #   ports:
+  #     - "80:80"
+  #   networks:
+  #     - ai-network
 
   # Prometheus - 监控指标收集
   prometheus:
