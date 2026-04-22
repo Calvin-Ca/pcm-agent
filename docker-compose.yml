@@ -122,11 +122,10 @@ services:
     environment:
       # 容器内网通信（覆盖 .env 中的 127.0.0.1，使用 Docker 内部服务名）
       - REDIS_HOST=redis
-      - REDIS_PORT=16379
+      - REDIS_PORT=6379
       - MILVUS_HOST=milvus
       - MILVUS_PORT=19530
-      # Spring Boot 在宿主机运行，通过 host.docker.internal 访问
-      - SPRINGBOOT_BASE_URL=http://host.docker.internal:9900
+      # SPRINGBOOT_BASE_URL 由 .env 控制（跨机部署走公网域名）
     ports:
       - "127.0.0.1:8000:8000"
     volumes:

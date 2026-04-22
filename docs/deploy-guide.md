@@ -320,7 +320,7 @@ ssh 172              # 直接连接
 
 ### 4.4 配置 .env
 
-生产环境 `.env` 关键配置：
+#### 4.4a Docker Compose 部署（生产，推荐）
 
 ```bash
 # === LLM（使用本地 vLLM）===
@@ -342,11 +342,59 @@ MYSQL_DATABASE=workhour
 MYSQL_USER=yunzuku
 MYSQL_PASSWORD=yunzuku2021
 
-# === Redis（Docker 容器，端口映射）===
+# === Redis（Docker 容器，容器内用服务名）===
+REDIS_HOST=redis
+REDIS_PORT=6379
+
+# === Milvus（Docker 容器，容器内用服务名）===
+MILVUS_HOST=milvus
+MILVUS_PORT=19530
+
+# === MinIO ===
+MINIO_ROOT_USER=minioadmin
+MINIO_ROOT_PASSWORD=minioadmin123
+
+# === Spring Boot 后端（116 服务器，公网）===
+SPRINGBOOT_BASE_URL=https://gst.thsware.com
+
+# === SQL Agent 只读账号 ===
+SQL_AGENT_DB_HOST=192.168.0.94
+SQL_AGENT_DB_PORT=3306
+SQL_AGENT_DB_NAME=workhour
+SQL_AGENT_DB_USER=read_only_ai
+SQL_AGENT_DB_PASSWORD=read_only_ai
+
+# === 日志 ===
+LOG_LEVEL=INFO
+```
+
+#### 4.4b ai-service 裸跑 + 依赖用 Docker（本地开发）
+
+```bash
+# === LLM（使用内网 GPU 服务器 vLLM）===
+INTENT_LLM_API_KEY=EMPTY
+INTENT_LLM_API_BASE=http://172.19.3.136:8099/v1
+INTENT_LLM_MODEL=qwen3-8b
+
+CHAT_LLM_API_KEY=EMPTY
+CHAT_LLM_API_BASE=http://172.19.3.136:8099/v1
+CHAT_LLM_MODEL=qwen3-8b
+
+# === RAG Embedding（DashScope 专用）===
+DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxxxxx
+
+# === MySQL ===
+MYSQL_HOST=localhost
+MYSQL_PORT=3306
+MYSQL_DATABASE=workhour
+MYSQL_USER=yunzuku
+MYSQL_PASSWORD=yunzuku2021
+
+# === Redis（Docker 容器，宿主机用高位端口映射）===
 REDIS_HOST=127.0.0.1
 REDIS_PORT=16379
 
-# === Milvus（Docker 容器，端口映射）===
+# === Milvus（Docker 容器，宿主机用高位端口映射）===
 MILVUS_HOST=127.0.0.1
 MILVUS_PORT=29530
 
@@ -354,8 +402,8 @@ MILVUS_PORT=29530
 MINIO_ROOT_USER=minioadmin
 MINIO_ROOT_PASSWORD=minioadmin123
 
-# === Spring Boot 后端（116 服务器）===
-SPRINGBOOT_BASE_URL=http://116.205.174.57:9900
+# === Spring Boot 后端（生产公网）===
+SPRINGBOOT_BASE_URL=https://gst.thsware.com
 
 # === SQL Agent 只读账号 ===
 SQL_AGENT_DB_HOST=192.168.0.94
@@ -374,15 +422,21 @@ LOG_LEVEL=INFO
 
 ```nginx
 location /api/ai/ {
-    proxy_pass http://172.19.3.136:8000/api/ai/;
-    proxy_set_header Host $http_host;
+    proxy_pass http://127.0.0.1:9900;   # 走 SpringBoot AIController（网关），不是直接连 ai-service
+    proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_http_version 1.1;
     proxy_set_header Connection '';
     proxy_buffering off;
+    proxy_cache off;
     proxy_read_timeout 300s;
 }
 ```
+
+> **关于反向 SSH 隧道**：ai-service 在 172.19.3.136，只绑 `127.0.0.1:8000`。116 上的 nginx 不能直连 172:8000，路径是：
+> - 浏览器 → nginx(116) → SpringBoot(127.0.0.1:9900) → 反向隧道(127.0.0.1:9901) → ai-service(172:8000)
+> - 隧道由 172 上的 autossh 常驻维持：`ssh -R 9901:127.0.0.1:8000 useryzk@116`
 
 重载 nginx：
 
@@ -607,144 +661,13 @@ mc alias set local http://127.0.0.1:29000 minioadmin minioadmin123
 mc ls local/
 ```
 
-### nginx（116 服务器）
-
-```bash
-# 测试配置
-/usr/local/nginx/sbin/nginx -t
-
-# 重载配置（不中断连接）
-/usr/local/nginx/sbin/nginx -s reload
-
-# 查看错误日志
-tail -f /usr/local/nginx/logs/error.log
-```
-
-### LLM 服务运维
-
-```bash
-# 查看 LLM 服务状态
-docker ps | grep -E "vllm|ollama"
-
-# 查看 vLLM 日志
-docker logs vllm-qwen3-8b --tail 50
-
-# 检查 vLLM 模型列表
-curl http://127.0.0.1:8099/v1/models
-
-# 检查 Ollama 模型
-curl http://127.0.0.1:11434/api/tags
-
-# 重启 LLM 服务
-docker restart vllm-qwen3-8b
-docker restart ollama
-```
-
-### 日志管理
-
-```bash
-# 查看 ai-service 日志
-docker compose logs -f ai-service
-
-# 查看错误日志
-docker compose logs ai-service | grep -i error
-
-# 导出日志到文件
-docker compose logs ai-service > ai-service-$(date +%Y%m%d).log
-```
-
-### ai-service（开发，Docker）
-
-```bash
-# 查看服务状态
-docker-compose ps
-
-# 重启 ai-service
-docker-compose restart ai-service
-
-# 实时日志
-docker-compose logs -f ai-service
-
-# 进入容器调试
-docker-compose exec ai-service bash
-```
-
-### Milvus（生产）
-
-```bash
-# 查看容器状态
-docker ps | grep milvus
-
-# 查看日志
-docker logs milvus-standalone --tail 50
-
-# 重启
-docker restart milvus-standalone
-```
-
-### Redis
-
-```bash
-# 检查连接
-redis-cli ping
-
-# 查看 key 数量
-redis-cli dbsize
-
-# 清空会话缓存（谨慎）
-redis-cli flushdb
-```
-
-### nginx
-
-```bash
-# 测试配置
-/usr/local/nginx/sbin/nginx -t
-
-# 重载配置（不中断连接）
-/usr/local/nginx/sbin/nginx -s reload
-
-# 查看错误日志
-tail -f /usr/local/nginx/logs/error.log
-```
-
-### Spring Boot（参考）
-
-```bash
-sh /home/gongshi/gongshi-ht.sh status
-sh /home/gongshi/gongshi-ht.sh restart
-```
-
-### 升级 ai-service（生产）
-
-```bash
-cd /home/gongshi/ai-service
-git pull
-conda activate workhour
-pip install -r fastapi-service/requirements.txt   # 如有新依赖
-sh /home/gongshi/ai-service.sh restart
-```
-
 ---
 
 ## 八、部署建议与方案
 
-### 8.1 推荐部署方式：conda 裸跑 vs Docker 容器化
+### 8.1 推荐部署方式：Docker Compose
 
-| 维度 | conda 裸跑 | Docker 容器化 |
-|------|-----------|--------------|
-| 部署复杂度 | 低，与 Spring Boot 同一套运维习惯 | 中，需额外维护镜像构建 |
-| 环境隔离 | 靠 conda 虚拟环境，有限 | 完整隔离，依赖不互相污染 |
-| 启动速度 | 快（直接 nohup） | 稍慢（需拉取/构建镜像） |
-| 热更新 | 直接 git pull + restart | 需重新构建镜像 |
-| 资源开销 | 低 | 略高（容器层开销） |
-| 与现有运维对齐 | 高（和 Spring Boot 同风格） | 低 |
-
-**推荐：当前阶段使用 conda 裸跑**，理由：
-- 116 服务器已有 conda + Spring Boot 的运维流程，复用成本最低
-- ai-service 依赖（Redis、Milvus）单独用 Docker 管理，ai-service 本身无需容器化
-- 团队规模小，维护 Docker 镜像构建流程收益有限
-- 未来如有多机部署需求，可再切换到容器化
+生产环境使用 Docker Compose 部署 ai-service，与 Redis、Milvus、MinIO 等依赖服务同属一个 docker 网络，容器间通过服务名通信。
 
 ### 8.2 资源需求评估
 
@@ -753,23 +676,10 @@ ai-service 本身不运行任何 LLM（LLM 推理全部在 172.19.3.136），主
 | 资源 | 空闲 | 单请求峰值 | 说明 |
 |------|------|-----------|------|
 | CPU | < 0.1 核 | 0.2~0.5 核 | 主要是 FastAPI 路由、JSON 序列化、BM25 检索 |
-| 内存 | ~300 MB | ~600 MB | LangGraph 状态、BM25 索引（约 200 MB）、CrossEncoder Reranker 模型（约 200 MB）、会话缓存 |
+| 内存 | ~300 MB | ~600 MB | LangGraph 状态、BM25 索引、CrossEncoder Reranker 模型、会话缓存 |
 | 网络 | 低 | 取决于 LLM 响应速度 | SSE 长连接，每请求持续 5~30 秒 |
 
-**建议预留**：1 核 CPU、1 GB 内存。116 服务器同时运行 Spring Boot（约 500 MB），需确认宿主机总内存充足（建议 8 GB 以上）。
-
-### 8.3 部署位置建议
-
-**推荐：部署在 116 服务器（与 Spring Boot 同机）**，理由：
-
-- ai-service 频繁调用 Spring Boot 内部接口（工时查询、项目查询等），同机通信走 `127.0.0.1`，延迟 < 1 ms，避免跨机器网络开销
-- Milvus、Redis 均已在 116 部署，同机访问无网络跳转
-- nginx 在同机，SSE 代理最简单，无需额外网络配置
-- 唯一的跨机器调用是 vLLM（172.19.3.136），这是合理的（GPU 机器独立管理）
-
-如果未来 116 服务器资源不足，可将 ai-service 迁移到独立机器，届时调整 `SPRINGBOOT_BASE_URL` 和 nginx 代理地址即可。
-
-### 8.4 高可用建议
+### 8.3 高可用建议
 
 **当前阶段：单实例足够**，理由：
 - 工时管理系统为内部系统，并发用户数有限
@@ -792,24 +702,19 @@ location /api/ai/ {
 
 注意：多实例共享 Redis（会话记忆），无状态设计，可直接水平扩展。
 
-### 8.5 依赖服务连通性
+### 8.4 依赖服务连通性
 
 ```
-ai-service (116:8000)
+ai-service (172.19.3.136, Docker 内)
     |
-    +--[127.0.0.1:9900]--> Spring Boot       同机内网，延迟极低
-    |
-    +--[127.0.0.1:6379]--> Redis             同机内网，延迟极低
-    |
-    +--[127.0.0.1:19530]-> Milvus (Docker)   同机内网，延迟极低
-    |
-    +--[192.168.0.94:3306]-> MySQL           跨机内网，延迟 < 1 ms
-    |
-    +--[172.19.3.136:8099]-> vLLM qwen3-8b  跨机内网，延迟 < 5 ms
-    |                                        （LLM 推理本身 5~30 秒）
-    +--[172.19.3.136:8097]-> vLLM bge-large  Embedding，每次 RAG 检索调用
-    |
-    +--[DashScope HTTPS]---> 阿里云           RAG Embedding（外网）
+    +--[redis:6379]---------> Redis (Docker)    容器内服务名
+    +--[milvus:19530]-------> Milvus (Docker)   容器内服务名
+    +--[192.168.0.94:3306]-> MySQL              跨机内网
+    +--[172.19.3.136:8099]-> vLLM qwen3-8b      本机 GPU
+    +--[172.19.3.136:8097]-> vLLM bge-large     本机 GPU，Embedding
+    +--[DashScope HTTPS]-----> 阿里云             外网，RAG Embedding
+
+ai-service --[SpringBoot 业务调用]--> https://gst.thsware.com
 ```
 
 所有内网连接均无防火墙阻断（同 VLAN），外网仅 DashScope Embedding。
