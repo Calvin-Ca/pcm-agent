@@ -819,7 +819,13 @@ async def stream_agent_response(
     # 会话日志收集
     start_time = datetime.now()
     user_ctx = user_context or {}
-    user_id = user_ctx.get("user_id", "anonymous")
+    user_id = user_ctx.get("user_id")
+    if not user_id:
+        user_id = "anonymous"
+        logger.warning(
+            f"[DEBUG] user_id fallback to anonymous in stream_agent_response, "
+            f"user_context keys={list(user_ctx.keys())}"
+        )
     log_intent: Optional[str] = None
     log_route_type: Optional[str] = None
     log_status = "success"

@@ -174,24 +174,41 @@ async def chat_stream(request: ChatRequest, http_request: Request):
     try:
         # 构建用户上下文
         user_context = request.user_context or {}
-        
-        # 从请求头中提取用户信息（如果有JWT等认证信息）
-        # 这里可以根据实际的认证方式来提取用户信息
-        user_id = http_request.headers.get("X-User-ID")
-        entity_type = http_request.headers.get("X-Entity-Type")
-        department_id = http_request.headers.get("X-Department-ID")
-        
+
+        # 优先从 body.user_context 读取用户身份信息
+        body_user_id = user_context.get("user_id")
+        body_entity_type = user_context.get("entity_type")
+        body_department_id = user_context.get("department_id")
+        body_auth_token = user_context.get("auth_token")
+
+        # 其次从请求头读取（向后兼容旧调用方）
+        header_user_id = http_request.headers.get("X-User-ID")
+        header_entity_type = http_request.headers.get("X-Entity-Type")
+        header_department_id = http_request.headers.get("X-Department-ID")
+        header_auth_token = http_request.headers.get("Authorization", "")
+
+        # 合并：body 优先，header 兜底
+        user_id = body_user_id or header_user_id
+        entity_type = body_entity_type or header_entity_type
+        department_id = body_department_id or header_department_id
+        auth_token = body_auth_token or header_auth_token
+
         if user_id:
             user_context["user_id"] = user_id
+        else:
+            user_id = "anonymous"
+            user_context["user_id"] = user_id
+            logger.warning(
+                f"[DEBUG] user_id fallback to anonymous in /chat/stream, "
+                f"body.user_id={body_user_id}, header.X-User-ID={header_user_id}"
+            )
+
         if entity_type:
             user_context["entity_type"] = entity_type
         if department_id:
             user_context["department_id"] = department_id
-
-        # 传递认证 token，供工具调用下游 SpringBoot 服务
-        auth_header = http_request.headers.get("Authorization", "")
-        if auth_header:
-            user_context["auth_token"] = auth_header
+        if auth_token:
+            user_context["auth_token"] = auth_token
 
         # 构建权限上下文
         if user_id and entity_type:
@@ -282,14 +299,34 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
         # 构建用户上下文
         user_context = request.user_context or {}
 
-        # 从请求头中提取用户信息
-        user_id = http_request.headers.get("X-User-ID", "anonymous")
-        entity_type = http_request.headers.get("X-Entity-Type")
-        department_id = http_request.headers.get("X-Department-ID")
-        auth_token = http_request.headers.get("Authorization", "")
+        # 优先从 body.user_context 读取用户身份信息
+        body_user_id = user_context.get("user_id")
+        body_entity_type = user_context.get("entity_type")
+        body_department_id = user_context.get("department_id")
+        body_auth_token = user_context.get("auth_token")
+
+        # 其次从请求头读取（向后兼容旧调用方）
+        header_user_id = http_request.headers.get("X-User-ID")
+        header_entity_type = http_request.headers.get("X-Entity-Type")
+        header_department_id = http_request.headers.get("X-Department-ID")
+        header_auth_token = http_request.headers.get("Authorization", "")
+
+        # 合并：body 优先，header 兜底
+        user_id = body_user_id or header_user_id
+        entity_type = body_entity_type or header_entity_type
+        department_id = body_department_id or header_department_id
+        auth_token = body_auth_token or header_auth_token
 
         if user_id:
             user_context["user_id"] = user_id
+        else:
+            user_id = "anonymous"
+            user_context["user_id"] = user_id
+            logger.warning(
+                f"[DEBUG] user_id fallback to anonymous in /chat, "
+                f"body.user_id={body_user_id}, header.X-User-ID={header_user_id}"
+            )
+
         if entity_type:
             user_context["entity_type"] = entity_type
         if department_id:
