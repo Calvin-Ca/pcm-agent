@@ -65,7 +65,7 @@ def _resolve_user_identity(request: ChatRequest, http_request: Request) -> tuple
         user_id = "anonymous"
         user_context["user_id"] = user_id
         logger.warning(
-            f"[DEBUG] user_id fallback to anonymous, "
+            f"user_id fallback to anonymous, "
             f"session_id={request.session_id}, "
             f"body.user_id={body_user_id}, header.X-User-ID={header_user_id}"
         )

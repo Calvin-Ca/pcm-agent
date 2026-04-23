@@ -823,7 +823,7 @@ async def stream_agent_response(
     if not user_id:
         user_id = "anonymous"
         logger.warning(
-            f"[DEBUG] user_id fallback to anonymous in stream_agent_response, "
+            f"user_id fallback to anonymous in stream_agent_response, "
             f"session_id={session_id}, user_context keys={list(user_ctx.keys())}"
         )
     log_intent: Optional[str] = None
