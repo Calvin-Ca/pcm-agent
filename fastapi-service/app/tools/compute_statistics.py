@@ -190,250 +190,298 @@ async def compute_statistics_handler(**kwargs) -> Dict[str, Any]:
         }
 
 
-async def _compute_user_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
-    """计算用户工时统计"""
+async def _fetch_workhour_records(
+    params: StatisticsQueryParams, headers: Dict[str, str] = None
+) -> List[Dict[str, Any]]:
+    """通过 /api/workhour/by-date-range 获取原始工时记录，供各统计类型统一使用。"""
     base_url = settings.SPRINGBOOT_BASE_URL
-    url = f"{base_url}/api/statistics/user-hours"
+    url = f"{base_url}/api/workhour/by-date-range"
 
     query_params = {
         "startDate": params.start_date,
-        "endDate": params.end_date
+        "endDate": params.end_date,
     }
-
+    if params.user_id:
+        query_params["memberId"] = params.user_id
     if params.project_id:
         query_params["projectId"] = params.project_id
-    if params.department_id:
-        query_params["departmentId"] = params.department_id
-    if params.user_id:
-        query_params["userId"] = params.user_id
 
     async with httpx.AsyncClient(timeout=30.0) as client:
         response = await client.get(url, params=query_params, headers=headers or {})
         response.raise_for_status()
-        
-        api_data = response.json()
-        if not api_data.get("success", False):
-            raise Exception(api_data.get("message", "API调用失败"))
-        
-        data = api_data.get("data", [])
-        items = []
-        total_hours = 0.0
-        
-        for item_data in data:
-            item = StatisticsItem(
-                id=item_data["userId"],
-                name=item_data.get("userName", "未知用户"),
-                total_hours=float(item_data["totalHours"]),
-                work_days=int(item_data.get("workDays", 0)),
-                average_daily_hours=float(item_data.get("averageDailyHours", 0.0)),
-                details={
-                    "department": item_data.get("department", ""),
-                    "projects": item_data.get("projects", [])
-                }
-            )
-            items.append(item)
-            total_hours += item.total_hours
-        
-        return {
-            "success": True,
-            "statistics_type": "user_hours",
-            "date_range": f"{params.start_date} 至 {params.end_date}",
-            "total_hours": round(total_hours, 2),
-            "total_records": len(items),
-            "items": [item.dict() for item in items],
-            "summary": {
-                "average_hours_per_user": round(total_hours / max(1, len(items)), 2),
-                "total_work_days": sum(item.work_days for item in items),
-                "date_range_days": (end_date - start_date).days + 1
-            }
-        }
+        data = response.json()
+        if isinstance(data, dict):
+            data = data.get("data", [])
+        return data if isinstance(data, list) else []
+
+
+async def _compute_user_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
+    """计算用户工时统计（基于原始记录聚合）"""
+    records = await _fetch_workhour_records(params, headers)
+
+    from collections import defaultdict
+    user_map = defaultdict(lambda: {"total_hours": 0.0, "work_days": set(), "projects": set()})
+
+    for r in records:
+        uid = r.get("memberId") or r.get("userId") or "unknown"
+        user_map[uid]["total_hours"] += float(r.get("workhour", 0) or 0)
+        user_map[uid]["work_days"].add(str(r.get("workhourDate", ""))[:10])
+        user_map[uid]["projects"].add(r.get("projectName", ""))
+
+    items = []
+    total_hours = 0.0
+    for uid, info in sorted(user_map.items(), key=lambda x: -x[1]["total_hours"]):
+        item = StatisticsItem(
+            id=uid,
+            name=uid,
+            total_hours=round(info["total_hours"], 2),
+            work_days=len(info["work_days"]),
+            average_daily_hours=round(info["total_hours"] / max(1, len(info["work_days"])), 2),
+            details={"projects": list(info["projects"])},
+        )
+        items.append(item)
+        total_hours += info["total_hours"]
+
+    return {
+        "success": True,
+        "statistics_type": "user_hours",
+        "date_range": f"{params.start_date} 至 {params.end_date}",
+        "total_hours": round(total_hours, 2),
+        "total_records": len(items),
+        "items": [item.dict() for item in items],
+        "summary": {
+            "average_hours_per_user": round(total_hours / max(1, len(items)), 2),
+            "total_work_days": sum(i.work_days for i in items),
+            "date_range_days": (end_date - start_date).days + 1,
+        },
+    }
 
 
 async def _compute_project_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
-    """计算项目工时统计"""
-    base_url = settings.SPRINGBOOT_BASE_URL
-    url = f"{base_url}/api/statistics/project-hours"
+    """计算项目工时统计（基于原始记录聚合）"""
+    records = await _fetch_workhour_records(params, headers)
 
-    query_params = {
-        "startDate": params.start_date,
-        "endDate": params.end_date
+    from collections import defaultdict
+    proj_map = defaultdict(lambda: {"total_hours": 0.0, "work_days": set(), "users": set()})
+
+    for r in records:
+        pid = r.get("projectId") or r.get("projectName", "unknown")
+        pname = r.get("projectName", pid)
+        proj_map[pid]["name"] = pname
+        proj_map[pid]["total_hours"] += float(r.get("workhour", 0) or 0)
+        proj_map[pid]["work_days"].add(str(r.get("workhourDate", ""))[:10])
+        proj_map[pid]["users"].add(r.get("memberId", ""))
+
+    items = []
+    total_hours = 0.0
+    for pid, info in sorted(proj_map.items(), key=lambda x: -x[1]["total_hours"]):
+        item = StatisticsItem(
+            id=pid,
+            name=info.get("name", pid),
+            total_hours=round(info["total_hours"], 2),
+            work_days=len(info["work_days"]),
+            average_daily_hours=round(info["total_hours"] / max(1, len(info["work_days"])), 2),
+            details={"user_count": len(info["users"])},
+        )
+        items.append(item)
+        total_hours += info["total_hours"]
+
+    return {
+        "success": True,
+        "statistics_type": "project_hours",
+        "date_range": f"{params.start_date} 至 {params.end_date}",
+        "total_hours": round(total_hours, 2),
+        "total_records": len(items),
+        "items": [item.dict() for item in items],
+        "summary": {
+            "average_hours_per_project": round(total_hours / max(1, len(items)), 2),
+            "total_work_days": sum(i.work_days for i in items),
+            "date_range_days": (end_date - start_date).days + 1,
+        },
     }
-
-    if params.user_id:
-        query_params["userId"] = params.user_id
-    if params.department_id:
-        query_params["departmentId"] = params.department_id
-    if params.project_id:
-        query_params["projectId"] = params.project_id
-
-    async with httpx.AsyncClient(timeout=30.0) as client:
-        response = await client.get(url, params=query_params, headers=headers or {})
-        response.raise_for_status()
-        
-        api_data = response.json()
-        if not api_data.get("success", False):
-            raise Exception(api_data.get("message", "API调用失败"))
-        
-        data = api_data.get("data", [])
-        items = []
-        total_hours = 0.0
-        
-        for item_data in data:
-            item = StatisticsItem(
-                id=item_data["projectId"],
-                name=item_data.get("projectName", "未知项目"),
-                total_hours=float(item_data["totalHours"]),
-                work_days=int(item_data.get("workDays", 0)),
-                average_daily_hours=float(item_data.get("averageDailyHours", 0.0)),
-                details={
-                    "status": item_data.get("status", ""),
-                    "members": item_data.get("members", []),
-                    "progress": item_data.get("progress", 0.0)
-                }
-            )
-            items.append(item)
-            total_hours += item.total_hours
-        
-        return {
-            "success": True,
-            "statistics_type": "project_hours",
-            "date_range": f"{params.start_date} 至 {params.end_date}",
-            "total_hours": round(total_hours, 2),
-            "total_records": len(items),
-            "items": [item.dict() for item in items],
-            "summary": {
-                "average_hours_per_project": round(total_hours / max(1, len(items)), 2),
-                "total_work_days": sum(item.work_days for item in items),
-                "date_range_days": (end_date - start_date).days + 1
-            }
-        }
 
 
 async def _compute_department_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
-    """计算部门工时统计"""
-    base_url = settings.SPRINGBOOT_BASE_URL
-    url = f"{base_url}/api/statistics/department-hours"
+    """计算部门工时统计（基于原始记录聚合）"""
+    records = await _fetch_workhour_records(params, headers)
 
-    query_params = {
-        "startDate": params.start_date,
-        "endDate": params.end_date
+    from collections import defaultdict
+    dept_map = defaultdict(lambda: {"total_hours": 0.0, "work_days": set(), "users": set()})
+
+    for r in records:
+        dept = r.get("orgName") or r.get("departmentName") or r.get("deptId", "未知部门")
+        dept_map[dept]["total_hours"] += float(r.get("workhour", 0) or 0)
+        dept_map[dept]["work_days"].add(str(r.get("workhourDate", ""))[:10])
+        dept_map[dept]["users"].add(r.get("memberId", ""))
+
+    items = []
+    total_hours = 0.0
+    for dept, info in sorted(dept_map.items(), key=lambda x: -x[1]["total_hours"]):
+        item = StatisticsItem(
+            id=dept,
+            name=dept,
+            total_hours=round(info["total_hours"], 2),
+            work_days=len(info["work_days"]),
+            average_daily_hours=round(info["total_hours"] / max(1, len(info["work_days"])), 2),
+            details={"user_count": len(info["users"])},
+        )
+        items.append(item)
+        total_hours += info["total_hours"]
+
+    return {
+        "success": True,
+        "statistics_type": "department_hours",
+        "date_range": f"{params.start_date} 至 {params.end_date}",
+        "total_hours": round(total_hours, 2),
+        "total_records": len(items),
+        "items": [item.dict() for item in items],
+        "summary": {
+            "average_hours_per_department": round(total_hours / max(1, len(items)), 2),
+            "total_work_days": sum(i.work_days for i in items),
+            "date_range_days": (end_date - start_date).days + 1,
+        },
     }
-
-    if params.department_id:
-        query_params["departmentId"] = params.department_id
-
-    async with httpx.AsyncClient(timeout=30.0) as client:
-        response = await client.get(url, params=query_params, headers=headers or {})
-        response.raise_for_status()
-        
-        api_data = response.json()
-        if not api_data.get("success", False):
-            raise Exception(api_data.get("message", "API调用失败"))
-        
-        data = api_data.get("data", [])
-        items = []
-        total_hours = 0.0
-        
-        for item_data in data:
-            item = StatisticsItem(
-                id=item_data["departmentId"],
-                name=item_data.get("departmentName", "未知部门"),
-                total_hours=float(item_data["totalHours"]),
-                work_days=int(item_data.get("workDays", 0)),
-                average_daily_hours=float(item_data.get("averageDailyHours", 0.0)),
-                details={
-                    "member_count": item_data.get("memberCount", 0),
-                    "projects": item_data.get("projects", [])
-                }
-            )
-            items.append(item)
-            total_hours += item.total_hours
-        
-        return {
-            "success": True,
-            "statistics_type": "department_hours",
-            "date_range": f"{params.start_date} 至 {params.end_date}",
-            "total_hours": round(total_hours, 2),
-            "total_records": len(items),
-            "items": [item.dict() for item in items],
-            "summary": {
-                "average_hours_per_department": round(total_hours / max(1, len(items)), 2),
-                "total_work_days": sum(item.work_days for item in items),
-                "date_range_days": (end_date - start_date).days + 1
-            }
-        }
 
 
 async def _compute_daily_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
-    """计算每日工时统计"""
-    base_url = settings.SPRINGBOOT_BASE_URL
-    url = f"{base_url}/api/statistics/daily-hours"
+    """计算每日工时统计（基于原始记录聚合）"""
+    records = await _fetch_workhour_records(params, headers)
 
-    query_params = {
-        "startDate": params.start_date,
-        "endDate": params.end_date
+    from collections import defaultdict
+    day_map = defaultdict(lambda: {"total_hours": 0.0, "users": set(), "projects": set()})
+
+    for r in records:
+        d = str(r.get("workhourDate", ""))[:10]
+        if not d:
+            continue
+        day_map[d]["total_hours"] += float(r.get("workhour", 0) or 0)
+        day_map[d]["users"].add(r.get("memberId", ""))
+        day_map[d]["projects"].add(r.get("projectName", ""))
+
+    items = []
+    total_hours = 0.0
+    for d in sorted(day_map.keys()):
+        info = day_map[d]
+        item = StatisticsItem(
+            id=d,
+            name=d,
+            total_hours=round(info["total_hours"], 2),
+            work_days=1,
+            average_daily_hours=round(info["total_hours"], 2),
+            details={"user_count": len(info["users"]), "project_count": len(info["projects"])},
+        )
+        items.append(item)
+        total_hours += info["total_hours"]
+
+    return {
+        "success": True,
+        "statistics_type": "daily_hours",
+        "date_range": f"{params.start_date} 至 {params.end_date}",
+        "total_hours": round(total_hours, 2),
+        "total_records": len(items),
+        "items": [item.dict() for item in items],
+        "summary": {
+            "average_daily_hours": round(total_hours / max(1, len(items)), 2),
+            "max_daily_hours": max([i.total_hours for i in items], default=0),
+            "min_daily_hours": min([i.total_hours for i in items], default=0),
+            "date_range_days": (end_date - start_date).days + 1,
+        },
     }
-
-    if params.user_id:
-        query_params["userId"] = params.user_id
-    if params.project_id:
-        query_params["projectId"] = params.project_id
-    if params.department_id:
-        query_params["departmentId"] = params.department_id
-
-    async with httpx.AsyncClient(timeout=30.0) as client:
-        response = await client.get(url, params=query_params, headers=headers or {})
-        response.raise_for_status()
-        
-        api_data = response.json()
-        if not api_data.get("success", False):
-            raise Exception(api_data.get("message", "API调用失败"))
-        
-        data = api_data.get("data", [])
-        items = []
-        total_hours = 0.0
-        
-        for item_data in data:
-            item = StatisticsItem(
-                id=item_data["date"],
-                name=f"{item_data['date']} ({item_data.get('weekday', '')})",
-                total_hours=float(item_data["totalHours"]),
-                work_days=1,
-                average_daily_hours=float(item_data["totalHours"]),
-                details={
-                    "user_count": item_data.get("userCount", 0),
-                    "project_count": item_data.get("projectCount", 0)
-                }
-            )
-            items.append(item)
-            total_hours += item.total_hours
-        
-        return {
-            "success": True,
-            "statistics_type": "daily_hours",
-            "date_range": f"{params.start_date} 至 {params.end_date}",
-            "total_hours": round(total_hours, 2),
-            "total_records": len(items),
-            "items": [item.dict() for item in items],
-            "summary": {
-                "average_daily_hours": round(total_hours / max(1, len(items)), 2),
-                "max_daily_hours": max([item.total_hours for item in items], default=0),
-                "min_daily_hours": min([item.total_hours for item in items], default=0),
-                "date_range_days": (end_date - start_date).days + 1
-            }
-        }
 
 
 async def _compute_weekly_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
-    """计算每周工时统计"""
-    # 简化实现，实际应该按周分组
-    return await _compute_daily_hours_statistics(params, start_date, end_date, headers)
+    """计算每周工时统计（基于原始记录按周聚合）"""
+    records = await _fetch_workhour_records(params, headers)
+
+    from collections import defaultdict
+    week_map = defaultdict(lambda: {"total_hours": 0.0, "work_days": set(), "users": set()})
+
+    for r in records:
+        d_str = str(r.get("workhourDate", ""))[:10]
+        if not d_str:
+            continue
+        d = datetime.strptime(d_str, "%Y-%m-%d").date()
+        # ISO 周: YYYY-WNN
+        week_key = d.strftime("%Y-W%W")
+        week_map[week_key]["total_hours"] += float(r.get("workhour", 0) or 0)
+        week_map[week_key]["work_days"].add(d_str)
+        week_map[week_key]["users"].add(r.get("memberId", ""))
+
+    items = []
+    total_hours = 0.0
+    for wk in sorted(week_map.keys()):
+        info = week_map[wk]
+        item = StatisticsItem(
+            id=wk,
+            name=wk,
+            total_hours=round(info["total_hours"], 2),
+            work_days=len(info["work_days"]),
+            average_daily_hours=round(info["total_hours"] / max(1, len(info["work_days"])), 2),
+            details={"user_count": len(info["users"])},
+        )
+        items.append(item)
+        total_hours += info["total_hours"]
+
+    return {
+        "success": True,
+        "statistics_type": "weekly_hours",
+        "date_range": f"{params.start_date} 至 {params.end_date}",
+        "total_hours": round(total_hours, 2),
+        "total_records": len(items),
+        "items": [item.dict() for item in items],
+        "summary": {
+            "average_hours_per_week": round(total_hours / max(1, len(items)), 2),
+            "total_work_days": sum(i.work_days for i in items),
+            "date_range_days": (end_date - start_date).days + 1,
+        },
+    }
 
 
 async def _compute_monthly_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
-    """计算每月工时统计"""
-    # 简化实现，实际应该按月分组
-    return await _compute_daily_hours_statistics(params, start_date, end_date, headers)
+    """计算每月工时统计（基于原始记录按月聚合）"""
+    records = await _fetch_workhour_records(params, headers)
+
+    from collections import defaultdict
+    month_map = defaultdict(lambda: {"total_hours": 0.0, "work_days": set(), "users": set()})
+
+    for r in records:
+        d_str = str(r.get("workhourDate", ""))[:10]
+        if not d_str:
+            continue
+        d = datetime.strptime(d_str, "%Y-%m-%d").date()
+        month_key = d.strftime("%Y-%m")
+        month_map[month_key]["total_hours"] += float(r.get("workhour", 0) or 0)
+        month_map[month_key]["work_days"].add(d_str)
+        month_map[month_key]["users"].add(r.get("memberId", ""))
+
+    items = []
+    total_hours = 0.0
+    for mk in sorted(month_map.keys()):
+        info = month_map[mk]
+        item = StatisticsItem(
+            id=mk,
+            name=mk,
+            total_hours=round(info["total_hours"], 2),
+            work_days=len(info["work_days"]),
+            average_daily_hours=round(info["total_hours"] / max(1, len(info["work_days"])), 2),
+            details={"user_count": len(info["users"])},
+        )
+        items.append(item)
+        total_hours += info["total_hours"]
+
+    return {
+        "success": True,
+        "statistics_type": "monthly_hours",
+        "date_range": f"{params.start_date} 至 {params.end_date}",
+        "total_hours": round(total_hours, 2),
+        "total_records": len(items),
+        "items": [item.dict() for item in items],
+        "summary": {
+            "average_hours_per_month": round(total_hours / max(1, len(items)), 2),
+            "total_work_days": sum(i.work_days for i in items),
+            "date_range_days": (end_date - start_date).days + 1,
+        },
+    }
 
 
 def register_compute_statistics_tool():

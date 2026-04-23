@@ -45,6 +45,23 @@ ssh caic@172.19.3.136 "ssh useryzk@116.205.174.57 'cd /home/gongshi && sudo bash
 
 反向 SSH 隧道（常驻 172）：`autossh -M 0 -N -R 9901:127.0.0.1:8000 useryzk@116.205.174.57`
 
+### ⚠️ 公网测试必读：华为云 WAF 会限流开发机 IP
+
+从**本地开发机** curl 公网 `https://gst.thsware.com/api/ai/chat` 多次后会出现 **403（0.04s 快速拒绝）**，这是华为云 WAF 对该 IP 的 CC 防护，**不是路径白名单问题，不是服务故障**。识别指纹：响应头带 `Set-Cookie: HWWAFSESID` + `Server: CW`。
+
+**正确做法**：
+1. **测试入口放 116 服务器**，脚本推过去跑（企业出口 IP 信誉高，基本不被限）
+   ```bash
+   cat scripts/e2e-regression-0423.sh | ssh caic@172.19.3.136 "ssh useryzk@116.205.174.57 'cat > /tmp/e2e.sh && chmod +x /tmp/e2e.sh'"
+   ssh caic@172.19.3.136 "ssh useryzk@116.205.174.57 'TOKEN=<jwt> bash /tmp/e2e.sh'"
+   ```
+2. 脚本内每条 curl 之间 `sleep 3`，加浏览器 UA + Origin + Referer
+3. 已被限流 → 等 15~30 分钟自动解封，或换 IP（4G 热点）
+4. **不要在未复测（至少两个不同 IP）前下"CDN 阻断"结论**
+5. 最终验收必须**浏览器实测**，脚本过 ≠ 用户能用
+
+完整诊断与证据：[`docs/waf-403-diagnosis-2026-04-23.md`](docs/waf-403-diagnosis-2026-04-23.md)
+
 ### 获取 JWT Token（用于 API 测试）
 
 ```bash

@@ -30,7 +30,8 @@ class PermissionContext(BaseModel):
     managed_departments: List[str] = Field(default_factory=list, description="管理的部门ID列表")
     managed_projects: List[str] = Field(default_factory=list, description="管理的项目ID列表")
     session_id: Optional[str] = Field(None, description="会话ID")
-    
+    auth_token: Optional[str] = Field(None, description="认证令牌（JWT）")
+
     class Config:
         use_enum_values = True
 

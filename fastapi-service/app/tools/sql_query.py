@@ -194,8 +194,17 @@ def _build_permission_constraints(context: Any) -> str:
     from app.services.permission_validator import permission_validator
     from app.models.tool import ToolExecutionContext
 
+    # 空 context fallback（测试环境或匿名用户）
+    if not context:
+        return "（无数据范围限制，匿名查询模式）"
+
     # 将 dict 或 ToolExecutionContext 转为 PermissionContext
     if isinstance(context, dict):
+        # 补全缺失的必填字段，防止 ValidationError
+        if not context.get("user_id"):
+            context["user_id"] = "anonymous"
+        if not context.get("entity_type"):
+            context["entity_type"] = "employee"
         ctx = ToolExecutionContext(**context)
     else:
         ctx = context

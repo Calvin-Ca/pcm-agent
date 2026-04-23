@@ -94,7 +94,7 @@ async def query_project_handler(**kwargs) -> Dict[str, Any]:
 
         if not params.project_id:
             # 无 project_id，返回项目列表（含可填报项目）
-            url = f"{base_url}/api/project/list"
+            url = f"{base_url}/api/project-infos"
             async with httpx.AsyncClient(timeout=30.0) as client:
                 response = await client.get(url, headers=request_headers)
                 response.raise_for_status()
@@ -106,7 +106,7 @@ async def query_project_handler(**kwargs) -> Dict[str, Any]:
             }
 
         # 构建查询URL（指定项目）
-        url = f"{base_url}/api/projects/{params.project_id}"
+        url = f"{base_url}/api/project-infos/{params.project_id}"
 
         # 调用SpringBoot API
         async with httpx.AsyncClient(timeout=30.0) as client:

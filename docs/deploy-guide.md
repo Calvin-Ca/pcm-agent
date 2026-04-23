@@ -4,6 +4,8 @@
 项目架构图、请求处理流程、RAG 流程等见 [deployment.md](deployment.md)。
 LLM 推理服务器（vLLM / Ollama）的详细操作命令见 [deploy-model-server.md](deploy-model-server.md)。
 
+> **⚠️ 公网测试前必读**：从开发机 curl `https://gst.thsware.com/api/ai/chat` 反复多次会触发华为云 WAF CC 防护返回 **403（0.04s 快速拒绝 + `HWWAFSESID` cookie）**，**不是路径白名单问题**。测试入口应放 116 服务器，或等 15~30 分钟自动解封。详见 [`waf-403-diagnosis-2026-04-23.md`](./waf-403-diagnosis-2026-04-23.md)。
+
 ---
 
 ## 一、架构总览
@@ -497,7 +499,67 @@ docker compose logs -f redis
 
 详细部署命令（启动容器、压测、GPU 资源分配等）见 [deploy-model-server.md](deploy-model-server.md)。
 
-### 当前运行服务
+### 5.1 vLLM 配置位置
+
+| 服务 | 配置文件路径 | 说明 |
+|------|-------------|------|
+| vllm-qwen3-8b | `/mnt/nvme/stone/vllm-qwen/docker-compose.yml` | 主力对话 LLM |
+| vllm-zaojiazhan | `/mnt/nvme/stone/vllm-qwen/docker-compose.yml` | 另一 vLLM 实例（GPU 3） |
+| vllm-bge-large | 未知 | Embedding 服务 |
+
+### 5.2 vllm-qwen3-8b 当前配置
+
+```yaml
+vllm-qwen3-8b:
+  container_name: vllm-qwen3-8b
+  image: vllm-qwen3:latest-cu122
+  runtime: nvidia
+  environment:
+    - NVIDIA_VISIBLE_DEVICES=2  # GPU 2
+    - NVIDIA_DISABLE_REQUIRE=1
+    - PYTORCH_ALLOC_CONF=expandable_segments:True
+  shm_size: 16gb
+  ports:
+    - "8099:8099"
+  volumes:
+    - /mnt/nvme/stone/modelscope_cache/models/Qwen/Qwen3-8B:/model:ro
+  command: >
+    python -m vllm.entrypoints.openai.api_server
+    --model /model
+    --served-model-name qwen3-8b
+    --port 8099
+    --tensor-parallel-size 1
+    --trust-remote-code
+    --gpu-memory-utilization 0.85
+    --max-model-len 8192
+    --max-num-seqs 8
+    --enable-auto-tool-choice
+    --tool-call-parser hermes
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            device_ids: ["2"]
+            capabilities: [gpu]
+```
+
+**关键参数说明**：
+- `--served-model-name qwen3-8b`：模型别名，ai-service 用此名称调用（同时保留 `/model` 也可用）
+- `--max-num-seqs 8`：最大并发序列数
+- `--gpu-memory-utilization 0.85`：GPU 显存使用比例
+- `--max-model-len 8192`：最大上下文长度
+- `--enable-auto-tool-choice`：启用自动工具选择，使模型能根据 `tools` 参数触发 function calling
+- `--tool-call-parser hermes`：工具调用解析器。Qwen3 系列官方推荐用 `hermes`（`qwen3_coder`/`qwen3_xml` 有已知 bug，会导致 `tool_calls` 为空）
+
+### 5.3 重启 vLLM 服务
+
+```bash
+cd /mnt/nvme/stone/vllm-qwen
+docker compose up -d --force-recreate vllm-qwen3-8b
+```
+
+### 5.4 当前运行服务
 
 | 端口 | 服务 | 模型 | GPU | 用途 |
 |------|------|------|-----|------|

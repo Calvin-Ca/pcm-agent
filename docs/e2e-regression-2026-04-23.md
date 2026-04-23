@@ -240,21 +240,63 @@ TOKEN=<your-token> ./e2e-regression.sh
 
 ---
 
-## 结果记录模板
+## 结果记录（2026-04-23 复测）
 
-测试完成后，在下方表格记录结果：
+> **执行位置**：116 本机 `curl --resolve gst.thsware.com:443:127.0.0.1`（绕 CDN 直打 nginx）。
+> **原因**：公网 CDN/WAF 仍阻断所有 POST `/api/ai/chat`（403），测试必须绕 CDN 才能走完 nginx→SpringBoot→ai-service 全链路。
+> 账号：159\*\*\*\*0206 (ROLE_ADMIN, entity_type=employee)，JWT exp=2026-04-24 12:05。
 
-| 用例 | 工具/场景 | HTTP 状态 | SSE 正常 | 数据正确 | 备注 |
-|------|-----------|-----------|----------|----------|------|
-| T1 | query_timesheet | | | | |
-| T2 | query_project | | | | |
-| T3 | compute_statistics | | | | |
-| T4 | generate_weekly_report | | | | |
-| T5 | save_workhour | | | | |
-| T6 | RAG 知识库 | | | | |
-| T7 | sql_query | | | | |
-| T8 | 通用对话 | | | | |
-| T9 | 中文稳定性 | | | | |
+| 用例 | 工具/场景 | HTTP | SSE | 数据正确 | 状态 | 备注 |
+|------|-----------|------|-----|----------|------|------|
+| T1 | query_timesheet | 200 | ✅ | ✅ | ✅ PASS | user_id=`159****0206` 正确解析，total_hours=0（账号本周未填，符合预期） |
+| T2 | query_project | 200 | ✅ | ❌ | ❌ FAIL | 工具调用成功，但后端 `/api/project/list` 返回 404；LLM 把整句"查一下我参与的"当 project_name |
+| T3 | compute_statistics | 200 | ✅ | ❌ | ❌ FAIL | 参数校验失败：缺 `statistics_type` / `start_date` / `end_date`。LLM 只提供了 user_id |
+| T4 | generate_weekly_report | 200 | ✅ | ❌ | ❌ FAIL | LLM **没真正触发 function calling**，直接把 tool_calls 写成 JSON 文本回复用户（vLLM tool parser 未开） |
+| T5 | save_workhour | 200 | ✅ | ✅ | ✅ PASS | 正确进入 clarify 模式，引导补充项目/日期/时长。注：未验证完整写操作链路（数据库确认行插入），后续需补 hard regression |
+| T6 | RAG 知识库 | 200 | ✅ | ✅ | ✅ PASS | 返回"次日 10:00 / 次月 5 日前"正确内容，引用来源：工时填报管理制度.md / 假期与加班政策.md / 常见问题FAQ.md / 工时审核流程.md |
+| T7 | sql_query | 200 | ✅ | ❌ | ❌ FAIL | LLM **错选** compute_statistics 而非 sql_query，且参数又缺失；SQL Agent 完全未触发 |
+| T8 | 通用对话 | 200 | ✅ | ⚠️ | ⚠️ PASS* | 返回角色介绍正确；但输出里有 `<think>...</think>` 推理过程泄漏 |
+| T9 | 中文稳定性 | 200 | ✅ | ✅ | ✅ PASS | 同 T1，中文 POST body 链路稳定 |
+
+**通过率**：4/9 完全通过（T1/T5/T6/T9）+ 1/9 带警告通过（T8 `<think>` 泄漏）+ 4/9 FAIL（T2/T3/T4/T7）。
+
+### 总结
+
+| 层级 | 状态 | 说明 |
+|------|------|------|
+| 网络链路（nginx→SpringBoot→tunnel→ai-service） | ✅ 全通 | 9/9 HTTP 200 |
+| 身份透传（user_id + auth_token） | ✅ 全通 | `user_id="159****0206"`（非 anonymous），auth_token 带完整 JWT 透传给工具 |
+| SSE 流式输出 | ✅ 全通 | nginx 本机发直接 OK，`proxy_buffering off` 已生效 |
+| 公网入口（CDN） | ✅ 正常（见修正） | 本次测试**从开发机走 --resolve 绕 CDN**，初测以为 CDN 还拦；后从 116 走真公网实测 POST 200，**运维白名单已生效**。开发机 403 是 WAF 对该 IP 做了 CC 频率限流，详见 [waf-403-diagnosis-2026-04-23.md](./waf-403-diagnosis-2026-04-23.md) |
+| 工具正确性（9 个工具） | ❌ 4 个不通 | 见下方"发现的问题" |
+| RAG 知识库 | ✅ 可用 | 答案命中 + 来源引用正常 |
+
+---
+
+## 发现的问题（按严重度排序）
+
+### P0 — 阻断业务
+
+| # | 问题 | 影响 | 根因 | 建议 |
+|---|------|------|------|------|
+| ~~E1~~ | ~~CDN/WAF 阻断所有公网 POST `/api/ai/chat` → 403~~ | **诊断错了，实际是测试客户端 IP 被华为云 WAF 频率限流** | 同一开发机短时间多次 curl 触发 CC 防护；运维白名单已生效，终端用户正常 | 详见 [`docs/waf-403-diagnosis-2026-04-23.md`](./waf-403-diagnosis-2026-04-23.md)。降级为 🟡 测试规避项，不再 P0 |
+| E2 | vLLM qwen3-8b 的 Function Calling 没启用 tool parser | LLM 无法正确触发 tool_calls，T4 直接把伪 tool_calls JSON 当文本回复给用户；Prometheus 看到 17 次 function_calling 全 `status="error"`，总耗时 0.08s（表示请求压根没打到推理） | vLLM 启动缺少 `--enable-auto-tool-choice --tool-call-parser hermes`（或对应 qwen3 的 parser 名） | 修 vLLM 启动参数，或改走 qwen-plus DashScope 兜底（对应 grafana-validation 的 G3/G5，同一修复） |
+
+### P1 — 功能错位
+
+| # | 问题 | 影响 | 根因 | 建议 |
+|---|------|------|------|------|
+| E3 | `query_project` 调 `/api/project/list` 返回 404 | T2 查项目失败 | SpringBoot 侧实际路径为 `/api/project-infos`（见 `springboot-api-reference.md` 第三节），`query_project.py` 中 URL 写错 | 将 `query_project.py` 中的 URL 改为 `/api/project-infos` |
+| E4 | LLM 参数提取不稳 — T3/T7 缺 `statistics_type/start_date/end_date` 等必填字段 | 工具调用被 Pydantic 拒绝 | 与 E2 同源：tool parser 未开，LLM 只能以 generate 模式"尝试模仿"工具调用，参数结构不完整 | 修完 E2 后复测；或在 `task_executor.py` 中对缺失必填参数进入 clarify 流程而不是直接抛错 |
+| E5 | LLM 错选工具 — T7 期望 `sql_query`，实际选 `compute_statistics` | 复杂 SQL 场景无法走 SQL Agent | System Prompt 中 sql_query 的触发条件描述不足，与 compute_statistics 边界重叠 | 在 `prompts/system.yaml` 的 sql_query few-shot 中补一条"统计所有员工..."示例 |
+| E6 | `<think>...</think>` 推理过程泄漏到用户回复 | T4/T8 输出里能看到模型推理思路，体验差 | qwen3 系列默认输出 `<think>` 标签，ai-service 未过滤 | 在 `llm_client.py` 返回路径过滤：先完成 tool_calls 解析，再对最终 content 用正则剥离 `<think>.*?</think>` |
+
+### P2 — 已记录
+
+| # | 问题 | 状态 |
+|---|------|------|
+| E7 | Milvus nodeID 不匹配 → FAISS 降级 | 已知，不影响 RAG 可用性 |
+| E8 | autossh 无持久化（172 重启需手动） | 已知 |
 
 ---
 
@@ -273,6 +315,6 @@ TOKEN=<your-token> ./e2e-regression.sh
 
 ## 当前状态
 
-- [ ] 测试执行中
-- [ ] 结果已记录
-- [ ] 问题已修复（如有）
+- [x] 测试执行中（2026-04-23 20:08~20:13 UTC+8，9 个用例全部跑完）
+- [x] 结果已记录（见上方"结果记录（2026-04-23 复测）"表格）
+- [ ] 问题已修复（CDN 阻断、vLLM tool parser、/api/project/list 404 等 6 项待办）

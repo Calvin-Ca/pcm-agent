@@ -326,14 +326,19 @@ class TaskExecutor:
             import asyncio as _asyncio
             import inspect
 
-            # 为 sql_query 工具注入 permission_context（handler 需要 user_id/entity_type）
+            # 注入用户认证信息（所有调用 SpringBoot 的工具都需要）
             exec_params = dict(processed_params)
-            if task.tool_name == "sql_query" and permission_context:
-                exec_params["context"] = {
-                    "user_id": permission_context.user_id,
-                    "entity_type": permission_context.entity_type,
-                    "department_id": permission_context.department_id,
-                }
+            if permission_context:
+                if permission_context.auth_token:
+                    exec_params["auth_token"] = permission_context.auth_token
+
+                # 为 sql_query 工具注入 permission_context
+                if task.tool_name == "sql_query":
+                    exec_params["context"] = {
+                        "user_id": permission_context.user_id,
+                        "entity_type": permission_context.entity_type,
+                        "department_id": permission_context.department_id,
+                    }
 
             if inspect.iscoroutinefunction(handler):
                 coro = handler(**exec_params)
@@ -343,6 +348,10 @@ class TaskExecutor:
                 )
             result = await asyncio.wait_for(coro, timeout=task.timeout)
 
+            # 检查业务层失败（handler 返回了 success=False 但未抛异常）
+            if isinstance(result, dict) and result.get("success") is False:
+                _call_status = "error"
+
             execution_time = (datetime.now() - start_time).total_seconds()
             logger.info(f"工具执行完成: {task.tool_name}, 耗时: {execution_time:.2f}秒")
 
@@ -351,7 +360,7 @@ class TaskExecutor:
                 "parameters": processed_params,
                 "result": result,
                 "execution_time": execution_time,
-                "success": True
+                "success": _call_status == "success"
             }
         except asyncio.TimeoutError:
             _call_status = "error"

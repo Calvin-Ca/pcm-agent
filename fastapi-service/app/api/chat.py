@@ -215,7 +215,6 @@ async def chat_stream(request: ChatRequest, http_request: Request):
     import time
 
     ACTIVE_REQUESTS.inc()
-    _start = time.monotonic()
     _intent = "unknown"
 
     try:
@@ -229,7 +228,8 @@ async def chat_stream(request: ChatRequest, http_request: Request):
             permission_context = PermissionContext(
                 user_id=user_id,
                 entity_type=entity_type,
-                department_id=department_id
+                department_id=department_id,
+                auth_token=auth_token
             )
             user_context["permission_context"] = permission_context
 
@@ -238,6 +238,8 @@ async def chat_stream(request: ChatRequest, http_request: Request):
         # 生成流式响应（LangGraph Agent）
         async def generate_stream():
             nonlocal _intent
+            _stream_start = time.monotonic()
+            _stream_status = "success"
             try:
                 async for event in stream_agent_response(
                     message=request.message,
@@ -254,12 +256,18 @@ async def chat_stream(request: ChatRequest, http_request: Request):
                             _intent = "general_chat"
                     yield event
             except Exception as e:
+                _stream_status = "error"
                 logger.error(f"流式响应生成异常: {e}", exc_info=True)
                 import json
                 yield (
                     f"event: error\n"
                     f"data: {json.dumps({'message': f'处理请求时发生错误: {str(e)}'}, ensure_ascii=False)}\n\n"
                 )
+            finally:
+                # 埋点放在 generator 内部 finally，测的是真实流持续时间
+                duration = time.monotonic() - _stream_start
+                REQUEST_COUNT.labels(intent=_intent, status=_stream_status).inc()
+                REQUEST_LATENCY.labels(intent=_intent).observe(duration)
 
         return StreamingResponse(
             generate_stream(),
@@ -277,9 +285,7 @@ async def chat_stream(request: ChatRequest, http_request: Request):
         raise HTTPException(status_code=500, detail=f"处理聊天请求失败: {str(e)}")
 
     finally:
-        duration = time.monotonic() - _start
-        REQUEST_COUNT.labels(intent=_intent, status="success").inc()
-        REQUEST_LATENCY.labels(intent=_intent).observe(duration)
+        # 外层只负责活跃请求计数，埋点已移到 generate_stream 内部
         ACTIVE_REQUESTS.dec()
 
 
@@ -320,7 +326,8 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
             permission_context = PermissionContext(
                 user_id=user_id,
                 entity_type=entity_type,
-                department_id=department_id
+                department_id=department_id,
+                auth_token=auth_token
             )
             user_context["permission_context"] = permission_context
 

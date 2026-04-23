@@ -111,7 +111,11 @@ class LLMClient:
                         if _has_metrics:
                             LLM_TOKENS.labels(model=self.model, token_type="prompt").inc(usage.get("prompt_tokens", 0))
                             LLM_TOKENS.labels(model=self.model, token_type="completion").inc(usage.get("completion_tokens", 0))
-                        return data["choices"][0]["message"]["content"]
+                        content = data["choices"][0]["message"]["content"]
+                        if content:
+                            import re
+                            content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL).strip()
+                        return content
                     else:
                         _status = "error"
                         error_text = await resp.text()
@@ -253,7 +257,11 @@ class LLMClient:
                                 for tc in msg.get("tool_calls", [])
                             ]
                             return {"finish_reason": "tool_calls", "content": None, "tool_calls": calls}
-                        return {"finish_reason": "stop", "content": msg.get("content", ""), "tool_calls": []}
+                        content = msg.get("content", "")
+                        if content:
+                            import re
+                            content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL).strip()
+                        return {"finish_reason": "stop", "content": content, "tool_calls": []}
                     else:
                         _status = "error"
                         err = await resp.text()
