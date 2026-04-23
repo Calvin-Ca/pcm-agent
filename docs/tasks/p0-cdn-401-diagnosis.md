@@ -9,7 +9,7 @@
 | POST 返回 **401** | `JWTFilter.java` 验证 token 后**未调用** `SecurityContextHolder.setAuthentication()`，Spring Security 认为请求未认证 | 恢复被注释的两行代码 |
 | POST 返回 **403**（中文 body） | nginx `location /api/` **缺少 SSE 参数**（`proxy_buffering off`、`proxy_http_version 1.1`、`chunked_transfer_encoding on`），导致 SSE 响应被缓冲/超时 | 新增 `location /api/ai/` 并配置 SSE 优化参数 |
 
-两个问题**叠加出现**，导致排查方向反复：先以为是 WAF 拦截，后以为是 Spring Security，最后定位到 nginx SSE 配置。
+两个问题**串联暴露**（401 挡在 Spring Security，修掉后才暴露出 nginx SSE 配置缺失的 403），导致排查方向两次修正。
 
 ---
 
@@ -365,7 +365,19 @@ location /api/ai/ {
 | 文档顶部加 TL;DR | ✅ | 新增"最终根因（TL;DR）"表格，区分 401 和 403 两个根因 |
 | 修正 nginx 本质描述 | ✅ | 明确新旧 location `proxy_pass` 终点相同，修复生效的是 SSE 参数 |
 | 04-22 WAF 判断加推翻标记 | ✅ | 04-22 记录顶部加 `⚠️ 此判断后被推翻` |
-| POST /api/workhour 500 排查 | ✅ | **非代码 bug**，测试 curl 字段名错误：`workDate`→`workhourDate`、`duration`→`workhour` |
+| POST /api/workhour 500 排查 | ✅ | **非代码 bug**，测试 curl 字段名错误，见下方字段对照表 |
+
+### SpringBoot /api/workhour 字段对照表
+
+> 踩坑记录：POST /api/workhour 返回 500/400 时，先核对字段名。Spring Boot `WorkhourDTO` 的字段名如下：
+
+| 业务含义 | SpringBoot 字段名 | 常见错误写法 |
+|----------|-------------------|-------------|
+| 工时日期 | `workhourDate` | ❌ `workDate` |
+| 工时小时数 | `workhour` | ❌ `duration` |
+| 工作内容 | `workContent` | ❌ `content` |
+| 项目 ID | `projectId` | — |
+| 成员 ID | `memberId` | — |
 
 ---
 
