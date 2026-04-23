@@ -200,6 +200,7 @@ async def chat_stream(request: ChatRequest, http_request: Request):
             user_context["user_id"] = user_id
             logger.warning(
                 f"[DEBUG] user_id fallback to anonymous in /chat/stream, "
+                f"session_id={request.session_id}, "
                 f"body.user_id={body_user_id}, header.X-User-ID={header_user_id}"
             )
 
@@ -324,6 +325,7 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
             user_context["user_id"] = user_id
             logger.warning(
                 f"[DEBUG] user_id fallback to anonymous in /chat, "
+                f"session_id={request.session_id}, "
                 f"body.user_id={body_user_id}, header.X-User-ID={header_user_id}"
             )
 

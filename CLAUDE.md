@@ -2,6 +2,59 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 生产环境速查（执行任务必读）
+
+### 服务器 SSH 连接
+
+| 服务器 | 用途 | SSH 命令 |
+|--------|------|----------|
+| 172.19.3.136 | GPU 服务器，运行 ai-service Docker Compose | `ssh caic@172.19.3.136` |
+| 116.205.174.57 | 公网应用服务器，运行 SpringBoot + nginx | 从 172 跳转：`ssh caic@172.19.3.136 "ssh useryzk@116.205.174.57 '<命令>'"` |
+| 192.168.0.94 | 数据库服务器，MySQL 3306，库名 workhour | 仅内网访问 |
+
+> 注意：本地无法直接 SSH 到 116，必须经 172 跳转。
+
+### 关键路径与命令
+
+```bash
+# 172：ai-service 目录
+/home/caic/code/workhour/workhour_agent/
+
+# 172：重建 ai-service 容器（改了 docker-compose.yml 或 .env 后执行）
+ssh caic@172.19.3.136 "cd /home/caic/code/workhour/workhour_agent && docker compose up -d --force-recreate ai-service"
+
+# 172：查看 ai-service 日志
+ssh caic@172.19.3.136 "docker logs ai-assistant-service --tail 50"
+
+# 116：SpringBoot 启动脚本位置
+/home/gongshi/gongshi-ht.sh
+/home/gongshi/gongshi-ht.war   # WAR 包
+
+# 116：重启 SpringBoot（需要 sudo）
+ssh caic@172.19.3.136 "ssh useryzk@116.205.174.57 'cd /home/gongshi && sudo bash gongshi-ht.sh restart'"
+
+# 116：nginx 配置
+/usr/local/nginx/conf/nginx.conf
+```
+
+### 网络拓扑（简版）
+
+```
+浏览器 → nginx(116:443) → SpringBoot(116:9900) → 隧道(116:9901) → ai-service(172:8000)
+```
+
+反向 SSH 隧道（常驻 172）：`autossh -M 0 -N -R 9901:127.0.0.1:8000 useryzk@116.205.174.57`
+
+### 获取 JWT Token（用于 API 测试）
+
+```bash
+# 从接口获取（密码需加密，见 reference_e2e_testing.md）
+# 或从浏览器 DevTools → Network → authenticate → Response → data.token
+TOKEN="<从浏览器复制的 Bearer token，去掉 Bearer 前缀>"
+```
+
+---
+
 ## 跨机器记忆同步
 
 记忆文件存放在项目内的 `.claude/memory/` 目录（已纳入 git）。
@@ -64,8 +117,9 @@ pytest tests/performance/test_response_time.py -v  # 性能测试
 
 ```
 Spring Boot (8080)
-  → 注入 X-User-ID、X-Entity-Type、X-Department-ID 请求头（已完成 JWT 验证）
+  → 构造 POST body，在 user_context 中携带用户信息（user_id / entity_type / department_id / auth_token）
   → POST /api/ai/chat/stream（FastAPI 8000）
+    → 入口路由优先读取 body.user_context.*，header X-User-ID 等作为兜底
     → LangGraph Agent
       → node_llm_with_tools（Function Calling 主节点，qwen-plus + tools schema）
           ├─ tool_calls → ParamResolver（名称→ID）→ PermissionValidator → TaskExecutor → 调用工具
