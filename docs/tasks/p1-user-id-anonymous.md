@@ -191,6 +191,32 @@ git commit -m "fix: correctly extract user_id from body.user_context instead of 
 
 ---
 
+## 评审后补修记录（2026-04-23）
+
+| 评审项 | 状态 | 说明 |
+|--------|------|------|
+| 同步更新 CLAUDE.md | ✅ | "请求处理流程"从 `header 注入` 改为 `body.user_context 优先，header 兜底` |
+| WARNING 日志加 session_id | ✅ | `chat.py` 两处 + `langgraph_agent.py` 一处，共三处 |
+| 提取 `_resolve_user_identity` 函数 | ✅ | 从两个路由函数中提取，消除重复代码，两个路由复用 |
+| user_id 解析单元测试 | ✅ | 新增 `tests/test_chat_user_id_resolution.py`，10 个用例全部通过 |
+
+### 单元测试覆盖
+
+```
+test_read_user_id_from_body                          PASSED
+test_read_all_fields_from_body                       PASSED
+test_fallback_to_header_when_body_missing            PASSED
+test_header_fallback_for_all_fields                  PASSED
+test_body_wins_over_header                           PASSED
+test_fallback_to_anonymous                           PASSED
+test_fallback_to_anonymous_logs_warning              PASSED
+test_empty_string_body_user_id_treated_as_falsey     PASSED
+test_none_body_user_id_treated_as_missing            PASSED
+test_partial_body_with_header_complement             PASSED
+```
+
+---
+
 ## 任务状态：✅ 已完成（2026-04-23）
 ```
 
