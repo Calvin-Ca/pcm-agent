@@ -33,6 +33,53 @@ class ChatRequest(BaseModel):
     user_context: Optional[Dict[str, Any]] = Field(None, description="用户上下文")
 
 
+def _resolve_user_identity(request: ChatRequest, http_request: Request) -> tuple[str, Optional[str], Optional[str], str, Dict[str, Any]]:
+    """
+    解析用户身份信息。
+
+    优先级：body.user_context > header > anonymous fallback
+
+    Returns:
+        (user_id, entity_type, department_id, auth_token, user_context)
+    """
+    user_context = request.user_context or {}
+
+    body_user_id = user_context.get("user_id")
+    body_entity_type = user_context.get("entity_type")
+    body_department_id = user_context.get("department_id")
+    body_auth_token = user_context.get("auth_token")
+
+    header_user_id = http_request.headers.get("X-User-ID")
+    header_entity_type = http_request.headers.get("X-Entity-Type")
+    header_department_id = http_request.headers.get("X-Department-ID")
+    header_auth_token = http_request.headers.get("Authorization", "")
+
+    user_id = body_user_id or header_user_id
+    entity_type = body_entity_type or header_entity_type
+    department_id = body_department_id or header_department_id
+    auth_token = body_auth_token or header_auth_token
+
+    if user_id:
+        user_context["user_id"] = user_id
+    else:
+        user_id = "anonymous"
+        user_context["user_id"] = user_id
+        logger.warning(
+            f"[DEBUG] user_id fallback to anonymous, "
+            f"session_id={request.session_id}, "
+            f"body.user_id={body_user_id}, header.X-User-ID={header_user_id}"
+        )
+
+    if entity_type:
+        user_context["entity_type"] = entity_type
+    if department_id:
+        user_context["department_id"] = department_id
+    if auth_token:
+        user_context["auth_token"] = auth_token
+
+    return user_id, entity_type, department_id, auth_token, user_context
+
+
 class ChatResponse(BaseModel):
     """聊天响应模型"""
     success: bool = Field(..., description="是否成功")
@@ -172,44 +219,10 @@ async def chat_stream(request: ChatRequest, http_request: Request):
     _intent = "unknown"
 
     try:
-        # 构建用户上下文
-        user_context = request.user_context or {}
-
-        # 优先从 body.user_context 读取用户身份信息
-        body_user_id = user_context.get("user_id")
-        body_entity_type = user_context.get("entity_type")
-        body_department_id = user_context.get("department_id")
-        body_auth_token = user_context.get("auth_token")
-
-        # 其次从请求头读取（向后兼容旧调用方）
-        header_user_id = http_request.headers.get("X-User-ID")
-        header_entity_type = http_request.headers.get("X-Entity-Type")
-        header_department_id = http_request.headers.get("X-Department-ID")
-        header_auth_token = http_request.headers.get("Authorization", "")
-
-        # 合并：body 优先，header 兜底
-        user_id = body_user_id or header_user_id
-        entity_type = body_entity_type or header_entity_type
-        department_id = body_department_id or header_department_id
-        auth_token = body_auth_token or header_auth_token
-
-        if user_id:
-            user_context["user_id"] = user_id
-        else:
-            user_id = "anonymous"
-            user_context["user_id"] = user_id
-            logger.warning(
-                f"[DEBUG] user_id fallback to anonymous in /chat/stream, "
-                f"session_id={request.session_id}, "
-                f"body.user_id={body_user_id}, header.X-User-ID={header_user_id}"
-            )
-
-        if entity_type:
-            user_context["entity_type"] = entity_type
-        if department_id:
-            user_context["department_id"] = department_id
-        if auth_token:
-            user_context["auth_token"] = auth_token
+        # 解析用户身份信息（body 优先，header 兜底）
+        user_id, entity_type, department_id, auth_token, user_context = _resolve_user_identity(
+            request, http_request
+        )
 
         # 构建权限上下文
         if user_id and entity_type:
@@ -297,44 +310,10 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
     response_message = None
 
     try:
-        # 构建用户上下文
-        user_context = request.user_context or {}
-
-        # 优先从 body.user_context 读取用户身份信息
-        body_user_id = user_context.get("user_id")
-        body_entity_type = user_context.get("entity_type")
-        body_department_id = user_context.get("department_id")
-        body_auth_token = user_context.get("auth_token")
-
-        # 其次从请求头读取（向后兼容旧调用方）
-        header_user_id = http_request.headers.get("X-User-ID")
-        header_entity_type = http_request.headers.get("X-Entity-Type")
-        header_department_id = http_request.headers.get("X-Department-ID")
-        header_auth_token = http_request.headers.get("Authorization", "")
-
-        # 合并：body 优先，header 兜底
-        user_id = body_user_id or header_user_id
-        entity_type = body_entity_type or header_entity_type
-        department_id = body_department_id or header_department_id
-        auth_token = body_auth_token or header_auth_token
-
-        if user_id:
-            user_context["user_id"] = user_id
-        else:
-            user_id = "anonymous"
-            user_context["user_id"] = user_id
-            logger.warning(
-                f"[DEBUG] user_id fallback to anonymous in /chat, "
-                f"session_id={request.session_id}, "
-                f"body.user_id={body_user_id}, header.X-User-ID={header_user_id}"
-            )
-
-        if entity_type:
-            user_context["entity_type"] = entity_type
-        if department_id:
-            user_context["department_id"] = department_id
-        if auth_token:
-            user_context["auth_token"] = auth_token
+        # 解析用户身份信息（body 优先，header 兜底）
+        user_id, entity_type, department_id, auth_token, user_context = _resolve_user_identity(
+            request, http_request
+        )
 
         # 构建权限上下文
         if user_id and entity_type:
