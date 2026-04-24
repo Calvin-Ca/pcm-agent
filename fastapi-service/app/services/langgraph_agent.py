@@ -14,6 +14,7 @@ LangGraph Agent 编排层
 import asyncio
 import json
 import logging
+import os
 import re
 from datetime import datetime
 from typing import Any, AsyncGenerator, Dict, Optional
@@ -202,6 +203,11 @@ async def node_llm_with_tools(state: AgentState) -> dict:
     一次 LLM 调用同时完成：意图识别 + 工具选择 + 参数提取 + 缺参追问
     LLM/registry 不可用时自动降级到 node_classify_intent
     """
+    # 基准测试模式：强制降级到两次 LLM 调用的 classify_intent 路径
+    user_ctx = state.get("user_context") or {}
+    if os.getenv("BENCHMARK_FORCE_FALLBACK") == "1" or user_ctx.get("_benchmark_force_fallback"):
+        return await node_classify_intent(state)
+
     if not _llm_client or not _tool_registry:
         return await node_classify_intent(state)
 

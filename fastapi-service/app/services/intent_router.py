@@ -330,6 +330,7 @@ class IntentRouter:
         payload = {
             "model": model,
             "messages": [
+                {"role": "system", "content": "你是一个意图分类助手。不要输出思考过程，直接返回JSON。"},
                 {"role": "user", "content": prompt}
             ],
             "temperature": 0.1,
@@ -340,7 +341,12 @@ class IntentRouter:
             async with session.post(url, headers=headers, json=payload) as resp:
                 if resp.status == 200:
                     data = await resp.json()
-                    return data["choices"][0]["message"]["content"]
+                    content = data["choices"][0]["message"]["content"]
+                    import re
+                    content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL).strip()
+                    if "<think>" in content:
+                        content = re.sub(r"<think>.*", "", content, flags=re.DOTALL).strip()
+                    return content
                 else:
                     error_text = await resp.text()
                     raise ValueError(f"Intent LLM API错误 ({model}): {resp.status} - {error_text}")
@@ -881,7 +887,7 @@ class IntentRouter:
                     prompt=prompt,
                     system_prompt=system_prompt_text,
                     temperature=0,
-                    max_tokens=150
+                    max_tokens=500
                 )
                 json_str = response.strip()
                 # 去掉可能的markdown代码块
@@ -931,7 +937,7 @@ class IntentRouter:
                     prompt=prompt,
                     system_prompt=system_prompt_text,
                     temperature=0,
-                    max_tokens=150,
+                    max_tokens=500,
                 )
                 json_str = response.strip()
                 match = re.search(r'\{.*\}', json_str, re.DOTALL)

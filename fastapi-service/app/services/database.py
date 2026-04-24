@@ -23,7 +23,8 @@ class DatabaseService:
             pool_recycle=3600,
             pool_size=10,
             max_overflow=20,
-            echo=settings.DEBUG
+            echo=settings.DEBUG,
+            connect_args={"connect_timeout": 2},
         )
         
         self.SessionLocal = sessionmaker(

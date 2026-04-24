@@ -115,6 +115,8 @@ class LLMClient:
                         if content:
                             import re
                             content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL).strip()
+                            if "<think>" in content:
+                                content = re.sub(r"<think>.*", "", content, flags=re.DOTALL).strip()
                         return content
                     else:
                         _status = "error"
@@ -261,6 +263,8 @@ class LLMClient:
                         if content:
                             import re
                             content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL).strip()
+                            if "<think>" in content:
+                                content = re.sub(r"<think>.*", "", content, flags=re.DOTALL).strip()
                         return {"finish_reason": "stop", "content": content, "tool_calls": []}
                     else:
                         _status = "error"
