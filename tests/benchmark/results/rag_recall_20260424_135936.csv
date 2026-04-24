@@ -1,0 +1,4 @@
+strategy,recall@5,recall@10,mrr@10
+A_milvus,1.0,1.0,0.91
+B_bm25,0.96,1.0,0.8545238095238095
+C_hybrid,0.98,1.0,0.899

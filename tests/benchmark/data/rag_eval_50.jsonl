@@ -1,0 +1,50 @@
+{"id":1,"question":"工时截止日期是哪天","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"次日上午10:00"}
+{"id":2,"question":"工时最晚几点提交","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"次日上午10:00"}
+{"id":3,"question":"工时什么时候必须填完","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"工作日结束前"}
+{"id":4,"question":"工时填报截止时间是什么时候","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"填报时间"}
+{"id":5,"question":"本月工时最晚提交日期是哪天","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"次月 5 日前"}
+{"id":6,"question":"工时填报有截止时间吗","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"逾期填报"}
+{"id":7,"question":"本月工时截止是哪天","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"次月 5 日前"}
+{"id":8,"question":"工时填报最小单位是多少","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"0.5小时"}
+{"id":9,"question":"每天最多能填多少小时","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"24 小时"}
+{"id":10,"question":"标准工作日几个小时","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"标准工作日为8小时"}
+{"id":11,"question":"工时记录要填哪些信息","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"项目名称"}
+{"id":12,"question":"员工能填未分配的项目吗","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"只能填报已分配的项目"}
+{"id":13,"question":"单日工时超过12小时怎么办","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"单日工时超过12小时"}
+{"id":14,"question":"跨月补填工时怎么处理","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"跨月补填工时"}
+{"id":15,"question":"连续3天没填工时会怎样","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"连续3天未填报"}
+{"id":16,"question":"虚报工时怎么处罚","expected_doc":"工时填报管理制度.md","expected_chunk_contains":"虚报工时"}
+{"id":17,"question":"加班怎么算","expected_doc":"假期与加班政策.md","expected_chunk_contains":"工作日加班"}
+{"id":18,"question":"周末加班有双倍工资吗","expected_doc":"假期与加班政策.md","expected_chunk_contains":"周末加班"}
+{"id":19,"question":"法定节假日上班怎么算薪资","expected_doc":"假期与加班政策.md","expected_chunk_contains":"节假日加班"}
+{"id":20,"question":"加班费怎么算","expected_doc":"假期与加班政策.md","expected_chunk_contains":"2 倍"}
+{"id":21,"question":"节假日加班是三倍工资吗","expected_doc":"假期与加班政策.md","expected_chunk_contains":"3 倍"}
+{"id":22,"question":"年假有多少天","expected_doc":"假期与加班政策.md","expected_chunk_contains":"年假天数"}
+{"id":23,"question":"调休有效期是多久","expected_doc":"假期与加班政策.md","expected_chunk_contains":"6 个月"}
+{"id":24,"question":"加班可以换调休吗","expected_doc":"假期与加班政策.md","expected_chunk_contains":"调休"}
+{"id":25,"question":"年假可以跨年吗","expected_doc":"假期与加班政策.md","expected_chunk_contains":"不可跨年结转"}
+{"id":26,"question":"加班工时需要在系统填报吗","expected_doc":"假期与加班政策.md","expected_chunk_contains":"工时管理系统中填报"}
+{"id":27,"question":"部门管理员能审核谁的工时","expected_doc":"工时审核流程.md","expected_chunk_contains":"本部门成员"}
+{"id":28,"question":"普通员工能审核工时吗","expected_doc":"工时审核流程.md","expected_chunk_contains":"无审核权限"}
+{"id":29,"question":"项目负责人可以审核工时吗","expected_doc":"工时审核流程.md","expected_chunk_contains":"项目负责人"}
+{"id":30,"question":"工时审核后还能修改吗","expected_doc":"工时审核流程.md","expected_chunk_contains":"已审核工时原则上不可修改"}
+{"id":31,"question":"AI助手能批量审核工时吗","expected_doc":"工时审核流程.md","expected_chunk_contains":"批量审核"}
+{"id":32,"question":"审核拒绝怎么操作","expected_doc":"工时审核流程.md","expected_chunk_contains":"审核拒绝"}
+{"id":33,"question":"忘记审核会怎样","expected_doc":"工时审核流程.md","expected_chunk_contains":"未审核工时不会计入月度统计"}
+{"id":34,"question":"工时审核通过后状态是什么","expected_doc":"工时审核流程.md","expected_chunk_contains":"已审核"}
+{"id":35,"question":"怎么填写工时","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"工时填报"}
+{"id":36,"question":"怎么查看工时记录","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"工时查询"}
+{"id":37,"question":"怎么导出工时报表","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"导出"}
+{"id":38,"question":"已提交的工时还能修改吗","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"修改"}
+{"id":39,"question":"怎么查看团队成员的工时","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"项目经理"}
+{"id":40,"question":"怎么添加新项目","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"新建项目"}
+{"id":41,"question":"怎么给项目分配成员","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"项目成员"}
+{"id":42,"question":"忘记密码怎么找回","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"忘记密码"}
+{"id":43,"question":"遇到系统问题怎么反馈","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"意见反馈"}
+{"id":44,"question":"系统支持哪些浏览器","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"Chrome"}
+{"id":45,"question":"项目状态有哪些","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"计划中"}
+{"id":46,"question":"工时填报最小单位是多少","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"0.5小时"}
+{"id":47,"question":"忘记填报工时怎么办","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"补填"}
+{"id":48,"question":"普通员工能看到别人的工时吗","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"只能查看自己的工时"}
+{"id":49,"question":"哪些人可以创建项目","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"项目经理和管理员"}
+{"id":50,"question":"系统有哪些角色","expected_doc":"常见问题FAQ.md","expected_chunk_contains":"超级管理员"}

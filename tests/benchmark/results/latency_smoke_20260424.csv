@@ -1,0 +1,6 @@
+id,category,query,a_ttft_ms,a_e2e_ms,a_call_count,a_prompt_tokens,a_completion_tokens,a_total_tokens,a_intent_type,a_tool_name,b_ttft_ms,b_e2e_ms,b_prompt_tokens,b_completion_tokens,b_total_tokens
+1,query,查询我本周的工时,5140,5140,1,370,293,663,general_chat,,1250,7954,0,0,0
+2,query,上周的工时呢,4592,4592,1,369,264,633,general_chat,,250,4827,0,0,0
+3,query,帮我查一下本月填报的工时,4672,4672,1,372,268,640,general_chat,,250,5844,0,0,0
+4,query,看看上个月的工作时长,4718,4718,1,370,271,641,general_chat,,250,5859,0,0,0
+5,query,查一下李四的工时,3922,3922,1,371,226,597,general_chat,,265,7765,0,0,0
