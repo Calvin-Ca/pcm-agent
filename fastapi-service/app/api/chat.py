@@ -261,7 +261,7 @@ async def chat_stream(request: ChatRequest, http_request: Request):
                 import json
                 yield (
                     f"event: error\n"
-                    f"data: {json.dumps({'message': f'处理请求时发生错误: {str(e)}'}, ensure_ascii=False)}\n\n"
+                    f"data: {json.dumps({'type': 'error', 'message': f'处理请求时发生错误: {str(e)}'}, ensure_ascii=False)}\n\n"
                 )
             finally:
                 # 埋点放在 generator 内部 finally，测的是真实流持续时间

@@ -801,7 +801,14 @@ def _build_graph():
 # ─── SSE 流式输出 ─────────────────────────────────────────────────────────────
 
 def _format_sse(event_type: str, data: Dict[str, Any]) -> str:
-    """格式化 SSE 事件字符串"""
+    """格式化 SSE 事件字符串
+
+    同时把 event_type 写入 data JSON 的 `type` 字段。原因:
+    SpringBoot AIController 当前用 `bodyToFlux(String.class)` 消费 SSE，
+    Spring WebFlux 默认会丢掉 `event:` 行只保留 `data:` 内容。把 type 冗余
+    放进 data JSON,前端可以不依赖 event 行就拿到类型。
+    """
+    data.setdefault("type", event_type)
     data.setdefault("timestamp", datetime.now().isoformat())
     return f"event: {event_type}\ndata: {json.dumps(data, ensure_ascii=False, separators=(',', ':'))}\n\n"
 
