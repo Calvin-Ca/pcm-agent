@@ -21,3 +21,6 @@
 
 ## 踩坑记录
 - [RAG/Milvus 兼容性修复经验](feedback_rag_milvus_fixes.md) — pymilvus 2.6 ORM bug、DashScope embedding 兼容、langchain包结构变化（2026-03-31）
+
+## 基准测试约束（必读）
+- [简历叙事约束](feedback_benchmark_narrative.md) — FC延迟/SQL安全/RAG Recall的**绝对不要写**和**正确写法**，基于三轮实测数据（2026-04-25）
