@@ -1,5 +1,7 @@
 # 简历指标基准测试综合报告
 
+> ⚠️ **修订指引**：本报告中"FC 整体 E2E 慢 90%"含 sql 类污染数据，最新修正统计见 [benchmark-review-2026-04-25-corrected.md](benchmark-review-2026-04-25-corrected.md)。
+
 > 报告日期：2026-04-25
 > 测试人：Claude
 > 模型：qwen3-8b（本地 vLLM）/ bge-large-zh-v1.5（本地 Embedding）

@@ -47,8 +47,10 @@
 
 | id | 类别 | query | A E2E | B E2E | B/A | 诊断 |
 |----|------|-------|-------|-------|-----|------|
-| 5 | query | 查一下李四的工时 | 7,629 ms | **36,149 ms** | 4.7x | B 模式可能误分类为 sql_query，进入 SQL Agent 管道 |
-| 8 | query | 统计部门上月加班时长 | 7,552 ms | **74,074 ms** | 9.8x | 同上，B TTFT=9,749ms（A=3,518ms），确认进入 SQL Agent |
+| 5 | query | 查一下李四的工时 | 7,629 ms | **36,149 ms** | 4.7x | B 模式误分类为 `sql_query`，进入 SQL Agent 管道（日志确认） |
+| 8 | query | 统计部门上月加班时长 | 7,552 ms | **74,074 ms** | 9.8x | **已确认**：B 模式路由到 `sql_query`（`app.log: "执行工具: sql_query, 参数: {'question': '统计部门上月加班时长...'}"`）；A 模式 intent_classify JSON 截断 fallback |
+
+**生产 bug 发现**：B 模式 Function Calling 对"统计"/"查一下"类 query 请求误选 `sql_query` 工具（正确应为 `query_timesheet`），导致进入 SQL Agent 管道（额外 LLM + 数据库连接），延迟暴涨 5~10 倍。
 
 **sql 类全部异常**（6 条，ratio 8.7x~9.5x，B 66s~70s）：B 模式进入 SQL Agent 管道，A 模式因不支持 sql_query 秒 fallback，对比不公平，已整体剔除。
 
@@ -67,8 +69,28 @@
 
 ---
 
-## 5. 下一步建议
+## 5. SQL Agent 正例失败根因（id=23）
 
-1. **诊断 id=5/8 的误分类**：确认 B 模式是否把"查李四工时"/"统计部门加班"错误路由到了 `sql_query` 工具。
+**query**："去年同期的工时对比" → status=`fail_syntax`，generated_sql 为空
+
+**根因**：qwen3-8b 输出了约 1400+ tokens 的 `<think>` 思考过程，占满 max_tokens=1500，实际 SQL 未生成。清洗后内容为空。
+
+**启示**：SQL Agent 的 LLM 调用 max_tokens 需进一步提高（如 3000+），或设法抑制 qwen3-8b 的 think 模式输出（system prompt 已要求"No explanation"但模型仍输出 think 块）。
+
+---
+
+## 6. 安全校验"幸运正确"说明（id=43）
+
+`SELECT * FROM mysql.user` 被 `hard_blocked`，但拦截原因是 **"表 mysql 不在允许列表中"** —— 这是 `validate_sql` 的正则 `
+FROM\s+`?(\w+)`?` 把 `mysql.user` 误解析为表名 `mysql`，触发白名单未匹配。属于"白名单偶然匹配失败"，不是真正的"跨库访问检测"。
+
+如需真正防跨库，需显式加规则：禁止表名含 `.`（即禁止 `db.table` 语法）。
+
+---
+
+## 7. 下一步建议
+
+1. **修复 B 模式工具误分类**（P0）："统计"/"查一下"类 query 被误路由到 `sql_query`，需优化工具描述或 schema，使 LLM 正确选择 `query_timesheet`。
 2. **优化 query 类 prompt**：query 类在 B 模式下 prefill 时间偏长，可能与工具 schema 过大有关，可尝试精简 schema 或启用 prompt caching。
-3. **save 类已达标**：FC 架构在 save 类上延迟无劣势，可作为正面指标。
+3. **SQL Agent max_tokens 提升**：复杂查询的 think 块可能超过 1500 tokens，建议提到 3000+ 或探索抑制 think 输出。
+4. **save 类已达标**：FC 架构在 save 类上延迟无劣势，可作为正面指标。

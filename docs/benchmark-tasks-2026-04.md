@@ -326,9 +326,9 @@ tests/benchmark/
 
 | 任务 | 状态 | 日期 | 备注 |
 |---|---|---|---|
-| 指标 1：RAG Recall@K | ☐ | ___ | ___ |
-| 指标 2：FC vs 两次 LLM 延迟 | ☐ | ___ | ___ |
-| 指标 3：SQL Agent 准确率 | ☐ | ___ | ___ |
+| 指标 1：RAG Recall@K | ✅ | 2026-04-24 | Recall@5: A=100%, C=98%, D=98%（4文档小库，BM25噪音主导）；详见 [benchmark-report-2026-04-25-final.md](benchmark-report-2026-04-25-final.md) |
+| 指标 2：FC vs 两次 LLM 延迟 | ✅ | 2026-04-24 | save持平+0.7%，query慢37~44%，kb慢21%；sql类已剔除；详见 [benchmark-review-2026-04-25-corrected.md](benchmark-review-2026-04-25-corrected.md) |
+| 指标 3：SQL Agent 准确率 | ✅ | 2026-04-25 | 正例96.7%（29/30），硬规则拦截25%（5/20），LLM改写75%（15/20）；v2修正版剔除think截断误判；详见 [benchmark-review-2026-04-25-corrected.md](benchmark-review-2026-04-25-corrected.md) |
 | 指标 4：vLLM 吞吐（可选）| ☐ | ___ | ___ |
 | 指标 5：Grafana 数据（可选）| ☐ | ___ | ___ |
 | 简历 V2 数字填入 | ☐ | ___ | ___ |
