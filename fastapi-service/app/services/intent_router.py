@@ -327,10 +327,13 @@ class IntentRouter:
             "Content-Type": "application/json"
         }
 
+        pm = get_prompt_manager()
+        system_prompt = pm.get_str("system", file="intent_classify") or "你是一个意图分类助手。不要输出思考过程，直接返回JSON。"
+
         payload = {
             "model": model,
             "messages": [
-                {"role": "system", "content": "你是一个意图分类助手。不要输出思考过程，直接返回JSON。"},
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
             ],
             "temperature": 0.1,

@@ -204,8 +204,8 @@ async def node_llm_with_tools(state: AgentState) -> dict:
     LLM/registry 不可用时自动降级到 node_classify_intent
     """
     # 基准测试模式：强制降级到两次 LLM 调用的 classify_intent 路径
-    user_ctx = state.get("user_context") or {}
-    if os.getenv("BENCHMARK_FORCE_FALLBACK") == "1" or user_ctx.get("_benchmark_force_fallback"):
+    # TODO: Q3 前删除此 env 开关（仅用于基准测试）
+    if os.getenv("BENCHMARK_FORCE_FALLBACK") == "1":
         return await node_classify_intent(state)
 
     if not _llm_client or not _tool_registry:
