@@ -1,3 +1,5 @@
+system: "你是一个意图分类助手。不要输出思考过程，直接返回JSON。"
+
 _type: prompt
 input_variables:
   - history_section
