@@ -383,8 +383,9 @@ def register_sql_query_tool():
         tool_registry.register_tool(
             name="sql_query",
             description=(
-                "执行自定义 SQL 查询，用于跨表关联、排序 TOP N、趋势分析、缺勤/异常检测等复杂分析场景。"
-                "当现有工具（query_timesheet、compute_statistics）无法覆盖时使用。"
+                "执行自定义 SQL 查询。仅当 query_timesheet（工时明细/简单汇总）和 compute_statistics（聚合统计/排名）明确无法覆盖时使用。"
+                "适用场景：多表 JOIN 关联、复杂条件筛选、窗口函数、自定义时间区间聚合等需要灵活 SQL 的复杂场景。"
+                "绝不适用（禁止选用）：查某人工时明细、统计部门/人员总工时或加班时长、本月/上周工时汇总、工时排名TopN、项目工时对比等标准查询——这些有专门的 query_timesheet 和 compute_statistics 工具处理。"
                 "参数：question（自然语言问题）。"
             ),
             json_schema=SQL_QUERY_SCHEMA,

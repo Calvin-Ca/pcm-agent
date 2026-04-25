@@ -316,7 +316,8 @@ def register_query_timesheet_tool():
     try:
         tool_registry.register_tool(
             name="query_timesheet",
-            description="查询工时填报明细记录，返回具体的每条工时条目（日期、项目、小时数）。适用于：查某人/自己的工时记录明细、查某个时间段的填报情况。不返回汇总统计数字。",
+            description="查询工时记录，返回明细条目和简单汇总。支持按人员、时间范围、项目筛选，支持'本周''本月''上周'等模糊时间描述（自动推断日期范围）。适用于：查某人/自己的工时明细、查某时间段填报情况、按项目/人员筛选工时、加班记录查询。",
+
             json_schema=QUERY_TIMESHEET_SCHEMA,
             handler=query_timesheet_handler,
             category=ToolCategory.DATA_QUERY,

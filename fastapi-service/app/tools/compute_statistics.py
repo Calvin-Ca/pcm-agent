@@ -36,6 +36,7 @@ class StatisticsQueryParams(BaseModel):
     user_id: Optional[str] = Field(None, description="用户ID（可选）")
     project_id: Optional[str] = Field(None, description="项目ID（可选）")
     department_id: Optional[str] = Field(None, description="部门ID（可选）")
+    work_type: Optional[str] = Field(None, description="工时类型筛选（可选），如'其他工时'表示加班工时。不填则统计全部工时。")
 
 
 class StatisticsItem(BaseModel):
@@ -90,6 +91,10 @@ COMPUTE_STATISTICS_SCHEMA = {
         "department_id": {
             "type": "string",
             "description": "部门ID（可选），用于筛选特定部门"
+        },
+        "work_type": {
+            "type": "string",
+            "description": "工时类型筛选（可选），如'其他工时'表示加班工时。不填则统计全部工时。"
         }
     },
     "required": ["statistics_type", "start_date", "end_date"],
@@ -215,9 +220,20 @@ async def _fetch_workhour_records(
         return data if isinstance(data, list) else []
 
 
+def _filter_by_work_type(records: List[Dict[str, Any]], work_type: Optional[str]) -> List[Dict[str, Any]]:
+    """按工时类型筛选记录（支持 workType / work_type 两种字段名）。"""
+    if not work_type:
+        return records
+    return [
+        r for r in records
+        if r.get("workType") == work_type or r.get("work_type") == work_type
+    ]
+
+
 async def _compute_user_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
     """计算用户工时统计（基于原始记录聚合）"""
     records = await _fetch_workhour_records(params, headers)
+    records = _filter_by_work_type(records, params.work_type)
 
     from collections import defaultdict
     user_map = defaultdict(lambda: {"total_hours": 0.0, "work_days": set(), "projects": set()})
@@ -260,6 +276,7 @@ async def _compute_user_hours_statistics(params: StatisticsQueryParams, start_da
 async def _compute_project_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
     """计算项目工时统计（基于原始记录聚合）"""
     records = await _fetch_workhour_records(params, headers)
+    records = _filter_by_work_type(records, params.work_type)
 
     from collections import defaultdict
     proj_map = defaultdict(lambda: {"total_hours": 0.0, "work_days": set(), "users": set()})
@@ -304,6 +321,7 @@ async def _compute_project_hours_statistics(params: StatisticsQueryParams, start
 async def _compute_department_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
     """计算部门工时统计（基于原始记录聚合）"""
     records = await _fetch_workhour_records(params, headers)
+    records = _filter_by_work_type(records, params.work_type)
 
     from collections import defaultdict
     dept_map = defaultdict(lambda: {"total_hours": 0.0, "work_days": set(), "users": set()})
@@ -346,6 +364,7 @@ async def _compute_department_hours_statistics(params: StatisticsQueryParams, st
 async def _compute_daily_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
     """计算每日工时统计（基于原始记录聚合）"""
     records = await _fetch_workhour_records(params, headers)
+    records = _filter_by_work_type(records, params.work_type)
 
     from collections import defaultdict
     day_map = defaultdict(lambda: {"total_hours": 0.0, "users": set(), "projects": set()})
@@ -392,6 +411,7 @@ async def _compute_daily_hours_statistics(params: StatisticsQueryParams, start_d
 async def _compute_weekly_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
     """计算每周工时统计（基于原始记录按周聚合）"""
     records = await _fetch_workhour_records(params, headers)
+    records = _filter_by_work_type(records, params.work_type)
 
     from collections import defaultdict
     week_map = defaultdict(lambda: {"total_hours": 0.0, "work_days": set(), "users": set()})
@@ -440,6 +460,7 @@ async def _compute_weekly_hours_statistics(params: StatisticsQueryParams, start_
 async def _compute_monthly_hours_statistics(params: StatisticsQueryParams, start_date: date, end_date: date, headers: Dict[str, str] = None) -> Dict[str, Any]:
     """计算每月工时统计（基于原始记录按月聚合）"""
     records = await _fetch_workhour_records(params, headers)
+    records = _filter_by_work_type(records, params.work_type)
 
     from collections import defaultdict
     month_map = defaultdict(lambda: {"total_hours": 0.0, "work_days": set(), "users": set()})
@@ -489,7 +510,7 @@ def register_compute_statistics_tool():
     try:
         tool_registry.register_tool(
             name="compute_statistics",
-            description="对工时数据进行汇总统计计算，返回合计、均值、排名等聚合数据。适用于：统计总工时、部门工时排名、项目工时占比分析。不返回明细条目。",
+            description="对工时数据进行汇总统计与排名分析，返回合计、均值、排名、趋势等聚合数据。支持'本月''上周''上月''本季度'等模糊时间描述（自动推断日期范围）。work_type 为可选参数，仅在用户明确询问'加班'时填 work_type='其他工时'，否则不填该参数。适用于：统计总工时、部门/人员工时排名、项目工时占比、加班时长统计、月度/季度趋势分析、工时对比、TopN排名（如工时最多的前5人）。不返回明细条目。",
             json_schema=COMPUTE_STATISTICS_SCHEMA,
             handler=compute_statistics_handler,
             category=ToolCategory.STATISTICS,
