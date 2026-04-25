@@ -247,7 +247,13 @@ class TaskExecutor:
             if task.tool_name in ['query_timesheet', 'query_project']:
                 # 数据查询工具需要验证数据访问权限
                 user_id = processed_params.get('userId') or processed_params.get('user_id')
+                member_name = processed_params.get('member_name')
                 project_id = processed_params.get('projectId') or processed_params.get('project_id')
+
+                # member_name 参数表示查他人工时，员工角色无此权限
+                if member_name and permission_context.entity_type in ('employee', 'deptSubAdmin'):
+                    logger.warning(f"权限拒绝: member_name={member_name}, entity_type={permission_context.entity_type}")
+                    raise PermissionError(f"抱歉，您的角色（{permission_context.entity_type}）没有权限查询他人（{member_name}）的工时记录")
 
                 if user_id:
                     result = self.permission_validator.can_access_user_data(permission_context, user_id)

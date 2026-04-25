@@ -11,6 +11,9 @@ template: |
 
   关联：workhour.member_id=sys_user.id | workhour.project_id=project_info.id | sys_user.dept_id=org_dept.id | project_member.member_id=sys_user.id
 
+  漏填工时查询方法：SELECT DATE(wc.date_value) AS 日期 FROM work_calendar wc LEFT JOIN workhour wh ON DATE(wc.date_value)=DATE(wh.workhour_date) AND wh.member_id='{user_id}' WHERE wc.is_work_day='Y' AND DATE(wc.date_value) BETWEEN '{start}' AND '{end}' AND wh.id IS NULL ORDER BY wc.date_value
+  work_calendar.is_work_day='Y' 表示应填工时的工作日；workhour.member_id 对应 sys_user.id（非 user_name）
+
   权限约束：{permission_constraints}
 
   规则：仅SELECT | workhour_date是datetime用DATE()比较 | 姓名用sys_user.entity_name | 用中文别名 | 加LIMIT

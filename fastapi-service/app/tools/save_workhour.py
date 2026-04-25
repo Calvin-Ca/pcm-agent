@@ -133,7 +133,7 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
         request_headers["Authorization"] = token
 
     # 2a. 解析 project_id：LLM 可能填入项目名称（如"AI平台"），需转换为数字 ID
-    resolved_project_id, project_err = await resolve_project_id(project_id, auth_token, base_url)
+    resolved_project_id, project_err = await resolve_project_id(project_id, auth_token, base_url, user_id=user_id)
     if project_err:
         return {"success": False, "error": f"项目解析失败：{project_err}"}
     project_id = resolved_project_id
