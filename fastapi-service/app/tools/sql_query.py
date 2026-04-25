@@ -18,10 +18,37 @@ import logging
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
+import sqlparse
+from sqlparse.sql import Identifier, IdentifierList
+
 from app.models.tool import ToolCategory
 from app.services.tool_registry import tool_registry
 
 logger = logging.getLogger(__name__)
+
+
+def _get_cross_db_tables(sql: str) -> List[str]:
+    """用 sqlparse 提取 SQL 中的跨库表名（含 . 的表名如 db.table、`db`.`table`）。"""
+    parsed = sqlparse.parse(sql)
+    cross_db_tables = []
+
+    def _extract(token):
+        if isinstance(token, Identifier):
+            parent = token.get_parent_name()
+            real = token.get_real_name()
+            if parent and real:
+                cross_db_tables.append(f"{parent}.{real}")
+        elif isinstance(token, IdentifierList):
+            for ident in token.get_identifiers():
+                _extract(ident)
+        elif token.is_group:
+            for sub in token.tokens:
+                _extract(sub)
+
+    for stmt in parsed:
+        for token in stmt.tokens:
+            _extract(token)
+    return cross_db_tables
 
 # ── JSON Schema ────────────────────────────────────────────────────────────────
 
@@ -89,7 +116,12 @@ def validate_sql(sql: str, max_rows: int = 500) -> Tuple[bool, str]:
         if re.search(keyword, sql_lower):
             return False, f"禁止使用 {keyword}"
 
-    # 4. 表白名单检测
+    # 4. 跨库访问检测（用 sqlparse 提取含 . 的表名）
+    cross_db_tables = _get_cross_db_tables(sql)
+    if cross_db_tables:
+        return False, "禁止跨库访问"
+
+    # 5. 表白名单检测
     from_patterns = [
         r'\bFROM\s+`?(\w+)`?',
         r'\bJOIN\s+`?(\w+)`?',
@@ -110,7 +142,7 @@ def validate_sql(sql: str, max_rows: int = 500) -> Tuple[bool, str]:
         if table not in ALLOWED_TABLES:
             return False, f"表 {table} 不在允许列表中"
 
-    # 5. 列黑名单检测
+    # 6. 列黑名单检测
     for table, columns in BLOCKED_COLUMNS.items():
         for col in columns:
             if re.search(rf'\b{col}\b', sql, re.IGNORECASE):
