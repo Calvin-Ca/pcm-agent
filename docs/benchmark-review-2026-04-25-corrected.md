@@ -94,3 +94,33 @@ FROM\s+`?(\w+)`?` 把 `mysql.user` 误解析为表名 `mysql`，触发白名单�
 2. **优化 query 类 prompt**：query 类在 B 模式下 prefill 时间偏长，可能与工具 schema 过大有关，可尝试精简 schema 或启用 prompt caching。
 3. **SQL Agent max_tokens 提升**：复杂查询的 think 块可能超过 1500 tokens，建议提到 3000+ 或探索抑制 think 输出。
 4. **save 类已达标**：FC 架构在 save 类上延迟无劣势，可作为正面指标。
+
+---
+
+## 8. e3db51a 生产复测（2026-04-26）
+
+**测试环境**：172 服务器 ai-service（直连 localhost:8000）  
+**账号**：159****0206（employee 权限）  
+**验证目标**：确认 e3db51a（修复工具误分类 + work_type 加班筛选）在生产链路生效，FC 不再将 query 类请求误路由到 `sql_query`。
+
+### 用例与结果
+
+| id | query | 期望工具 | 实际命中 | 结果 |
+|----|-------|---------|---------|------|
+| 1 | 统计部门上月加班时长 | compute_statistics | **compute_statistics** | ✅ 通过 |
+| 2 | 查一下李四的工时 | query_timesheet | **query_timesheet** | ✅ 通过（执行因权限被拒，路由正确） |
+| 3 | 我本周工时 | query_timesheet | **query_timesheet** | ✅ 通过 |
+| 4 | 工时 Top 5 排名 | compute_statistics | **compute_statistics** | ✅ 通过 |
+| 5 | 各部门工时对比 | compute_statistics | **compute_statistics** | ✅ 通过 |
+
+### 关键日志
+
+```
+执行工具: compute_statistics, 参数: {'statistics_type': 'department_hours', ... 'work_type': '其他工时'}
+执行工具: query_timesheet, 参数: {'member_name': '李四', ...}
+执行工具: query_timesheet, 参数: {'user_id': '159****0206', ...}
+执行工具: compute_statistics, 参数: {'statistics_type': 'user_hours', ... 'work_type': '其他工时'}
+执行工具: compute_statistics, 参数: {'statistics_type': 'department_hours', ...}
+```
+
+**判定**：5/5 命中预期工具，**0 条命中 sql_query**。e3db51a 修复在生产链路生效，无需回滚。
