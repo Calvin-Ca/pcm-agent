@@ -443,12 +443,11 @@ def register_sql_query_tool():
         tool_registry.register_tool(
             name="sql_query",
             description=(
-                "执行自定义 SQL 查询。适用场景：多表 JOIN 关联、复杂条件筛选、窗口函数、自定义时间区间聚合。"
-                "【必须使用此工具的场景】："
-                "1. 漏填工时查询（关联 work_calendar 与 workhour 找出未填日期）；"
-                "2. 加班时长查询（加班数据在 workhour_attendance.overtime_hours，compute_statistics 不含此字段）；"
-                "3. 考勤异常查询（workhour_attendance.is_abnormal）；"
-                "4. 打卡时间查询（workhour_attendance.check_in_time/check_out_time）。"
+                "自定义 SQL 查询工具（兜底工具，仅当专用工具无法覆盖时使用）。"
+                "专用工具清单：query_timesheet（工时明细查询）、compute_statistics（统计排名对比趋势）。"
+                "sql_query 适用：多表 JOIN、窗口函数、漏填工时检测（work_calendar 与 workhour 差集）、"
+                "加班统计（workhour_attendance.overtime_hours）、考勤异常、打卡时间、复杂条件筛选。"
+                "sql_query 不适用：上述专用工具已覆盖的标准查询场景（工时明细、排名TopN、部门对比、总工时汇总等）。"
                 "参数：question（自然语言问题）。"
             ),
             json_schema=SQL_QUERY_SCHEMA,

@@ -143,3 +143,69 @@ SQL 生成准确率 100%（30 条正例），恶意查询综合拦截率 100%（
 **结论**：生产环境监控基础设施（Prometheus + Grafana）于本次测试日首次部署，面板已就绪（8 个 panel：请求 QPS、延迟 P95、错误率、活跃请求数、工具调用分布、工具调用延迟 P95、LLM 调用延迟 P95、意图分布），但历史数据因服务重启而缺失。建议运行稳定 7 天后重采。
 
 截图：[grafana_snapshot_2026-04-26.png](../tests/benchmark/results/grafana_snapshot_2026-04-26.png)（面板存在，因 image renderer 插件刚安装待重启生效）
+
+---
+
+## 9. 生产 7 天运行数据（2026-04-26 采集）
+
+> 采集时间：2026-04-26  
+> 环境：172.19.3.136（Prometheus + Grafana 已运行 20 小时）
+
+**数据状态**：ai-service 于 2026-04-26 约 08:30 再次重启，Prometheus 计数器重置。以下 5 项指标均无有效观测值。
+
+| 指标 | 值 | 来源 | 说明 |
+|------|---|------|------|
+| 总请求数 | N/A | `ai_chat_requests_total` | 计数器重置后无记录 |
+| P50 / P95 延迟 | N/A | `ai_chat_request_duration_seconds` | Histogram 无观测值 |
+| 各工具调用占比 | N/A | `ai_tool_calls_total` | 计数器重置后无记录 |
+| RAG 检索延迟 | N/A | `ai_rag_query_duration_seconds` | 计数器重置后无记录 |
+| SQL 拦截次数 | N/A | `ai_sql_query_blocked_total` | 未埋点 |
+
+**结论**：Prometheus + Grafana 面板已就绪（8 个 panel），但 ai-service 重启导致 7 天内无累计数据。建议服务稳定运行 7 天后重采。
+
+截图：[2026-04-26-grafana-overview.png](docs/benchmarks/screenshots/2026-04-26-grafana-overview.png)
+
+---
+
+## 10. e3db51a 生产链路验证（2026-04-26）
+
+**测试环境**：116 入口 → SpringBoot → 172 ai-service（完整链路）  
+**账号**：159****0206（employee）  
+**Token**：从 `.env.local` 现取，有效期约 24 小时
+
+### 验证结果
+
+| id | query | 期望工具 | 实际命中 | 判断 |
+|----|-------|---------|---------|------|
+| 1 | 统计部门上月加班时长 | — | **sql_query** | ✅ 正确（加班数据在 `workhour_attendance.overtime_hours`，`compute_statistics` 走 API 查不到） |
+| 2 | 查一下李四的工时 | query_timesheet | **query_timesheet** | ✅ 正确 |
+| 3 | 我本周工时 | query_timesheet | **query_timesheet** | ✅ 正确 |
+| 4 | 工时 Top 5 排名 | compute_statistics | **sql_query** | ❌ 误路由（`user_hours` 排名本应走 `compute_statistics`） |
+| 5 | 各部门工时对比 | compute_statistics | **sql_query** | ❌ 误路由（`department_hours` 对比本应走 `compute_statistics`） |
+
+**判定：3/5 命中正确，2/5 误路由到 sql_query。**
+
+### 根因
+
+非 e3db51a 回退，而是 **f700a46**（2026-04-26 01:45）在 `sql_query` description 中扩展了适用场景，LLM 将"排名"/"对比"泛化理解进了 sql_query 的适用范围。
+
+### 修复
+
+已修改 `sql_query.py` description，明确定位为**兜底工具**，前置强调"仅当 query_timesheet / compute_statistics 等专用工具无法覆盖时使用"，并列举专用工具清单便于未来拓展：
+
+```python
+"自定义 SQL 查询工具（兜底工具，仅当专用工具无法覆盖时使用）。"
+"专用工具清单：query_timesheet（工时明细查询）、compute_statistics（统计排名对比趋势）。"
+"sql_query 适用：多表 JOIN、窗口函数、漏填工时检测、加班统计、考勤异常、打卡时间、复杂条件筛选。"
+"sql_query 不适用：上述专用工具已覆盖的标准查询场景（工时明细、排名TopN、部门对比、总工时汇总等）。"
+```
+
+### 日志证据
+
+```
+05:39:55 执行工具: sql_query, 参数: {'question': '统计部门上月加班时长'}     ✅ 正确
+05:40:17 执行工具: query_timesheet, 参数: {'project_id': '李四', ...}         ✅ 正确
+05:40:26 执行工具: query_timesheet, 参数: {'user_id': '159****0206', ...}    ✅ 正确
+05:40:39 执行工具: sql_query, 参数: {'question': '统计本月工时Top 5排名'}    ❌ 误路由
+05:40:54 执行工具: sql_query, 参数: {'question': '各部门工时对比'}            ❌ 误路由
+```
