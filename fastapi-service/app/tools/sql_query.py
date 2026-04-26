@@ -323,15 +323,29 @@ async def sql_query_handler(**kwargs) -> Dict[str, Any]:
     # 4. LLM 生成 SQL
     #    prompt 结构优化：system 短指令 + user 紧凑上下文
     #    让 qwen3-8b 不会因 prompt 过长而"忘记"输出格式要求
-    from datetime import date as _date
+    from datetime import date as _date, timedelta
     pm = get_prompt_manager()
+
+    # 预计算常用日期范围，避免 LLM 自行推断出错（B9 修复）
+    _today = _date.today()
+    _week_start = _today - timedelta(days=_today.weekday())
+    _last_week_start = _week_start - timedelta(days=7)
+    _last_week_end = _week_start - timedelta(days=1)
+
     sql_generation_prompt = pm.format(
         "sql_generation",
         table_schemas=table_schemas,
         permission_constraints=permission_constraints,
         user_question=question,
         user_id=user_id or "unknown",
-        today=str(_date.today()),
+        today=str(_today),
+        department_id=department_id or "",
+        month_start=str(_today.replace(day=1)),
+        month_end=str(_today),
+        week_start=str(_week_start),
+        week_end=str(_today),
+        last_week_start=str(_last_week_start),
+        last_week_end=str(_last_week_end),
     )
 
     llm_client = SQLAgentLLMClient()
