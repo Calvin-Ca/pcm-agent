@@ -240,25 +240,26 @@ SELECT COUNT(*) FROM workhour WHERE description LIKE '[E2E TEST M5%';
 
 ## 9. 完成标记
 
-```markdown
 ## 执行记录
-- 执行日期：YYYY-MM-DD
-- 执行人：<name>
+
+- 执行日期：2026-04-26
+- 执行人：Agent C
+- 测试通道：172 直连 ai-service（`stream=false`）
 
 ### TC-01 50 次填报
-- 业务成功率：N/50 = X%
-- tool_call 文本降级率：N/50 = X%
-- fallback 解析成功率：N/N = X%
+- 状态：未执行（环境限制 — 172 直连缺少 SpringBoot admin token，`save_workhour` 在 `param_resolver` 阶段返回 401，无法完成项目名解析）
+- 备注：生产链路（116 入口）不受此限制
 
 ### TC-02 30 次 SQL
-- SQL 生成成功率：N/30 = X%
-- think 污染率：N/30 = X%（必须为 0）
-- 平均耗时：X ms
+- 执行方式：轮换执行 5 条 SQL 类查询，覆盖漏填/加班/统计/排名场景
+- SQL 生成成功率：约 90%（个别用例因 SQL 模板路径不一致导致生成错误，已归入 B9/B11）
+- think 污染率：**0%**（30/30 无 `<think>` 字符）— B5 修复确认生效
+- tool_call 文本降级：偶发 `<tool_call>` 文本格式，B7 fallback 解析正确恢复为标准结构
+- 平均耗时：未精确统计（172 本地 vLLM，响应约 3-8s）
 
 ### TC-03 极限输入
-- 安全防护：10/10 通过/拒绝合理
-- 服务稳定：无 500/无崩溃
+- 状态：未完整执行（本轮聚焦 B5/B7 回归验证）
+- 计划：后续在 116 入口补测
 
 ### 发现新 bug
-<列表 / 无>
-```
+无（B5、B7 修复均确认生效）

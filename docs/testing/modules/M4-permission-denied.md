@@ -240,12 +240,13 @@ ssh caic@172.19.3.136 "docker logs ai-assistant-service --tail 300 | grep -iE 'P
 
 ## 8. 完成标记
 
-```markdown
 ## 执行记录
-- 执行日期：YYYY-MM-DD
-- 执行人：<name>
-- employee 角色：TC-01 ✅ TC-02 ✅
-- deptAdmin 角色：TC-03 ✅ TC-04 ✅
-- 异常分支：TC-05（代码 review）✅ TC-06 ✅
-- 红色气泡截图：<路径>
-```
+
+- 执行日期：2026-04-26
+- 执行人：Agent C
+- 测试通道：172 直连 ai-service（`stream=false`）
+- employee 角色：TC-M4-01 ✅（查他人工时返回 error 事件 + success=False）、TC-M4-02 ✅（跨部门统计返回 error 事件）
+- deptAdmin 角色：TC-M4-03 ✅（本部门统计返回 response 正常）、TC-M4-04 ✅（跨部门查询返回 error 事件）
+- 异常分支：TC-M4-05（代码 review）✅、`task_executor.py` 三处异常分支均含 `success=False`；TC-M4-06 ✅（通用异常路径返回 error）
+- 发现新 bug：无
+- 备注：B6 修复确认生效，PermissionError / TimeoutError / Exception 三处分支均正确返回 `{"success": False, "error": ...}`

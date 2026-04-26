@@ -223,11 +223,15 @@ ssh caic@172.19.3.136 "docker logs ai-assistant-service --tail 300 | grep -E '�
 
 ## 8. 完成标记
 
-```markdown
 ## 执行记录
-- 执行日期：YYYY-MM-DD
-- 执行人：<name>
-- 通过用例：TC-M3-01~05
-- 工具路由：5/5 命中 sql_query（0 误路由）
-- 发现新 bug：<列表 / 无>
-```
+
+- 执行日期：2026-04-26
+- 执行人：Agent C
+- 测试通道：172 直连 ai-service（`stream=false`）
+- 通过用例：TC-M3-02 ✅（本月加班统计 SQL 正确）、TC-M3-03 ✅（加班次数统计 SQL 正确）、TC-M3-05 ✅（无加班场景兜底文案正确）
+- 失败用例：
+  - TC-M3-01 ❌：误路由到 `rag_engine`（knowledge_qa），未命中 `sql_query`
+  - TC-M3-04 ❌：SQL 中 `member_id` 范围未扩展到部门，仅查当前用户
+- 发现新 bug：
+  - B8：M3 加班查询误路由到 RAG（见 `docs/changelog/2026-04-26.md §B8`）
+  - B11：M3 部门加班排名 SQL 范围错误（见 `docs/changelog/2026-04-26.md §B11`）

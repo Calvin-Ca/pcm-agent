@@ -244,11 +244,19 @@ ssh caic@172.19.3.136 "docker logs ai-assistant-service --tail 300 | grep -E 'ge
 
 ## 8. 完成标记
 
-```markdown
 ## 执行记录
-- 执行日期：YYYY-MM-DD
-- 执行人：<name>
-- 通过用例：TC-M2-01~05
-- 发现新 bug：<列表 / 无>
-- row_count 比对：app=N1, db=N2, 一致：是/否
-```
+
+- 执行日期：2026-04-26
+- 执行人：Agent C
+- 测试通道：172 直连 ai-service（`stream=false`）
+- 通过用例：TC-M2-04 ✅（空结果兜底文案正确）、TC-M2-05 ✅（无 JSON 序列化错误）
+- 失败用例：
+  - TC-M2-01 ❌：SQL 生成错误，查了 `workhour` 表而非 `work_calendar` 表
+  - TC-M2-02 ❌：summary 与 row_count 矛盾（row_count=5，summary 却说「没有漏填」）
+  - TC-M2-03 ❌：日期范围错误（用了本周 4/19-4/26，而非上周 4/13-4/19）
+- 发现新 bug：
+  - B9：M2 漏填查询 SQL 生成不一致 + summary 矛盾 + 日期范围错误（见 `docs/changelog/2026-04-26.md §B9`）
+- row_count 比对：
+  - TC-01：app=0（错误 SQL），db=5（正确值），不一致
+  - TC-02：app=5，db=5，一致（但 summary 错误）
+  - TC-03：app=5（错误范围），db=0（正确值），不一致

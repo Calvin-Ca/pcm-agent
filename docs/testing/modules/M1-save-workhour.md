@@ -261,14 +261,16 @@ ssh caic@172.19.3.136 "docker logs ai-assistant-service --tail 200 | grep -E 'wo
 
 ## 8. 完成标记
 
-测试通过后，在本文档底部追加：
-
-```markdown
 ## 执行记录
 
-- 执行日期：YYYY-MM-DD
-- 执行人：<name>
-- 通过用例：TC-M1-01 ✅ TC-M1-02 ✅ TC-M1-03 ✅ TC-M1-04 ✅ TC-M1-05 ✅
-- 发现新 bug：<列表 / 无>
-- 截图与日志：<路径或链接>
-```
+- 执行日期：2026-04-26
+- 执行人：Agent C
+- 测试通道：172 直连 ai-service（`stream=false`）
+- 通过用例：TC-M1-04 ✅（项目不存在，返回错误）
+- 阻塞用例：TC-M1-01/02/03/05（param_resolver 调用 SpringBoot API 返回 401，无法解析项目名）
+- 发现新 bug：
+  - B10：LLM 参数提取不稳定，多次将 `[E2E TEST]` 前缀误认为项目名（见 `docs/changelog/2026-04-26.md §B10`）
+- 环境限制：
+  - 172 直连缺少 SpringBoot admin token，param_resolver 无法获取项目列表
+  - 116 curl 7.29.0 不支持 SSE，无法执行流式测试
+- 截图与日志：`scripts/m1-test-172-v3-output.log`, `scripts/m1-test-116-v3-output.log`
