@@ -87,7 +87,7 @@ async def _llm_infer_work_type(description: str) -> Optional[str]:
         return None
     try:
         from app.services.llm_client import LLMClient
-        client = LLMClient(env_prefix="INTENT", temperature=0.1, max_tokens=20)
+        client = LLMClient(env_prefix="INTENT_LLM", temperature=0.1, max_tokens=20)
         prompt = (
             f"从候选列表选最匹配的工时类型。只返回类型名称，不解释。\n"
             f"候选：{', '.join(WORK_TYPE_CANDIDATES)}\n"
