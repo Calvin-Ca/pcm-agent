@@ -72,14 +72,17 @@ GET /thsuaa/api/sys-users?entityName.contains=张三&page=0&size=10
 | `projectName` | 项目名称（只读，冗余字段） |
 | `workhourDate` | 工时日期（ISO instant 格式，如 `2026-03-31T00:00:00Z`） |
 | `workhour` | 工时时长（小时，0.5步长） |
-| `description` | 工作内容描述 |
+| `workContent` | 工作内容描述（DTO 驼峰；DB 列名为 `work_content`） |
+| `workType` | 工时大类（如"研发工作"，写死会被 SpringBoot 校验拒绝，需按用户/部门取） |
+| `workhourType` | 工时类别（"正常工时"/"其他工时"，由 work_calendar.is_work_day 决定） |
 
 ### 接口列表
 
 ```
 POST /api/workhour
-     Body: { projectId, workhourDate, workhour, description?, memberId? }
+     Body: { projectId, workhourDate, workhour, workContent?, workType, workhourType, memberId? }
      说明：填报工时。无 memberId 时填报当前登录用户
+     注意：JSON 字段 workContent（驼峰），DB 列 work_content（蛇形），不是 description
 
 GET  /api/workhour/by-date-range
      Query: startDate=YYYY-MM-DD, endDate=YYYY-MM-DD, memberId?, projectId?, orgId?
