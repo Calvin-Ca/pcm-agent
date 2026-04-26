@@ -245,8 +245,8 @@ async def run_benchmark(smoke: bool = False, smoke_count: int = SMOKE_COUNT):
 
     print("=" * 70)
 
-    # ── 回填区（复制到 docs/benchmark-tasks-2026-04.md）───────────────────────
-    print("\n--- 结果回填区（复制到 docs/benchmark-tasks-2026-04.md）---")
+    # ── 回填区（复制到 docs/benchmarks/tasks-2026-04.md）───────────────────────
+    print("\n--- 结果回填区（复制到 docs/benchmarks/tasks-2026-04.md）---")
     vals_ttft_a = [r["a_ttft_ms"] for r in results if r["a_ttft_ms"] is not None]
     vals_ttft_b = [r["b_ttft_ms"] for r in results if r["b_ttft_ms"] is not None]
     vals_e2e_a = [r["a_e2e_ms"] for r in results if r["a_e2e_ms"] is not None]

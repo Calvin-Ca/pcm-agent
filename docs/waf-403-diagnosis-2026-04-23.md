@@ -128,7 +128,7 @@ curl -c /tmp/wafjar.txt -b /tmp/wafjar.txt ...
 
 ## 五、对 E2E 文档的修正
 
-`docs/e2e-regression-2026-04-23.md` 里 E1 原本标为"P0 阻断业务",结论是错的。**实际状态**:
+`docs/archive/tasks-2026-04/e2e-regression-2026-04-23.md` 里 E1 原本标为"P0 阻断业务",结论是错的。**实际状态**:
 
 | 视角 | 状态 |
 |------|------|

@@ -14,7 +14,7 @@
 - [SpringBoot API 参考](reference_springboot_api.md) — 工时/项目/用户接口路径、字段名、查询参数（2026-04-01 整理自源码）
 
 ## 生产环境
-- [生产环境基础设施](project_infra.md) — 实测拓扑：ai-service 在 172 Docker Compose + 反向 SSH 隧道到 116:9901；SpringBoot 网关模式。8 个阻断 bug 见 `docs/deploy-fixes-2026-04-22.md`（2026-04-22 更新）
+- [生产环境基础设施](project_infra.md) — 实测拓扑：ai-service 在 172 Docker Compose + 反向 SSH 隧道到 116:9901；SpringBoot 网关模式。8 个阻断 bug 见 `docs/deploy/deploy-fixes-2026-04-22.md`（2026-04-22 更新）
 
 ## 精度测试
 - [Layer1 精度路线图](project_accuracy_roadmap.md) — v1=70.2%、v2=70.9%、失败根因分析、v3 Prompt改进方案（3项改动）、PlannerAgent架构方向（2026-04-02）

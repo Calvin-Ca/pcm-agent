@@ -7,7 +7,7 @@
 
 ## ⚠️ 待办（P0，2026-05-10 前完成）
 
-- **简历指标基准测试**：RAG Recall@K / Function Calling 延迟对比 / SQL Agent 准确率等 5 项基准测试，用于补齐个人简历可核验指标。详见 `docs/benchmark-tasks-2026-04.md`
+- **简历指标基准测试**：RAG Recall@K / Function Calling 延迟对比 / SQL Agent 准确率等 5 项基准测试，用于补齐个人简历可核验指标。详见 `docs/benchmarks/tasks-2026-04.md`
 
 ---
 

@@ -72,7 +72,7 @@ autossh -M 0 -N -R 9901:127.0.0.1:8000 useryzk@116.205.174.57
 - 116 SpringBoot 启动脚本：`/home/gongshi/gongshi-ht.sh`
 - 116 nginx 配置：`/usr/local/nginx/conf/nginx.conf`
 
-## ⚠️ 2026-04-22 发现的阻断 bug（见 docs/deploy-fixes-2026-04-22.md）
+## ⚠️ 2026-04-22 发现的阻断 bug（见 docs/deploy/deploy-fixes-2026-04-22.md）
 
 | # | 位置 | 问题 |
 |---|------|------|
@@ -85,7 +85,7 @@ autossh -M 0 -N -R 9901:127.0.0.1:8000 useryzk@116.205.174.57
 | P2-2 | `AIController.java:171-173`, `AIPermissionInterceptor.java:58-59` | entity_type/department_id 硬编码 → 权限降级 |
 | P2-3 | 116 nginx | `/api/ai/` 未加 SSE 专用 location（proxy_buffering on 会毁流式） |
 
-完整修复清单见 `docs/deploy-fixes-2026-04-22.md`。
+完整修复清单见 `docs/deploy/deploy-fixes-2026-04-22.md`。
 
 ## 文档状态
 

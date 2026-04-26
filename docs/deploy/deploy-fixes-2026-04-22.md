@@ -55,8 +55,8 @@
 | P2-2 | `AIController` 和 `AIPermissionInterceptor` 里 `entity_type`/`department_id` 硬编码 | `AIController.java:171-173`, `AIPermissionInterceptor.java:58-59` | 🟠 功能降级 | 权限校验全部按普通用户处理，管理员能力失效 |
 | P2-3 | 生产 nginx `/api/ai/` 未加 SSE 专用 location | 116 `/usr/local/nginx/conf/nginx.conf` | 🟠 体验 | 默认 `proxy_buffering on` → SSE 被缓冲，流式效果丢失（现在走公网 /api/ai/ 返回 401 也意味着它走 SpringBoot 默认 /api/ location，没 SSE 友好参数） |
 | P3-1 | `.env` 文件每行有 2 空格缩进，不规范 | `172:/home/caic/code/workhour/workhour_agent/.env` | 🟡 细节 | docker-compose env_file 目前能解析，但建议清理 |
-| P3-2 | `docs/deploy-guide.md` 多处自相矛盾 | `docs/deploy-guide.md` | 🟡 文档 | §4.1/§4.2 Docker 部署 vs §8.1/§8.3 建议 conda+116，两段没清理 |
-| P3-3 | `docs/deploy-guide.md` nginx 示例写 `proxy_pass http://172.19.3.136:8000` | `docs/deploy-guide.md §4.5` | 🟡 文档 | 与实际的反向隧道方案不符，应为 `http://127.0.0.1:9901` |
+| P3-2 | `docs/deploy/deploy-guide.md` 多处自相矛盾 | `docs/deploy/deploy-guide.md` | 🟡 文档 | §4.1/§4.2 Docker 部署 vs §8.1/§8.3 建议 conda+116，两段没清理 |
+| P3-3 | `docs/deploy/deploy-guide.md` nginx 示例写 `proxy_pass http://172.19.3.136:8000` | `docs/deploy/deploy-guide.md §4.5` | 🟡 文档 | 与实际的反向隧道方案不符，应为 `http://127.0.0.1:9901` |
 
 ---
 
@@ -262,9 +262,9 @@ location /api/ai/ {
 
 ---
 
-### 任务 7【P3-2 & P3-3】清理 docs/deploy-guide.md
+### 任务 7【P3-2 & P3-3】清理 docs/deploy/deploy-guide.md
 
-**文件**：`docs/deploy-guide.md`
+**文件**：`docs/deploy/deploy-guide.md`
 
 **改动**：
 1. 删掉 §8.1 "推荐部署方式：conda 裸跑 vs Docker"（与 §4.2 矛盾，现在实际就是 Docker Compose）
