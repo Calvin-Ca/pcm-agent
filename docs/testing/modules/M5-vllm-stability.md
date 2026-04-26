@@ -61,7 +61,7 @@ vLLM qwen3-8b 在某些输入下，会把 tool_calls **降级为文本**输出�
 
 **输入模板**（每次随机变换 description 长度）：
 ```
-帮我填今天预管理系统 X 小时，[E2E TEST] <随机长度的描述文本>
+帮我填今天预管理系统 X 小时，<随机长度的描述文本>(自动测试-请勿处理)
 ```
 
 **变量**：
@@ -159,7 +159,7 @@ descs=(
 
 for i in $(seq 1 50); do
   hours=$((1 + RANDOM % 8))
-  desc="[E2E TEST M5-${i}] ${descs[$((RANDOM % 5))]}"
+  desc="${descs[$((RANDOM % 5))]}(自动测试-请勿处理-M5-${i})"
   msg="帮我填今天预管理系统 ${hours} 小时，${desc}"
   echo "--- run $i: $msg ---" | tee -a "$OUT"
   curl -Ns --max-time 60 \
@@ -205,13 +205,13 @@ ssh caic@172.19.3.136 "docker logs ai-assistant-service --since 1h 2>&1 | grep -
 ```sql
 -- 测试前 baseline
 SELECT COUNT(*) AS baseline FROM workhour
-WHERE description LIKE '[E2E TEST M5%';
+WHERE description LIKE '%(自动测试-请勿处理-M5%';
 -- 期望 0
 
 -- 测试后清理
-DELETE FROM workhour WHERE description LIKE '[E2E TEST M5%';
+DELETE FROM workhour WHERE description LIKE '%(自动测试-请勿处理-M5%';
 -- 验证清理
-SELECT COUNT(*) FROM workhour WHERE description LIKE '[E2E TEST M5%';
+SELECT COUNT(*) FROM workhour WHERE description LIKE '%(自动测试-请勿处理-M5%';
 -- 期望 0
 ```
 
@@ -263,3 +263,19 @@ SELECT COUNT(*) FROM workhour WHERE description LIKE '[E2E TEST M5%';
 
 ### 发现新 bug
 无（B5、B7 修复均确认生效）
+
+### 第二轮浏览器手测（2026-04-26）
+
+> **状态：待补**
+>
+> 本轮为 Agent C 第二轮，计划通过浏览器手测完成 TC-01（降级 10 次）+ TC-03（极限输入 10 条），但因以下环境限制未能执行：
+> - 无法获取有效 JWT Token（需浏览器 DevTools 抓取，CLI 无浏览器环境）
+> - 116 跳板 curl 7.29.0 不支持 SSE，无法替代浏览器
+>
+> **测试输入标记已更新**：按 §B12 规范，所有 `[E2E TEST]` 改为 `(自动测试-请勿处理)` 后缀。
+>
+> **待补项**：
+> - **TC-01（降级 10 次）**：浏览器手测 10 次填报，覆盖 B7 触发场景（变长 description），记录业务成功率和 tool_call 文本降级率
+> - **TC-02**：不重跑，沿用第一轮记录（think 污染率 0% ✅）
+> - **TC-03（极限输入 10 条）**：逐条手测，特别关注 SQL 注入和 prompt 注入用例是否泄露系统信息
+> - 测试后清理 `DELETE FROM workhour WHERE description LIKE '%(自动测试-请勿处理)%'`

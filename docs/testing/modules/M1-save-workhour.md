@@ -62,7 +62,7 @@ ORDER BY id DESC LIMIT 1;
 -- project_id：非空，对应"预管理系统"项目 ID
 -- workhour_date：当天日期
 -- workhour：3.0
--- description："[E2E TEST] 写了单元测试"   ← 注意 description 字段必须有内容
+-- description："写了单元测试(自动测试-请勿处理)"   ← 注意 description 字段必须有内容
 ```
 
 **预期浏览器气泡**：
@@ -142,7 +142,7 @@ ssh caic@172.19.3.136 "docker logs ai-assistant-service --tail 50 | grep workhou
 | 接口层 | SSE 事件类型 | TC-01~03 看到 `tool_call` + `response`；TC-04~05 看到 `error`（success=false） |
 | 接口层 | tool_calls 参数 | `project_name` / `duration` / `description` 字段名正确，无 `workContent` 别名 |
 | 数据层 | DB SELECT 比对 | TC-01~03 工时记录数 +1，字段值与输入一致；TC-04~05 无新增 |
-| 数据层 | description 持久化 | `[E2E TEST]` 前缀完整保留 |
+| 数据层 | description 持久化 | `(自动测试-请勿处理)` 后缀完整保留 |
 | 渲染层 | 气泡内容 | 成功用 ✅ + 自然语言；失败用 ❌ + 红色 |
 | 渲染层 | 无原始 JSON | 不出现 `{` `}` 字符 |
 
@@ -167,15 +167,15 @@ WHERE member_id = '<test_user_id>' AND workhour_date = CURDATE();
 ### 清理
 
 ```sql
--- 测试后清理所有 [E2E TEST] 标记的记录
+-- 测试后清理所有 (自动测试-请勿处理) 标记的记录
 DELETE FROM workhour
 WHERE member_id = '<test_user_id>'
-  AND description LIKE '[E2E TEST]%';
+  AND description LIKE '%(自动测试-请勿处理)%';
 
 -- 验证清理
 SELECT COUNT(*) FROM workhour
 WHERE member_id = '<test_user_id>'
-  AND description LIKE '[E2E TEST]%';
+  AND description LIKE '%(自动测试-请勿处理)%';
 -- 期望 = 0
 ```
 
@@ -215,11 +215,11 @@ run() {
   sleep 3
 }
 
-run "帮我填今天的工时，项目预管理系统，3 小时，[E2E TEST] 写了单元测试" "m1-tc01"
-run "今天 8h，预管理系统，[E2E TEST] 完成回弹检测的后端开发（含单元测试&集成测试）" "m1-tc02"
-run "帮我补一条昨天的工时，预管理系统，4h，[E2E TEST] 需求评审" "m1-tc03"
-run "今天 5h，不存在的项目xyz，[E2E TEST] 做了点东西" "m1-tc04"
-run "今天填 30 小时，预管理系统，[E2E TEST] 加班" "m1-tc05"
+run "帮我填今天的工时，项目预管理系统，3 小时，写了单元测试(自动测试-请勿处理)" "m1-tc01"
+run "今天 8h，预管理系统，完成回弹检测的后端开发（含单元测试&集成测试）(自动测试-请勿处理)" "m1-tc02"
+run "帮我补一条昨天的工时，预管理系统，4h，需求评审(自动测试-请勿处理)" "m1-tc03"
+run "今天 5h，不存在的项目xyz，做了点东西(自动测试-请勿处理)" "m1-tc04"
+run "今天填 30 小时，预管理系统，加班(自动测试-请勿处理)" "m1-tc05"
 SCRIPT
 
 # 执行
@@ -274,3 +274,20 @@ ssh caic@172.19.3.136 "docker logs ai-assistant-service --tail 200 | grep -E 'wo
   - 172 直连缺少 SpringBoot admin token，param_resolver 无法获取项目列表
   - 116 curl 7.29.0 不支持 SSE，无法执行流式测试
 - 截图与日志：`scripts/m1-test-172-v3-output.log`, `scripts/m1-test-116-v3-output.log`
+
+### 第二轮浏览器手测（2026-04-26）
+
+> **状态：待补**
+>
+> 本轮为 Agent C 第二轮，计划通过浏览器手测重跑 TC-M1-01~05，但因以下环境限制未能执行：
+> - 无法获取有效 JWT Token（需浏览器 DevTools 抓取，CLI 无浏览器环境）
+> - 116 跳板 curl 7.29.0 不支持 SSE，无法替代浏览器
+>
+> **测试输入标记已更新**：按 §B12 规范，所有 `[E2E TEST]` 改为 `(自动测试-请勿处理)` 后缀。
+>
+> **待补项**：
+> - 浏览器登录 `https://gst.thsware.com`，用 `159****0206` 登录
+> - 逐条输入更新后的 TC-M1-01~05（description 后缀为 `(自动测试-请勿处理)`）
+> - 验证 B1 三处修复：workhourDate 格式、description 字段名、HTTPError body 透出
+> - DevTools 抓 SSE 事件序列 + 截图气泡内容
+> - 测试后清理 `DELETE FROM workhour WHERE description LIKE '%(自动测试-请勿处理)%'`
