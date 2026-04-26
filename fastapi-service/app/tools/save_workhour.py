@@ -37,9 +37,9 @@ SAVE_WORKHOUR_SCHEMA = {
         },
         "duration": {
             "type": "number",
-            "description": "工时时长（小时），必须为 0.5 的整数倍，取值范围 0.5 ~ 24",
+            "description": "工时时长（小时），必须为 0.5 的整数倍，取值范围 0.5 ~ 10",
             "minimum": 0.5,
-            "maximum": 24,
+            "maximum": 10,
         },
         "description": {
             "type": "string",
@@ -66,8 +66,8 @@ def _validate_duration(duration: float) -> Optional[str]:
     """
     if duration <= 0:
         return "工时时长必须大于 0"
-    if duration > 24:
-        return "单次填报工时不能超过 24 小时"
+    if duration > 10:
+        return "单次填报工时不能超过 10 小时"
     # 检查是否为 0.5 的倍数：乘以 2 后应为整数
     if abs(round(duration * 2) - duration * 2) > 1e-9:
         return f"工时时长必须为 0.5 的整数倍（当前值：{duration}）"
@@ -87,6 +87,53 @@ def _validate_date(date_str: str) -> Optional[str]:
     if record_date > date.today():
         return f"不能填报未来日期的工时：{date_str}"
     return None
+
+
+# ─── 工作日历查询 ─────────────────────────────────────────────────────────────
+
+async def _get_workhour_type_for_date(
+    date_str: str,
+    auth_token: Optional[str],
+    base_url: str,
+) -> str:
+    """
+    根据日期查询工作日历，返回应填报的工时类别。
+    工作日 -> '正常工时'，非工作日 -> '其他工时'。
+    查询失败时默认返回 '正常工时'。
+    """
+    headers: Dict[str, str] = {}
+    if auth_token:
+        token = auth_token if auth_token.startswith("Bearer ") else f"Bearer {auth_token}"
+        headers["Authorization"] = token
+
+    try:
+        # 构造当天 00:00:00 和 23:59:59 的 ISO 字符串用于范围查询
+        day_start = f"{date_str}T00:00:00Z"
+        day_end = f"{date_str}T23:59:59Z"
+
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            resp = await client.get(
+                f"{base_url}/api/work-calendars/list",
+                params={
+                    "dateValue.greaterThanOrEqual": day_start,
+                    "dateValue.lessThanOrEqual": day_end,
+                    "isDeleted.equals": "0",
+                    "page": 0,
+                    "size": 1,
+                },
+                headers=headers,
+            )
+            resp.raise_for_status()
+            data = resp.json()
+
+        calendars = data if isinstance(data, list) else data.get("content", [])
+        if calendars:
+            is_work_day = str(calendars[0].get("isWorkDay", "1"))
+            return "正常工时" if is_work_day == "1" else "其他工时"
+    except Exception as e:
+        logger.warning(f"查询工作日历失败({date_str}): {e}")
+
+    return "正常工时"
 
 
 # ─── 工具 Handler ─────────────────────────────────────────────────────────────
@@ -138,20 +185,12 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
         return {"success": False, "error": f"项目解析失败：{project_err}"}
     project_id = resolved_project_id
 
-    existing_hours = await _get_daily_total(
-        user_id=user_id,
-        date_str=date_str,
-        base_url=base_url,
-        headers=request_headers,
-    )
-    if existing_hours + duration > 24:
-        return {
-            "success": False,
-            "error": (
-                f"填报后当日工时合计将超过 24 小时（已有 {existing_hours}h，"
-                f"本次 {duration}h，合计 {existing_hours + duration}h）"
-            ),
-        }
+    # 注：每日工时上限由 SpringBoot 后端根据 work_calendar 精确校验
+    # ai-service 不做预校验，避免上限值不准（如 7.5h 工作日上限是 8h）
+    # SpringBoot 超限会返回 "当天正常工时总和不能超过X小时"，B1 修复已保证错误信息透出
+
+    # 2b. 查询工作日历，确定工时类别
+    workhour_type = await _get_workhour_type_for_date(date_str, auth_token, base_url)
 
     # 3. 构建请求体并调用 SpringBoot API
     # workhourDate 需要 ISO instant 格式（SpringBoot Instant 类型）
@@ -159,9 +198,11 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
         "projectId": project_id,
         "workhourDate": f"{date_str}T00:00:00.000Z",
         "workhour": duration,
+        "workType": "研发工作",
+        "workhourType": workhour_type,
     }
     if description:
-        payload["description"] = description
+        payload["workContent"] = description
     if user_id:
         payload["memberId"] = user_id
 
