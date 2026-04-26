@@ -261,10 +261,22 @@ class LLMClient:
                             return {"finish_reason": "tool_calls", "content": None, "tool_calls": calls}
                         content = msg.get("content", "")
                         if content:
-                            import re
-                            content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL).strip()
+                            import re as _re, json as _json
+                            content = _re.sub(r"<think>.*?</think>", "", content, flags=_re.DOTALL).strip()
                             if "<think>" in content:
-                                content = re.sub(r"<think>.*", "", content, flags=re.DOTALL).strip()
+                                content = _re.sub(r"<think>.*", "", content, flags=_re.DOTALL).strip()
+                            # fallback：部分 vLLM 版本以文本格式输出工具调用
+                            if "<tool_call>" in content:
+                                m = _re.search(r"<tool_call>\s*(\{.*?\})\s*(?:</tool_call>|$)", content, _re.DOTALL)
+                                if m:
+                                    try:
+                                        tc_data = _json.loads(m.group(1))
+                                        name = tc_data.get("name") or tc_data.get("tool")
+                                        args = tc_data.get("arguments") or tc_data.get("parameters") or {}
+                                        if name:
+                                            return {"finish_reason": "tool_calls", "content": None, "tool_calls": [{"name": name, "arguments": args}]}
+                                    except Exception:
+                                        pass
                         return {"finish_reason": "stop", "content": content, "tool_calls": []}
                     else:
                         _status = "error"

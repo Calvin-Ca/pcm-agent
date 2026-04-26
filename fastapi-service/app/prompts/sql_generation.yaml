@@ -3,19 +3,41 @@ input_variables:
   - table_schemas
   - permission_constraints
   - user_question
+  - user_id
+  - today
 template: |
   根据问题生成MySQL SELECT语句。只输出SQL，不要解释。
+
+  当前用户ID：{user_id}
+  今天日期：{today}
 
   表结构：
   {table_schemas}
 
-  关联：workhour.member_id=sys_user.id | workhour.project_id=project_info.id | sys_user.dept_id=org_dept.id | project_member.member_id=sys_user.id
+  表关联规则：
+  - workhour.member_id = sys_user.id（人员）
+  - workhour.project_id = project_info.id（项目）
+  - sys_user.org_id = org_dept.ext_field_2（部门，用于获取部门名称：org_dept.dept_name；注意是 org_id 而非 dept_id）
+  - project_member.member_id = sys_user.id（项目成员）
+  - workhour_attendance.member_id = sys_user.id（考勤/加班，关键字段：overtime_hours加班时长、check_in_time上班打卡、check_out_time下班打卡、work_date日期）
 
-  漏填工时查询方法：SELECT DATE(wc.date_value) AS 日期 FROM work_calendar wc LEFT JOIN workhour wh ON DATE(wc.date_value)=DATE(wh.workhour_date) AND wh.member_id='{user_id}' WHERE wc.is_work_day='Y' AND DATE(wc.date_value) BETWEEN '{start}' AND '{end}' AND wh.id IS NULL ORDER BY wc.date_value
-  work_calendar.is_work_day='Y' 表示应填工时的工作日；workhour.member_id 对应 sys_user.id（非 user_name）
+  【漏填工时专用查询模板】查询用户在某日期区间内哪些工作日没有填工时：
+  SELECT DATE(wc.date_value) AS 日期, wc.work_hour AS 应填工时 FROM work_calendar wc LEFT JOIN workhour wh ON DATE(wc.date_value)=DATE(wh.workhour_date) AND wh.member_id='{user_id}' WHERE wc.is_work_day='1' AND DATE(wc.date_value) BETWEEN '{{start}}' AND '{{end}}' AND wh.id IS NULL ORDER BY wc.date_value LIMIT 100
+  说明：work_calendar.is_work_day='1'（字符串）；work_calendar.work_hour 是该天应填工时；不要 JOIN sys_user 或 org_dept（漏填时 wh 记录不存在，JOIN 结果全为 NULL）。
+
+  【加班时长专用查询模板】加班数据在 workhour_attendance 表，不在 workhour 表：
+  SELECT wa.work_date AS 日期, wa.overtime_hours AS 加班时长, wa.overtime_type AS 加班类型 FROM workhour_attendance wa WHERE wa.member_id='{user_id}' AND wa.work_date BETWEEN '{{start}}' AND '{{end}}' AND wa.overtime_hours > 0 ORDER BY wa.work_date LIMIT 100
+  说明：overtime_hours 是 decimal 类型；汇总加班总时长用 SUM(wa.overtime_hours)；member_id 对应 sys_user.id。
 
   权限约束：{permission_constraints}
 
-  规则：仅SELECT | workhour_date是datetime用DATE()比较 | 姓名用sys_user.entity_name | 用中文别名 | 加LIMIT
+  生成规则：
+  1. 只生成 SELECT 语句，禁止 INSERT/UPDATE/DELETE
+  2. workhour.workhour_date 是 datetime 类型，日期比较必须用 DATE() 函数，如 DATE(wh.workhour_date)='2026-04-01'
+  3. 人员姓名用 sys_user.entity_name 字段
+  4. 部门名称用 org_dept.dept_name 字段，关联条件 sys_user.org_id = org_dept.ext_field_2
+  5. 所有列名必须使用中文别名（AS 中文名）
+  6. 结果必须加 LIMIT（默认 LIMIT 100）
+  7. 涉及漏填工时查询时，必须使用上方【漏填工时专用查询模板】，不得自行改写查询逻辑
 
   问题：{user_question}

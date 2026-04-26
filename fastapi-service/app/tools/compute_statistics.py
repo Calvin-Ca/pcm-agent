@@ -510,7 +510,7 @@ def register_compute_statistics_tool():
     try:
         tool_registry.register_tool(
             name="compute_statistics",
-            description="对工时数据进行汇总统计与排名分析，返回合计、均值、排名、趋势等聚合数据。支持'本月''上周''上月''本季度'等模糊时间描述（自动推断日期范围）。work_type 为可选参数，仅在用户明确询问'加班'时填 work_type='其他工时'，否则不填该参数。适用于：统计总工时、部门/人员工时排名、项目工时占比、加班时长统计、月度/季度趋势分析、工时对比、TopN排名（如工时最多的前5人）。不返回明细条目。",
+            description="对工时数据进行汇总统计与排名分析，返回合计、均值、排名、趋势等聚合数据。支持'本月''上周''上月''本季度'等模糊时间描述（自动推断日期范围）。适用于：统计总工时、部门/人员工时排名、项目工时占比、月度/季度趋势分析、工时对比、TopN排名（如工时最多的前5人）。不返回明细条目。【重要】加班时长/加班统计 不适用此工具，加班数据在 workhour_attendance.overtime_hours，应使用 sql_query 查询。",
             json_schema=COMPUTE_STATISTICS_SCHEMA,
             handler=compute_statistics_handler,
             category=ToolCategory.STATISTICS,

@@ -154,9 +154,10 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
         }
 
     # 3. 构建请求体并调用 SpringBoot API
+    # workhourDate 需要 ISO instant 格式（SpringBoot Instant 类型）
     payload: Dict[str, Any] = {
         "projectId": project_id,
-        "workhourDate": date_str,
+        "workhourDate": f"{date_str}T00:00:00.000Z",
         "workhour": duration,
     }
     if description:
@@ -199,8 +200,13 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
         }
 
     except httpx.HTTPStatusError as e:
-        logger.error(f"工时填报 API 调用失败: {e}")
-        return {"success": False, "error": f"服务调用失败: HTTP {e.response.status_code}"}
+        try:
+            err_body = e.response.json()
+            err_msg = err_body.get("message") or err_body.get("msg") or str(err_body)
+        except Exception:
+            err_msg = e.response.text or ""
+        logger.error(f"工时填报 API 调用失败: HTTP {e.response.status_code}, body: {err_msg}, payload: {payload}")
+        return {"success": False, "error": f"服务调用失败: HTTP {e.response.status_code}" + (f" — {err_msg}" if err_msg else "")}
     except httpx.HTTPError as e:
         logger.error(f"工时填报网络错误: {e}")
         return {"success": False, "error": f"网络请求失败: {e}"}

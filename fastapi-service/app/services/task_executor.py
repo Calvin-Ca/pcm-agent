@@ -176,19 +176,19 @@ class TaskExecutor:
             error_msg = f"任务执行超时 ({timeout}秒)"
             logger.error(f"任务 {task.task_id} 执行超时")
             task.fail_execution(error_msg)
-            return {"error": error_msg}
+            return {"success": False, "error": error_msg}
 
         except PermissionError as e:
             error_msg = str(e)
             logger.warning(f"任务 {task.task_id} 权限拒绝: {error_msg}")
             task.fail_execution(error_msg)
-            return {"error": error_msg}
+            return {"success": False, "error": error_msg}
 
         except Exception as e:
             error_msg = f"任务执行异常: {str(e)}"
             logger.error(f"任务 {task.task_id} 执行异常: {e}", exc_info=True)
             task.fail_execution(error_msg)
-            return {"error": error_msg}
+            return {"success": False, "error": error_msg}
     
     async def _execute_task_by_type(
         self, 

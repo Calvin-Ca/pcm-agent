@@ -116,9 +116,11 @@ def validate_sql(sql: str, max_rows: int = 500) -> Tuple[bool, str]:
         if re.search(keyword, sql_lower):
             return False, f"禁止使用 {keyword}"
 
-    # 4. 跨库访问检测（用 sqlparse 提取含 . 的表名）
-    cross_db_tables = _get_cross_db_tables(sql)
-    if cross_db_tables:
+    # 4. 跨库访问检测：仅检测 FROM/JOIN 子句中的 db.table 格式（alias.column 不属于此类）
+    cross_db_in_clause = re.search(
+        r'\b(?:FROM|JOIN)\s+`?\w+`?\s*\.\s*`?\w+`?', sql, re.IGNORECASE
+    )
+    if cross_db_in_clause:
         return False, "禁止跨库访问"
 
     # 5. 表白名单检测
@@ -189,15 +191,21 @@ class SQLAgentLLMClient:
         messages: [{"role": "system|user|assistant", "content": "..."}]
         """
         import aiohttp
-        import json
-        import time
+        import re as _re
 
         url = f"{self._api_base.rstrip('/')}/chat/completions"
+        # vLLM qwen3 通过 chat_template_kwargs 关闭 thinking；Ollama 用 think:false
+        _is_ollama = "ollama" in self._api_base.lower()
+        if _is_ollama:
+            _thinking_param = {"think": False}
+        else:
+            _thinking_param = {"chat_template_kwargs": {"enable_thinking": False}}
         payload = {
             "model": self._model,
             "messages": messages,
             "temperature": kwargs.get("temperature", 0.1),
-            "max_tokens": kwargs.get("max_tokens", 2000),
+            "max_tokens": kwargs.get("max_tokens", 800),
+            **_thinking_param,
         }
 
         headers = {
@@ -210,7 +218,11 @@ class SQLAgentLLMClient:
                 async with session.post(url, headers=headers, json=payload) as resp:
                     if resp.status == 200:
                         data = await resp.json()
-                        return data["choices"][0]["message"]["content"]
+                        content = data["choices"][0]["message"]["content"] or ""
+                        content = _re.sub(r"<think>[\s\S]*?</think>", "", content, flags=_re.DOTALL).strip()
+                        if "<think>" in content:
+                            content = _re.sub(r"<think>[\s\S]*", "", content, flags=_re.DOTALL).strip()
+                        return content
                     else:
                         error_text = await resp.text()
                         raise Exception(f"LLM API 错误: {resp.status} - {error_text}")
@@ -311,12 +323,15 @@ async def sql_query_handler(**kwargs) -> Dict[str, Any]:
     # 4. LLM 生成 SQL
     #    prompt 结构优化：system 短指令 + user 紧凑上下文
     #    让 qwen3-8b 不会因 prompt 过长而"忘记"输出格式要求
+    from datetime import date as _date
     pm = get_prompt_manager()
     sql_generation_prompt = pm.format(
         "sql_generation",
         table_schemas=table_schemas,
         permission_constraints=permission_constraints,
         user_question=question,
+        user_id=user_id or "unknown",
+        today=str(_date.today()),
     )
 
     llm_client = SQLAgentLLMClient()
@@ -329,7 +344,7 @@ async def sql_query_handler(**kwargs) -> Dict[str, Any]:
                 {"role": "user", "content": sql_generation_prompt}
             ],
             temperature=0.1,
-            max_tokens=500,
+            max_tokens=2000,
         )
         # 清理 LLM 返回内容中的 thinking/reasoning 内容
         generated_sql = re.sub(r"<think>[\s\S]*?</think>", "", generated_sql)
@@ -392,9 +407,22 @@ async def sql_query_handler(**kwargs) -> Dict[str, Any]:
         logger.warning(f"SQL 结果汇总失败: {e}")
         summary = f"查询完成，共返回 {len(query_results)} 条数据（汇总生成失败）"
 
-    # 转换 Decimal 为字符串（避免 JSON 序列化失败）
+    # 转换非 JSON 可序列化类型（Decimal、date、datetime 等）
+    from datetime import date as _date_type, datetime as _datetime_type
     def _sanitize_row(row):
-        return {k: str(v) if hasattr(v, '__float__') and not isinstance(v, str) else v for k, v in row.items()}
+        result = {}
+        for k, v in row.items():
+            if v is None:
+                result[k] = None
+            elif isinstance(v, _datetime_type):
+                result[k] = v.strftime("%Y-%m-%d %H:%M:%S")
+            elif isinstance(v, _date_type):
+                result[k] = v.strftime("%Y-%m-%d")
+            elif hasattr(v, '__float__') and not isinstance(v, (int, float, bool)):
+                result[k] = str(v)
+            else:
+                result[k] = v
+        return result
 
     return {
         "success": True,
@@ -415,10 +443,12 @@ def register_sql_query_tool():
         tool_registry.register_tool(
             name="sql_query",
             description=(
-                "执行自定义 SQL 查询。仅当 query_timesheet（工时明细/简单汇总）和 compute_statistics（聚合统计/排名）明确无法覆盖时使用。"
-                "适用场景：多表 JOIN 关联、复杂条件筛选、窗口函数、自定义时间区间聚合等需要灵活 SQL 的复杂场景。"
-                "特别适用：检查漏填工时（需关联 work_calendar 与 workhour 表，找出应填但未填的日期）。"
-                "绝不适用（禁止选用）：查某人工时明细、统计部门/人员总工时或加班时长、本月/上周工时汇总、工时排名TopN、项目工时对比等标准查询——这些有专门的 query_timesheet 和 compute_statistics 工具处理。"
+                "执行自定义 SQL 查询。适用场景：多表 JOIN 关联、复杂条件筛选、窗口函数、自定义时间区间聚合。"
+                "【必须使用此工具的场景】："
+                "1. 漏填工时查询（关联 work_calendar 与 workhour 找出未填日期）；"
+                "2. 加班时长查询（加班数据在 workhour_attendance.overtime_hours，compute_statistics 不含此字段）；"
+                "3. 考勤异常查询（workhour_attendance.is_abnormal）；"
+                "4. 打卡时间查询（workhour_attendance.check_in_time/check_out_time）。"
                 "参数：question（自然语言问题）。"
             ),
             json_schema=SQL_QUERY_SCHEMA,

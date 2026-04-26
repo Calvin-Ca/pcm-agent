@@ -230,14 +230,24 @@ async def node_llm_with_tools(state: AgentState) -> dict:
 
         # Ollama 专属参数，vLLM 不识别会被忽略
         is_ollama = "11434" in (_llm_client.api_base or "")
-        extra = {"num_ctx": num_ctx, "think": False} if is_ollama else {}
+        if is_ollama:
+            extra = {"num_ctx": num_ctx, "think": False}
+        else:
+            # DashScope qwen3：关闭 thinking mode，避免思考 token 占用上下文
+            extra = {"enable_thinking": False}
 
+        # FC 调用时截短会话历史到最近 3 轮（保留 system + 最近 6 条 + 当前消息）
+        # 防止长会话导致 input tokens 超出模型上下文限制（qwen3-8b: 8192）
+        if len(messages) > 9:
+            messages = [messages[0]] + messages[-8:]
+
+        # tool call JSON 通常 100~600 tokens；qwen3-8b 8192 context，input ~4000-6000 时还有 2000+ 可用
         result = await _llm_client.generate_with_tools(
             messages=messages,
             tools=tools,
             tool_choice="auto",
             temperature=0.1,
-            max_tokens=1500,
+            max_tokens=1024,
             extra=extra,
         )
     except Exception as e:
@@ -711,11 +721,6 @@ async def node_execute_llm(state: AgentState) -> dict:
     if not _llm_client:
         return {"llm_result": "LLM 服务未初始化", "error": "LLM not available"}
 
-    base_system_prompt = get_prompt_manager().format("system") or (
-        "你是一个专业的企业工时管理助手。"
-        "请用简洁、友好的方式回答用户问题。"
-    )
-
     try:
         history = state.get("conversation_history") or []
         if history:
@@ -729,10 +734,10 @@ async def node_execute_llm(state: AgentState) -> dict:
                 max_tokens=1000,
             )
         else:
-            # 无历史时降级为单轮模式
+            # 无历史时降级为单轮模式（conversation_history 构建失败的兜底）
             answer = await _llm_client.generate(
                 prompt=state["user_message"],
-                system_prompt=base_system_prompt,
+                system_prompt="你是一个专业的企业工时管理助手。请用简洁、友好的方式回答用户问题。",
                 temperature=0.7,
                 max_tokens=1000,
             )
@@ -974,18 +979,31 @@ async def stream_agent_response(
                     result = state_delta.get("tool_result")
                     error = state_delta.get("error")
                     if error or (result and not result.get("success", True)):
-                        msg = error or result.get("error", "工具执行失败")
+                        # 错误消息优先级：state.error > result.error > result.result.error > 默认值
+                        inner = result.get("result") if isinstance(result, dict) else None
+                        msg = (
+                            error
+                            or (result.get("error") if isinstance(result, dict) else None)
+                            or (inner.get("error") if isinstance(inner, dict) else None)
+                            or "工具执行失败"
+                        )
                         log_status = "error"
                         log_error = msg
                         log_tools_called = [{"tool_name": log_tool_name, "success": False, "error": msg}]
                         yield _format_sse("error", {"message": msg})
                     else:
-                        _collected_assistant_response = _summarize_tool_result(log_tool_name, result)
+                        # 从工具结果提取摘要文本供前端展示
+                        inner_result = result.get("result") if isinstance(result, dict) else None
+                        summary_text = None
+                        if isinstance(inner_result, dict):
+                            summary_text = inner_result.get("summary") or inner_result.get("message")
+                        _collected_assistant_response = summary_text or _summarize_tool_result(log_tool_name, result)
                         log_ai_response = _collected_assistant_response
                         log_tools_called = [{"tool_name": log_tool_name, "success": True}]
                         yield _format_sse("response", {
                             "result": result,
                             "tool_name": log_tool_name,
+                            "message": summary_text,  # 前端优先展示此摘要
                         })
 
                 elif node_name == "execute_rag":
