@@ -18,6 +18,7 @@ import httpx
 from app.models.tool import ToolCategory
 from app.services.tool_registry import tool_registry
 from app.services.param_resolver import resolve_project_id
+from app.services.work_type_resolver import resolve_work_type
 
 logger = logging.getLogger(__name__)
 
@@ -192,13 +193,18 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
     # 2b. 查询工作日历，确定工时类别
     workhour_type = await _get_workhour_type_for_date(date_str, auth_token, base_url)
 
+    # 2c. 智能推断 workType（(user, project) 二维众数 → user 单维 → LLM → 默认）
+    resolved_work_type = await resolve_work_type(
+        user_id or "", project_id, description, auth_token, base_url
+    )
+
     # 3. 构建请求体并调用 SpringBoot API
     # workhourDate 需要 ISO instant 格式（SpringBoot Instant 类型）
     payload: Dict[str, Any] = {
         "projectId": project_id,
         "workhourDate": f"{date_str}T00:00:00.000Z",
         "workhour": duration,
-        "workType": "研发工作",
+        "workType": resolved_work_type,
         "workhourType": workhour_type,
     }
     if description:
