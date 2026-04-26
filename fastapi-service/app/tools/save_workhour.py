@@ -243,8 +243,17 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
     except httpx.HTTPStatusError as e:
         try:
             err_body = e.response.json()
-            # SpringBoot ProblemDetail 格式：detail 是实际错误描述，message 是 i18n key
-            err_msg = err_body.get("detail") or err_body.get("message") or err_body.get("msg") or str(err_body)
+            # SpringBoot ProblemDetail 格式（JHIPSTER）：
+            # - title: 用户友好的错误文案（BadRequestAlertException 的标题）
+            # - detail: 可能为 "null" 字符串
+            # - message: i18n key（如 error.dailyWorkhourExceeded）
+            # 优先级：title > detail(过滤 "null") > message
+            err_msg = (
+                err_body.get("title")
+                or (err_body.get("detail") if err_body.get("detail") != "null" else None)
+                or err_body.get("message")
+                or str(err_body)
+            )
         except Exception:
             err_msg = e.response.text or ""
         logger.error(f"工时填报 API 调用失败: HTTP {e.response.status_code}, body: {err_msg}, payload: {payload}")
