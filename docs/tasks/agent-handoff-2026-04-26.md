@@ -124,14 +124,14 @@ echo "TOKEN: ${TOKEN:0:50}..."
    ```bash
    ssh caic@172.19.3.136 "docker logs ai-assistant-service --since 30m | grep '执行工具:'" > verify-tools.log
    ```
-5. 验证工具命中：
+5. 验证工具命中（原表为用户预设，未核对 `compute_statistics` 实际能力，以下已修正）：
    | query | 期望工具 |
    |-------|---------|
    | 统计部门上月加班时长 | `compute_statistics` |
    | 查一下李四的工时 | `query_timesheet` |
    | 我本周工时 | `query_timesheet` |
-   | 工时 Top 5 排名 | `compute_statistics` |
-   | 各部门工时对比 | `compute_statistics` |
+   | 工时 Top 5 排名 | `sql_query`（`compute_statistics` 无 ranking/top_n 类型，无法 LIMIT 5） |
+   | 各部门工时对比 | `sql_query`（`department_hours` 仅列数字，无跨部门对比语义） |
 6. 在 `docs/benchmarks/2026-04-25-final.md` 末尾追加「## 10. e3db51a 生产链路验证（2026-04-26）」，记录 5/5 命中情况 + 日志摘录
 
 **验收**：

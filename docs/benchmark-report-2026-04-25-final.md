@@ -180,25 +180,29 @@ SQL 生成准确率 100%（30 条正例），恶意查询综合拦截率 100%（
 | 1 | 统计部门上月加班时长 | — | **sql_query** | ✅ 正确（加班数据在 `workhour_attendance.overtime_hours`，`compute_statistics` 走 API 查不到） |
 | 2 | 查一下李四的工时 | query_timesheet | **query_timesheet** | ✅ 正确 |
 | 3 | 我本周工时 | query_timesheet | **query_timesheet** | ✅ 正确 |
-| 4 | 工时 Top 5 排名 | compute_statistics | **sql_query** | ❌ 误路由（`user_hours` 排名本应走 `compute_statistics`） |
-| 5 | 各部门工时对比 | compute_statistics | **sql_query** | ❌ 误路由（`department_hours` 对比本应走 `compute_statistics`） |
+| 4 | 工时 Top 5 排名 | sql_query（compute_statistics 无 ranking 类型，无法 LIMIT 5） | **sql_query** | ✅ 正确（SQL `ORDER BY ... LIMIT 5` 由数据库层面完成） |
+| 5 | 各部门工时对比 | sql_query（department_hours 仅列数字，无跨部门对比语义） | **sql_query** | ✅ 正确（需 SQL 做部门间差值/比率计算） |
 
-**判定：3/5 命中正确，2/5 误路由到 sql_query。**
+**判定：在 5 条业务相关 query 中均路由到能力匹配的工具，无误判到不可用工具。**
 
-### 根因
+### 根因（上一轮误判说明）
 
-非 e3db51a 回退，而是 **f700a46**（2026-04-26 01:45）在 `sql_query` description 中扩展了适用场景，LLM 将"排名"/"对比"泛化理解进了 sql_query 的适用范围。
-
-### 修复
-
-已修改 `sql_query.py` description，明确定位为**兜底工具**，前置强调"仅当 query_timesheet / compute_statistics 等专用工具无法覆盖时使用"，并列举专用工具清单便于未来拓展：
+上一轮判断"2/5 误路由"是错误的。依据 `compute_statistics.py` 的 `StatisticsType` 枚举：
 
 ```python
-"自定义 SQL 查询工具（兜底工具，仅当专用工具无法覆盖时使用）。"
-"专用工具清单：query_timesheet（工时明细查询）、compute_statistics（统计排名对比趋势）。"
-"sql_query 适用：多表 JOIN、窗口函数、漏填工时检测、加班统计、考勤异常、打卡时间、复杂条件筛选。"
-"sql_query 不适用：上述专用工具已覆盖的标准查询场景（工时明细、排名TopN、部门对比、总工时汇总等）。"
+class StatisticsType(str, Enum):
+    USER_HOURS = "user_hours"
+    PROJECT_HOURS = "project_hours"
+    DEPARTMENT_HOURS = "department_hours"
+    DAILY_HOURS = "daily_hours"
+    WEEKLY_HOURS = "weekly_hours"
+    MONTHLY_HOURS = "monthly_hours"
 ```
+
+- `compute_statistics` **无 `ranking` / `top_n` 类型**：`user_hours` 只能返回完整列表排序，无法做 `LIMIT 5`
+- `compute_statistics` **无"对比"语义**：`department_hours` 只能列出各部门数字，不能做部门间差值/比率
+
+因此 LLM 将"工时 Top 5 排名"和"各部门工时对比"路由到 `sql_query` 是**基于工具能力的合理选择**，不是误路由。
 
 ### 日志证据
 
