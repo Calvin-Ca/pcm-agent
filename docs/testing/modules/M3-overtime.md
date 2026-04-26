@@ -235,3 +235,9 @@ ssh caic@172.19.3.136 "docker logs ai-assistant-service --tail 300 | grep -E '�
 - 发现新 bug：
   - B8：M3 加班查询误路由到 RAG（见 `docs/changelog/2026-04-26.md §B8`）
   - B11：M3 部门加班排名 SQL 范围错误（见 `docs/changelog/2026-04-26.md §B11`）
+
+### 第二轮修复验证（2026-04-26，Agent C Round 3）
+
+- B11 修复后重新验证：
+  - TC-M3-04（部门加班排名）：✅ SQL 正确使用【部门加班统计模板】，`JOIN sys_user + org_dept`，`od.ext_field_2 = 'fb17e76c-dc90-4c38-8ffd-51fdfe528c3b'`，`work_date BETWEEN '2026-04-20' AND '2026-04-26'`，row_count=15，返回部门内 15 人加班排名
+- 日志关键摘录：`generated_sql` 含 `JOIN sys_user su ON wa.member_id = su.id JOIN org_dept od ON su.org_id = od.ext_field_2`，未限制 `member_id='{user_id}'`

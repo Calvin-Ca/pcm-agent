@@ -260,3 +260,10 @@ ssh caic@172.19.3.136 "docker logs ai-assistant-service --tail 300 | grep -E 'ge
   - TC-01：app=0（错误 SQL），db=5（正确值），不一致
   - TC-02：app=5，db=5，一致（但 summary 错误）
   - TC-03：app=5（错误范围），db=0（正确值），不一致
+
+### 第二轮修复验证（2026-04-26，Agent C Round 3）
+
+- B9 修复后重新验证：
+  - TC-M2-01（本月漏填）：✅ SQL 正确使用漏填模板，`BETWEEN '2026-04-01' AND '2026-04-26'`，`is_work_day='1'`，`wh.id IS NULL`，row_count=2
+  - TC-M2-03（上周漏填）：⚠️ 日期范围正确（`2026-04-13` 至 `2026-04-19`），但 LLM 自行加了 `GROUP BY` + `COUNT` 导致语法错误（乱码别名），未严格遵循模板约束
+- 日志关键摘录：`workType (user×project) 众数: '研发工作'`（save_workhour 已接入 resolver）
