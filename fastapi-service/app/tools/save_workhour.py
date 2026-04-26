@@ -243,11 +243,13 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
     except httpx.HTTPStatusError as e:
         try:
             err_body = e.response.json()
-            err_msg = err_body.get("message") or err_body.get("msg") or str(err_body)
+            # SpringBoot ProblemDetail 格式：detail 是实际错误描述，message 是 i18n key
+            err_msg = err_body.get("detail") or err_body.get("message") or err_body.get("msg") or str(err_body)
         except Exception:
             err_msg = e.response.text or ""
         logger.error(f"工时填报 API 调用失败: HTTP {e.response.status_code}, body: {err_msg}, payload: {payload}")
-        return {"success": False, "error": f"服务调用失败: HTTP {e.response.status_code}" + (f" — {err_msg}" if err_msg else "")}
+        # 直接透传 SpringBoot 的原始错误文案，不包 HTTP 前缀
+        return {"success": False, "error": err_msg or f"服务调用失败 (HTTP {e.response.status_code})"}
     except httpx.HTTPError as e:
         logger.error(f"工时填报网络错误: {e}")
         return {"success": False, "error": f"网络请求失败: {e}"}
