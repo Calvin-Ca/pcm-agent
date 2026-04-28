@@ -23,6 +23,7 @@ from langgraph.graph import END, START, StateGraph
 from typing_extensions import TypedDict
 
 from app.services.prompt_manager import get_prompt_manager
+from app.services.chart_builder import build_chart_option
 
 logger = logging.getLogger(__name__)
 
@@ -1005,6 +1006,17 @@ async def stream_agent_response(
                             "tool_name": log_tool_name,
                             "message": summary_text,  # 前端优先展示此摘要
                         })
+                        # ── Chart 事件：工具结果可视化 ───────────────────────────
+                        try:
+                            chart_data = await build_chart_option(
+                                user_query=message,
+                                tool_result=result,
+                                llm_client=_llm_client,
+                            )
+                            if chart_data:
+                                yield _format_sse("chart", chart_data)
+                        except Exception as chart_err:
+                            logger.warning(f"Chart 事件生成失败，静默降级: {chart_err}")
 
                 elif node_name == "execute_rag":
                     # 流式 RAG：当 intent 阶段检测到 knowledge_qa 时，
