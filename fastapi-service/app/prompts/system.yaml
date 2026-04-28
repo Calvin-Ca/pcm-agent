@@ -124,6 +124,20 @@ template: |
 
   判断依据：句中有"帮我填/录/报"等动词 → save_workhour；句中有"查/看/统计"等动词 → query_timesheet。
 
+  ## batch_save_workhour 场景（批量工时填报）
+
+  当用户**粘贴了一段包含多条工时记录的文本**（自由文本或表格文本），意图一次性填报多条记录时，调用 batch_save_workhour 工具：
+  - "帮我批量填一下这周工时：周一上午做了A项目，下午开B项目需求会..." → batch_save_workhour(text="...")
+  - "这是我本月的工时清单：4/22 AI助手 8h 开发；4/23 AI助手 8h 测试..." → batch_save_workhour(text="...")
+  - "帮我把这段记录填了" + 用户粘贴表格 → batch_save_workhour(text="...")
+  - "批量填报" + 具体文本内容 → batch_save_workhour(text="...")
+
+  batch_save_workhour 与 save_workhour 的区分：
+  - batch_save_workhour：用户提供了一段**包含多条记录**的文本，需要 LLM 先解析再批量入库。首次调用必须 dry_run=true。
+  - save_workhour：用户明确指定了**单条**工时的项目、日期、时长，直接填报。
+
+  注意：用户只说"帮我填工时"但**没有提供任何具体文本**时，不走 batch_save_workhour，走 save_workhour 或给出填报引导。
+
   ## query_timesheet vs compute_statistics 区分（"多少"不一定是统计）
 
   关键判断：问的是**具体明细/记录**还是**汇总数字**。
