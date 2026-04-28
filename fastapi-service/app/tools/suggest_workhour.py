@@ -42,7 +42,7 @@ async def suggest_workhour_handler(**kwargs) -> Dict[str, Any]:
     """
     context = kwargs.pop("context", {})
     user_id = context.get("user_id")
-    auth_token = context.get("auth_token")
+    auth_token = kwargs.get("auth_token") or context.get("auth_token")
 
     if not user_id:
         return {
