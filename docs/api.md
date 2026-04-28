@@ -296,4 +296,5 @@ AI 助手内置以下工具，由 LangGraph 根据用户意图自动选择调用
 | `query_project` | 查询项目信息 | project_id（可选） |
 | `compute_statistics` | 统计分析工时 | filters, statistics_type |
 | `generate_weekly_report` | 生成周报 | user_id, week |
-| `save_workhour` | 填报工时 | project_id, date, duration, description |
+| `save_workhour` | 单条工时填报 | project_id, date, duration, description |
+| `batch_save_workhour` | 批量工时填报（自然语言解析 + dry_run 预览） | text（工时描述文本）, dry_run（默认 true 预览） |

@@ -164,16 +164,15 @@ Spring Boot (8080)
 
 ### 工具层（`app/tools/`）
 
-6 个业务工具，5 个通过 HTTP 调用 Spring Boot API，1 个直接操作数据库：
+7 个业务工具，6 个通过 HTTP 调用 Spring Boot API，1 个直接操作数据库：
 
 - `query_timesheet.py` — 工时查询（`memberId` 无值时回退到当前用户，已修复全员数据问题）
 - `query_project.py` — 项目查询
 - `compute_statistics.py` — 统计分析
 - `generate_weekly_report.py` — 周报生成
-- `save_workhour.py` — 工时填报（已接入 `param_resolver`，自动将项目名转换为 ID）
+- `save_workhour.py` — 单条工时填报（已接入 `param_resolver`，自动将项目名转换为 ID）
+- `batch_save_workhour.py` — 批量工时填报（自然语言/表格文本解析 + dry_run 预览 + 逐条入库）
 - `sql_query.py` — **SQL Agent**（自然语言转 SQL，直接查询数据库，支持复杂分析场景）
-- `generate_weekly_report.py` — 周报生成
-- `save_workhour.py` — 工时填报（已接入 `param_resolver`，自动将项目名转换为 ID）
 
 ### LLM 模型配置
 
