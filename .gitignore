@@ -32,6 +32,9 @@ fastapi-service/.hypothesis/
 # Docker 本地覆盖（使用 docker-compose.prod.yml）
 docker-compose.override.yml
 
+# Git worktrees
+.worktrees/
+
 # 本地工具配置脚本（含 API Key，不进 git）
 cc配置readme.txt
 
