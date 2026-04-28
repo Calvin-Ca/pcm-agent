@@ -34,6 +34,13 @@ template: |
   - project_member.member_id = sys_user.id（项目成员）
   - workhour_attendance.member_id = sys_user.id（考勤/加班，关键字段：overtime_hours加班时长、check_in_time上班打卡、check_out_time下班打卡、work_date日期）
 
+  【部门层级规则】org_dept 表中 ext_field_2 是父部门 ID：
+  - 二级部门：id = ext_field_2（自己指向自己，即有子部门归在它下面的部门）
+  - 三级子部门：id != ext_field_2（有明确父部门的班组/小组）
+  - 用户问"各部门""部门占比""部门排名"时，只统计二级部门（WHERE od.id = od.ext_field_2），
+    不展开到三级子部门（如"族组(吴世豪)""SDK组(江威)"等），避免图表过碎。
+  - 关联写法：JOIN org_dept od ON su.org_id = od.ext_field_2 WHERE od.id = od.ext_field_2
+
   【漏填工时专用查询模板】查询用户在某日期区间内哪些工作日没有填工时：
   SELECT DATE(wc.date_value) AS 日期, wc.work_hour AS 应填工时 FROM work_calendar wc LEFT JOIN workhour wh ON DATE(wc.date_value)=DATE(wh.workhour_date) AND wh.member_id='{user_id}' WHERE wc.is_work_day='1' AND DATE(wc.date_value) BETWEEN '起始日期' AND '结束日期' AND wh.id IS NULL ORDER BY wc.date_value LIMIT 100
   说明：work_calendar.is_work_day='1'（字符串）；work_calendar.work_hour 是该天应填工时；不要 JOIN sys_user 或 org_dept（漏填时 wh 记录不存在，JOIN 结果全为 NULL）。
