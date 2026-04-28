@@ -11,6 +11,9 @@ from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
+# 类别过多时的阈值：超过此值触发图表布局优化
+CATEGORY_THRESHOLD = 10
+
 # ─── LLM Tool Schema（强制结构化输出）──────────────────────────────────────────
 
 ECHARTS_TOOL_SCHEMA = {
@@ -50,6 +53,17 @@ ECHARTS_TOOL_SCHEMA = {
         },
     },
 }
+
+# 纯文本 prompt 用的 JSON Schema 描述（兼容不支持 tool_choice=func 的 vLLM）
+ECHARTS_JSON_SCHEMA_DESC = json.dumps({
+    "type": "object",
+    "properties": {
+        "chart_type": {"enum": ["bar", "line", "pie", "table"]},
+        "echarts_option": {"type": "object"},
+        "should_render": {"type": "boolean"},
+    },
+    "required": ["chart_type", "should_render"],
+}, ensure_ascii=False)
 
 
 # ─── 数据提取 ─────────────────────────────────────────────────────────────────
@@ -160,6 +174,9 @@ def _build_chart_prompt(user_query: str, rows: List[Dict[str, Any]]) -> tuple[st
     numeric_cols = [c for c in columns if _is_numeric_column(rows, c)]
     category_cols = [c for c in columns if c not in numeric_cols]
 
+    category_count = len(rows)
+    need_optimize = category_count > CATEGORY_THRESHOLD
+
     system_prompt = (
         "你是数据可视化专家。根据用户问题和数据特征，选择最合适的图表类型，"
         "生成标准的 ECharts 5.x option 配置。\n\n"
@@ -168,13 +185,20 @@ def _build_chart_prompt(user_query: str, rows: List[Dict[str, Any]]) -> tuple[st
         "2. 时间序列/趋势类查询（如'趋势''走势''近X天''每天'）用 line（折线图）\n"
         "3. 对比/排名类查询（如'对比''排名''各部门''各项目'）用 bar（柱状图）\n"
         "4. 其他情况优先 bar\n\n"
+        "类别过多优化（数据行数 > 10 时必须执行）：\n"
+        "- bar 图：切换为水平条形图，yAxis 放类别名、xAxis 放数值，"
+        "并设置 grid.left='25%' 给长标签留空间\n"
+        "- pie 图：只保留数值最大的 Top 10，其余合并为'其他'\n"
+        "- 当用户明确要求'全部'时仍展示全部数据，但用水平条形图避免重叠\n\n"
         "echarts_option 必须是完整的合法 JSON，包含：\n"
         "- title: {text: '图表标题'}\n"
         "- tooltip: {}\n"
-        "- bar/line: 必须包含 xAxis 和 yAxis\n"
+        "- bar/line: 必须包含 xAxis 和 yAxis（水平条形图时互换）\n"
         "- pie: 不需要坐标轴，series.data 用 {name, value} 格式\n"
         "- series: 数组，每个元素包含 type 和 data\n\n"
-        "数据值必须是数字，不要带单位字符串。"
+        "数据值必须是数字，不要带单位字符串。\n\n"
+        "你必须以如下 JSON Schema 输出结果（不要加 markdown 代码块，直接输出纯 JSON）：\n"
+        f"{ECHARTS_JSON_SCHEMA_DESC}"
     )
 
     data_json = json.dumps(sample_rows, ensure_ascii=False, default=str)
@@ -184,9 +208,9 @@ def _build_chart_prompt(user_query: str, rows: List[Dict[str, Any]]) -> tuple[st
         f"数据列：{columns}\n"
         f"数值列：{numeric_cols}\n"
         f"分类列：{category_cols}\n"
-        f"数据行数：{len(rows)}\n"
+        f"数据行数：{len(rows)}（{'类别过多，必须做水平条形图/Top10 优化' if need_optimize else '可直接展示' }）\n"
         f"数据示例（前{len(sample_rows)}行）：\n{data_json}\n\n"
-        f"请调用 render_chart 工具生成图表配置。"
+        f"请生成图表配置，直接输出合法 JSON，不要加 ```json 等标记。"
     )
 
     return system_prompt, user_prompt
@@ -229,48 +253,46 @@ async def build_chart_option(
     system_prompt, user_prompt = _build_chart_prompt(user_query, rows)
 
     try:
-        result = await llm_client.generate_with_tools(
+        content = await llm_client.generate(
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            tools=[ECHARTS_TOOL_SCHEMA],
-            tool_choice="render_chart",
             temperature=0.1,
             max_tokens=1500,
         )
 
-        if result.get("finish_reason") == "tool_calls":
-            tool_calls = result.get("tool_calls", [])
-            if tool_calls:
-                args = tool_calls[0].get("arguments", {})
-                if not args.get("should_render", True):
-                    return None
-                chart_type = args.get("chart_type", "bar")
-                echarts_option = args.get("echarts_option")
-                if echarts_option and isinstance(echarts_option, dict):
-                    return {
-                        "echarts_option": echarts_option,
-                        "chart_type": chart_type,
-                    }
+        if not content:
+            return None
 
-        # fallback：如果 LLM 没有以 tool_calls 返回，尝试从 content 解析
-        content = result.get("content", "")
-        if content:
-            # 尝试提取 JSON
-            try:
-                # 查找 {...} 块
-                start = content.find("{")
-                end = content.rfind("}")
-                if start >= 0 and end > start:
-                    parsed = json.loads(content[start:end + 1])
-                    if parsed.get("echarts_option"):
-                        return {
-                            "echarts_option": parsed["echarts_option"],
-                            "chart_type": parsed.get("chart_type", "bar"),
-                        }
-            except json.JSONDecodeError:
-                pass
+        # 清理可能的 markdown 代码块标记
+        content = content.strip()
+        if content.startswith("```json"):
+            content = content[7:]
+        if content.startswith("```"):
+            content = content[3:]
+        if content.endswith("```"):
+            content = content[:-3]
+        content = content.strip()
+
+        # 提取 JSON
+        start = content.find("{")
+        end = content.rfind("}")
+        if start < 0 or end <= start:
+            return None
+
+        parsed = json.loads(content[start:end + 1])
+
+        if not parsed.get("should_render", True):
+            return None
+
+        chart_type = parsed.get("chart_type", "bar")
+        echarts_option = parsed.get("echarts_option")
+        if echarts_option and isinstance(echarts_option, dict):
+            return {
+                "echarts_option": echarts_option,
+                "chart_type": chart_type,
+            }
 
         return None
 

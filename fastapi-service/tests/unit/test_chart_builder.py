@@ -184,22 +184,16 @@ class TestBuildChartOptionBar:
     @pytest.mark.asyncio
     async def test_bar_chart_for_department_hours(self, mock_llm_client):
         """部门工时数据应生成 bar 图"""
-        mock_llm_client.generate_with_tools = AsyncMock(return_value={
-            "finish_reason": "tool_calls",
-            "tool_calls": [{
-                "name": "render_chart",
-                "arguments": {
-                    "chart_type": "bar",
-                    "should_render": True,
-                    "echarts_option": {
-                        "title": {"text": "各部门工时统计"},
-                        "xAxis": {"type": "category", "data": ["研发部", "产品部"]},
-                        "yAxis": {"type": "value"},
-                        "series": [{"type": "bar", "data": [120, 80]}],
-                    },
-                },
-            }],
-        })
+        mock_llm_client.generate = AsyncMock(return_value=json.dumps({
+            "chart_type": "bar",
+            "should_render": True,
+            "echarts_option": {
+                "title": {"text": "各部门工时统计"},
+                "xAxis": {"type": "category", "data": ["研发部", "产品部"]},
+                "yAxis": {"type": "value"},
+                "series": [{"type": "bar", "data": [120, 80]}],
+            },
+        }))
 
         tool_result = {
             "tool_name": "sql_query",
@@ -223,7 +217,7 @@ class TestBuildChartOptionBar:
         assert result["chart_type"] == "bar"
         assert "echarts_option" in result
         assert result["echarts_option"]["title"]["text"] == "各部门工时统计"
-        mock_llm_client.generate_with_tools.assert_called_once()
+        mock_llm_client.generate.assert_called_once()
 
 
 class TestBuildChartOptionLine:
@@ -232,22 +226,16 @@ class TestBuildChartOptionLine:
     @pytest.mark.asyncio
     async def test_line_chart_for_daily_trend(self, mock_llm_client):
         """日维度时间序列应生成 line 图"""
-        mock_llm_client.generate_with_tools = AsyncMock(return_value={
-            "finish_reason": "tool_calls",
-            "tool_calls": [{
-                "name": "render_chart",
-                "arguments": {
-                    "chart_type": "line",
-                    "should_render": True,
-                    "echarts_option": {
-                        "title": {"text": "近7天工时趋势"},
-                        "xAxis": {"type": "category", "data": ["04-01", "04-02"]},
-                        "yAxis": {"type": "value"},
-                        "series": [{"type": "line", "data": [8, 7.5]}],
-                    },
-                },
-            }],
-        })
+        mock_llm_client.generate = AsyncMock(return_value=json.dumps({
+            "chart_type": "line",
+            "should_render": True,
+            "echarts_option": {
+                "title": {"text": "近7天工时趋势"},
+                "xAxis": {"type": "category", "data": ["04-01", "04-02"]},
+                "yAxis": {"type": "value"},
+                "series": [{"type": "line", "data": [8, 7.5]}],
+            },
+        }))
 
         tool_result = {
             "tool_name": "sql_query",
@@ -278,26 +266,20 @@ class TestBuildChartOptionPie:
     @pytest.mark.asyncio
     async def test_pie_chart_for_proportion(self, mock_llm_client):
         """占比类查询应生成 pie 图"""
-        mock_llm_client.generate_with_tools = AsyncMock(return_value={
-            "finish_reason": "tool_calls",
-            "tool_calls": [{
-                "name": "render_chart",
-                "arguments": {
-                    "chart_type": "pie",
-                    "should_render": True,
-                    "echarts_option": {
-                        "title": {"text": "各部门工时占比"},
-                        "series": [{
-                            "type": "pie",
-                            "data": [
-                                {"name": "研发部", "value": 120},
-                                {"name": "产品部", "value": 80},
-                            ],
-                        }],
-                    },
-                },
-            }],
-        })
+        mock_llm_client.generate = AsyncMock(return_value=json.dumps({
+            "chart_type": "pie",
+            "should_render": True,
+            "echarts_option": {
+                "title": {"text": "各部门工时占比"},
+                "series": [{
+                    "type": "pie",
+                    "data": [
+                        {"name": "研发部", "value": 120},
+                        {"name": "产品部", "value": 80},
+                    ],
+                }],
+            },
+        }))
 
         tool_result = {
             "tool_name": "compute_statistics",
@@ -444,7 +426,7 @@ class TestBuildChartOptionLLMFailure:
     @pytest.mark.asyncio
     async def test_llm_failure_returns_none(self, mock_llm_client):
         """LLM 调用异常时应静默返回 None"""
-        mock_llm_client.generate_with_tools = AsyncMock(
+        mock_llm_client.generate = AsyncMock(
             side_effect=Exception("LLM API 超时")
         )
 
@@ -471,11 +453,7 @@ class TestBuildChartOptionLLMFailure:
     @pytest.mark.asyncio
     async def test_llm_returns_stop_without_tool_calls(self, mock_llm_client):
         """LLM 以 stop 结束（没有 tool_calls）→ None"""
-        mock_llm_client.generate_with_tools = AsyncMock(return_value={
-            "finish_reason": "stop",
-            "content": "这是一个文本回复",
-            "tool_calls": [],
-        })
+        mock_llm_client.generate = AsyncMock(return_value="这是一个文本回复，没有 JSON")
 
         tool_result = {
             "tool_name": "sql_query",
@@ -499,16 +477,10 @@ class TestBuildChartOptionLLMFailure:
     @pytest.mark.asyncio
     async def test_llm_returns_should_render_false(self, mock_llm_client):
         """LLM 返回 should_render=false → None"""
-        mock_llm_client.generate_with_tools = AsyncMock(return_value={
-            "finish_reason": "tool_calls",
-            "tool_calls": [{
-                "name": "render_chart",
-                "arguments": {
-                    "chart_type": "bar",
-                    "should_render": False,
-                },
-            }],
-        })
+        mock_llm_client.generate = AsyncMock(return_value=json.dumps({
+            "chart_type": "bar",
+            "should_render": False,
+        }))
 
         tool_result = {
             "tool_name": "sql_query",
@@ -539,11 +511,7 @@ class TestBuildChartOptionLLMFailure:
                 "series": [{"type": "bar", "data": [1, 2]}],
             },
         })
-        mock_llm_client.generate_with_tools = AsyncMock(return_value={
-            "finish_reason": "stop",
-            "content": f"这是一些说明文字\n{echarts_json}\n更多文字",
-            "tool_calls": [],
-        })
+        mock_llm_client.generate = AsyncMock(return_value=f"这是一些说明文字\n{echarts_json}\n更多文字")
 
         tool_result = {
             "tool_name": "sql_query",
@@ -601,20 +569,14 @@ class TestBuildChartOptionEdgeCases:
     @pytest.mark.asyncio
     async def test_large_data_truncation(self, mock_llm_client):
         """大量数据时只给 LLM 前20行，但返回全部行（≤50）"""
-        mock_llm_client.generate_with_tools = AsyncMock(return_value={
-            "finish_reason": "tool_calls",
-            "tool_calls": [{
-                "name": "render_chart",
-                "arguments": {
-                    "chart_type": "bar",
-                    "should_render": True,
-                    "echarts_option": {
-                        "title": {"text": "测试"},
-                        "series": [{"type": "bar", "data": [1]}],
-                    },
-                },
-            }],
-        })
+        mock_llm_client.generate = AsyncMock(return_value=json.dumps({
+            "chart_type": "bar",
+            "should_render": True,
+            "echarts_option": {
+                "title": {"text": "测试"},
+                "series": [{"type": "bar", "data": [1]}],
+            },
+        }))
 
         tool_result = {
             "tool_name": "sql_query",
@@ -636,7 +598,7 @@ class TestBuildChartOptionEdgeCases:
         assert result is not None
         assert result["chart_type"] == "bar"
         # 验证 LLM 被调用（说明行数 ≤50 走了 LLM 路径）
-        mock_llm_client.generate_with_tools.assert_called_once()
+        mock_llm_client.generate.assert_called_once()
 
 
 class TestSchema:

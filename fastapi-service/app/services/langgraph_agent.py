@@ -17,7 +17,7 @@ import logging
 import os
 import re
 from datetime import datetime
-from typing import Any, AsyncGenerator, Dict, Optional
+from typing import Any, AsyncGenerator, Dict, List, Optional
 
 from langgraph.graph import END, START, StateGraph
 from typing_extensions import TypedDict
@@ -998,13 +998,21 @@ async def stream_agent_response(
                         summary_text = None
                         if isinstance(inner_result, dict):
                             summary_text = inner_result.get("summary") or inner_result.get("message")
+
+                        # 如果 LLM 没有提供 summary，自动生成 Markdown 表格 fallback
+                        if not summary_text:
+                            summary_text = _build_fallback_message(log_tool_name, result)
+
                         _collected_assistant_response = summary_text or _summarize_tool_result(log_tool_name, result)
                         log_ai_response = _collected_assistant_response
                         log_tools_called = [{"tool_name": log_tool_name, "success": True}]
+
+                        # 精简 result：只暴露用户关心的数据，去掉内部执行信息
+                        user_facing_data = _extract_user_facing_data(log_tool_name, result)
                         yield _format_sse("response", {
-                            "result": result,
+                            "result": user_facing_data,
                             "tool_name": log_tool_name,
-                            "message": summary_text,  # 前端优先展示此摘要
+                            "message": _collected_assistant_response,  # 前端优先展示此摘要
                         })
                         # ── Chart 事件：工具结果可视化 ───────────────────────────
                         try:
@@ -1332,3 +1340,120 @@ def _summarize_tool_result(tool_name: str, result: Optional[Dict[str, Any]]) -> 
     keys = ["message", "total", "count", "status"]
     parts = [f"{k}={inner[k]}" for k in keys if k in inner]
     return f"{tool_name} 执行完成" + (f"：{'; '.join(parts)}" if parts else "")
+
+
+# ─── Response 事件后处理：精简结果 + Markdown 表格 fallback ──────────────────
+
+def _extract_user_facing_data(tool_name: str, result: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """
+    从 task_executor 的完整返回中提取用户关心的数据。
+    去掉内部字段（parameters, execution_time 等），只保留业务数据。
+    """
+    if not result or not isinstance(result, dict):
+        return None
+
+    inner = result.get("result")
+    if not isinstance(inner, dict):
+        return None
+
+    if inner.get("success") is False:
+        return {"error": inner.get("error", "查询失败")}
+
+    if tool_name == "sql_query":
+        return {
+            "row_count": inner.get("row_count", 0),
+            "columns": inner.get("columns", []),
+            "data": inner.get("data", []),
+            "summary": inner.get("summary", ""),
+        }
+
+    if tool_name == "compute_statistics":
+        return {
+            "statistics_type": inner.get("statistics_type", ""),
+            "date_range": inner.get("date_range", ""),
+            "total_hours": inner.get("total_hours", 0),
+            "total_records": inner.get("total_records", 0),
+            "items": [
+                {
+                    "name": item.get("name", ""),
+                    "total_hours": item.get("total_hours", 0),
+                    "work_days": item.get("work_days", 0),
+                    "average_daily_hours": item.get("average_daily_hours", 0),
+                }
+                for item in inner.get("items", [])
+            ],
+        }
+
+    if tool_name == "query_timesheet":
+        return {
+            "total_hours": inner.get("total_hours", 0),
+            "record_count": inner.get("record_count", 0),
+            "records": inner.get("records", [])[:20],  # 最多 20 条
+        }
+
+    # 通用 fallback：保留 message 和关键字段
+    return {k: v for k, v in inner.items() if k in ("message", "success", "data", "items", "records", "projects")}
+
+
+def _format_markdown_table(rows: List[Dict[str, Any]], max_rows: int = 20) -> str:
+    """把数据行转为 Markdown 表格字符串"""
+    if not rows:
+        return ""
+
+    rows = rows[:max_rows]
+    columns = list(rows[0].keys())
+
+    # 表头
+    header = " | ".join(columns)
+    separator = " | ".join(["---"] * len(columns))
+
+    # 数据行
+    lines = []
+    for row in rows:
+        line = " | ".join(str(row.get(c, "")) for c in columns)
+        lines.append(line)
+
+    return "\n".join([header, separator] + lines)
+
+
+def _build_fallback_message(tool_name: str, result: Optional[Dict[str, Any]]) -> Optional[str]:
+    """
+    当 LLM 没有提供 summary/message 时，自动生成 Markdown 表格作为 fallback。
+    """
+    user_data = _extract_user_facing_data(tool_name, result)
+    if not user_data:
+        return None
+
+    if user_data.get("error"):
+        return None  # 错误已在 error 事件中处理
+
+    # sql_query
+    if "data" in user_data and "columns" in user_data:
+        data = user_data["data"]
+        if data:
+            table = _format_markdown_table(data, max_rows=20)
+            suffix = f"\n\n（共 {len(data)} 条记录）" if len(data) > 20 else ""
+            return table + suffix
+        return "查询完成，暂无数据。"
+
+    # compute_statistics
+    if "items" in user_data:
+        items = user_data["items"]
+        if items:
+            table = _format_markdown_table(items, max_rows=20)
+            suffix = f"\n\n（共 {len(items)} 条记录，总计工时：{user_data.get('total_hours', 0)} 小时）"
+            return table + suffix
+        return "统计完成，暂无数据。"
+
+    # query_timesheet
+    if "records" in user_data:
+        records = user_data["records"]
+        if records:
+            table = _format_markdown_table(records, max_rows=20)
+            suffix = f"\n\n（共 {user_data.get('record_count', 0)} 条记录，总工时：{user_data.get('total_hours', 0)} 小时）"
+            return table + suffix
+        return "查询完成，暂无工时记录。"
+
+    # 通用 fallback
+    msg = user_data.get("message")
+    return msg if msg else None
