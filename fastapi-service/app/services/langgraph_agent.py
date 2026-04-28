@@ -23,6 +23,8 @@ from langgraph.graph import END, START, StateGraph
 from typing_extensions import TypedDict
 
 from app.services.prompt_manager import get_prompt_manager
+from app.services.project_resolver import resolve_project_suggestion
+from app.services.hours_resolver import resolve_hours_suggestion
 
 logger = logging.getLogger(__name__)
 
@@ -356,7 +358,12 @@ async def node_llm_with_tools(state: AgentState) -> dict:
             if not tool_params.get("duration"):
                 missing.append("**工时时长**（小时，如 8 或 4.5）")
             if missing:
-                clarify_msg = _build_workhour_clarify_message(tool_params, missing)
+                clarify_msg = await _build_workhour_clarify_message(
+                    tool_params,
+                    missing,
+                    user_id=user_ctx.get("user_id"),
+                    auth_token=user_ctx.get("auth_token"),
+                )
                 return {
                     "intent": "clarify",
                     "tool_name": tool_name,
@@ -485,7 +492,12 @@ async def node_classify_intent(state: AgentState) -> dict:
             if not tool_params.get("duration"):
                 missing.append("**工时时长**（小时，如 8 或 4.5）")
             if missing:
-                clarify_msg = _build_workhour_clarify_message(tool_params, missing)
+                clarify_msg = await _build_workhour_clarify_message(
+                    tool_params,
+                    missing,
+                    user_id=user_ctx.get("user_id"),
+                    auth_token=user_ctx.get("auth_token"),
+                )
                 return {
                     "intent": "clarify",
                     "tool_name": tool_name,
@@ -536,8 +548,13 @@ async def node_execute_tool(state: AgentState) -> dict:
         return {"tool_result": {"success": False, "error": str(e)}, "error": str(e)}
 
 
-def _build_workhour_clarify_message(partial_params: Dict[str, Any], missing: list) -> str:
-    """生成引导式提问，收集工时填报缺失的必要信息。"""
+async def _build_workhour_clarify_message(
+    partial_params: Dict[str, Any],
+    missing: list,
+    user_id: Optional[str] = None,
+    auth_token: Optional[str] = None,
+) -> str:
+    """生成引导式提问，收集工时填报缺失的必要信息，并注入历史推荐。"""
     lines = ["好的，我来帮您填报工时！请提供以下缺少的信息：\n"]
     for i, field in enumerate(missing, 1):
         lines.append(f"{i}. {field}")
@@ -553,6 +570,28 @@ def _build_workhour_clarify_message(partial_params: Dict[str, Any], missing: lis
         already.append(f"描述：{partial_params['description']}")
     if already:
         lines.append(f"\n（已获取：{', '.join(already)}）")
+
+    # 注入基于历史的智能推荐
+    if user_id:
+        base_url = os.getenv("SPRINGBOOT_BASE_URL") or (
+            f"http://{os.getenv('SPRINGBOOT_HOST', 'host.docker.internal')}:8080"
+        )
+        try:
+            projects = await resolve_project_suggestion(user_id, auth_token, base_url, top_k=3)
+            if projects:
+                lines.append("\n📌 根据您最近 30 天的填报记录，推荐以下项目：")
+                for p in projects:
+                    lines.append(f"   • {p['project_name']}（最近 {p['frequency']} 次）")
+            default_hours = await resolve_hours_suggestion(
+                user_id,
+                projects[0]["project_id"] if projects else None,
+                auth_token,
+                base_url,
+            )
+            lines.append(f"\n⏱ 推荐工时：{default_hours} 小时")
+        except Exception:
+            # 推荐失败不阻断主流程
+            pass
 
     lines.append("\n💡 您可以一次性回复所有信息，例如：")
     lines.append("「工时管理系统，今天，8小时，完成了AI助手开发」")
