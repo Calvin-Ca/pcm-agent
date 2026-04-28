@@ -57,8 +57,42 @@ data: <JSON 字符串>
 | `thinking` | 正在分析/搜索 | `{message}` |
 | `tool_call` | 即将调用工具 | `{tool_name, message}` |
 | `response` | 返回结果 | `{message}` 或 `{result, tool_name}` |
+| `chart` | 工具结果可视化（仅当数据适合图表时） | `{echarts_option, chart_type}` 或 `{chart_type: "table", fallback_table: [...]}` |
 | `error` | 发生错误 | `{message}` |
 | `done` | 请求完成 | `{message, session_id}` |
+
+**chart 事件详细说明**
+
+`chart` 事件紧跟在 `response` 事件之后发送，当工具返回的数据满足以下条件时触发：
+
+1. 数据为表格格式（≥2 行数据）
+2. 至少包含一列数值类型（int/float）
+3. 单值/纯文本结果不触发
+
+**chart 事件 data 字段**
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `type` | string | 固定值 `"chart"` |
+| `chart_type` | string | `"bar"` / `"line"` / `"pie"` / `"table"` |
+| `echarts_option` | object | ECharts 5.x 标准 option（bar/line/pie 时） |
+| `fallback_table` | array | 行数 > 50 时降级，返回原始数据行 |
+
+**chart 事件示例**
+
+```json
+{
+  "type": "chart",
+  "chart_type": "bar",
+  "echarts_option": {
+    "title": {"text": "各部门工时统计"},
+    "tooltip": {},
+    "xAxis": {"type": "category", "data": ["研发部", "产品部", "测试部"]},
+    "yAxis": {"type": "value"},
+    "series": [{"type": "bar", "data": [120, 80, 60]}]
+  }
+}
+```
 
 **示例（curl）**
 

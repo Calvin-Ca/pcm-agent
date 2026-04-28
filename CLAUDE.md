@@ -143,7 +143,7 @@ Spring Boot (8080)
           ├─ knowledge_qa → LangChain RAG（Milvus + BM25 + CrossEncoder Reranker）
           ├─ general_chat → LLM 直接回复
           └─ （降级）→ IntentRouter 规则匹配（LLM 不可用时）
-    → SSE 事件流返回
+    → SSE 事件流返回（含新增 `event: chart`，工具结果满足条件时自动触发图表可视化）
 ```
 
 ### 核心服务文件
