@@ -338,8 +338,8 @@ class TaskExecutor:
                 if permission_context.auth_token:
                     exec_params["auth_token"] = permission_context.auth_token
 
-                # 为 sql_query 工具注入 permission_context
-                if task.tool_name == "sql_query":
+                # 为需要 permission_context 的工具注入上下文
+                if task.tool_name in ("sql_query", "suggest_workhour"):
                     exec_params["context"] = {
                         "user_id": permission_context.user_id,
                         "entity_type": permission_context.entity_type,
