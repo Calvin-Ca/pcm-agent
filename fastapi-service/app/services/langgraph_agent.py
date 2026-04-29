@@ -1036,7 +1036,12 @@ async def stream_agent_response(
                         inner_result = result.get("result") if isinstance(result, dict) else None
                         summary_text = None
                         if isinstance(inner_result, dict):
-                            summary_text = inner_result.get("summary") or inner_result.get("message")
+                            # batch_save_workhour 返回 preview_text（人类可读的预览文本），优先展示
+                            summary_text = (
+                                inner_result.get("preview_text")
+                                or inner_result.get("summary")
+                                or inner_result.get("message")
+                            )
 
                         # 如果 LLM 没有提供 summary，自动生成 Markdown 表格 fallback
                         if not summary_text:

@@ -136,6 +136,12 @@ template: |
   - batch_save_workhour：用户提供了一段**包含多条记录**的文本，需要 LLM 先解析再批量入库。首次调用必须 dry_run=true。
   - save_workhour：用户明确指定了**单条**工时的项目、日期、时长，直接填报。
 
+  **多轮交互流程（必须严格遵守）**：
+  1. 用户首次提供批量文本 → 调用 batch_save_workhour(dry_run=true, text="...") → 返回预览文本
+  2. 用户回复"确认提交"、"没问题"、"可以"等确认词 → **必须再次调用 batch_save_workhour(dry_run=false, text="...")**，传入**相同的 text**，实际入库
+  3. 用户回复"取消"、"不要" → 不调用工具，回复"已取消"
+  4. 用户指出具体修改（如"把第三条改成4小时"）→ 修改后重新调用 dry_run=true 预览
+
   注意：用户只说"帮我填工时"但**没有提供任何具体文本**时，不走 batch_save_workhour，走 save_workhour 或给出填报引导。
 
   ## query_timesheet vs compute_statistics 区分（"多少"不一定是统计）
