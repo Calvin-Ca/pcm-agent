@@ -68,7 +68,7 @@ PARSE_TOOL_SCHEMA = {
                         "type": "object",
                         "properties": {
                             "date": {"type": "string", "description": "ISO YYYY-MM-DD"},
-                            "project_name": {"type": "string", "description": "项目名称（可模糊）"},
+                            "project_name": {"type": "string", "description": "项目名称。优先从用户最近填过的项目列表中选择最接近的，列表中无匹配时才允许自由填写"},
                             "hours": {"type": "number", "description": "工时数（0.5 倍数）"},
                             "work_type": {
                                 "type": "string",
@@ -153,13 +153,29 @@ def _post_normalize_records(records: List[Dict], common_project: Optional[str]) 
 
 # ─── LLM 解析阶段 ─────────────────────────────────────────────────────────────
 
-async def _parse_text_to_records(text: str, today: str) -> Dict[str, Any]:
+async def _parse_text_to_records(
+    text: str,
+    today: str,
+    user_id: Optional[str] = None,
+    auth_token: Optional[str] = None,
+    base_url: Optional[str] = None,
+) -> Dict[str, Any]:
     """LLM 解析自由文本为结构化记录"""
     if len(text) > BATCH_TEXT_MAX_LEN:
         text = text[:BATCH_TEXT_MAX_LEN]
 
     # 前处理：提取统一项目名
     common_project = _extract_common_project(text)
+
+    # 拉取用户最近 1 个月填过的项目列表，供 LLM 参考
+    recent_projects: List[str] = []
+    if user_id and auth_token and base_url:
+        try:
+            from app.services.param_resolver import _fetch_user_recent_projects
+            recent = await _fetch_user_recent_projects(user_id, auth_token, base_url, months_back=1)
+            recent_projects = [p.get("name", "") for p in recent if p.get("name")]
+        except Exception as e:
+            logger.debug(f"拉取用户最近项目失败: {e}")
 
     llm_client = LLMClient(env_prefix="CHAT_LLM", temperature=0.1, max_tokens=2000)
 
@@ -173,12 +189,19 @@ async def _parse_text_to_records(text: str, today: str) -> Dict[str, Any]:
     _last_monday = _monday - _td(days=7)
     _last_week_days = [(_last_monday + _td(days=i)).isoformat() for i in range(7)]
 
-    # 如果检测到统一项目名，直接注入 prompt，不再让 LLM 猜测
+    # 构建项目名提示：统一项目名 + 最近项目列表
     project_hint = ""
     if common_project:
         project_hint = f"""
 **用户已明确所有记录的项目名统一为：{common_project}**
 所有记录的 project_name 都填"{common_project}"，不要从工作内容中提取项目名。
+"""
+    elif recent_projects:
+        # 限制列表长度，防止 prompt 过长（最多 30 个项目）
+        shown = recent_projects[:30]
+        project_hint = f"""
+**用户最近 1 个月填过的项目（请优先从以下列表中选择 project_name，无匹配时才允许自由填写）：**
+{', '.join(shown)}
 """
 
     parse_prompt = f"""你是工时填报助手。把用户提供的工时描述文本解析为结构化记录数组。
@@ -197,10 +220,11 @@ async def _parse_text_to_records(text: str, today: str) -> Dict[str, Any]:
 2. "上午"=4h，"下午"=4h，"全天"=8h，"半天"=4h；优先采纳明确写出的小时数
 3. 工时数必须是 0.5 的倍数
 4. work_type 必须是这 5 个之一：研发工作 / 商务工作 / 综合管理工作 / 履约工作 / 需求工作；不确定时默认"研发工作"
-5. 项目名通常是简短的名词短语，编号列表"1、xxx；2、yyy"是工作内容不是项目名
-6. 一天内有多条记录必须拆分为**多条独立记录**
-7. unparsed_segments **只放完全无法解析成任何记录的原文片段**
-8. 表格文本中，表头行不要作为数据解析
+5. project_name 必须从上面的"用户最近填过的项目"列表中选择最接近的；列表中无匹配时才允许自由填写
+6. 编号列表"1、xxx；2、yyy"是工作内容，不是项目名
+7. 一天内有多条记录必须拆分为**多条独立记录**
+8. unparsed_segments **只放完全无法解析成任何记录的原文片段**
+9. 表格文本中，表头行不要作为数据解析
 
 用户文本：
 {text}
@@ -816,7 +840,7 @@ async def batch_save_workhour_handler(**kwargs) -> Dict[str, Any]:
     today = date.today().isoformat()
 
     # ── 1. LLM 解析 ──────────────────────────────────────────────────────────
-    parse_result = await _parse_text_to_records(text, today)
+    parse_result = await _parse_text_to_records(text, today, user_id, auth_token, base_url)
     records = parse_result.get("records", [])
     unparsed_segments = parse_result.get("unparsed_segments", [])
     truncated = parse_result.get("truncated", False)
