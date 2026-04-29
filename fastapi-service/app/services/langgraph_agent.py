@@ -223,23 +223,21 @@ async def node_llm_with_tools(state: AgentState) -> dict:
         if not messages:
             return await node_classify_intent(state)
 
-        # num_ctx 自适应：历史超过 2000 字用大 context（仅 Ollama 支持）
+        # num_ctx 自适应：历史超过 2000 字用大 context
         history_chars = sum(
             len(m.get("content", "")) for m in messages
         )
-        num_ctx = (
-            8192 if history_chars > 2000 else 4096
-        )
+        # vLLM / Ollama 统一按 32K 配置
+        num_ctx = 32768 if history_chars > 2000 else 16384
 
-        # Ollama 专属参数，vLLM 不识别会被忽略
         is_ollama = "11434" in (_llm_client.api_base or "")
         if is_ollama:
             extra = {"num_ctx": num_ctx, "think": False}
         else:
-            # DashScope qwen3：关闭 thinking mode，避免思考 token 占用上下文
+            # vLLM 或 DashScope：关闭 thinking mode
             extra = {"enable_thinking": False}
 
-        # FC 调用时截短会话历史，防止 input tokens 超出模型上下文限制（qwen3-8b: 8192）
+        # FC 调用时截短会话历史，防止 input tokens 超出模型上下文限制（32K context）
         # 策略1：按条数截断（保留 system + 最近 6 条 + 当前消息）
         if len(messages) > 9:
             messages = [messages[0]] + messages[-8:]
@@ -247,8 +245,8 @@ async def node_llm_with_tools(state: AgentState) -> dict:
         # 策略2：按估算 token 数截断（字符数/3 + tools schema ~200 tokens/个）
         total_chars = sum(len(m.get("content", "")) for m in messages)
         estimated_tokens = total_chars // 3 + len(tools) * 200
-        if estimated_tokens > 6000:
-            # 进一步收紧到 system + 最近 2 轮（4条）+ 当前消息
+        if estimated_tokens > 12000:
+            # 32K context 下留 4K output，截断到 system + 最近 2 轮（4条）+ 当前消息
             messages = [messages[0]] + messages[-4:]
             logger.warning(f"FC 输入估算 {estimated_tokens} tokens，已截断到最近 2 轮")
 
@@ -730,7 +728,7 @@ async def node_summarize(state: AgentState) -> dict:
         results_text += f"\n【{tool_name}】执行结果：\n{summary_str}\n"
 
     # 总长度硬限制：超过 4000 字符直接截断
-    MAX_SUMMARY_CHARS = 4000
+    MAX_SUMMARY_CHARS = 6000
     if len(results_text) > MAX_SUMMARY_CHARS:
         results_text = results_text[:MAX_SUMMARY_CHARS] + "\n...[更多结果已省略]"
 
