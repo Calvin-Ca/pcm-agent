@@ -104,19 +104,31 @@ async def _parse_text_to_records(text: str, today: str) -> Dict[str, Any]:
 
     llm_client = LLMClient(env_prefix="CHAT_LLM", temperature=0.1, max_tokens=2000)
 
+    # 计算本周各天日期，辅助 LLM 解析
+    from datetime import datetime as _dt, timedelta as _td
+    _today_obj = _dt.strptime(today, "%Y-%m-%d").date()
+    _weekday = _today_obj.weekday()  # 0=周一
+    _monday = _today_obj - _td(days=_weekday)
+    _week_days = [(_monday + _td(days=i)).isoformat() for i in range(7)]
+
     parse_prompt = f"""你是工时填报助手。把用户提供的工时描述文本解析为结构化记录数组。
 
-**今天的日期是 {today}**（用于解析"昨天/上周三/周一"等相对表达）
+**今天的日期是 {today}**
+**本周各天对应日期：**
+- 本周一 = {_week_days[0]}，本周二 = {_week_days[1]}，本周三 = {_week_days[2]}
+- 本周四 = {_week_days[3]}，本周五 = {_week_days[4]}，本周六 = {_week_days[5]}，本周日 = {_week_days[6]}
+- 上周一 = {(_monday - _td(days=7)).isoformat()}，下周一 = {(_monday + _td(days=7)).isoformat()}
 
-规则：
-1. 日期统一输出 ISO 格式 YYYY-MM-DD
+**解析规则：**
+1. 日期统一输出 ISO 格式 YYYY-MM-DD。用户说"这周"的"周一"=本周一({_week_days[0]})，不要算错。
 2. "上午"=4h，"下午"=4h，"全天"=8h，"半天"=4h；优先采纳明确写出的小时数
 3. 工时数必须是 0.5 的倍数
 4. work_type 必须是这 5 个之一：研发工作 / 商务工作 / 综合管理工作 / 履约工作 / 需求工作；不确定时默认"研发工作"
-5. 解析不到日期/项目/工时数任一字段时，仍输出该记录但 confidence<0.5
-6. 无法解析的原文片段放入 unparsed_segments，不要丢弃
-7. 如果用户只提供了"周一到周五"这种范围描述但没有具体每天的内容，为每一天生成一条记录，使用相同的项目名和工时数
-8. 表格文本中，表头行不要作为数据解析
+5. 一天内有多条记录（如"上午做A，下午做B"）必须拆分为**多条独立记录**，每条有自己的 project_name 和 hours
+6. 解析不到日期/项目/工时数任一字段时，仍输出该记录但 confidence<0.5
+7. unparsed_segments **只放完全无法解析成任何记录的原文片段**，已成功解析的内容不要放入
+8. 如果用户只提供了"周一到周五"这种范围描述但没有具体每天的内容，为每一天生成一条记录，使用相同的项目名和工时数
+9. 表格文本中，表头行不要作为数据解析
 
 用户文本：
 {text}
