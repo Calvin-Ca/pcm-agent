@@ -167,6 +167,14 @@ async def _parse_text_to_records(text: str, today: str) -> Dict[str, Any]:
     _last_monday = _monday - _td(days=7)
     _last_week_days = [(_last_monday + _td(days=i)).isoformat() for i in range(7)]
 
+    # 如果检测到统一项目名，直接注入 prompt，不再让 LLM 猜测
+    project_hint = ""
+    if common_project:
+        project_hint = f"""
+**用户已明确所有记录的项目名统一为：{common_project}**
+所有记录的 project_name 都填"{common_project}"，不要从工作内容中提取项目名。
+"""
+
     parse_prompt = f"""你是工时填报助手。把用户提供的工时描述文本解析为结构化记录数组。
 
 **今天的日期是 {today}**
@@ -177,13 +185,13 @@ async def _parse_text_to_records(text: str, today: str) -> Dict[str, Any]:
 - 上周一 = {_last_week_days[0]}，上周二 = {_last_week_days[1]}，上周三 = {_last_week_days[2]}
 - 上周四 = {_last_week_days[3]}，上周五 = {_last_week_days[4]}，上周六 = {_last_week_days[5]}，上周日 = {_last_week_days[6]}
 - 下周一 = {(_monday + _td(days=7)).isoformat()}
-
+{project_hint}
 **解析规则：**
 1. 日期统一输出 ISO 格式 YYYY-MM-DD。直接查上面的对应表，不要自己推算。
 2. "上午"=4h，"下午"=4h，"全天"=8h，"半天"=4h；优先采纳明确写出的小时数
 3. 工时数必须是 0.5 的倍数
 4. work_type 必须是这 5 个之一：研发工作 / 商务工作 / 综合管理工作 / 履约工作 / 需求工作；不确定时默认"研发工作"
-5. 项目名通常是简短的名词短语（如"预管理平台""AI助手"），编号列表"1、xxx；2、yyy"是工作内容不是项目名
+5. 项目名通常是简短的名词短语，编号列表"1、xxx；2、yyy"是工作内容不是项目名
 6. 一天内有多条记录必须拆分为**多条独立记录**
 7. unparsed_segments **只放完全无法解析成任何记录的原文片段**
 8. 表格文本中，表头行不要作为数据解析
