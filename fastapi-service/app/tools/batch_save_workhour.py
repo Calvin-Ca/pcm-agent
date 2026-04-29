@@ -111,24 +111,44 @@ async def _parse_text_to_records(text: str, today: str) -> Dict[str, Any]:
     _monday = _today_obj - _td(days=_weekday)
     _week_days = [(_monday + _td(days=i)).isoformat() for i in range(7)]
 
+    _last_monday = _monday - _td(days=7)
+    _last_week_days = [(_last_monday + _td(days=i)).isoformat() for i in range(7)]
+
     parse_prompt = f"""你是工时填报助手。把用户提供的工时描述文本解析为结构化记录数组。
 
 **今天的日期是 {today}**
 **本周各天对应日期：**
 - 本周一 = {_week_days[0]}，本周二 = {_week_days[1]}，本周三 = {_week_days[2]}
 - 本周四 = {_week_days[3]}，本周五 = {_week_days[4]}，本周六 = {_week_days[5]}，本周日 = {_week_days[6]}
-- 上周一 = {(_monday - _td(days=7)).isoformat()}，下周一 = {(_monday + _td(days=7)).isoformat()}
+**上周各天对应日期：**
+- 上周一 = {_last_week_days[0]}，上周二 = {_last_week_days[1]}，上周三 = {_last_week_days[2]}
+- 上周四 = {_last_week_days[3]}，上周五 = {_last_week_days[4]}，上周六 = {_last_week_days[5]}，上周日 = {_last_week_days[6]}
+- 下周一 = {(_monday + _td(days=7)).isoformat()}
 
 **解析规则：**
-1. 日期统一输出 ISO 格式 YYYY-MM-DD。用户说"这周"的"周一"=本周一({_week_days[0]})，不要算错。
+1. 日期统一输出 ISO 格式 YYYY-MM-DD。直接查上面的对应表，不要自己推算。
 2. "上午"=4h，"下午"=4h，"全天"=8h，"半天"=4h；优先采纳明确写出的小时数
 3. 工时数必须是 0.5 的倍数
 4. work_type 必须是这 5 个之一：研发工作 / 商务工作 / 综合管理工作 / 履约工作 / 需求工作；不确定时默认"研发工作"
-5. 一天内有多条记录（如"上午做A，下午做B"）必须拆分为**多条独立记录**，每条有自己的 project_name 和 hours
-6. 解析不到日期/项目/工时数任一字段时，仍输出该记录但 confidence<0.5
-7. unparsed_segments **只放完全无法解析成任何记录的原文片段**，已成功解析的内容不要放入
-8. 如果用户只提供了"周一到周五"这种范围描述但没有具体每天的内容，为每一天生成一条记录，使用相同的项目名和工时数
-9. 表格文本中，表头行不要作为数据解析
+5. **项目名识别（关键）**：
+   - 如果用户开头说"都是X项目""统一是X项目""X这个项目"，**所有记录的 project_name 都是 X**，后面的内容是 work_content
+   - "1、xxx；2、yyy"这种编号列表是**工作内容**，不是项目名
+   - 项目名通常是简短的名词（如"预管理平台""AI助手"），不是长句子
+6. 一天内有多条记录必须拆分为**多条独立记录**
+7. 解析不到日期/项目/工时数任一字段时，仍输出该记录但 confidence<0.5
+8. unparsed_segments **只放完全无法解析成任何记录的原文片段**，不要放入已正常解析的内容
+9. 如果用户只提供了"周一到周五"范围但没有具体内容，为每一天生成一条记录
+10. 表格文本中，表头行不要作为数据解析
+
+**格式示例（务必参考）：**
+输入："都是A项目。上周三，5.5小时，完成了XXX；上周四，1、YYY；2、ZZZ；上周五，1、AAA；2、BBB"
+输出 records：
+- date=上周三, project_name=A项目, hours=5.5, content="完成了XXX"
+- date=上周四, project_name=A项目, hours=4.0, content="YYY"
+- date=上周四, project_name=A项目, hours=4.0, content="ZZZ"
+- date=上周五, project_name=A项目, hours=4.0, content="AAA"
+- date=上周五, project_name=A项目, hours=4.0, content="BBB"
+注意："1、2、3、"编号的内容全部属于它前面的日期，不要跨日期分配。
 
 用户文本：
 {text}
@@ -160,6 +180,27 @@ async def _parse_text_to_records(text: str, today: str) -> Dict[str, Any]:
     args = tool_calls[0].get("arguments", {})
     records = args.get("records", [])
     unparsed = args.get("unparsed_segments", [])
+
+    # 后处理：过滤掉已被解析到 records 中的 unparsed 片段（LLM 常误把已解析内容放入）
+    def _is_already_parsed(segment: str, records: list) -> bool:
+        """检查文本片段是否已被解析到某条记录的 content 中"""
+        seg_norm = segment.strip().replace(" ", "").replace("；", ";").replace("，", ",")
+        if len(seg_norm) < 10:
+            return False
+        for r in records:
+            content = (r.get("content", "") or "").strip()
+            # 子串匹配或相似度匹配
+            if seg_norm in content.replace(" ", "").replace("；", ";").replace("，", ","):
+                return True
+            if content in seg_norm:
+                return True
+        return False
+
+    if unparsed:
+        filtered_unparsed = [s for s in unparsed if not _is_already_parsed(s, records)]
+        if len(filtered_unparsed) != len(unparsed):
+            logger.info(f"过滤掉 {len(unparsed) - len(filtered_unparsed)} 条已解析的 unparsed 片段")
+            unparsed = filtered_unparsed
 
     # 截断超过上限的记录
     truncated = False
