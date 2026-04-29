@@ -239,10 +239,18 @@ async def node_llm_with_tools(state: AgentState) -> dict:
             # DashScope qwen3：关闭 thinking mode，避免思考 token 占用上下文
             extra = {"enable_thinking": False}
 
-        # FC 调用时截短会话历史到最近 3 轮（保留 system + 最近 6 条 + 当前消息）
-        # 防止长会话导致 input tokens 超出模型上下文限制（qwen3-8b: 8192）
+        # FC 调用时截短会话历史，防止 input tokens 超出模型上下文限制（qwen3-8b: 8192）
+        # 策略1：按条数截断（保留 system + 最近 6 条 + 当前消息）
         if len(messages) > 9:
             messages = [messages[0]] + messages[-8:]
+
+        # 策略2：按估算 token 数截断（字符数/3 + tools schema ~200 tokens/个）
+        total_chars = sum(len(m.get("content", "")) for m in messages)
+        estimated_tokens = total_chars // 3 + len(tools) * 200
+        if estimated_tokens > 6000:
+            # 进一步收紧到 system + 最近 2 轮（4条）+ 当前消息
+            messages = [messages[0]] + messages[-4:]
+            logger.warning(f"FC 输入估算 {estimated_tokens} tokens，已截断到最近 2 轮")
 
         # tool call JSON 通常 100~600 tokens；qwen3-8b 8192 context，input ~4000-6000 时还有 2000+ 可用
         result = await _llm_client.generate_with_tools(
@@ -698,12 +706,33 @@ async def node_summarize(state: AgentState) -> dict:
                 parts.append(str(r))
         return {"llm_result": "\n\n".join(parts) if parts else "任务已完成。"}
 
-    # 构建汇总 prompt
+    # 构建汇总 prompt — 截断过长的结果文本，防止超出模型上下文
+    def _truncate_result_for_summary(tool_name: str, r: dict) -> str:
+        """对工具结果做摘要级截断，保留关键信息"""
+        if not isinstance(r, dict):
+            return str(r)[:500]
+        # batch_save_workhour / save_workhour：保留 preview_text / message
+        if "preview_text" in r:
+            return r["preview_text"]
+        if "summary_text" in r:
+            return r["summary_text"]
+        if "message" in r:
+            return str(r["message"])[:800]
+        # 其他工具：保留 success + 前 3 个关键字段
+        filtered = {k: v for k, v in r.items() if k in ("success", "error", "message", "summary", "total", "count")}
+        return json.dumps(filtered, ensure_ascii=False)[:800]
+
     results_text = ""
     for task_id, result in plan_results.items():
         tool_name = result.get("tool_name", task_id)
         r = result.get("result", result)
-        results_text += f"\n【{tool_name}】执行结果：\n{json.dumps(r, ensure_ascii=False, indent=2)}\n"
+        summary_str = _truncate_result_for_summary(tool_name, r)
+        results_text += f"\n【{tool_name}】执行结果：\n{summary_str}\n"
+
+    # 总长度硬限制：超过 4000 字符直接截断
+    MAX_SUMMARY_CHARS = 4000
+    if len(results_text) > MAX_SUMMARY_CHARS:
+        results_text = results_text[:MAX_SUMMARY_CHARS] + "\n...[更多结果已省略]"
 
     messages = [
         {
@@ -734,6 +763,17 @@ async def node_summarize(state: AgentState) -> dict:
         return {"llm_result": answer}
     except Exception as e:
         logger.error(f"汇总节点 LLM 调用失败: {e}")
+        # 降级：直接返回 tools 的关键结果（如 batch_save_workhour 的 preview_text）
+        fallback_parts = []
+        for task_id, result in plan_results.items():
+            r = result.get("result", result)
+            if isinstance(r, dict):
+                if "preview_text" in r:
+                    fallback_parts.append(r["preview_text"])
+                elif "message" in r:
+                    fallback_parts.append(str(r["message"]))
+        if fallback_parts:
+            return {"llm_result": "\n\n".join(fallback_parts)}
         return {"llm_result": f"结果已收集，但汇总生成失败：{e}"}
 
 
