@@ -95,12 +95,65 @@ PARSE_TOOL_SCHEMA = {
 }
 
 
+# ─── 前处理 / 后处理 ──────────────────────────────────────────────────────────
+
+def _extract_common_project(text: str) -> Optional[str]:
+    """
+    前处理：从文本开头提取统一项目名。
+    匹配模式："都是X项目""X这个项目""统一X项目""项目都是X"等。
+    返回提取到的项目名，未匹配返回 None。
+    """
+    import re
+    head = text[:200]
+    patterns = [
+        r'都\s*是\s*["\']?(.+?)["\']?\s*(?:项目|系统|平台)',
+        r'(?:项目|系统|平台)\s*都\s*是\s*["\']?(.+?)["\']?',
+        r'统一\s*(?:是|为)\s*["\']?(.+?)["\']?\s*(?:项目|系统|平台)?',
+        r'(?:都是|统一为|全部为)\s*["\']?(.+?)["\']?(?:这个)?\s*(?:项目|系统|平台)',
+    ]
+    for p in patterns:
+        m = re.search(p, head, re.IGNORECASE)
+        if m:
+            name = m.group(1).strip()
+            if len(name) >= 2 and len(name) <= 30:
+                return name
+    return None
+
+
+def _post_normalize_records(records: List[Dict], common_project: Optional[str]) -> List[Dict]:
+    """
+    后处理：修正 LLM 的系统性错误。
+    - 统一项目名替换：用户明确说了"都是X项目"时，强制替换
+    - 多项目场景：不替换，保持 LLM 原始解析结果
+    """
+    if not records:
+        return records
+
+    for r in records:
+        proj = r.get("project_name", "")
+        # 情况1：用户明确指定统一项目名 → 无条件替换所有长项目名
+        if common_project:
+            if len(proj) > len(common_project) + 6:
+                # LLM 把工作内容当成了项目名，替换回统一项目名
+                r["project_name"] = common_project
+                if not r.get("content") or len(r.get("content", "")) < 5:
+                    r["content"] = proj[:200]
+            continue
+
+        # 情况2：多项目场景（common_project 为 None）→ 不干预，信任 LLM
+        # 未来可扩展：检测"项目名全是长句子"的异常模式再修正
+    return records
+
+
 # ─── LLM 解析阶段 ─────────────────────────────────────────────────────────────
 
 async def _parse_text_to_records(text: str, today: str) -> Dict[str, Any]:
     """LLM 解析自由文本为结构化记录"""
     if len(text) > BATCH_TEXT_MAX_LEN:
         text = text[:BATCH_TEXT_MAX_LEN]
+
+    # 前处理：提取统一项目名
+    common_project = _extract_common_project(text)
 
     llm_client = LLMClient(env_prefix="CHAT_LLM", temperature=0.1, max_tokens=2000)
 
@@ -130,25 +183,10 @@ async def _parse_text_to_records(text: str, today: str) -> Dict[str, Any]:
 2. "上午"=4h，"下午"=4h，"全天"=8h，"半天"=4h；优先采纳明确写出的小时数
 3. 工时数必须是 0.5 的倍数
 4. work_type 必须是这 5 个之一：研发工作 / 商务工作 / 综合管理工作 / 履约工作 / 需求工作；不确定时默认"研发工作"
-5. **项目名识别（关键）**：
-   - 如果用户开头说"都是X项目""统一是X项目""X这个项目"，**所有记录的 project_name 都是 X**，后面的内容是 work_content
-   - "1、xxx；2、yyy"这种编号列表是**工作内容**，不是项目名
-   - 项目名通常是简短的名词（如"预管理平台""AI助手"），不是长句子
+5. 项目名通常是简短的名词短语（如"预管理平台""AI助手"），编号列表"1、xxx；2、yyy"是工作内容不是项目名
 6. 一天内有多条记录必须拆分为**多条独立记录**
-7. 解析不到日期/项目/工时数任一字段时，仍输出该记录但 confidence<0.5
-8. unparsed_segments **只放完全无法解析成任何记录的原文片段**，不要放入已正常解析的内容
-9. 如果用户只提供了"周一到周五"范围但没有具体内容，为每一天生成一条记录
-10. 表格文本中，表头行不要作为数据解析
-
-**格式示例（务必参考）：**
-输入："都是A项目。上周三，5.5小时，完成了XXX；上周四，1、YYY；2、ZZZ；上周五，1、AAA；2、BBB"
-输出 records：
-- date=上周三, project_name=A项目, hours=5.5, content="完成了XXX"
-- date=上周四, project_name=A项目, hours=4.0, content="YYY"
-- date=上周四, project_name=A项目, hours=4.0, content="ZZZ"
-- date=上周五, project_name=A项目, hours=4.0, content="AAA"
-- date=上周五, project_name=A项目, hours=4.0, content="BBB"
-注意："1、2、3、"编号的内容全部属于它前面的日期，不要跨日期分配。
+7. unparsed_segments **只放完全无法解析成任何记录的原文片段**
+8. 表格文本中，表头行不要作为数据解析
 
 用户文本：
 {text}
@@ -207,6 +245,9 @@ async def _parse_text_to_records(text: str, today: str) -> Dict[str, Any]:
     if len(records) > BATCH_MAX_RECORDS:
         records = records[:BATCH_MAX_RECORDS]
         truncated = True
+
+    # 后处理：修正 LLM 的系统性错误
+    records = _post_normalize_records(records, common_project)
 
     return {
         "records": records,
