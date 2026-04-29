@@ -14,6 +14,7 @@ from . import knowledge_qa
 from . import approve_workhour
 from . import export_report
 from . import batch_save_workhour
+from . import suggest_workhour
 
 __all__ = [
     "query_timesheet",
@@ -25,4 +26,5 @@ __all__ = [
     "approve_workhour",
     "export_report",
     "batch_save_workhour",
+    "suggest_workhour",
 ]
