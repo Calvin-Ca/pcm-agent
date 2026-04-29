@@ -105,18 +105,22 @@ def _extract_common_project(text: str) -> Optional[str]:
     """
     import re
     head = text[:200]
-    # 支持中英文引号："" '' "" ''
-    _q = r'[""""''\'“”‘’]'
+    # 不依赖引号，直接匹配"都是"到"项目/系统/平台"之间的内容
     patterns = [
-        rf'都\s*是\s*{_q}?(.+?){_q}?\s*(?:项目|系统|平台)',
-        rf'(?:项目|系统|平台)\s*都\s*是\s*{_q}?(.+?){_q}?',
-        rf'统一\s*(?:是|为)\s*{_q}?(.+?){_q}?\s*(?:项目|系统|平台)?',
-        rf'(?:都是|统一为|全部为)\s*{_q}?(.+?){_q}?(?:这个)?\s*(?:项目|系统|平台)',
+        r'都\s*是\s*(?:这个)?\s*(.+?)(?:项目|系统|平台)',
+        r'(?:项目|系统|平台)\s*都\s*是\s*(?:这个)?\s*(.+?)(?:的)?(?:，|；|。|$)',
+        r'统一\s*(?:是|为)\s*(?:这个)?\s*(.+?)(?:项目|系统|平台)?(?:，|；|。|$)',
+        r'(?:都是|统一为|全部为)\s*(?:这个)?\s*(.+?)(?:项目|系统|平台)',
     ]
     for p in patterns:
         m = re.search(p, head, re.IGNORECASE)
         if m:
             name = m.group(1).strip()
+            # 去掉末尾的系统/平台/项目后缀（如"预管理系统"→"预管理"）
+            for suffix in ['系统', '平台', '项目']:
+                if name.endswith(suffix):
+                    name = name[:-len(suffix)]
+                    break
             if len(name) >= 2 and len(name) <= 30:
                 return name
     return None
