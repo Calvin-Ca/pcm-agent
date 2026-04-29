@@ -1,13 +1,44 @@
 # AI 智能助手 — 升级路线与优化建议
 
-> 更新日期：2026-04-23
-> 当前版本：1.2（已完成 L1~L3 全部 + 稳定性 + vLLM 部署 + SQL Agent，准备上线）
+> 更新日期：2026-04-29
+> 当前版本：1.3（L1~L3 + ECharts 可视化 + 智能填报建议 + 批量工时填报，工具数升至 10）
 
 ---
 
-## ⚠️ 待办（P0，2026-05-10 前完成）
+## ✅ 已完成的 P0：简历指标基准测试（2026-04-25 ~ 2026-04-27）
 
-- **简历指标基准测试**：RAG Recall@K / Function Calling 延迟对比 / SQL Agent 准确率等 5 项基准测试，用于补齐个人简历可核验指标。详见 `docs/benchmarks/tasks-2026-04.md`
+5 项基准测试已全部完成，简历 + 模拟面试 Q&A v2 已定稿。
+
+**数据来源**：
+
+| 类别 | 路径 |
+|------|------|
+| 测试代码 | `fastapi-service/tests/benchmark/bench_fc_vs_two_calls.py` / `bench_rag_recall.py` / `bench_sql_agent.py` |
+| 测试数据集（各 50 条） | `fastapi-service/tests/benchmark/data/{latency,rag,sql}_eval_50.jsonl` |
+| 原始结果 CSV | `fastapi-service/tests/benchmark/results/{rag_recall,latency_full,sql_agent}_*.csv` |
+| 综合报告（含 5 项指标 + 简历写法） | [`docs/benchmarks/report-2026-04-25-final.md`](benchmarks/report-2026-04-25-final.md) |
+| 修订与根因分析 | [`docs/benchmarks/review-2026-04-25-corrected.md`](benchmarks/review-2026-04-25-corrected.md) |
+| Grafana 生产截图 | `docs/benchmarks/screenshots/2026-04-26-grafana-overview.png` 等 |
+| 简历 5 条 bullet | [`docs/interview/resume-bullets.md`](interview/resume-bullets.md) |
+| 模拟面试 Q&A | [`docs/interview/interview-qa.md`](interview/interview-qa.md) |
+| 派单清单（已闭环） | [`docs/benchmarks/tasks-2026-04.md`](benchmarks/tasks-2026-04.md) |
+
+**关键产出指标摘要**（详细数字以 final 报告为准）：
+- RAG：Hybrid 60/40 Recall@5 = 98%（4 文档 / 36 chunk 小规模知识库）
+- Function Calling：本地 vLLM 下 TTFT P50 = 6.9s（长 prompt prefill 主导，非托管 API 场景）
+- SQL Agent：30 条正例生成成功率 100%，20 条恶意查询综合拦截率 100%（5 条硬规则 + 15 条 LLM 无害化转换）
+
+---
+
+## ✅ 已完成的迭代（2026-04-28 ~ 2026-04-29）
+
+| # | 功能 | 关键 commit | 派单方案 |
+|---|------|------------|---------|
+| ① | ECharts 可视化（SSE chart 事件 + LLM JSON Schema） | `b785e1e` / `81f190f` / `367c8fc` / `b40b335` | [`plan-echarts-visualization.md`](changelog/plan-echarts-visualization.md) |
+| ② | 智能填报建议（project_resolver / hours_resolver / suggest_workhour） | `b97372e` / `99103ab` / `66a35c8` / `dd2f1a7` / `c546cbe` / `a107ca1` | [`plan-smart-fill-suggestions.md`](changelog/plan-smart-fill-suggestions.md) |
+| ③ | 批量工时填报（自然语言 → dry_run 预览 → 批量入库） | `0e93a92` / `79609e0` / `6efba53` / `3b3d2f8` / `d452791` | [`plan-batch-workhour-fill.md`](changelog/plan-batch-workhour-fill.md) |
+
+**合并里程碑**：2026-04-29，feat/suggest-workhour 分支通过 merge commit `3adfdaa` 合入 main，解决 3 处冲突（langgraph_agent.py / task_executor.py / tools/__init__.py 均为简单并集）。合并后单元测试 71 个全过（chart 29 + batch 24 + project 7 + hours 11）。
 
 ---
 
@@ -284,17 +315,35 @@ Code Interpreter Python 沙箱（让 LLM 生成 Python 代码处理复杂数据�
   ├── ⬜ 生产 .env 配置确认（LLM/DB/Redis/Milvus 地址）
   └── ⬜ 上线后观察：Grafana 看板监控 + 日志排查
 
-🔵 上线后持续迭代
+✅ 第四阶段（2026-04-28 ~ 2026-04-29）— 用户体验闭环（已完成并合入 main）
+  ├── ✅ ECharts 可视化（2026-04-28）
+  │   chart_builder.py + LangGraph SSE event:chart 接入
+  │   LLM 输出 ECharts option JSON Schema，前端直接 setOption 渲染
+  │   29 个单元测试全过；后续 b40b335 修了 vLLM 兼容 + 类别过多优化
+  ├── ✅ 智能填报建议（2026-04-28）
+  │   project_resolver / hours_resolver 复用 work_type_resolver._fetch_history 套路
+  │   suggest_workhour 工具独立解耦，clarify 节点注入历史推荐
+  │   18 个单元测试全过；feat/suggest-workhour 分支于 2026-04-29 通过 merge commit 3adfdaa 合入 main
+  └── ✅ 批量工时填报（2026-04-29）
+      batch_save_workhour 工具：自然语言/表格 → LLM 强类型 JSON → dry_run 预览 → 批量入库
+      含日上限校验（8h 黄/24h 红）/ 重复检测 / 部分失败逐条返回 + suggested_fix
+      24 个单元测试全过；真实入库的 e2e 待用户提供 token 后补验
+
+🔵 上线后持续迭代（按 ROI 排序）
+  ├── 🟡 MCP Server 接入（1-2 天，**工具数已升至 10，触发条件已满足**）
+  │   langchain-mcp-adapters + Swagger 自动转，自动发现 SpringBoot 接口
+  │   → 当前 10 个工具，后续若新增 ≥5 个接口再做更划算；可与"自动任务执行"一起规划
   ├── ec 类别精度提升（当前 61%，不阻塞上线）
-  ├── Self-Reflection（回答质量自校验，0.5天）
   ├── SQL Agent 精度测试集（量化 SQL 生成质量）
-  ├── 查询结果可视化（ECharts 图表）
+  ├── 批量填报 v2（Excel/CSV 文件上传，1 天）— 视真实使用频次决定
   ├── 技术债清理（工具注册校验、工具调用重试、Tool 基类提取）
-  ├── MCP Server 接入（工具 > 10 个时，自动发现 SpringBoot 接口）
   ├── Multi-Agent 角色协作（等有明确的多角色业务场景再做，避免过度设计）
-  ├── Code Interpreter Python 沙箱（SQL Agent 之后的进阶）
   ├── 自动任务执行（定时分析异常 + 通知，Autonomous Agent 方向）
   └── 记忆升级 Memory 2.0（用户画像 + 行为模式 + 偏好学习）
+
+🚫 已决定放弃
+  ├── SQL Self-Reflection（面试雷区，效果不显著）
+  └── Code Interpreter Python 沙箱（与 ECharts 价值重叠，沙箱安全成本高）
 ```
 
 ### AI 能力等级参照（来自 GPT 评审，结合项目实际调整）
@@ -322,7 +371,10 @@ L5  Autonomous Agent   ← 远期（定时任务 + 自动执行 + 通知）
 | **精度调优（v2 回归）** | ★★★★ | ~~2天~~ | ✅ 已完成（87%精度） |
 | **SQL Agent（DeepSearch）** | ★★★★★ | ~~1.5天~~ | ✅ 已完成 |
 | **LLM 本地部署（vLLM）** | ★★★★ | ~~0.5-1天~~ | ✅ 已完成（vLLM qwen3-8b） |
-| Self-Reflection | ★★★ | 0.5天 | 🔵 上线后迭代 |
-| MCP Server 批量接入 | ★★★★ | 1-2天 | 🔵 工具 > 10 个时 |
-| Multi-Agent | ★★★ | 3-5天 | 🔵 等业务场景驱动 |
-| Code Interpreter 沙箱 | ★★★★★ | 2-3天 | 🔵 上线后迭代 |
+| ~~ECharts 可视化~~ | ★★★★ | ~~1 天~~ | ✅ 已完成（2026-04-28） |
+| ~~智能填报建议~~ | ★★★★ | ~~1 天~~ | ✅ 已完成（2026-04-28，2026-04-29 合入 main） |
+| ~~批量工时填报~~ | ★★★★ | ~~1.5 天~~ | ✅ 已完成（2026-04-29） |
+| MCP Server 批量接入 | ★★★★ | 1-2 天 | 🟡 工具数已 10，触发条件满足，看后续接口增长 |
+| Multi-Agent | ★★★ | 3-5 天 | 🔵 等业务场景驱动 |
+| Self-Reflection | ★★★ | 0.5 天 | 🚫 已放弃（面试雷区） |
+| Code Interpreter 沙箱 | ★★★★★ | 2-3 天 | 🚫 已放弃（与 ECharts 价值重叠） |
