@@ -81,6 +81,10 @@ class AgentState(TypedDict):
     # 多步规划
     task_plan: Optional[Dict[str, Any]]          # 序列化的 TaskPlan（plan_and_execute 使用）
     plan_results: Optional[Dict[str, Any]]       # 各任务执行结果 {task_id: result}
+    # ── Agent Loop（承载 A-RAG 多轮调用，渐进式披露）─────────────────────────
+    agent_iterations: int                        # 当前已循环轮数（从 0 开始）
+    agent_max_iterations: int                    # 上限，默认 5
+    agent_history: list                          # [{iteration, tool, args, observation}]
 
 
 # ─── 节点函数 ─────────────────────────────────────────────────────────────────
@@ -223,9 +227,44 @@ async def node_llm_with_tools(state: AgentState) -> dict:
         if not messages:
             return await node_classify_intent(state)
 
+        # ── A-RAG agent loop: 第 2 轮起把 history 拼成 OpenAI tool messages ──
+        # 这样 LLM 能看到上几轮工具执行结果, 决定是否继续追问/精读, 或直接给最终答案
+        agent_history = state.get("agent_history") or []
+        if agent_history:
+            history_msgs = []
+            for h in agent_history:
+                call_id = f"call_{h.get('iteration', 0)}"
+                try:
+                    args_json = json.dumps(h.get("args") or {}, ensure_ascii=False)
+                    obs_json = json.dumps(
+                        h.get("observation"), ensure_ascii=False, default=str
+                    )
+                except Exception:
+                    args_json = str(h.get("args") or {})
+                    obs_json = str(h.get("observation"))
+                history_msgs.append({
+                    "role": "assistant",
+                    "content": None,
+                    "tool_calls": [{
+                        "id": call_id,
+                        "type": "function",
+                        "function": {
+                            "name": h.get("tool") or "",
+                            "arguments": args_json,
+                        },
+                    }],
+                })
+                history_msgs.append({
+                    "role": "tool",
+                    "tool_call_id": call_id,
+                    "content": obs_json,
+                })
+            # 在 conversation_history 之后追加, 使 LLM 看到 [system, ...对话历史..., user, assistant_tc, tool, ...]
+            messages = list(messages) + history_msgs
+
         # num_ctx 自适应：历史超过 2000 字用大 context
         history_chars = sum(
-            len(m.get("content", "")) for m in messages
+            len(m.get("content") or "") for m in messages
         )
         # vLLM / Ollama 统一按 32K 配置
         num_ctx = 32768 if history_chars > 2000 else 16384
@@ -243,7 +282,7 @@ async def node_llm_with_tools(state: AgentState) -> dict:
             messages = [messages[0]] + messages[-8:]
 
         # 策略2：按估算 token 数截断（字符数/3 + tools schema ~200 tokens/个）
-        total_chars = sum(len(m.get("content", "")) for m in messages)
+        total_chars = sum(len(m.get("content") or "") for m in messages)
         estimated_tokens = total_chars // 3 + len(tools) * 200
         if estimated_tokens > 12000:
             # 32K context 下留 4K output，截断到 system + 最近 2 轮（4条）+ 当前消息
@@ -529,9 +568,22 @@ async def node_classify_intent(state: AgentState) -> dict:
 
 
 async def node_execute_tool(state: AgentState) -> dict:
-    """节点：工具执行（query_timesheet / query_project / compute_statistics）"""
+    """节点：工具执行（query_timesheet / query_project / compute_statistics）
+
+    A-RAG agent loop 改造点：
+    - 每次执行后把 (tool, args, observation_truncated) 累加到 agent_history
+    - agent_iterations += 1
+    observation 截断到 ~500 tokens (字符数 / 3)，防止 prompt 爆。
+    """
     if not _task_executor:
-        return {"error": "TaskExecutor 未初始化", "tool_result": {"success": False}}
+        return {
+            "error": "TaskExecutor 未初始化",
+            "tool_result": {"success": False},
+            "agent_iterations": state.get("agent_iterations", 0) + 1,
+            "agent_history": _append_agent_history(
+                state, observation={"error": "TaskExecutor 未初始化"}
+            ),
+        }
 
     from app.models.task_plan import TaskNode, TaskType
     import uuid
@@ -549,10 +601,50 @@ async def node_execute_tool(state: AgentState) -> dict:
 
     try:
         result = await _task_executor.execute_single_task(task, permission_ctx)
-        return {"tool_result": result}
+        return {
+            "tool_result": result,
+            "agent_iterations": state.get("agent_iterations", 0) + 1,
+            "agent_history": _append_agent_history(state, observation=result),
+        }
     except Exception as e:
         logger.error(f"工具执行节点异常: {e}")
-        return {"tool_result": {"success": False, "error": str(e)}, "error": str(e)}
+        err_obs = {"success": False, "error": str(e)}
+        return {
+            "tool_result": err_obs,
+            "error": str(e),
+            "agent_iterations": state.get("agent_iterations", 0) + 1,
+            "agent_history": _append_agent_history(state, observation=err_obs),
+        }
+
+
+def _truncate_observation(observation: Any, max_chars: int = 1500) -> Any:
+    """
+    把 observation 截短到 ~500 tokens (字符数 / 3 ≈ tokens)。
+    保留 dict 的关键字段, 其它字段截断后存到 _truncated_json。
+    """
+    try:
+        s = json.dumps(observation, ensure_ascii=False, default=str)
+    except Exception:
+        s = str(observation)
+    if len(s) <= max_chars:
+        return observation
+    return {
+        "_truncated": True,
+        "_preview": s[:max_chars],
+        "_full_length_chars": len(s),
+    }
+
+
+def _append_agent_history(state: AgentState, observation: Any) -> list:
+    """把当前轮次执行结果追加到 agent_history (浅 copy 后返回新 list)"""
+    history = list(state.get("agent_history") or [])
+    history.append({
+        "iteration": state.get("agent_iterations", 0),
+        "tool": state.get("tool_name"),
+        "args": state.get("tool_params") or {},
+        "observation": _truncate_observation(observation),
+    })
+    return history
 
 
 async def _build_workhour_clarify_message(
@@ -686,11 +778,25 @@ async def node_summarize(state: AgentState) -> dict:
     """
     节点：多步执行结果汇总
 
-    将 plan_results 中的各工具执行结果交给 LLM 综合分析，
-    生成面向用户的自然语言回答。
+    两种入口:
+    - plan_and_execute → summarize: 消费 state.plan_results (TaskPlan 多工具并行)
+    - agent_loop force_end → summarize: 消费 state.agent_history (A-RAG 多轮循环兜底)
     """
     plan_results = state.get("plan_results") or {}
     user_message = state.get("user_message", "")
+
+    # ── A-RAG agent loop 兜底: 没有 plan_results 但有 agent_history ────────
+    # 把 agent_history 转成 plan_results 等价结构, 复用下方的汇总逻辑
+    if not plan_results:
+        history = state.get("agent_history") or []
+        if history:
+            plan_results = {}
+            for h in history:
+                tid = f"agent_t{h.get('iteration', 0)}"
+                plan_results[tid] = {
+                    "tool_name": h.get("tool"),
+                    "result": h.get("observation"),
+                }
 
     if not plan_results:
         return {"llm_result": "所有任务均已完成，但未产生可汇总的结果。"}
@@ -839,6 +945,72 @@ def _route_by_intent(state: AgentState) -> str:
     }.get(intent, "execute_llm")
 
 
+# ─── A-RAG Agent Loop 守卫 ────────────────────────────────────────────────────
+
+def _agent_loop_should_continue(state: AgentState) -> str:
+    """
+    Agent loop 条件路由 (承载 A-RAG 多轮渐进式披露)。
+
+    返回:
+        - "continue":  回到 llm_with_tools 让 LLM 看 observation 决定下一步
+        - "end":       提前结束 (重复 / 连续异常等)
+        - "force_end": 达到 max_iterations, 走 summarize 兜底
+
+    死循环 3 道闸:
+        1. agent_iterations >= agent_max_iterations  → force_end
+        2. 最近 3 轮中 (tool, args) 重复出现 ≥ 2 次   → end
+        3. agent_history 末尾 3 条全是 error          → end
+    """
+    iters = state.get("agent_iterations", 0)
+    max_iters = state.get("agent_max_iterations", 5) or 5
+    history = state.get("agent_history") or []
+
+    # 闸 1: 达到上限
+    if iters >= max_iters:
+        logger.warning(f"Agent loop 达到 max_iterations={max_iters}, 强制 summarize 收尾")
+        return "force_end"
+
+    # 闸 2: 重复 tool_call 检测 (最近 3 次中同 (tool, args) 出现 ≥ 2 次)
+    if len(history) >= 2:
+        recent = history[-3:]
+        signatures: list = []
+        for h in recent:
+            try:
+                sig = (
+                    h.get("tool") or "",
+                    json.dumps(h.get("args") or {}, ensure_ascii=False, sort_keys=True),
+                )
+            except Exception:
+                sig = (h.get("tool") or "", str(h.get("args")))
+            signatures.append(sig)
+        for s in set(signatures):
+            if signatures.count(s) >= 2:
+                logger.warning(f"Agent loop 检测到重复 tool_call {s[0]}, 提前结束")
+                return "end"
+
+    # 闸 3: 连续 3 次异常 → 提前结束 (避免持续失败的工具调用浪费 token)
+    if len(history) >= 3:
+        last_three = history[-3:]
+        all_errors = True
+        for h in last_three:
+            obs = h.get("observation")
+            if isinstance(obs, dict):
+                if obs.get("success") is False or obs.get("error"):
+                    continue
+                if isinstance(obs.get("result"), dict) and (
+                    obs["result"].get("success") is False or obs["result"].get("error")
+                ):
+                    continue
+            all_errors = False
+            break
+        if all_errors:
+            logger.warning("Agent loop 检测到连续 3 次工具异常, 提前结束")
+            return "end"
+
+    # 默认: 回到 llm_with_tools 让 LLM 决定 (它可能继续调工具, 也可能给最终答案)
+    return "continue"
+
+
 # ─── 构建图 ───────────────────────────────────────────────────────────────────
 
 def _build_graph():
@@ -871,7 +1043,16 @@ def _build_graph():
     )
 
     # 所有执行节点 → END（plan_and_execute → summarize → END）
-    builder.add_edge("execute_tool", END)
+    # ── execute_tool: A-RAG agent loop, 不再固定 → END ──────────────────────
+    builder.add_conditional_edges(
+        "execute_tool",
+        _agent_loop_should_continue,
+        {
+            "continue": "llm_with_tools",   # 回到主节点形成循环
+            "end": END,                     # 重复/连续异常 → 提前结束
+            "force_end": "summarize",       # 达到 max_iterations → 走兜底汇总
+        },
+    )
     builder.add_edge("execute_rag", END)
     builder.add_edge("execute_llm", END)
     builder.add_edge("clarify_node", END)
@@ -1014,6 +1195,10 @@ async def stream_agent_response(
         "error": None,
         "task_plan": None,
         "plan_results": None,
+        # ── Agent Loop 默认值 ─────────────────────────────────────────────
+        "agent_iterations": 0,
+        "agent_max_iterations": int(os.getenv("AGENT_MAX_ITERATIONS", "5") or 5),
+        "agent_history": [],
     }
 
     yield _format_sse("start", {
@@ -1084,6 +1269,12 @@ async def stream_agent_response(
                         # 如果 LLM 没有提供 summary，自动生成 Markdown 表格 fallback
                         if not summary_text:
                             summary_text = _build_fallback_message(log_tool_name, result)
+
+                        # 通用后处理：没有预定义格式化规则时，用 LLM 生成自然语言摘要
+                        if not summary_text:
+                            summary_text = await _generate_llm_summary(
+                                log_tool_name, result, message
+                            )
 
                         _collected_assistant_response = summary_text or _summarize_tool_result(log_tool_name, result)
                         log_ai_response = _collected_assistant_response
@@ -1418,10 +1609,69 @@ def _summarize_tool_result(tool_name: str, result: Optional[Dict[str, Any]]) -> 
         names = [p.get("name") or p.get("projectName", "") for p in projects[:5]]
         return f"项目查询结果：共 {len(projects)} 个项目，包括：{', '.join(names)}"
 
-    # 通用兜底：只取关键字段
-    keys = ["message", "total", "count", "status"]
-    parts = [f"{k}={inner[k]}" for k in keys if k in inner]
-    return f"{tool_name} 执行完成" + (f"：{'; '.join(parts)}" if parts else "")
+    if tool_name == "suggest_workhour":
+        projects = inner.get("suggested_projects", [])
+        hours = inner.get("suggested_hours", 8)
+        tip = inner.get("tip", "")
+        if not projects:
+            return "暂无历史填报记录，请直接告诉我您要填报的项目和工时。"
+        lines = ["根据您最近 30 天的填报记录，推荐如下：\n"]
+        for i, p in enumerate(projects, 1):
+            freq = p.get("frequency", 0)
+            lines.append(f"{i}. {p['project_name']}（最近填报 {freq} 次）")
+        lines.append(f"\n推荐工时：{hours} 小时")
+        if tip:
+            lines.append(f"\n{tip}")
+        return "\n".join(lines)
+
+    # 通用兜底：优先取工具自带的 message，避免暴露工具名
+    if inner.get("message"):
+        return str(inner["message"])
+    if inner.get("success"):
+        return "操作已成功完成。"
+    return "操作已完成。"
+
+
+async def _generate_llm_summary(tool_name: str, result: Dict[str, Any], user_message: str) -> Optional[str]:
+    """用 LLM 将工具执行结果转化为用户友好的自然语言摘要（通用后处理）"""
+    if not _llm_client:
+        return None
+
+    inner = result.get("result") if isinstance(result, dict) else result
+    if not isinstance(inner, dict):
+        inner = {"result": inner} if inner else {}
+
+    # 截断过长的结果，防止超出 prompt 长度
+    result_text = json.dumps(inner, ensure_ascii=False)
+    if len(result_text) > 3000:
+        result_text = result_text[:3000] + "\n...（结果过长，已截断）"
+
+    system_prompt = (
+        "你是企业工时管理系统的智能助手。你的任务是将系统返回的数据转化为"
+        "简洁、友好、口语化的中文回复。要求："
+        "1. 不要提及工具名称、字段名、JSON 结构等技术细节；"
+        "2. 直接告诉用户他能理解的信息；"
+        "3. 如果涉及数据，用列表或简短描述呈现，不要直接输出 JSON；"
+        "4. 控制在 300 字以内。"
+    )
+
+    prompt = (
+        f'用户说："{user_message}"\n\n'
+        f"系统返回了以下结果：\n{result_text}\n\n"
+        f"请用自然语言直接回复用户，不要暴露技术细节。"
+    )
+
+    try:
+        summary = await _llm_client.generate(
+            prompt=prompt,
+            system_prompt=system_prompt,
+            temperature=0.3,
+            max_tokens=800,
+        )
+        return summary.strip() if summary else None
+    except Exception as e:
+        logger.warning(f"LLM 工具摘要生成失败: {e}")
+        return None
 
 
 # ─── Response 事件后处理：精简结果 + Markdown 表格 fallback ──────────────────
@@ -1471,6 +1721,13 @@ def _extract_user_facing_data(tool_name: str, result: Optional[Dict[str, Any]]) 
             "total_hours": inner.get("total_hours", 0),
             "record_count": inner.get("record_count", 0),
             "records": inner.get("records", [])[:20],  # 最多 20 条
+        }
+
+    if tool_name == "suggest_workhour":
+        return {
+            "suggested_projects": inner.get("suggested_projects", []),
+            "suggested_hours": inner.get("suggested_hours", 8),
+            "tip": inner.get("tip", ""),
         }
 
     # 通用 fallback：保留 message 和关键字段
@@ -1535,6 +1792,24 @@ def _build_fallback_message(tool_name: str, result: Optional[Dict[str, Any]]) ->
             suffix = f"\n\n（共 {user_data.get('record_count', 0)} 条记录，总工时：{user_data.get('total_hours', 0)} 小时）"
             return table + suffix
         return "查询完成，暂无工时记录。"
+
+    # suggest_workhour
+    if "suggested_projects" in user_data:
+        projects = user_data["suggested_projects"]
+        hours = user_data.get("suggested_hours", 8)
+        tip = user_data.get("tip", "")
+        if not projects:
+            return "暂无历史填报记录，请直接告诉我您要填报的项目和工时。"
+        lines = ["**智能填报建议**\n"]
+        lines.append("| 序号 | 推荐项目 | 最近填报次数 |")
+        lines.append("| --- | --- | --- |")
+        for i, p in enumerate(projects, 1):
+            freq = p.get("frequency", 0)
+            lines.append(f"| {i} | {p.get('project_name', '')} | {freq} |")
+        lines.append(f"\n**推荐工时：** {hours} 小时")
+        if tip:
+            lines.append(f"\n*{tip}*")
+        return "\n".join(lines)
 
     # 通用 fallback
     msg = user_data.get("message")
