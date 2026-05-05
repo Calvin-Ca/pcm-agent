@@ -15,6 +15,11 @@ from . import approve_workhour
 from . import export_report
 from . import batch_save_workhour
 from . import suggest_workhour
+# RAG 渐进式披露 (A-RAG) — 4 个层次化检索 Tool, 与 knowledge_qa 并存
+from . import kb_outline
+from . import kb_keyword_search
+from . import kb_semantic_search
+from . import kb_read_section
 
 __all__ = [
     "query_timesheet",
@@ -27,4 +32,8 @@ __all__ = [
     "export_report",
     "batch_save_workhour",
     "suggest_workhour",
+    "kb_outline",
+    "kb_keyword_search",
+    "kb_semantic_search",
+    "kb_read_section",
 ]
