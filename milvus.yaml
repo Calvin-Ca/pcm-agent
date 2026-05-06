@@ -16,7 +16,7 @@
 
 # Related configuration of etcd, used to store Milvus metadata & service discovery.
 etcd:
-  endpoints: localhost:2379
+  endpoints: etcd:2379
   rootPath: by-dev # The root path where data is stored in etcd
   metaSubPath: meta # metaRootPath = rootPath + '/' + metaSubPath
   kvSubPath: kv # kvRootPath = rootPath + '/' + kvSubPath
@@ -64,10 +64,10 @@ localStorage:
 # Related configuration of MinIO/S3/GCS or any other service supports S3 API, which is responsible for data persistence for Milvus.
 # We refer to the storage service as MinIO/S3 in the following description for simplicity.
 minio:
-  address: localhost # Address of MinIO/S3
+  address: minio # Address of MinIO/S3
   port: 9000 # Port of MinIO/S3
   accessKeyID: minioadmin # accessKeyID of MinIO/S3
-  secretAccessKey: minioadmin123 # MinIO/S3 encryption string
+  secretAccessKey: minioadmin # MinIO/S3 encryption string
   useSSL: false # Access to MinIO/S3 with SSL
   bucketName: a-bucket # Bucket name in MinIO/S3
   rootPath: files # The root path where the message is stored in MinIO/S3

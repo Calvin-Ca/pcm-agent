@@ -336,6 +336,7 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
         # 使用 LangGraph Agent 处理请求（收集流式输出）
         collected_events = []
         final_response = None
+        effective_session_id = request.session_id
         detected_intent = None
         detected_tool = None
         tool_result = None
@@ -359,7 +360,9 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
                     collected_events.append({"event": event_type, "data": data})
 
                     # 提取关键信息
-                    if event_type == "tool_call":
+                    if event_type in ("start", "done") and data.get("session_id"):
+                        effective_session_id = data.get("session_id")
+                    elif event_type == "tool_call":
                         detected_tool = data.get("tool_name")
                         tool_name = detected_tool
                     elif event_type == "response":
@@ -369,6 +372,7 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
                     elif event_type == "error":
                         final_response = data.get("message", "处理请求时发生错误")
                         status = "error"
+                        error_message = final_response
 
         # 根据事件推断意图类型
         for event in collected_events:
@@ -390,13 +394,25 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
         intent_value = detected_intent
 
         # 构建与旧格式兼容的 result
+        response_text = final_response or "请求处理完成"
         result = {
             "route_info": {
                 "target": route_type,
                 "intent_type": detected_intent,
                 "confidence": 0.9,  # Function Calling 通常有高置信度
             },
-            "message": final_response or "请求处理完成",
+            # 兼容不同前端取值路径：旧前端取 result.message，新前端常取
+            # result.response/content/text。四个字段保持同一用户可见文本。
+            "message": response_text,
+            "response": response_text,
+            "content": response_text,
+            "text": response_text,
+            "data": {
+                "message": response_text,
+                "response": response_text,
+                "content": response_text,
+                "text": response_text,
+            },
         }
 
         if detected_tool:
@@ -406,8 +422,8 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
 
         response = ChatResponse(
             success=status != "error",
-            message=final_response or "请求处理完成",
-            session_id=request.session_id,
+            message=response_text,
+            session_id=effective_session_id,
             result=result,
             error=error_message if status == "error" else None,
         )
@@ -432,7 +448,7 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
             conv_logger = get_conversation_logger()
 
             conv_logger.log_conversation(
-                session_id=request.session_id or "unknown",
+                session_id=(effective_session_id if 'effective_session_id' in locals() else request.session_id) or "unknown",
                 user_id=user_id if 'user_id' in locals() else "anonymous",
                 user_message=request.message,
                 route_type=route_type or "unknown",
