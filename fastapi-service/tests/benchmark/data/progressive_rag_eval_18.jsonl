@@ -1,0 +1,18 @@
+{"id":"S01","category":"simple","query":"加班算不算工时?","expected_path":["knowledge_qa"],"expected_docs":["加班补偿政策","工时类型分类标准"],"expected_points":["加班需审批后计入","单独标记加班工时"]}
+{"id":"S02","category":"simple","query":"工时填报截止日期是几号?","expected_path":["knowledge_qa"],"expected_docs":["工时填报管理制度"],"expected_points":["每月 5 号前"]}
+{"id":"S03","category":"simple","query":"病假能不能折算成事假?","expected_path":["knowledge_qa"],"expected_docs":["病假管理规定","事假管理规定"],"expected_points":["不可折算","病假需医院证明"]}
+{"id":"S04","category":"simple","query":"试用期员工有年假吗?","expected_path":["knowledge_qa"],"expected_docs":["年假管理规定","入职管理制度"],"expected_points":["试用期内无年假","满一年才有"]}
+{"id":"S05","category":"simple","query":"出差的工时怎么算?","expected_path":["knowledge_qa"],"expected_docs":["工时类型分类标准"],"expected_points":["按实际工作时长","不含路途"]}
+{"id":"M01","category":"multi_hop","query":"周末加班审批超时未处理,工时怎么记?","expected_path":["kb_outline","kb_semantic_search","kb_read_section","kb_semantic_search","kb_read_section"],"expected_docs":["加班补偿政策","工时审核管理办法"],"expected_points":["超时审批的兜底机制","工时仍可正常记录"]}
+{"id":"M02","category":"multi_hop","query":"产假期间申请的项目奖金怎么发放?","expected_path":["kb_outline","kb_semantic_search","kb_read_section","kb_keyword_search","kb_read_section"],"expected_docs":["婚丧产假管理规定","年终奖与绩效奖金制度"],"expected_points":["产假期间奖金计算规则","发放时间"]}
+{"id":"M03","category":"multi_hop","query":"跨项目工时分摊后,单个项目超 8 小时算不算加班?","expected_path":["kb_keyword_search","kb_read_section","kb_keyword_search","kb_read_section"],"expected_docs":["跨项目工时分摊规则","加班补偿政策"],"expected_points":["分摊后超 8 小时的判定","加班认定条件"]}
+{"id":"M04","category":"multi_hop","query":"试用期员工提前离职,五险一金怎么处理?","expected_path":["kb_semantic_search","kb_read_section","kb_semantic_search","kb_read_section"],"expected_docs":["离职管理制度","五险一金缴纳办法"],"expected_points":["试用期离职流程","五险一金停缴/转移"]}
+{"id":"M05","category":"multi_hop","query":"项目立项后变更工期,工时填报模板要不要改?","expected_path":["kb_semantic_search","kb_read_section","kb_semantic_search","kb_read_section"],"expected_docs":["项目变更管理办法","工时填报管理制度"],"expected_points":["项目变更对工时的影响","填报模板调整规则"]}
+{"id":"M06","category":"multi_hop","query":"调休没用完离职会赔偿吗?涉及哪些制度?","expected_path":["kb_outline","kb_semantic_search","kb_read_section"],"expected_docs":["调休与补休规则","跨年度调休结转规则","离职管理制度"],"expected_points":["未使用调休的处理","离职结算包含调休"]}
+{"id":"M07","category":"multi_hop","query":"出差产生加班,可以同时申请加班费和出差补贴吗?","expected_path":["kb_keyword_search","kb_read_section","kb_keyword_search","kb_read_section"],"expected_docs":["加班补偿政策","福利津贴管理办法"],"expected_points":["加班费与出差补贴的关系","是否冲突"]}
+{"id":"F01","category":"metadata_filter","query":"项目经理这个角色,有哪些必读制度?","expected_path":["kb_outline"],"expected_docs":["所有 audience=manager 或 pm 的文档"],"expected_points":["列出 manager/pm 受众文档"]}
+{"id":"F02","category":"metadata_filter","query":"财务相关的所有政策有几篇?","expected_path":["kb_outline"],"expected_docs":["category=薪资福利"],"expected_points":["列出 14 篇"]}
+{"id":"F03","category":"metadata_filter","query":"HR 内部使用的保密文档有哪些?","expected_path":["kb_outline"],"expected_docs":["acl=internal"],"expected_points":["列出 internal 文档"]}
+{"id":"L01","category":"compare","query":"病假/事假/年假 三种请假在审批人和时限上有什么区别?","expected_path":["kb_keyword_search","kb_read_section","kb_keyword_search","kb_read_section","kb_keyword_search","kb_read_section"],"expected_docs":["病假管理规定","事假管理规定","年假管理规定"],"expected_points":["三种请假对照表"]}
+{"id":"L02","category":"compare","query":"工时类型有几种?","expected_path":["kb_keyword_search","kb_read_section"],"expected_docs":["工时类型分类标准"],"expected_points":["枚举工时类型"]}
+{"id":"L03","category":"compare","query":"法定节假日和年假的加班补偿一样吗?","expected_path":["kb_semantic_search","kb_read_section","kb_semantic_search","kb_read_section"],"expected_docs":["法定节假日规定","年假管理规定","加班补偿政策"],"expected_points":["三倍工资 vs 1.5 倍","对比"]}

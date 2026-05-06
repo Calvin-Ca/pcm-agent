@@ -1,0 +1,7 @@
+# 中间产物 / 实验性数据(以 _ 开头表明非正式产物)
+_*
+
+# smoke 跑的 log 与 cherry-pick 重跑前的备份
+*_smoke_log.txt
+smoke_run_log.txt
+full_run_log_v2.txt

@@ -1,0 +1,520 @@
+=== 全量测试: 18 条 query ===
+Tool Registry initialized
+从 ../knowledge-base 加载了 125 个文档
+文档分割完成：125 篇 → 849 个块
+Embeddings 初始化完成（vLLM bge-large-zh-v1.5, dim=1024）
+langchain-openai detected HTTP_PROXY, HTTPS_PROXY, http_proxy, https_proxy and no explicit `http_socket_options` / `http_client` / `http_async_client` / `openai_proxy`; skipping the custom `httpx` transport so httpx's env-proxy auto-detection applies. Pass `http_socket_options=[...]` to opt back into kernel-level TCP keepalive tuning on top of the env proxy.
+LLM 初始化完成（qwen3.5-plus）
+E:\huan\工时管理系统\trunk\1 源代码\1.0 系统代码\ai-service\fastapi-service\.venv\Lib\site-packages\langchain_milvus\vectorstores\milvus.py:408: RuntimeWarning: coroutine 'AsyncMilvusClient._get_connection' was never awaited
+  self.drop()
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+Milvus 向量存储初始化完成（http://172.19.3.136:19530）
+Building prefix dict from the default dictionary ...
+Building prefix dict from the default dictionary ...
+Loading model from cache C:\Users\E-C111~1\AppData\Local\Temp\jieba.cache
+Loading model from cache C:\Users\E-C111~1\AppData\Local\Temp\jieba.cache
+Loading model cost 0.587 seconds.
+Loading model cost 0.587 seconds.
+Prefix dict has been built successfully.
+Prefix dict has been built successfully.
+BM25 检索器初始化完成（jieba 分词）
+混合检索器（EnsembleRetriever）初始化完成
+MultiQueryRetriever 已禁用（USE_MULTI_QUERY=False），直接使用 EnsembleRetriever
+✅ LangChain RAG 服务初始化完成（向量后端: Milvus，文档块: 849）
+CrossEncoderReranker 已禁用（USE_RERANKER=False）
+RAG 初始化完成: 102 文件 / 849 chunks
+Permission Validator initialized
+Intent Router initialized
+Tool 'query_timesheet' registered successfully (category: ToolCategory.DATA_QUERY)
+工时查询工具注册成功
+Tool 'query_project' registered successfully (category: ToolCategory.DATA_QUERY)
+项目查询工具注册成功
+Tool 'compute_statistics' registered successfully (category: ToolCategory.STATISTICS)
+统计计算工具注册成功
+Tool 'generate_weekly_report' registered successfully (category: ToolCategory.REPORT)
+周报生成工具注册成功
+Tool 'save_workhour' registered successfully (category: ToolCategory.WORKHOUR)
+工时填报工具注册成功
+Tool 'knowledge_qa' registered successfully (category: ToolCategory.DATA_QUERY)
+知识问答工具注册成功
+Tool 'approve_workhour' registered successfully (category: ToolCategory.WORKHOUR)
+工时审核工具注册成功
+Tool 'export_report' registered successfully (category: ToolCategory.DATA_QUERY)
+工时报表导出工具注册成功
+Tool 'batch_save_workhour' registered successfully (category: ToolCategory.WORKHOUR)
+批量工时填报工具注册成功
+Tool 'suggest_workhour' registered successfully (category: ToolCategory.WORKHOUR)
+智能填报建议工具注册成功
+Tool 'kb_outline' registered successfully (category: ToolCategory.DATA_QUERY)
+kb_outline 工具注册成功
+Tool 'kb_keyword_search' registered successfully (category: ToolCategory.DATA_QUERY)
+kb_keyword_search 工具注册成功
+Tool 'kb_semantic_search' registered successfully (category: ToolCategory.DATA_QUERY)
+kb_semantic_search 工具注册成功
+Tool 'kb_read_section' registered successfully (category: ToolCategory.DATA_QUERY)
+kb_read_section 工具注册成功
+Intent Router initialized
+✅ LangGraph Agent 初始化完成
+Agent 初始化完成, 工具数: 14
+[1/36] id=S01 mode=oneshot query="加班算不算工时?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.047s
+Prompt 管理器已加载 7 个模板: ['intent_classify', 'param_extract', 'rag', 'sql_generation', 'sql_summarize', 'system', 'weekly_report']
+watchdog 未安装，跳过 prompt 热重载（pip install watchdog 可启用）
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 26.844s | 总耗时: 26.906s
+  -> intent=knowledge_qa tool_calls=0 latency=28549ms coverage=100.0% tokens=238
+[2/36] id=S01 mode=progressive query="加班算不算工时?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.047s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 28.859s | 总耗时: 28.906s
+  -> intent= tool_calls=0 latency=30491ms coverage=100.0% tokens=241
+[3/36] id=S02 mode=oneshot query="工时填报截止日期是几号?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.046s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 24.329s | 总耗时: 24.375s
+  -> intent=knowledge_qa tool_calls=0 latency=25730ms coverage=100.0% tokens=190
+[4/36] id=S02 mode=progressive query="工时填报截止日期是几号?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.047s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 40.016s | 总耗时: 40.063s
+  -> intent= tool_calls=0 latency=41342ms coverage=100.0% tokens=193
+[5/36] id=S03 mode=oneshot query="病假能不能折算成事假?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.063s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 31.594s | 总耗时: 31.657s
+  -> intent=knowledge_qa tool_calls=0 latency=33100ms coverage=100.0% tokens=221
+[6/36] id=S03 mode=progressive query="病假能不能折算成事假?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.031s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 36.235s | 总耗时: 36.266s
+  -> intent= tool_calls=0 latency=37618ms coverage=100.0% tokens=220
+[7/36] id=S04 mode=oneshot query="试用期员工有年假吗?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.032s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 49.187s | 总耗时: 49.219s
+  -> intent=knowledge_qa tool_calls=0 latency=50816ms coverage=100.0% tokens=216
+[8/36] id=S04 mode=progressive query="试用期员工有年假吗?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.062s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 66.391s | 总耗时: 66.453s
+  -> intent= tool_calls=0 latency=67750ms coverage=100.0% tokens=231
+[9/36] id=S05 mode=oneshot query="出差的工时怎么算?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.047s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 30.703s | 总耗时: 30.750s
+  -> intent=knowledge_qa tool_calls=0 latency=32062ms coverage=100.0% tokens=294
+[10/36] id=S05 mode=progressive query="出差的工时怎么算?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.031s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 36.125s | 总耗时: 36.156s
+  -> intent= tool_calls=0 latency=37456ms coverage=100.0% tokens=320
+[11/36] id=M01 mode=oneshot query="周末加班审批超时未处理,工时怎么记?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.047s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 37.000s | 总耗时: 37.047s
+  -> intent=knowledge_qa tool_calls=0 latency=38547ms coverage=100.0% tokens=279
+[12/36] id=M01 mode=progressive query="周末加班审批超时未处理,工时怎么记?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.031s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 42.672s | 总耗时: 42.703s
+  -> intent= tool_calls=0 latency=44099ms coverage=100.0% tokens=284
+[13/36] id=M02 mode=oneshot query="产假期间申请的项目奖金怎么发放?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.047s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 31.890s | 总耗时: 31.937s
+  -> intent=knowledge_qa tool_calls=0 latency=33128ms coverage=100.0% tokens=225
+[14/36] id=M02 mode=progressive query="产假期间申请的项目奖金怎么发放?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+开始执行任务: lg_16e1d86a (TaskType.TOOL_CALL)
+执行工具: kb_semantic_search, 参数: {'query': '产假期间项目奖金发放', 'top_k': 5, 'user_id': 'benchmark_user'}
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+工具执行完成: kb_semantic_search, 耗时: 0.04秒
+任务执行成功: lg_16e1d86a
+开始执行任务: lg_c021cb01 (TaskType.TOOL_CALL)
+执行工具: kb_read_section, 参数: {'file': '年终奖常见问题.md', 'section': 'Q8: 我休产假了，对年终奖有影响吗？', 'include_neighbors': True, 'user_id': 'benchmark_user'}
+工具执行完成: kb_read_section, 耗时: 0.00秒
+任务执行成功: lg_c021cb01
+开始执行任务: lg_bce1ea20 (TaskType.TOOL_CALL)
+执行工具: kb_keyword_search, 参数: {'query': '项目奖金 产假', 'top_k': 5, 'user_id': 'benchmark_user'}
+工具执行完成: kb_keyword_search, 耗时: 0.00秒
+任务执行成功: lg_bce1ea20
+开始执行任务: lg_7c0499e7 (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': '薪资福利', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_7c0499e7
+开始执行任务: lg_8a2549d3 (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': 'ALL', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_8a2549d3
+Agent loop 达到 max_iterations=5, 强制 summarize 收尾
+  -> intent=kb_semantic_search|kb_read_section|kb_keyword_search|kb_outline|kb_outline tool_calls=5 latency=49281ms coverage=100.0% tokens=1524
+[15/36] id=M03 mode=oneshot query="跨项目工时分摊后,单个项目超 8 小时算不算加班?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.031s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 37.188s | 总耗时: 37.219s
+  -> intent=knowledge_qa tool_calls=0 latency=38793ms coverage=100.0% tokens=209
+[16/36] id=M03 mode=progressive query="跨项目工时分摊后,单个项目超 8 小时算不算加班?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+开始执行任务: lg_df0a57ea (TaskType.TOOL_CALL)
+执行工具: kb_semantic_search, 参数: {'query': '跨项目工时分摊 单个项目超8小时 加班', 'top_k': 5, 'user_id': 'benchmark_user'}
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+工具执行完成: kb_semantic_search, 耗时: 0.04秒
+任务执行成功: lg_df0a57ea
+开始执行任务: lg_c2ab8fcc (TaskType.TOOL_CALL)
+执行工具: kb_semantic_search, 参数: {'query': '加班定义 单日超过8小时 跨项目', 'top_k': 5, 'user_id': 'benchmark_user'}
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+工具执行完成: kb_semantic_search, 耗时: 0.04秒
+任务执行成功: lg_c2ab8fcc
+开始执行任务: lg_b2505ea5 (TaskType.TOOL_CALL)
+执行工具: kb_read_section, 参数: {'file': '加班费计算规则.md', 'section': '定义与术语', 'include_neighbors': True, 'user_id': 'benchmark_user'}
+工具执行完成: kb_read_section, 耗时: 0.00秒
+任务执行成功: lg_b2505ea5
+开始执行任务: lg_81778ae2 (TaskType.TOOL_CALL)
+执行工具: kb_keyword_search, 参数: {'query': '加班 定义 8小时', 'top_k': 5, 'user_id': 'benchmark_user'}
+工具执行完成: kb_keyword_search, 耗时: 0.01秒
+任务执行成功: lg_81778ae2
+开始执行任务: lg_db9b124b (TaskType.TOOL_CALL)
+执行工具: kb_read_section, 参数: {'file': '加班费计算规则.md', 'section': '定义与术语', 'include_neighbors': True, 'user_id': 'benchmark_user'}
+工具执行完成: kb_read_section, 耗时: 0.00秒
+任务执行成功: lg_db9b124b
+Agent loop 达到 max_iterations=5, 强制 summarize 收尾
+  -> intent=kb_semantic_search|kb_semantic_search|kb_read_section|kb_keyword_search|kb_read_section tool_calls=5 latency=67869ms coverage=100.0% tokens=2196
+[17/36] id=M04 mode=oneshot query="试用期员工提前离职,五险一金怎么处理?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.062s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 59.282s | 总耗时: 59.344s
+  -> intent=knowledge_qa tool_calls=0 latency=60530ms coverage=100.0% tokens=281
+[18/36] id=M04 mode=progressive query="试用期员工提前离职,五险一金怎么处理?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+开始执行任务: lg_92a4e3cf (TaskType.TOOL_CALL)
+执行工具: kb_semantic_search, 参数: {'query': '试用期员工提前离职 五险一金处理', 'top_k': 5, 'user_id': 'benchmark_user'}
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+工具执行完成: kb_semantic_search, 耗时: 0.05秒
+任务执行成功: lg_92a4e3cf
+开始执行任务: lg_98903af2 (TaskType.TOOL_CALL)
+执行工具: kb_read_section, 参数: {'file': '离职常见问题__faq_07-通用制度.docx', 'section': 'Q5: 末月工资什么时候发？', 'include_neighbors': True, 'user_id': 'benchmark_user'}
+工具执行完成: kb_read_section, 耗时: 0.00秒
+任务执行成功: lg_98903af2
+开始执行任务: lg_6a918be2 (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': '薪资福利', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_6a918be2
+开始执行任务: lg_b1faf3ae (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': '通用制度', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_b1faf3ae
+开始执行任务: lg_4a7dbf8d (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': 'ALL', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_4a7dbf8d
+Agent loop 达到 max_iterations=5, 强制 summarize 收尾
+  -> intent=kb_semantic_search|kb_read_section|kb_outline|kb_outline|kb_outline tool_calls=5 latency=67933ms coverage=100.0% tokens=1164
+[19/36] id=M05 mode=oneshot query="项目立项后变更工期,工时填报模板要不要改?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.031s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 29.594s | 总耗时: 29.625s
+  -> intent=knowledge_qa tool_calls=0 latency=31350ms coverage=100.0% tokens=245
+[20/36] id=M05 mode=progressive query="项目立项后变更工期,工时填报模板要不要改?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.062s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 39.719s | 总耗时: 39.781s
+  -> intent= tool_calls=0 latency=41211ms coverage=100.0% tokens=245
+[21/36] id=M06 mode=oneshot query="调休没用完离职会赔偿吗?涉及哪些制度?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.031s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 41.860s | 总耗时: 41.891s
+  -> intent=knowledge_qa tool_calls=0 latency=43332ms coverage=100.0% tokens=247
+[22/36] id=M06 mode=progressive query="调休没用完离职会赔偿吗?涉及哪些制度?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+开始执行任务: lg_ea13f5b2 (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': 'ALL', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_ea13f5b2
+开始执行任务: lg_f72e330d (TaskType.TOOL_CALL)
+执行工具: kb_semantic_search, 参数: {'query': '调休 离职 赔偿 未休完', 'top_k': 10, 'user_id': 'benchmark_user'}
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+工具执行完成: kb_semantic_search, 耗时: 0.04秒
+任务执行成功: lg_f72e330d
+开始执行任务: lg_c0ef6c27 (TaskType.TOOL_CALL)
+执行工具: kb_read_section, 参数: {'file': '调休常见问题.md', 'section': 'Q2: 调休能保留多久？过期怎么办？', 'include_neighbors': True, 'user_id': 'benchmark_user'}
+工具执行完成: kb_read_section, 耗时: 0.00秒
+任务执行成功: lg_c0ef6c27
+开始执行任务: lg_8d40d066 (TaskType.TOOL_CALL)
+执行工具: kb_keyword_search, 参数: {'query': '调休 离职 赔偿', 'top_k': 10, 'user_id': 'benchmark_user'}
+工具执行完成: kb_keyword_search, 耗时: 0.00秒
+任务执行成功: lg_8d40d066
+开始执行任务: lg_1c7f8370 (TaskType.TOOL_CALL)
+执行工具: kb_read_section, 参数: {'file': '调休与补休规则.md', 'section': '3. 核心规则', 'include_neighbors': True, 'user_id': 'benchmark_user'}
+工具执行完成: kb_read_section, 耗时: 0.00秒
+任务执行成功: lg_1c7f8370
+Agent loop 达到 max_iterations=5, 强制 summarize 收尾
+  -> intent=kb_outline|kb_semantic_search|kb_read_section|kb_keyword_search|kb_read_section tool_calls=5 latency=83440ms coverage=100.0% tokens=1680
+[23/36] id=M07 mode=oneshot query="出差产生加班,可以同时申请加班费和出差补贴吗?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.047s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 82.187s | 总耗时: 82.234s
+  -> intent=knowledge_qa tool_calls=0 latency=83502ms coverage=100.0% tokens=261
+[24/36] id=M07 mode=progressive query="出差产生加班,可以同时申请加班费和出差补贴吗?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+开始执行任务: lg_3d906b3d (TaskType.TOOL_CALL)
+执行工具: kb_semantic_search, 参数: {'query': '出差加班 加班费 出差补贴 同时申请', 'top_k': 5, 'user_id': 'benchmark_user'}
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+工具执行完成: kb_semantic_search, 耗时: 0.04秒
+任务执行成功: lg_3d906b3d
+开始执行任务: lg_c32865e6 (TaskType.TOOL_CALL)
+执行工具: kb_read_section, 参数: {'file': '加班常见问题.md', 'section': 'Q7: 出差期间的加班怎么计算？', 'include_neighbors': True, 'user_id': 'benchmark_user'}
+工具执行完成: kb_read_section, 耗时: 0.00秒
+任务执行成功: lg_c32865e6
+开始执行任务: lg_05297e81 (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': 'ALL', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_05297e81
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.047s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 78.297s | 总耗时: 78.344s
+  -> intent=kb_semantic_search|kb_read_section|kb_outline tool_calls=3 latency=85216ms coverage=100.0% tokens=945
+[25/36] id=F01 mode=oneshot query="项目经理这个角色,有哪些必读制度?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.047s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 20.719s | 总耗时: 20.766s
+  -> intent=knowledge_qa tool_calls=0 latency=22089ms coverage=0.0% tokens=208
+[26/36] id=F01 mode=progressive query="项目经理这个角色,有哪些必读制度?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+开始执行任务: lg_2c591ce8 (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': 'ALL', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_2c591ce8
+开始执行任务: lg_b7097ccc (TaskType.TOOL_CALL)
+执行工具: kb_semantic_search, 参数: {'query': '项目经理 必读制度 职责 权限', 'top_k': 10, 'user_id': 'benchmark_user'}
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+工具执行完成: kb_semantic_search, 耗时: 0.05秒
+任务执行成功: lg_b7097ccc
+开始执行任务: lg_c92264cc (TaskType.TOOL_CALL)
+执行工具: kb_read_section, 参数: {'file': '项目经理工时管理职责.md', 'section': '1. 适用范围', 'include_neighbors': True, 'user_id': 'benchmark_user'}
+工具执行完成: kb_read_section, 耗时: 0.00秒
+任务执行成功: lg_c92264cc
+开始执行任务: lg_ce352790 (TaskType.TOOL_CALL)
+执行工具: kb_keyword_search, 参数: {'query': '项目经理 必读 制度', 'top_k': 10, 'user_id': 'benchmark_user'}
+工具执行完成: kb_keyword_search, 耗时: 0.00秒
+任务执行成功: lg_ce352790
+开始执行任务: lg_9f7bedb6 (TaskType.TOOL_CALL)
+执行工具: kb_read_section, 参数: {'file': '项目经理工时管理职责.md', 'section': '2. 核心职责', 'include_neighbors': True, 'user_id': 'benchmark_user'}
+工具执行完成: kb_read_section, 耗时: 0.00秒
+任务执行成功: lg_9f7bedb6
+Agent loop 达到 max_iterations=5, 强制 summarize 收尾
+  -> intent=kb_outline|kb_semantic_search|kb_read_section|kb_keyword_search|kb_read_section tool_calls=5 latency=80339ms coverage=0.0% tokens=1679
+[27/36] id=F02 mode=oneshot query="财务相关的所有政策有几篇?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.046s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 35.204s | 总耗时: 35.250s
+  -> intent=knowledge_qa tool_calls=0 latency=36614ms coverage=100.0% tokens=201
+[28/36] id=F02 mode=progressive query="财务相关的所有政策有几篇?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+开始执行任务: lg_3f0fd332 (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': 'ALL', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_3f0fd332
+开始执行任务: lg_640965bc (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_640965bc
+  -> intent=kb_outline|kb_outline tool_calls=2 latency=3884ms coverage=0.0% tokens=300
+[29/36] id=F03 mode=oneshot query="HR 内部使用的保密文档有哪些?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.047s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 22.422s | 总耗时: 22.469s
+  -> intent=knowledge_qa tool_calls=0 latency=23604ms coverage=0.0% tokens=217
+[30/36] id=F03 mode=progressive query="HR 内部使用的保密文档有哪些?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+开始执行任务: lg_838579ba (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': 'ALL', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_838579ba
+开始执行任务: lg_6e152d03 (TaskType.TOOL_CALL)
+执行工具: kb_semantic_search, 参数: {'query': 'HR 内部保密文档', 'top_k': 10, 'user_id': 'benchmark_user'}
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+工具执行完成: kb_semantic_search, 耗时: 0.04秒
+任务执行成功: lg_6e152d03
+开始执行任务: lg_e034562b (TaskType.TOOL_CALL)
+执行工具: kb_read_section, 参数: {'file': '薪资保密制度.md', 'section': '核心规则', 'user_id': 'benchmark_user'}
+工具执行完成: kb_read_section, 耗时: 0.00秒
+任务执行成功: lg_e034562b
+开始执行任务: lg_7d8f84b0 (TaskType.TOOL_CALL)
+执行工具: kb_keyword_search, 参数: {'query': '保密文档 HR 内部', 'top_k': 10, 'user_id': 'benchmark_user'}
+工具执行完成: kb_keyword_search, 耗时: 0.01秒
+任务执行成功: lg_7d8f84b0
+  -> intent=kb_outline|kb_semantic_search|kb_read_section|kb_keyword_search tool_calls=4 latency=14969ms coverage=0.0% tokens=1639
+[31/36] id=L01 mode=oneshot query="病假/事假/年假 三种请假在审批人和时限上有什么区别?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.047s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 32.422s | 总耗时: 32.469s
+  -> intent=knowledge_qa tool_calls=0 latency=33845ms coverage=100.0% tokens=279
+[32/36] id=L01 mode=progressive query="病假/事假/年假 三种请假在审批人和时限上有什么区别?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+开始执行任务: lg_25de4b76 (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': '请假管理', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_25de4b76
+开始执行任务: lg_7aa264c3 (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': 'ALL', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_7aa264c3
+开始执行任务: lg_b8f5f2eb (TaskType.TOOL_CALL)
+执行工具: kb_keyword_search, 参数: {'query': '病假 事假 年假 审批人 时限', 'top_k': 10, 'user_id': 'benchmark_user'}
+工具执行完成: kb_keyword_search, 耗时: 0.00秒
+任务执行成功: lg_b8f5f2eb
+开始执行任务: lg_2000b42e (TaskType.TOOL_CALL)
+执行工具: kb_semantic_search, 参数: {'query': '病假 事假 年假 审批流程 审批人 天数限制 时限', 'top_k': 10, 'user_id': 'benchmark_user'}
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+工具执行完成: kb_semantic_search, 耗时: 0.04秒
+任务执行成功: lg_2000b42e
+开始执行任务: lg_258b071e (TaskType.TOOL_CALL)
+执行工具: kb_read_section, 参数: {'file': '假期管理总则__policy_02-假期与加班.pdf', 'section': '审批权限与时限', 'include_neighbors': True, 'user_id': 'benchmark_user'}
+工具执行完成: kb_read_section, 耗时: 0.00秒
+任务执行成功: lg_258b071e
+Agent loop 达到 max_iterations=5, 强制 summarize 收尾
+  -> intent=kb_outline|kb_outline|kb_keyword_search|kb_semantic_search|kb_read_section tool_calls=5 latency=52484ms coverage=100.0% tokens=1563
+[33/36] id=L02 mode=oneshot query="工时类型有几种?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.047s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 51.593s | 总耗时: 51.640s
+  -> intent=knowledge_qa tool_calls=0 latency=52789ms coverage=100.0% tokens=218
+[34/36] id=L02 mode=progressive query="工时类型有几种?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+开始执行任务: lg_c5e5e6ae (TaskType.TOOL_CALL)
+执行工具: kb_keyword_search, 参数: {'query': '工时类型 几种', 'top_k': 5, 'user_id': 'benchmark_user'}
+工具执行完成: kb_keyword_search, 耗时: 0.00秒
+任务执行成功: lg_c5e5e6ae
+开始执行任务: lg_f81c8f70 (TaskType.TOOL_CALL)
+执行工具: kb_read_section, 参数: {'file': '工时类型分类标准.md', 'section': '2. 工时类型定义', 'user_id': 'benchmark_user'}
+工具执行完成: kb_read_section, 耗时: 0.00秒
+任务执行成功: lg_f81c8f70
+开始执行任务: lg_27e397c1 (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': '工时管理', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_27e397c1
+开始执行任务: lg_03e997fe (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': 'ALL', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_03e997fe
+  -> intent=kb_keyword_search|kb_read_section|kb_outline|kb_outline tool_calls=4 latency=11993ms coverage=100.0% tokens=1073
+[35/36] id=L03 mode=oneshot query="法定节假日和年假的加班补偿一样吗?"
+模式切换为 oneshot, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour']
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+[RAG-Timing] 检索阶段耗时: 0.047s
+HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+[RAG-Timing] 生成阶段耗时: 60.297s | 总耗时: 60.344s
+  -> intent=knowledge_qa tool_calls=0 latency=61699ms coverage=100.0% tokens=234
+[36/36] id=L03 mode=progressive query="法定节假日和年假的加班补偿一样吗?"
+模式切换为 progressive, 当前工具: ['query_timesheet', 'query_project', 'compute_statistics', 'generate_weekly_report', 'save_workhour', 'knowledge_qa', 'approve_workhour', 'export_report', 'batch_save_workhour', 'suggest_workhour', 'kb_outline', 'kb_keyword_search', 'kb_semantic_search', 'kb_read_section']
+开始执行任务: lg_6b148554 (TaskType.TOOL_CALL)
+执行工具: kb_semantic_search, 参数: {'query': '法定节假日 年假 加班补偿 区别', 'top_k': 5, 'user_id': 'benchmark_user'}
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+工具执行完成: kb_semantic_search, 耗时: 0.05秒
+任务执行成功: lg_6b148554
+开始执行任务: lg_7dd6c00e (TaskType.TOOL_CALL)
+执行工具: kb_semantic_search, 参数: {'query': '年假 加班补偿 调休 工资倍率', 'top_k': 5, 'user_id': 'benchmark_user'}
+HTTP Request: POST http://172.19.3.136:8097/v1/embeddings "HTTP/1.1 200 OK"
+工具执行完成: kb_semantic_search, 耗时: 0.03秒
+任务执行成功: lg_7dd6c00e
+开始执行任务: lg_c6b1c8d8 (TaskType.TOOL_CALL)
+执行工具: kb_read_section, 参数: {'file': '加班补偿政策.md', 'section': '年假期间加班补偿', 'include_neighbors': True, 'user_id': 'benchmark_user'}
+工具执行完成: kb_read_section, 耗时: 0.00秒
+任务执行成功: lg_c6b1c8d8
+开始执行任务: lg_2a0154f5 (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': '假期与加班', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_2a0154f5
+开始执行任务: lg_b1d8cdd2 (TaskType.TOOL_CALL)
+执行工具: kb_outline, 参数: {'category': 'ALL', 'user_id': 'benchmark_user'}
+工具执行完成: kb_outline, 耗时: 0.00秒
+任务执行成功: lg_b1d8cdd2
+Agent loop 达到 max_iterations=5, 强制 summarize 收尾
+  -> intent=kb_semantic_search|kb_semantic_search|kb_read_section|kb_outline|kb_outline tool_calls=5 latency=62550ms coverage=100.0% tokens=1689
+
+结果已保存: E:\huan\工时管理系统\trunk\1 源代码\1.0 系统代码\ai-service\fastapi-service\tests\benchmark\results\progressive_rag_2026-05-05_full.csv
+
+======================================================================
+汇总统计
+======================================================================
+
+[oneshot] 样本: 18 成功: 18 失败: 0
+  平均延迟: 40560ms
+  平均 tokens: 237
+  平均 tool_calls: 0.0
+  平均 docs_coverage: 88.9%
+
+[progressive] 样本: 18 成功: 18 失败: 0
+  平均延迟: 48885ms
+  平均 tokens: 955
+  平均 tool_calls: 2.7
+  平均 docs_coverage: 83.3%
+
+--- 按类别拆分 ---
+  compare      oneshot    : coverage=100.0% latency=49444ms tool_calls=0.0
+  compare      progressive: coverage=100.0% latency=42342ms tool_calls=4.7
+  metadata_filter oneshot    : coverage=33.3% latency=27436ms tool_calls=0.0
+  metadata_filter progressive: coverage=0.0% latency=33064ms tool_calls=3.7
+  multi_hop    oneshot    : coverage=100.0% latency=47026ms tool_calls=0.0
+  multi_hop    progressive: coverage=100.0% latency=62721ms tool_calls=3.3
+  simple       oneshot    : coverage=100.0% latency=34051ms tool_calls=0.0
+  simple       progressive: coverage=100.0% latency=42931ms tool_calls=0.0
+======================================================================
