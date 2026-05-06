@@ -1,8 +1,8 @@
-# 简历 Bullet 草稿（v2）
+# 简历 Bullet 草稿（v3）
 
-> **数据冻结**：所有数字源自 `docs/benchmarks/report-2026-04-25-final.md`（v1.2，2026-04-25）+ `docs/changelog/2026-04-26.md`（端到端修复）
+> **数据冻结**：v1.2 数字源自 `docs/benchmarks/report-2026-04-25-final.md`（2026-04-25）+ `docs/changelog/2026-04-26.md`（端到端修复）；Bullet 6 数字源自 `docs/benchmarks/progressive_rag_report_2026-05-05.md`（A-RAG 3 模型对照，108 次评测）
 >
-> **叙事约束**：严格遵守 `.claude/memory/feedback_benchmark_narrative.md` — 不写"延迟下降 X%"、不写"拦截率 100%"
+> **叙事约束**：严格遵守 `.claude/memory/feedback_benchmark_narrative.md` — 不写"延迟下降 X%"、不写"拦截率 100%"、不写"+30% 覆盖率 / +1.5 分"等本地实测不成立的数字
 >
 > **目标场景**：投递 AI 应用 / 大模型工程 / 后端开发岗，强调"自然语言 → 工具调用"全链路工程能力
 
@@ -95,6 +95,36 @@
 
 ---
 
+## Bullet 6 — Agentic RAG（A-RAG）渐进式披露 + 跨模型对照
+
+**架构演进**：把 one-shot RAG 重构为 4 层检索工具（`kb_outline` / `kb_keyword_search` / `kb_semantic_search` / `kb_read_section`），LangGraph 承载 agent loop，LLM 多轮自主调用；带 `max_iterations=5` + 重复 tool_call 检测 + 连续错误熔断，3 道防死循环闸。
+
+**跨模型对照评测**（同一评测集 18 query × 2 模式 × 3 模型 = **108 次**，进度可断点续跑）：
+
+| 模型 | multi_hop 覆盖率 | progressive 整体 cov | tool_calls 行为 |
+|------|----------------|---------------------|----------------|
+| qwen3.5-plus（DashScope） | **100%** | 83% | 0/5 步各 7 条，会判断 |
+| qwen3-8b（本地 vLLM） | 43% | 44% | 退化 44% / 单步 33% / 完整 22% |
+| qwen-flash（DashScope） | 36% | 25% | 撞 max_iterations 触发率 **83%**（R3 风险落地实测）|
+
+**关键发现**：3 模型形成"太保守 / 刚刚好 / 太激进"工具选择能力光谱，**定量证明 A-RAG 的瓶颈在 LLM tool-calling 控制能力，不在框架设计**；为 v1.5 模型选型 / Reranker / RAG fallback 策略提供基线数据。
+
+**人工评分**（qwen3-8b 36/36 完成）：oneshot 7.35 / progressive 5.11，但 metadata_filter 类目 progressive 反超 +2.0 分（outline 工具的设计价值在元数据过滤场景显现）。
+
+**关键技术栈**：LangGraph StateGraph 条件边循环 / 自定义 `KnowledgeNavigator`（outline + 章节索引 + 二次召回）/ DashScope OpenAI 兼容协议跨模型 swap
+
+**配套工程**：知识库扩容到 **100+ 篇 / 7 主题域 / 4 格式**（md / docx / pdf / csv），通过 4 个文档生成 agent 并行批产 + Phase 1 整合脚本（`split_output.py` 带 frontmatter 校验 + 字数下限 + category 白名单）
+
+**实证支撑**：
+- 评测集：`fastapi-service/tests/benchmark/data/progressive_rag_eval_18.jsonl`（4 类：simple / multi_hop / metadata_filter / compare）
+- 3 模型 CSV：`tests/benchmark/results/progressive_rag_2026-05-05_{qwen3-8b, qwen3.5-plus, qwen-flash}.csv`
+- 完整报告：`docs/benchmarks/progressive_rag_report_2026-05-05.md`（480 行，§6.5 跨模型对照表完整）
+- 设计文档：`docs/rag-progressive-disclosure-design.md`（A-RAG 论文落地 + 4 工具设计 + 评测协议）
+
+> ⚠️ **不写"+30% 覆盖率 / +1.5 分"** — 这是设计 doc 的预期，本地 8B 实测反向落后 39pp；qwen3.5-plus 上 multi_hop 才 +57pp。被问"为什么数据 8B 反向你还做"，答："这正是工程价值——预设目标和实测数据的差就是 LLM 工具选择能力的量化指标。同一份代码切到 plus 上 multi_hop 100%，证明设计正确。flash 撞顶 83% 又证明了我们设计的死循环闸有用。"
+
+---
+
 ## 自检清单（提交简历前过一遍）
 
 - [ ] Bullet 1 没有"延迟下降 X%"
@@ -102,6 +132,7 @@
 - [ ] Bullet 3 没有"综合拦截率 100%"，硬规则 / LLM 改写 / 权限三层分别拆开
 - [ ] Bullet 4 不列全部 11 个 bug，仅列 3-4 类代表
 - [ ] Bullet 5 workType 候选值 5 项准确，兜底 chain 完整
+- [ ] Bullet 6 没有写"+30% 覆盖率 / +1.5 分"等本地 8B 不成立的虚数字；3 模型对照表硬数字（100% / 43% / 83%）准确
 - [ ] 所有数字可在 git 仓库 CSV 或 docs 中追溯
 - [ ] 没有写"修复 100% bug"、"性能提升 5x"等绝对句
 
@@ -121,3 +152,11 @@
 | e3db51a 路由命中 | 5/5（能力匹配） | report-2026-04-25-final §10 |
 | 端到端修复 bug | 11 项（B1-B11） | changelog/2026-04-26.md |
 | workType 候选 | 5 项 | work_type_resolver.py |
+| A-RAG 评测总规模 | 108 次（18×2×3 模型） | progressive_rag_report_2026-05-05.md |
+| qwen3.5-plus multi_hop cov | 100% | progressive_rag_2026-05-05_qwen3.5-plus.csv |
+| qwen3-8b multi_hop cov | 43% | progressive_rag_2026-05-05_qwen3-8b.csv |
+| qwen3-8b 完整循环触发率 | 22%（4/18） | 同上 |
+| qwen3-8b 退化率 | 44%（8/18） | 同上 |
+| qwen-flash 撞顶率 | 83%（15/18） | progressive_rag_2026-05-05_qwen-flash.csv |
+| 知识库规模 | 100+ 篇 / 7 主题域 / 4 格式 | knowledge-base/ + report 表头 |
+| qwen3-8b 人工评分（35/36） | oneshot 7.35 / progressive 5.11 | progressive_rag_2026-05-05_qwen3-8b.csv |
