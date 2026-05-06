@@ -27,6 +27,7 @@ from app.api.memory import router as memory_router
 from app.api.init_db import router as init_db_router
 from app.api.db_test import router as db_test_router
 from app.api.conversation_query import router as conversation_query_router
+from app.api.internal_tools import router as internal_tools_router
 from app.services.tool_registry import ToolRegistry
 from app.services.permission_validator import PermissionValidator
 from app.services.llm_client import LLMClient
@@ -234,6 +235,7 @@ app.include_router(memory_router, prefix="/api", tags=["Memory Management"])
 app.include_router(init_db_router, prefix="/api", tags=["Database Init"])
 app.include_router(db_test_router, prefix="/api", tags=["Database Test"])
 app.include_router(conversation_query_router, prefix="/api", tags=["Audit Log"])
+app.include_router(internal_tools_router, tags=["Internal Tools"])
 
 
 @app.get("/")
