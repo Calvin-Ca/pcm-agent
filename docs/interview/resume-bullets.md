@@ -125,6 +125,18 @@
 
 ---
 
+## Bullet 7 — Model Context Protocol（MCP）落地
+
+**协议化输出**：把 ai-service 的 4 个 RAG 检索工具（`kb_outline` / `kb_keyword_search` / `kb_semantic_search` / `kb_read_section`）封装为独立 MCP server（FastMCP + stdio transport），**Claude Code / Cursor 等任意 MCP 客户端可直接调用工时管理知识库**。
+
+**14 工具完整迁移设计**：输出 7 章设计文档（`docs/mcp-full-migration-design.md`），量化梳理跨进程 MCP 化的 3 大工程难点 — 权限传递（MCP Resource / env 注入 / middleware）、参数解析跨进程缓存（Redis 共享 / 启动时同步）、SpringBoot 依赖注入（进程内重建 / 内部 HTTP 转发）；完成 1 工具 PoC（`query_timesheet`）验证「内部 HTTP 转发」方案，ai-service 维持单点权威源，MCP server 作为薄壳。
+
+**实测细节**：Windows + Claude Code stdio transport 冷启动 < 5s（无 RAG 预热），之后工具调用稳定 < 500ms；内部 HTTP 转发架构下，权限 / 参数解析 / SpringBoot 依赖全部在 ai-service 内复用，MCP server 零业务逻辑重写。
+
+**关键技术栈**：MCP Python SDK（FastMCP）/ stdio transport / Claude Code .mcp.json / 内部 HTTP 转发 / 项目级 MCP 配置纳入 git 让团队复用
+
+---
+
 ## 自检清单（提交简历前过一遍）
 
 - [ ] Bullet 1 没有"延迟下降 X%"
@@ -133,6 +145,8 @@
 - [ ] Bullet 4 不列全部 11 个 bug，仅列 3-4 类代表
 - [ ] Bullet 5 workType 候选值 5 项准确，兜底 chain 完整
 - [ ] Bullet 6 没有写"+30% 覆盖率 / +1.5 分"等本地 8B 不成立的虚数字；3 模型对照表硬数字（100% / 43% / 83%）准确
+- [ ] Bullet 7 MCP 设计文档 7 章齐全，字数 1500-2500
+- [ ] Bullet 7 不写"MCP 延迟优化"，只写协议化价值和工程难点
 - [ ] 所有数字可在 git 仓库 CSV 或 docs 中追溯
 - [ ] 没有写"修复 100% bug"、"性能提升 5x"等绝对句
 

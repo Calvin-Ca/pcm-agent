@@ -204,6 +204,35 @@
 
 ---
 
+## Bullet 7 追问 — MCP 协议化
+
+### Q7.1 你这个 MCP server 跟直接写 HTTP API 有什么区别？
+
+**答案要点**：
+- **协议层 vs 传输层**：HTTP API 是传输层约定，每个客户端要自己封装调用逻辑；MCP 是应用层协议，客户端（Claude Code / Cursor / IDE 插件）原生支持，零代码接入。
+- **上下文感知**：MCP 客户端在对话中自动把 tool 结果注入后续 prompt，HTTP API 需要客户端自己维护对话状态。
+- **生态复用**：一个 MCP server 可以被任意支持 MCP 的客户端消费，不是"为 Claude 定制"。
+- **不是替代 HTTP API**：ai-service 的 `/api/ai/chat` 继续服务前端用户；MCP 是给开发者/管理员的额外入口。
+
+### Q7.2 14 个工具 MCP 化的 3 大难点你怎么解的？
+
+**答案要点**：
+- **权限传递**：MCP stdio transport 没 header。Phase 1 PoC 用 env 注入（`MCP_TEST_USER_ID` / `MCP_TEST_AUTH_TOKEN`），因为当前是单租户部署；生产化后迁移到 MCP Resource 协议（`auth://current-user`）。
+- **参数解析跨进程**：`ParamResolver` 是进程级 LRU 单例。不拆出去 — MCP server 只做薄壳转发，参数解析仍在 ai-service 内完成，缓存继续生效。未来真要拆工具出去再考虑 Redis 共享。
+- **SpringBoot 依赖注入**：不重建。MCP server 转发到 ai-service `/api/internal/tools/{name}`，TaskExecutor + PermissionValidator + SpringBoot client 全部复用，0 重写。
+- **核心设计决策**：「内部 HTTP 转发」而不是「进程内重建」或「直接调 SpringBoot」。理由是 ai-service 是单点权威源，MCP server 只负责协议转换。
+
+### Q7.3（硬骨头）你为什么改了 kb_navigator 的业务代码，违反了 prompt 约束？
+
+**答案要点**：
+- **事实**：C 方案 agent 确实改了 `kb_navigator.py`（把 `asyncio.to_thread(retriever.invoke)` 改为同步 `retriever.invoke()`）。
+- **技术判断是对的**：`retriever.invoke()` 实测 < 30ms，to_thread 是过度设计；anyio MCP stdio 环境下 `ThreadPoolExecutor` 会死锁，改 sync 反而更高效。
+- **流程判断是错的**：agent 应该停下来报告，让用户拍板，而不是直接改业务代码。这是 agent 工程纪律的边界感问题。
+- **后续**：这条经验写入团队 SOP（`feedback_agent_commit_discipline.md`），派 agent 时必须写明"不修改任何现有业务文件"的约束。
+- **诚实回答**："技术上是正优化，流程上是越界。我作为负责人应该 review 时 catch 住，没 catch 住是我的问题。"
+
+---
+
 ## 综合追问
 
 ### Q-General-1 这个项目用了多少时间，你的角色是什么？
@@ -233,12 +262,13 @@
 
 ### Q-General-4 这个项目你最想推荐的"读源代码"路径是什么？
 
-**答案要点**（带面试官读 5 个文件，体现对架构的把握）：
+**答案要点**（带面试官读 5-6 个文件，体现对架构的把握）：
 1. `app/services/langgraph_agent.py` — DAG 编排入口，看怎么从 SSE 路由到 FC vs RAG vs general_chat
 2. `app/services/param_resolver.py` + `app/services/work_type_resolver.py` — 工程化的"LLM 输出后处理"层
 3. `app/services/sql_engine.py` + `app/tools/sql_query.py` — SQL Agent 三层安全
 4. `app/services/langchain_rag.py` — RAG 混合检索 + Reranker
-5. `docs/changelog/2026-04-26.md` — e2e 修复全过程，体现工程纪律
+5. `docs/mcp-full-migration-design.md` — 14 工具 MCP 化工程路径，3 大难点解法
+6. `docs/changelog/2026-04-26.md` — e2e 修复全过程，体现工程纪律
 
 ---
 
@@ -256,9 +286,10 @@
 ## 准备工具
 
 简历提交前 1 天，按这个清单过一遍：
-- [ ] **6 条** bullet 通顺、无注水、所有数字可验证
-- [ ] Q&A 每条 bullet 至少能答 3 个追问（Bullet 6 准备 4 个，含"数据反向"硬骨头）
+- [ ] **7 条** bullet 通顺、无注水、所有数字可验证
+- [ ] Q&A 每条 bullet 至少能答 3 个追问（Bullet 6 准备 4 个，含"数据反向"硬骨头；Bullet 7 准备 3 个，含"越界"硬骨头）
 - [ ] 数字快速对照表（resume-bullets.md 末尾）打印放手边 — 含 A-RAG 跨模型对照硬数字
-- [ ] 准备好"读源代码 5 个文件路径"应对深聊（Bullet 6 增 `app/services/kb_navigator.py` + `langgraph_agent._agent_loop_should_continue`）
+- [ ] 准备好"读源代码 6 个文件路径"应对深聊（增 `docs/mcp-full-migration-design.md`）
 - [ ] 准备好"最难的部分"3 个备选答案（架构 / 方法学 / 诚实）
 - [ ] **Bullet 6 专属：能从口述 30 秒讲完"3 模型形成工具选择能力光谱"故事**（太保守 / 刚刚好 / 太激进 + 3 道闸都验证过）
+- [ ] **Bullet 7 专属：能讲清 MCP vs HTTP API 的本质差异 + 3 大难点解法 + "内部 HTTP 转发"为什么是最优**
