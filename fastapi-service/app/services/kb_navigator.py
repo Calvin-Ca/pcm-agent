@@ -265,7 +265,6 @@ async def _retriever_search(
     if not query or not query.strip():
         return []
     try:
-        import asyncio
         from app.services import langchain_rag as _lr
 
         rag = getattr(_lr, "_rag_service", None)
@@ -283,8 +282,8 @@ async def _retriever_search(
         if retriever is None:
             return []
 
-        # bm25 retriever 也提供 invoke 接口
-        docs = await asyncio.to_thread(retriever.invoke, query)
+        # 同步调用（invoke 实测 0.001~0.03s），绕过 anyio ThreadPoolExecutor 死锁
+        docs = retriever.invoke(query)
     except Exception as e:
         logger.warning(f"_retriever_search({kind}) 失败: {e}")
         return []
