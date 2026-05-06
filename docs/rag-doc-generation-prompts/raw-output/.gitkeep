@@ -1,0 +1,8 @@
+# 把每个 agent 的完整输出保存到这个目录,文件名约定:
+#   output-A-工时与考勤.txt
+#   output-B-假期与请假.txt
+#   output-C-薪资福利.txt
+#   output-D-项目流程与通用制度.txt
+#
+# 然后跑切分脚本:
+#   python ../split_output.py --input output-A-工时与考勤.txt --output ../../../knowledge-base-v2/
