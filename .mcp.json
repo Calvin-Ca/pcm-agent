@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "workhour-knowledge-base": {
+      "command": "E:/huan/工时管理系统/trunk/1 源代码/1.0 系统代码/ai-service/fastapi-service/.venv/Scripts/python.exe",
+      "args": [
+        "E:/huan/工时管理系统/trunk/1 源代码/1.0 系统代码/ai-service/fastapi-service/mcp_servers/kb_mcp_server.py"
+      ],
+      "env": {
+        "KB_PATH": "E:/huan/工时管理系统/trunk/1 源代码/1.0 系统代码/ai-service/knowledge-base",
+        "MILVUS_HOST": "172.19.3.136",
+        "MILVUS_PORT": "19530",
+        "CHAT_LLM_API_KEY": "EMPTY",
+        "CHAT_LLM_API_BASE": "http://172.19.3.136:8099/v1",
+        "PYTHONIOENCODING": "utf-8"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
