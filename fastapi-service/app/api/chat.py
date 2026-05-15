@@ -16,6 +16,7 @@ from ..services.intent_router import IntentRouter, RouteTarget
 from ..services.task_executor import TaskExecutor
 from ..services.tool_registry import ToolRegistry
 from ..services.permission_validator import PermissionValidator, PermissionContext
+from ..services.llm_client import get_planner_llm_client
 from ..models.task_plan import PlannerAgent
 from ..services.langgraph_agent import initialize_agent, stream_agent_response
 
@@ -123,7 +124,7 @@ def initialize_chat_components(
     intent_router.set_llm_client(llm_client)
     
     # 初始化任务规划代理
-    planner_agent = PlannerAgent(tool_registry=tool_registry, llm_client=llm_client)
+    planner_agent = PlannerAgent(tool_registry=tool_registry, llm_client=get_planner_llm_client())
     intent_router.set_planner_agent(planner_agent)
     
     # 初始化任务执行器

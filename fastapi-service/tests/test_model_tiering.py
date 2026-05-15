@@ -22,3 +22,26 @@ def test_planner_factory_uses_planner_when_set(monkeypatch):
     assert client.api_key == "planner-key"
     assert client.model == "qwen-plus"
     assert "dashscope" in client.api_base
+
+
+def test_node_plan_and_execute_uses_planner_client(monkeypatch):
+    """node_plan_and_execute 走 PlannerAgent 时，PlannerAgent.llm_client 应来自推理层工厂。"""
+    import app.services.langgraph_agent as lg
+    captured = {}
+
+    class FakePlanner:
+        def __init__(self, tool_registry=None, llm_client=None):
+            captured["llm_client"] = llm_client
+        async def plan_tasks(self, **kw):
+            raise RuntimeError("stop-here")
+
+    monkeypatch.setattr("app.models.task_plan.PlannerAgent", FakePlanner)
+    sentinel = object()
+    monkeypatch.setattr(lg, "get_planner_llm_client", lambda *a, **k: sentinel)
+    monkeypatch.setattr(lg, "_llm_client", object())
+    monkeypatch.setattr(lg, "_tool_registry", object())
+
+    import asyncio
+    state = {"user_message": "对比 A、B、C 三个项目本月工时", "user_context": {}}
+    asyncio.get_event_loop().run_until_complete(lg.node_plan_and_execute(state))
+    assert captured["llm_client"] is sentinel

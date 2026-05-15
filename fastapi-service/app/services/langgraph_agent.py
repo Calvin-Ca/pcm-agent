@@ -26,6 +26,7 @@ from app.services.prompt_manager import get_prompt_manager
 from app.services.chart_builder import build_chart_option
 from app.services.project_resolver import resolve_project_suggestion
 from app.services.hours_resolver import resolve_hours_suggestion
+from app.services.llm_client import get_planner_llm_client
 
 logger = logging.getLogger(__name__)
 
@@ -743,7 +744,7 @@ async def node_plan_and_execute(state: AgentState) -> dict:
 
         planner = PlannerAgent(
             tool_registry=_tool_registry,
-            llm_client=_llm_client,
+            llm_client=get_planner_llm_client(),
         )
         try:
             task_plan = await planner.plan_tasks(
