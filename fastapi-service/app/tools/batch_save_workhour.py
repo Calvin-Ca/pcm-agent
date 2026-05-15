@@ -19,7 +19,7 @@ from app.models.tool import ToolCategory
 from app.services.tool_registry import tool_registry
 from app.services.param_resolver import resolve_project_id, _fetch_user_recent_projects, _find_best_match
 from app.services.work_type_resolver import resolve_work_type
-from app.services.llm_client import LLMClient
+from app.services.llm_client import LLMClient, get_planner_llm_client
 
 logger = logging.getLogger(__name__)
 
@@ -177,7 +177,7 @@ async def _parse_text_to_records(
         except Exception as e:
             logger.debug(f"拉取用户最近项目失败: {e}")
 
-    llm_client = LLMClient(env_prefix="CHAT_LLM", temperature=0.1, max_tokens=2000)
+    llm_client = get_planner_llm_client(temperature=0.1, max_tokens=2000)
 
     # 计算本周各天日期，辅助 LLM 解析
     from datetime import datetime as _dt, timedelta as _td

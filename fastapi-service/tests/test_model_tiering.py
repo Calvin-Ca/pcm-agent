@@ -45,3 +45,21 @@ def test_node_plan_and_execute_uses_planner_client(monkeypatch):
     state = {"user_message": "对比 A、B、C 三个项目本月工时", "user_context": {}}
     asyncio.get_event_loop().run_until_complete(lg.node_plan_and_execute(state))
     assert captured["llm_client"] is sentinel
+
+
+def test_batch_save_workhour_uses_planner_client(monkeypatch):
+    """batch_save_workhour 解析阶段应使用推理层工厂创建的客户端。"""
+    import app.tools.batch_save_workhour as bsw
+    captured = {}
+
+    def fake_factory(*a, **k):
+        obj = object()
+        captured["client"] = obj
+        return obj
+
+    monkeypatch.setattr(bsw, "get_planner_llm_client", fake_factory, raising=False)
+    # 触发模块内创建客户端的代码路径：直接断言源码已改为调用工厂
+    import inspect
+    src = inspect.getsource(bsw)
+    assert "get_planner_llm_client(" in src
+    assert 'LLMClient(env_prefix="CHAT_LLM"' not in src
