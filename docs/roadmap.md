@@ -1,6 +1,6 @@
 # AI 智能助手 — 升级路线与优化建议
 
-> 更新日期：2026-04-29
+> 更新日期：2026-05-15
 > 当前版本：1.3（L1~L3 + ECharts 可视化 + 智能填报建议 + 批量工时填报，工具数升至 10）
 
 ---
@@ -308,11 +308,32 @@ Code Interpreter Python 沙箱（让 LLM 生成 Python 代码处理复杂数据�
   └── ✅ 精度回归验证（2026-04-13）
       layer1_v6: 87.0%（2000 case），与 v5 持平，无回归
 
+🟠 第五阶段（2026-05-15）— 模型分层（方案 A，代码已合入 main）
+  背景：自评测（docs project_progressive_rag_eval_2026-05-05）显示 qwen3-8b
+        在 A-RAG 多步工具选择上不稳（44% 退化 / 22% 跑完 3 步）。
+        复杂场景切托管 API，轻量场景留本地 8b，按"能力"而非"模块"分 3 层。
+  实施计划：docs/superpowers/plans/2026-05-15-model-tiering-plan-a.md
+  关键 commit：1081e30 / f849060 / ae9c532 / d472f37 / f333346
+  ├── ✅ env 分层设计：3 层
+  │   ├── 轻量层 = 本地 vLLM 8b：INTENT_LLM_*（降级）+ CHAT_LLM_*（闲聊/单工具 FC）
+  │   ├── 推理层 = API：PLANNER_LLM_*（多步规划 + A-RAG + batch_save_workhour JSON 解析）
+  │   └── SQL 层 = API：SQL_AGENT_LLM_*（代码已支持，填值即可）
+  ├── ✅ 推理层工厂 get_planner_llm_client（PLANNER_LLM_* 未配置回退 CHAT_LLM，no-op 安全）
+  ├── ✅ 接线：node_plan_and_execute + chat.py PlannerAgent + batch_save_workhour
+  ├── ✅ A-RAG 受控破例：agent_history 含 kb_* 工具时升级推理层，首轮/单工具/闲聊仍 8b
+  ├── ✅ .env.example 补充 3 层注释 + SQL 层示例值
+  ├── ✅ 单测 6/6 通过；git 实证核验 commit scope 与边界（无越界）
+  ├── ⬜ 真冒烟待补：派单冒烟因 172 环境（vLLM 8099/Milvus 未起）未跑通端到端，
+  │   仅验证意图路由；待环境恢复后用真实 LLM 调用复测复杂场景
+  └── ⬜ 启用：172 .env 填 PLANNER_LLM_* + SQL_AGENT_LLM_*（DashScope/DeepSeek 等
+      OpenAI 兼容、且支持 function calling 的对话模型）→ force-recreate → 看日志确认升级
+      后续看 Grafana 精度再决定是否升级主 FC（方案 B）
+
 🟡 上线准备（4.14 ~）
   ├── ✅ 创建只读数据库账号（2026-04-14）
   │   账号 read_only_ai，.env SQL_AGENT_DB_* 已配置
   ├── ⬜ 生产环境部署（ai-service 部署到 116 服务器）
-  ├── ⬜ 生产 .env 配置确认（LLM/DB/Redis/Milvus 地址）
+  ├── ⬜ 生产 .env 配置确认（LLM/DB/Redis/Milvus 地址，含上方 3 层模型配置）
   └── ⬜ 上线后观察：Grafana 看板监控 + 日志排查
 
 ✅ 第四阶段（2026-04-28 ~ 2026-04-29）— 用户体验闭环（已完成并合入 main）
@@ -374,6 +395,7 @@ L5  Autonomous Agent   ← 远期（定时任务 + 自动执行 + 通知）
 | ~~ECharts 可视化~~ | ★★★★ | ~~1 天~~ | ✅ 已完成（2026-04-28） |
 | ~~智能填报建议~~ | ★★★★ | ~~1 天~~ | ✅ 已完成（2026-04-28，2026-04-29 合入 main） |
 | ~~批量工时填报~~ | ★★★★ | ~~1.5 天~~ | ✅ 已完成（2026-04-29） |
+| **模型分层（方案 A）** | ★★★★ | 0.5-1 天 | 🟠 进行中（复杂场景切 API，补已知 8b 多步缺陷） |
 | MCP Server 批量接入 | ★★★★ | 1-2 天 | 🟡 工具数已 10，触发条件满足，看后续接口增长 |
 | Multi-Agent | ★★★ | 3-5 天 | 🔵 等业务场景驱动 |
 | Self-Reflection | ★★★ | 0.5 天 | 🚫 已放弃（面试雷区） |
