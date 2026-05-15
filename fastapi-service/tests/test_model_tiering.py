@@ -63,3 +63,64 @@ def test_batch_save_workhour_uses_planner_client(monkeypatch):
     src = inspect.getsource(bsw)
     assert "get_planner_llm_client(" in src
     assert 'LLMClient(env_prefix="CHAT_LLM"' not in src
+
+
+import asyncio
+import app.services.langgraph_agent as lg
+
+
+def _run(coro):
+    return asyncio.new_event_loop().run_until_complete(coro)
+
+
+def test_arag_first_iteration_uses_8b(monkeypatch):
+    """无 kb 历史（首轮）→ 必须用 8b _llm_client，不升级。"""
+    used = {}
+
+    class FakeClient:
+        api_base = "http://172.19.3.136:8099/v1"
+        tag = "8b"
+        async def generate_with_tools(self, **kw):
+            used["tag"] = self.tag
+            return {"finish_reason": "stop", "content": "hi"}
+
+    monkeypatch.setattr(lg, "_llm_client", FakeClient())
+    monkeypatch.setattr(lg, "_tool_registry", object())
+    monkeypatch.setattr(lg, "_build_openai_tools", lambda r: [{"type": "function"}])
+    monkeypatch.setattr(lg, "get_planner_llm_client",
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError("不该升级")))
+    state = {
+        "user_message": "考勤怎么算迟到",
+        "conversation_history": [{"role": "user", "content": "考勤怎么算迟到"}],
+        "agent_history": [],
+    }
+    _run(lg.node_llm_with_tools(state))
+    assert used["tag"] == "8b"
+
+
+def test_arag_after_kb_tool_escalates_to_planner(monkeypatch):
+    """agent_history 已含 kb_* → 本轮 FC 切推理层客户端。"""
+    used = {}
+
+    class Base:
+        api_base = "http://172.19.3.136:8099/v1"
+        async def generate_with_tools(self, **kw):
+            used["tag"] = self.tag
+            return {"finish_reason": "stop", "content": "done"}
+
+    class Eight(Base): tag = "8b"
+    class Planner(Base): tag = "planner"
+
+    monkeypatch.setattr(lg, "_llm_client", Eight())
+    monkeypatch.setattr(lg, "_tool_registry", object())
+    monkeypatch.setattr(lg, "_build_openai_tools", lambda r: [{"type": "function"}])
+    monkeypatch.setattr(lg, "get_planner_llm_client", lambda *a, **k: Planner())
+    state = {
+        "user_message": "继续",
+        "conversation_history": [{"role": "user", "content": "考勤制度"}],
+        "agent_history": [
+            {"iteration": 0, "tool": "kb_keyword_search", "args": {}, "observation": "x"}
+        ],
+    }
+    _run(lg.node_llm_with_tools(state))
+    assert used["tag"] == "planner"

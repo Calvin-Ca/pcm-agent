@@ -291,7 +291,23 @@ async def node_llm_with_tools(state: AgentState) -> dict:
             logger.warning(f"FC 输入估算 {estimated_tokens} tokens，已截断到最近 2 轮")
 
         # tool call JSON 通常 100~600 tokens；qwen3-8b 8192 context，input ~4000-6000 时还有 2000+ 可用
-        result = await _llm_client.generate_with_tools(
+
+        # ── A-RAG 受控破例（方案 A）：已进入 kb 多步导航 → 升级推理层 API ──
+        # 首轮/单工具/闲聊不触发，仅当 agent_history 已含 kb_* 工具时切换。
+        _KB_TOOLS = {
+            "kb_keyword_search", "kb_outline",
+            "kb_read_section", "kb_semantic_search",
+        }
+        _fc_client = _llm_client
+        if any((h.get("tool") in _KB_TOOLS) for h in (agent_history or [])):
+            try:
+                _fc_client = get_planner_llm_client(temperature=0.1, max_tokens=1024)
+                logger.info("A-RAG 多步导航：FC 调用升级至推理层客户端 (model=%s)", getattr(_fc_client, "model", "unknown"))
+            except Exception as _esc_err:
+                logger.warning("推理层客户端获取失败，回退 8b: %s", _esc_err)
+                _fc_client = _llm_client
+
+        result = await _fc_client.generate_with_tools(
             messages=messages,
             tools=tools,
             tool_choice="auto",
