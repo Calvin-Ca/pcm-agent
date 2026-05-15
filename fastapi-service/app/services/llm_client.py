@@ -306,3 +306,17 @@ class LLMClient:
             msgs.insert(0, {"role": "system", "content": system_prompt})
 
         return msgs
+
+
+def get_planner_llm_client(
+    temperature: float = 0.1,
+    max_tokens: int = 2000,
+) -> LLMClient:
+    """推理层 LLM 工厂。
+
+    复杂场景（多步规划 / 批量解析 / A-RAG 多步导航）专用。
+    PLANNER_LLM_* 已配置则用之（通常指向托管 API）；
+    未配置时回退 CHAT_LLM_*（本地 8b），保证不改 .env 时行为不变。
+    """
+    prefix = "PLANNER_LLM" if os.getenv("PLANNER_LLM_API_KEY") else "CHAT_LLM"
+    return LLMClient(env_prefix=prefix, temperature=temperature, max_tokens=max_tokens)
