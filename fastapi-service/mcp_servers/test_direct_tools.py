@@ -72,5 +72,46 @@ async def test():
     print("=" * 60)
 
 
+def test_phase2_shells_smoke():
+    """Phase 2 薄壳 server 冒烟：仅验证能 import + mcp 对象构造 + tool 注册成功。
+
+    薄壳 server 把调用转发到 ai-service /api/internal/tools/{name}，
+    真实端到端转发依赖 ai-service(8000) 运行，不在本冒烟范围；
+    这里只确认 5 个新 server 模块本身完好（import / FastMCP / @mcp.tool 注册）。
+    """
+    import importlib
+
+    print("\n" + "=" * 60)
+    print("Phase 2 薄壳 server 冒烟（import + mcp 对象 + tool 注册）")
+    print("=" * 60)
+
+    expected = {
+        "project_mcp_server": ("workhour-project", "query_project"),
+        "statistics_mcp_server": ("workhour-statistics", "compute_statistics"),
+        "weekly_report_mcp_server": ("workhour-weekly-report", "generate_weekly_report"),
+        "sql_query_mcp_server": ("workhour-sql-query", "sql_query"),
+        "knowledge_qa_mcp_server": ("workhour-knowledge-qa", "knowledge_qa"),
+    }
+
+    for mod_name, (expected_mcp_name, tool_attr) in expected.items():
+        mod = importlib.import_module(f"mcp_servers.{mod_name}")
+        assert mod.mcp.name == expected_mcp_name, (
+            f"{mod_name}: mcp.name={mod.mcp.name!r} != {expected_mcp_name!r}"
+        )
+        # @mcp.tool() 装饰后函数仍保留在模块命名空间，作为薄壳函数存在性校验
+        assert hasattr(mod, tool_attr), f"{mod_name}: 缺少 tool 函数 {tool_attr}"
+        tools = asyncio.run(mod.mcp.list_tools())
+        tool_names = {t.name for t in tools}
+        assert tool_attr in tool_names, (
+            f"{mod_name}: tool {tool_attr!r} 未在 mcp 注册，实际={tool_names}"
+        )
+        print(f"[OK] {mod_name}: mcp={mod.mcp.name}, tools={sorted(tool_names)}")
+
+    print("\n" + "=" * 60)
+    print("PHASE 2 SHELLS SMOKE PASSED")
+    print("=" * 60)
+
+
 if __name__ == "__main__":
+    test_phase2_shells_smoke()
     asyncio.run(test())
