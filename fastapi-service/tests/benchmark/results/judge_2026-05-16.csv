@@ -1,0 +1,109 @@
+id,category,mode,source,score,hit_points,reason,query
+S01,simple,oneshot,8B,5,,direct_parse,加班算不算工时?
+S01,simple,oneshot,14B,6,,direct_parse,加班算不算工时?
+S01,simple,oneshot,3.5-plus,5,,direct_parse,加班算不算工时?
+S01,simple,progressive,8B,5,,direct_parse,加班算不算工时?
+S01,simple,progressive,14B,5,,direct_parse,加班算不算工时?
+S01,simple,progressive,3.5-plus,5,,direct_parse,加班算不算工时?
+S02,simple,oneshot,14B,10,,direct_parse,工时填报截止日期是几号?
+S02,simple,oneshot,8B,10,,direct_parse,工时填报截止日期是几号?
+S02,simple,oneshot,3.5-plus,10,,direct_parse,工时填报截止日期是几号?
+S02,simple,progressive,14B,10,,direct_parse,工时填报截止日期是几号?
+S02,simple,progressive,3.5-plus,10,,direct_parse,工时填报截止日期是几号?
+S02,simple,progressive,8B,10,,direct_parse,工时填报截止日期是几号?
+S03,simple,oneshot,8B,5,,direct_parse,病假能不能折算成事假?
+S03,simple,oneshot,3.5-plus,3,,direct_parse,病假能不能折算成事假?
+S03,simple,oneshot,14B,9,,direct_parse,病假能不能折算成事假?
+S03,simple,progressive,14B,0,,direct_parse,病假能不能折算成事假?
+S03,simple,progressive,8B,9,,direct_parse,病假能不能折算成事假?
+S03,simple,progressive,3.5-plus,3,,direct_parse,病假能不能折算成事假?
+S04,simple,oneshot,14B,10,,direct_parse,试用期员工有年假吗?
+S04,simple,oneshot,3.5-plus,10,,direct_parse,试用期员工有年假吗?
+S04,simple,oneshot,8B,10,,direct_parse,试用期员工有年假吗?
+S04,simple,progressive,14B,9,,direct_parse,试用期员工有年假吗?
+S04,simple,progressive,3.5-plus,10,,direct_parse,试用期员工有年假吗?
+S04,simple,progressive,8B,10,,direct_parse,试用期员工有年假吗?
+S05,simple,oneshot,8B,9,,direct_parse,出差的工时怎么算?
+S05,simple,oneshot,3.5-plus,5,,direct_parse,出差的工时怎么算?
+S05,simple,oneshot,14B,8,,direct_parse,出差的工时怎么算?
+S05,simple,progressive,3.5-plus,5,,direct_parse,出差的工时怎么算?
+S05,simple,progressive,8B,5,,direct_parse,出差的工时怎么算?
+S05,simple,progressive,14B,9,,direct_parse,出差的工时怎么算?
+M01,multi_hop,oneshot,3.5-plus,2,,direct_parse,"周末加班审批超时未处理,工时怎么记?"
+M01,multi_hop,oneshot,8B,0,,direct_parse,"周末加班审批超时未处理,工时怎么记?"
+M01,multi_hop,oneshot,14B,2,,direct_parse,"周末加班审批超时未处理,工时怎么记?"
+M01,multi_hop,progressive,8B,2,,direct_parse,"周末加班审批超时未处理,工时怎么记?"
+M01,multi_hop,progressive,3.5-plus,4,,direct_parse,"周末加班审批超时未处理,工时怎么记?"
+M01,multi_hop,progressive,14B,2,,direct_parse,"周末加班审批超时未处理,工时怎么记?"
+M02,multi_hop,oneshot,3.5-plus,4,,direct_parse,产假期间申请的项目奖金怎么发放?
+M02,multi_hop,oneshot,14B,4,,direct_parse,产假期间申请的项目奖金怎么发放?
+M02,multi_hop,oneshot,8B,4,,direct_parse,产假期间申请的项目奖金怎么发放?
+M02,multi_hop,progressive,14B,4,,direct_parse,产假期间申请的项目奖金怎么发放?
+M02,multi_hop,progressive,3.5-plus,2,,direct_parse,产假期间申请的项目奖金怎么发放?
+M02,multi_hop,progressive,8B,0,,direct_parse,产假期间申请的项目奖金怎么发放?
+M03,multi_hop,oneshot,3.5-plus,0,,direct_parse,"跨项目工时分摊后,单个项目超 8 小时算不算加班?"
+M03,multi_hop,oneshot,14B,2,,direct_parse,"跨项目工时分摊后,单个项目超 8 小时算不算加班?"
+M03,multi_hop,oneshot,8B,3,,direct_parse,"跨项目工时分摊后,单个项目超 8 小时算不算加班?"
+M03,multi_hop,progressive,14B,7,,direct_parse,"跨项目工时分摊后,单个项目超 8 小时算不算加班?"
+M03,multi_hop,progressive,3.5-plus,9,,direct_parse,"跨项目工时分摊后,单个项目超 8 小时算不算加班?"
+M03,multi_hop,progressive,8B,4,,direct_parse,"跨项目工时分摊后,单个项目超 8 小时算不算加班?"
+M04,multi_hop,oneshot,3.5-plus,9,,direct_parse,"试用期员工提前离职,五险一金怎么处理?"
+M04,multi_hop,oneshot,8B,9,,direct_parse,"试用期员工提前离职,五险一金怎么处理?"
+M04,multi_hop,oneshot,14B,9,,direct_parse,"试用期员工提前离职,五险一金怎么处理?"
+M04,multi_hop,progressive,14B,9,,direct_parse,"试用期员工提前离职,五险一金怎么处理?"
+M04,multi_hop,progressive,3.5-plus,6,,direct_parse,"试用期员工提前离职,五险一金怎么处理?"
+M04,multi_hop,progressive,8B,1,,direct_parse,"试用期员工提前离职,五险一金怎么处理?"
+M05,multi_hop,oneshot,14B,9,,direct_parse,"项目立项后变更工期,工时填报模板要不要改?"
+M05,multi_hop,oneshot,8B,8,,direct_parse,"项目立项后变更工期,工时填报模板要不要改?"
+M05,multi_hop,oneshot,3.5-plus,5,,direct_parse,"项目立项后变更工期,工时填报模板要不要改?"
+M05,multi_hop,progressive,14B,8,,direct_parse,"项目立项后变更工期,工时填报模板要不要改?"
+M05,multi_hop,progressive,3.5-plus,5,,direct_parse,"项目立项后变更工期,工时填报模板要不要改?"
+M05,multi_hop,progressive,8B,2,,direct_parse,"项目立项后变更工期,工时填报模板要不要改?"
+M06,multi_hop,oneshot,8B,9,,direct_parse,调休没用完离职会赔偿吗?涉及哪些制度?
+M06,multi_hop,oneshot,14B,10,,direct_parse,调休没用完离职会赔偿吗?涉及哪些制度?
+M06,multi_hop,oneshot,3.5-plus,9,,direct_parse,调休没用完离职会赔偿吗?涉及哪些制度?
+M06,multi_hop,progressive,3.5-plus,9,,direct_parse,调休没用完离职会赔偿吗?涉及哪些制度?
+M06,multi_hop,progressive,14B,4,,direct_parse,调休没用完离职会赔偿吗?涉及哪些制度?
+M06,multi_hop,progressive,8B,3,,direct_parse,调休没用完离职会赔偿吗?涉及哪些制度?
+M07,multi_hop,oneshot,3.5-plus,9,,direct_parse,"出差产生加班,可以同时申请加班费和出差补贴吗?"
+M07,multi_hop,oneshot,14B,9,,direct_parse,"出差产生加班,可以同时申请加班费和出差补贴吗?"
+M07,multi_hop,oneshot,8B,10,,direct_parse,"出差产生加班,可以同时申请加班费和出差补贴吗?"
+M07,multi_hop,progressive,14B,2,,direct_parse,"出差产生加班,可以同时申请加班费和出差补贴吗?"
+M07,multi_hop,progressive,8B,10,,direct_parse,"出差产生加班,可以同时申请加班费和出差补贴吗?"
+M07,multi_hop,progressive,3.5-plus,10,,direct_parse,"出差产生加班,可以同时申请加班费和出差补贴吗?"
+F01,metadata_filter,oneshot,3.5-plus,9,,direct_parse,"项目经理这个角色,有哪些必读制度?"
+F01,metadata_filter,oneshot,14B,9,,direct_parse,"项目经理这个角色,有哪些必读制度?"
+F01,metadata_filter,oneshot,8B,9,,direct_parse,"项目经理这个角色,有哪些必读制度?"
+F01,metadata_filter,progressive,8B,0,,direct_parse,"项目经理这个角色,有哪些必读制度?"
+F01,metadata_filter,progressive,3.5-plus,2,,direct_parse,"项目经理这个角色,有哪些必读制度?"
+F01,metadata_filter,progressive,14B,2,,direct_parse,"项目经理这个角色,有哪些必读制度?"
+F02,metadata_filter,oneshot,8B,0,,direct_parse,财务相关的所有政策有几篇?
+F02,metadata_filter,oneshot,14B,0,,direct_parse,财务相关的所有政策有几篇?
+F02,metadata_filter,oneshot,3.5-plus,0,,direct_parse,财务相关的所有政策有几篇?
+F02,metadata_filter,progressive,8B,0,,direct_parse,财务相关的所有政策有几篇?
+F02,metadata_filter,progressive,14B,0,,direct_parse,财务相关的所有政策有几篇?
+F02,metadata_filter,progressive,3.5-plus,0,,direct_parse,财务相关的所有政策有几篇?
+F03,metadata_filter,oneshot,8B,0,,direct_parse,HR 内部使用的保密文档有哪些?
+F03,metadata_filter,oneshot,3.5-plus,7,,direct_parse,HR 内部使用的保密文档有哪些?
+F03,metadata_filter,oneshot,14B,10,,direct_parse,HR 内部使用的保密文档有哪些?
+F03,metadata_filter,progressive,3.5-plus,8,,direct_parse,HR 内部使用的保密文档有哪些?
+F03,metadata_filter,progressive,14B,9,,direct_parse,HR 内部使用的保密文档有哪些?
+F03,metadata_filter,progressive,8B,1,,direct_parse,HR 内部使用的保密文档有哪些?
+L01,compare,oneshot,14B,9,,direct_parse,病假/事假/年假 三种请假在审批人和时限上有什么区别?
+L01,compare,oneshot,8B,9,,direct_parse,病假/事假/年假 三种请假在审批人和时限上有什么区别?
+L01,compare,oneshot,3.5-plus,7,,direct_parse,病假/事假/年假 三种请假在审批人和时限上有什么区别?
+L01,compare,progressive,14B,0,,direct_parse,病假/事假/年假 三种请假在审批人和时限上有什么区别?
+L01,compare,progressive,8B,0,,direct_parse,病假/事假/年假 三种请假在审批人和时限上有什么区别?
+L01,compare,progressive,3.5-plus,10,,direct_parse,病假/事假/年假 三种请假在审批人和时限上有什么区别?
+L02,compare,oneshot,8B,3,,direct_parse,工时类型有几种?
+L02,compare,oneshot,3.5-plus,7,,direct_parse,工时类型有几种?
+L02,compare,oneshot,14B,10,,direct_parse,工时类型有几种?
+L02,compare,progressive,3.5-plus,6,,direct_parse,工时类型有几种?
+L02,compare,progressive,8B,10,,direct_parse,工时类型有几种?
+L02,compare,progressive,14B,9,,direct_parse,工时类型有几种?
+L03,compare,oneshot,3.5-plus,5,,direct_parse,法定节假日和年假的加班补偿一样吗?
+L03,compare,oneshot,14B,7,,direct_parse,法定节假日和年假的加班补偿一样吗?
+L03,compare,oneshot,8B,10,,direct_parse,法定节假日和年假的加班补偿一样吗?
+L03,compare,progressive,3.5-plus,7,,direct_parse,法定节假日和年假的加班补偿一样吗?
+L03,compare,progressive,8B,6,,direct_parse,法定节假日和年假的加班补偿一样吗?
+L03,compare,progressive,14B,8,,direct_parse,法定节假日和年假的加班补偿一样吗?
