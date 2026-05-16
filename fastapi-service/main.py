@@ -28,7 +28,7 @@ from app.api.init_db import router as init_db_router
 from app.api.db_test import router as db_test_router
 from app.api.conversation_query import router as conversation_query_router
 from app.api.internal_tools import router as internal_tools_router
-from app.services.tool_registry import ToolRegistry
+from app.services.tool_registry import ToolRegistry, verify_expected_tools
 from app.services.permission_validator import PermissionValidator
 from app.services.llm_client import LLMClient
 from app.tools import query_timesheet, query_project, compute_statistics, sql_query
@@ -75,7 +75,17 @@ async def lifespan(app: FastAPI):
         logger.info("[OK] Tool Registry initialized")
 
         # 注册工具（导入工具模块会触发自动注册）
+        import app.tools  # noqa: F401 — 触发 app/tools/__init__.py 的工具自动注册
         logger.info("[OK] Tools registered")
+
+        # 技术债 #2：校验预期工具全部注册成功，缺失则明确报出（fail-soft，不中断启动）
+        missing_tools = verify_expected_tools(tool_registry)
+        if missing_tools:
+            logger.error(
+                "[ERROR] 工具注册不完整，缺失 %d 个: %s（服务继续启动，相关能力降级）",
+                len(missing_tools),
+                ", ".join(missing_tools),
+            )
 
         # 初始化权限验证器
         permission_validator = PermissionValidator()

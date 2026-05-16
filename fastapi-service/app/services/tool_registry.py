@@ -20,6 +20,61 @@ from app.models.tool import (
 logger = logging.getLogger(__name__)
 
 
+# 预期工具集合 —— 与 app/tools/__init__.py 的注册列表保持一致。
+# lifespan 启动时据此校验：缺失即说明对应工具模块 import / 注册失败。
+EXPECTED_TOOL_NAMES = (
+    "query_timesheet",
+    "query_project",
+    "compute_statistics",
+    "generate_weekly_report",
+    "save_workhour",
+    "knowledge_qa",
+    "approve_workhour",
+    "export_report",
+    "batch_save_workhour",
+    "suggest_workhour",
+    "kb_outline",
+    "kb_keyword_search",
+    "kb_semantic_search",
+    "kb_read_section",
+)
+
+
+def verify_expected_tools(registry: "ToolRegistry") -> list:
+    """校验预期工具集合是否全部注册成功。
+
+    在 FastAPI lifespan 启动时调用。某个工具模块 import 或注册失败时
+    （例如依赖缺失、schema 写错），该工具不会出现在 registry 中——本函数
+    把这种"静默缺失"显式暴露出来。
+
+    设计取舍：只 logger.error 不 raise。工具注册失败属于"部分能力降级"，
+    与 main.py lifespan 中 Redis / SQL Engine / RAG 不可用时的 fail-soft
+    风格一致（核心 AI 仍可用其余工具），强行 raise 会让整个服务起不来。
+
+    Args:
+        registry: 工具注册中心实例
+
+    Returns:
+        list: 缺失的工具名列表（全部注册成功时为空列表）
+    """
+    missing = [name for name in EXPECTED_TOOL_NAMES if not registry.tool_exists(name)]
+    if missing:
+        logger.error(
+            "[工具注册校验] 以下预期工具未注册成功，相关能力将不可用: %s "
+            "(已注册 %d/%d)",
+            ", ".join(missing),
+            registry.get_tool_count(),
+            len(EXPECTED_TOOL_NAMES),
+        )
+    else:
+        logger.info(
+            "[工具注册校验] 预期工具全部注册成功 (%d/%d)",
+            len(EXPECTED_TOOL_NAMES),
+            len(EXPECTED_TOOL_NAMES),
+        )
+    return missing
+
+
 class ToolRegistryError(Exception):
     """工具注册中心异常"""
     pass
