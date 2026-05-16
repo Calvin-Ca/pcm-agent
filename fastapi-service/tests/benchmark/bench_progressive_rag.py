@@ -433,7 +433,7 @@ def _load_existing_results(csv_path: Path) -> List[Dict[str, Any]]:
     return rows
 
 
-async def run_benchmark(mode: str, smoke: bool = False):
+async def run_benchmark(mode: str, smoke: bool = False, filter_ids: list = None):
     """运行评测(支持断点续跑)"""
     if not DATA_FILE.exists():
         logger.error(f"测试集不存在: {DATA_FILE}")
@@ -447,7 +447,10 @@ async def run_benchmark(mode: str, smoke: bool = False):
             if line:
                 queries.append(json.loads(line))
 
-    if smoke:
+    if filter_ids:
+        queries = [q for q in queries if q["id"] in filter_ids]
+        logger.info(f"=== Filter 模式: {len(queries)} 条 query ===")
+    elif smoke:
         # Smoke: S01 + M01 各跑 2 个模式 = 4 次
         queries = [q for q in queries if q["id"] in ("S01", "M01")]
         logger.info(f"=== Smoke 模式: {len(queries)} 条 query ===")
@@ -656,6 +659,7 @@ def main():
     parser.add_argument("--mode", choices=["oneshot", "progressive", "both"], default="both",
                         help="评测模式")
     parser.add_argument("--smoke", action="store_true", help="Smoke 模式, 只跑前 2 条")
+    parser.add_argument("--filter-ids", type=str, help="只跑指定 ID, 逗号分隔, 如 S01,M01,L01")
     parser.add_argument("--mark-mode", action="store_true", help="人工打分模式")
     parser.add_argument("--csv", type=str, help="人工打分模式对应的 CSV 文件")
     args = parser.parse_args()
@@ -671,7 +675,8 @@ def main():
                 sys.exit(1)
         run_mark_mode(args.csv)
     else:
-        asyncio.run(run_benchmark(mode=args.mode, smoke=args.smoke))
+        filter_ids = args.filter_ids.split(",") if args.filter_ids else None
+        asyncio.run(run_benchmark(mode=args.mode, smoke=args.smoke, filter_ids=filter_ids))
 
 
 if __name__ == "__main__":
