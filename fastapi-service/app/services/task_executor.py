@@ -12,6 +12,7 @@ from datetime import datetime
 from ..models.task_plan import TaskPlan, TaskNode, TaskStatus, TaskType
 from .tool_registry import ToolRegistry
 from .permission_validator import PermissionValidator, PermissionContext
+from .retry_util import retry_async
 
 
 logger = logging.getLogger(__name__)
@@ -346,13 +347,23 @@ class TaskExecutor:
                         "department_id": permission_context.department_id,
                     }
 
-            if inspect.iscoroutinefunction(handler):
-                coro = handler(**exec_params)
-            else:
-                coro = _asyncio.get_event_loop().run_in_executor(
-                    None, lambda: handler(**exec_params)
-                )
-            result = await asyncio.wait_for(coro, timeout=task.timeout)
+            async def _invoke_handler():
+                if inspect.iscoroutinefunction(handler):
+                    coro = handler(**exec_params)
+                else:
+                    coro = _asyncio.get_event_loop().run_in_executor(
+                        None, lambda: handler(**exec_params)
+                    )
+                return await asyncio.wait_for(coro, timeout=task.timeout)
+
+            # 技术债 #3：对可重试异常（网络 / 超时 / 5xx）做指数退避重试，
+            # 最多 3 次（0.5s / 1s）。业务错误 / 权限错误不重试（见 retry_util）。
+            result = await retry_async(
+                _invoke_handler,
+                max_attempts=3,
+                base_delay=0.5,
+                op_name=f"tool:{task.tool_name}",
+            )
 
             # 检查业务层失败（handler 返回了 success=False 但未抛异常）
             if isinstance(result, dict) and result.get("success") is False:
