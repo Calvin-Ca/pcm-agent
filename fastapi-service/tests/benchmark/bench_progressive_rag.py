@@ -33,6 +33,49 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
 
+
+class _RawLogTee:
+    """tee 式封装：写入 original_stream 的同时落盘到 UTF-8 文件。
+
+    测试卫生修复：此前依赖 PowerShell 的 `| Tee-Object` 落盘，产出
+    UTF-16LE，导致后续 grep / `python -c open(p).read()` 断言失配
+    （曾踩坑）。本类在 Python 内用 open(path, 'w', encoding='utf-8')
+    自己落盘，彻底规避 PowerShell 重定向编码问题。
+
+    作为 sys.stdout 替身使用（实现 write/flush/close + isatty）。
+    """
+
+    def __init__(self, path: str, original_stream=None):
+        self._original = original_stream if original_stream is not None else sys.__stdout__
+        self._file = open(path, "w", encoding="utf-8", newline="")
+        self.path = path
+
+    def write(self, data: str) -> int:
+        try:
+            self._original.write(data)
+        except Exception:
+            # 控制台写失败（如管道关闭）不应中断落盘
+            logger.debug("raw-log tee: 写 original_stream 失败，已忽略，继续落盘")
+        n = self._file.write(data)
+        self._file.flush()
+        return n
+
+    def flush(self):
+        try:
+            self._original.flush()
+        except Exception:
+            logger.debug("raw-log tee: flush original_stream 失败，已忽略")
+        self._file.flush()
+
+    def isatty(self) -> bool:
+        return False
+
+    def close(self):
+        try:
+            self._file.flush()
+        finally:
+            self._file.close()
+
 # ─── 常量 ─────────────────────────────────────────────────────────────────────
 DATA_FILE = Path(__file__).with_suffix("").parent / "data" / "progressive_rag_eval_18.jsonl"
 RESULTS_DIR = Path(__file__).with_suffix("").parent / "results"
@@ -662,8 +705,33 @@ def main():
     parser.add_argument("--filter-ids", type=str, help="只跑指定 ID, 逗号分隔, 如 S01,M01,L01")
     parser.add_argument("--mark-mode", action="store_true", help="人工打分模式")
     parser.add_argument("--csv", type=str, help="人工打分模式对应的 CSV 文件")
+    parser.add_argument(
+        "--raw-log",
+        type=str,
+        default=None,
+        help="将完整 stdout/日志同时落盘到该路径（UTF-8 编码，规避 PowerShell tee 的 UTF-16LE 问题）",
+    )
     args = parser.parse_args()
 
+    _tee = None
+    if args.raw_log:
+        _tee = _RawLogTee(args.raw_log, original_stream=sys.stdout)
+        sys.stdout = _tee
+        # 让 logging 的 StreamHandler 也输出到 tee（root logger 由 basicConfig 装的 StreamHandler）
+        for h in logging.getLogger().handlers:
+            if isinstance(h, logging.StreamHandler):
+                h.stream = _tee
+        logger.info(f"[raw-log] 完整输出落盘到（UTF-8）: {args.raw_log}")
+
+    try:
+        _run_cli(args)
+    finally:
+        if _tee is not None:
+            sys.stdout = _tee._original
+            _tee.close()
+
+
+def _run_cli(args):
     if args.mark_mode:
         if not args.csv:
             # 自动找最新的 CSV
