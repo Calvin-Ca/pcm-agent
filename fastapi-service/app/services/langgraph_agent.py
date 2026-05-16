@@ -86,9 +86,24 @@ class AgentState(TypedDict):
     agent_iterations: int                        # 当前已循环轮数（从 0 开始）
     agent_max_iterations: int                    # 上限，默认 5
     agent_history: list                          # [{iteration, tool, args, observation}]
+    # ── 方案 A：knowledge_qa 升级触发策略 ───────────────────────────────────
+    rag_strategy: Optional[str]                  # "agent" | None（默认）
+    _rag_fallback: Optional[bool]                # planner 中途失败标志
 
 
 # ─── 节点函数 ─────────────────────────────────────────────────────────────────
+
+def _probe_planner_availability() -> bool:
+    """planner 探活：只查 key 非空 + client 可构造，不发真实请求"""
+    key = os.getenv("PLANNER_LLM_API_KEY")
+    if not key:
+        return False
+    try:
+        get_planner_llm_client(temperature=0.1, max_tokens=1024)
+        return True
+    except Exception:
+        return False
+
 
 def _build_openai_tools(tool_registry) -> list:
     """将 ToolRegistry 的 json_schema 转换为 OpenAI function calling 格式"""
@@ -292,20 +307,23 @@ async def node_llm_with_tools(state: AgentState) -> dict:
 
         # tool call JSON 通常 100~600 tokens；qwen3-8b 8192 context，input ~4000-6000 时还有 2000+ 可用
 
-        # ── A-RAG 受控破例（方案 A）：已进入 kb 多步导航 → 升级推理层 API ──
-        # 首轮/单工具/闲聊不触发，仅当 agent_history 已含 kb_* 工具时切换。
+        # ── A-RAG 受控破例（方案 A）：rag_strategy 指定 agent 或已进入 kb 多步导航 → 升级推理层 API ──
         _KB_TOOLS = {
             "kb_keyword_search", "kb_outline",
             "kb_read_section", "kb_semantic_search",
         }
         _fc_client = _llm_client
-        if any((h.get("tool") in _KB_TOOLS) for h in (agent_history or [])):
+        if state.get("rag_strategy") == "agent" or any(
+            (h.get("tool") in _KB_TOOLS) for h in (agent_history or [])
+        ):
             try:
                 _fc_client = get_planner_llm_client(temperature=0.1, max_tokens=1024)
                 logger.info("A-RAG 多步导航：FC 调用升级至推理层客户端 (model=%s)", getattr(_fc_client, "model", "unknown"))
             except Exception as _esc_err:
                 logger.warning("推理层客户端获取失败，回退 8b: %s", _esc_err)
                 _fc_client = _llm_client
+                state["rag_strategy"] = None
+                state["_rag_fallback"] = True
 
         result = await _fc_client.generate_with_tools(
             messages=messages,
@@ -317,6 +335,10 @@ async def node_llm_with_tools(state: AgentState) -> dict:
         )
     except Exception as e:
         logger.warning(f"Function Calling 失败，降级到规则路由: {e}")
+        # 方案 A：planner 调用失败时清除策略，避免循环回 llm_with_tools
+        if state.get("rag_strategy") == "agent":
+            state["rag_strategy"] = None
+            state["_rag_fallback"] = True
         return await node_classify_intent(state)
 
     if result.get("finish_reason") == "tool_calls":
@@ -369,12 +391,18 @@ async def node_llm_with_tools(state: AgentState) -> dict:
             tool_params["auth_token"] = user_ctx["auth_token"]
 
         if tool_name == "knowledge_qa":
-            return {
+            result = {
                 "intent": "knowledge_qa",
                 "tool_name": None,
                 "tool_params": {},
                 "query": tool_params.get("query", state["user_message"]),
             }
+            # 只在首轮（8b 判定）设置 rag_strategy；已进入 agent 循环后若仍 knowledge_qa 则回退 RAG，避免死循环
+            if state.get("rag_strategy") == "agent":
+                result["rag_strategy"] = None
+            elif _probe_planner_availability():
+                result["rag_strategy"] = "agent"
+            return result
 
         if tool_name == "save_workhour":
             # ── 多天展开：检测"周一到周五"等日期范围 ─────────────────────────
@@ -576,12 +604,15 @@ async def node_classify_intent(state: AgentState) -> dict:
             "query": intent_result.parameters.get("query", state["user_message"]),
         }
 
-    return {
+    result = {
         "intent": intent_result.intent_type.value,
         "tool_name": None,
         "tool_params": {},
         "query": intent_result.parameters.get("query", state["user_message"]),
     }
+    if intent_result.intent_type.value == "knowledge_qa" and _probe_planner_availability():
+        result["rag_strategy"] = "agent"
+    return result
 
 
 async def node_execute_tool(state: AgentState) -> dict:
@@ -953,8 +984,9 @@ async def node_execute_llm(state: AgentState) -> dict:
 def _route_by_intent(state: AgentState) -> str:
     """根据意图分类结果选择下一节点"""
     intent = state.get("intent", "general_chat")
+    if intent == "knowledge_qa":
+        return "llm_with_tools" if state.get("rag_strategy") == "agent" else "execute_rag"
     return {
-        "knowledge_qa": "execute_rag",
         "tool_execution": "execute_tool",
         "complex_request": "plan_and_execute",   # 多步规划 + 并行执行
         "general_chat": "execute_llm",
@@ -978,6 +1010,10 @@ def _agent_loop_should_continue(state: AgentState) -> str:
         2. 最近 3 轮中 (tool, args) 重复出现 ≥ 2 次   → end
         3. agent_history 末尾 3 条全是 error          → end
     """
+    # 最高优先级：planner 回退标志 → 立即结束
+    if state.get("_rag_fallback"):
+        return "force_end"
+
     iters = state.get("agent_iterations", 0)
     max_iters = state.get("agent_max_iterations", 5) or 5
     history = state.get("agent_history") or []
@@ -1046,7 +1082,7 @@ def _build_graph():
     # 入口：Function Calling 节点
     builder.add_edge(START, "llm_with_tools")
 
-    # 条件路由（llm_with_tools → 执行节点之一）
+    # 条件路由（llm_with_tools → 执行节点之一 / 自循环）
     builder.add_conditional_edges(
         "llm_with_tools",
         _route_by_intent,
@@ -1056,6 +1092,7 @@ def _build_graph():
             "execute_llm": "execute_llm",
             "clarify_node": "clarify_node",
             "plan_and_execute": "plan_and_execute",
+            "llm_with_tools": "llm_with_tools",  # 方案 A：knowledge_qa 升级后回循环
         },
     )
 
