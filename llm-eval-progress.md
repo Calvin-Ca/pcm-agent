@@ -30,6 +30,22 @@
 - [x] 产出对比报告
 - 报告位置：`docs/benchmarks/llm-bakeoff-report-2026-05-15.md`
 
+### Phase 4: A-RAG 质量对照 + judge（2026-05-16）
+- [x] 14B-AWQ-Marlin vs 8B-BF16 vs 3.5-plus A-RAG 质量对照
+- [x] qwen3.6-plus LLM-judge 盲评 completeness（108 条）
+- 报告：`docs/benchmarks/llm-quality-bakeoff-2026-05-16.md`
+
+### Phase 5: 方案 A 启用 + 真冒烟（2026-05-16）— 🔴 升级未触发
+- [x] 172 .env PLANNER/SQL_AGENT model → qwen3.5-plus，容器 recreate 健康
+- [ ] 方案 A 升级链路验证 — **未触发**
+- 实证（生产 /chat + bench progressive smoke 两路径）：8b 首轮 FC `tool_calls=0`
+  不发起 kb_* → `agent_history` 不含 kb_* → 升级钩子（`langgraph_agent.py:302`）
+  不触发，qwen3.5-plus 从未被调用
+- 根因：方案 A 升级被卡在"8b 先成功发起 kb_*"这个 8b 最弱、本想补的前提上，
+  对最需要它的查询空转。代码正确，失效在**触发条件**，需改触发策略
+  （首轮即升级 / 意图路由送 planner / 下调阈值），属设计决策待 brainstorming
+- 原始证据：`fastapi-service/tests/benchmark/results/raw_arag_smoke_212026.log`
+
 ## 评测结果摘要
 
 | 模型 | 量化 | TTFT (ms) | TPS | 显存 (GB) | 备注 |

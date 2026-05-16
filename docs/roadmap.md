@@ -308,7 +308,7 @@ Code Interpreter Python 沙箱（让 LLM 生成 Python 代码处理复杂数据�
   └── ✅ 精度回归验证（2026-04-13）
       layer1_v6: 87.0%（2000 case），与 v5 持平，无回归
 
-🟠 第五阶段（2026-05-15）— 模型分层（方案 A，代码已合入 main）
+🔴 第五阶段（2026-05-15，2026-05-16 启用）— 模型分层（方案 A）：代码已合入 + 已启用，但升级触发条件失效（详见末尾 🔴）
   背景：自评测（docs project_progressive_rag_eval_2026-05-05）显示 qwen3-8b
         在 A-RAG 多步工具选择上不稳（44% 退化 / 22% 跑完 3 步）。
         复杂场景切托管 API，轻量场景留本地 8b，按"能力"而非"模块"分 3 层。
@@ -323,11 +323,16 @@ Code Interpreter Python 沙箱（让 LLM 生成 Python 代码处理复杂数据�
   ├── ✅ A-RAG 受控破例：agent_history 含 kb_* 工具时升级推理层，首轮/单工具/闲聊仍 8b
   ├── ✅ .env.example 补充 3 层注释 + SQL 层示例值
   ├── ✅ 单测 6/6 通过；git 实证核验 commit scope 与边界（无越界）
-  ├── ⬜ 真冒烟待补：派单冒烟因 172 环境（vLLM 8099/Milvus 未起）未跑通端到端，
-  │   仅验证意图路由；待环境恢复后用真实 LLM 调用复测复杂场景
-  └── ⬜ 启用：172 .env 填 PLANNER_LLM_* + SQL_AGENT_LLM_*（DashScope/DeepSeek 等
-      OpenAI 兼容、且支持 function calling 的对话模型）→ force-recreate → 看日志确认升级
-      后续看 Grafana 精度再决定是否升级主 FC（方案 B）
+  ├── ✅ 启用（2026-05-16）：172 .env PLANNER/SQL_AGENT model = qwen3.5-plus
+  │   （qwen-plus 在该 key 权限外、原配置是坏的），备份 .env.bak.20260516，
+  │   容器 recreate 后健康，基础 RAG 端到端可用
+  └── 🔴 真冒烟发现：升级链路**实证未触发**（生产 /chat + bench progressive smoke
+      两路径均证），8b 首轮 FC tool_calls=0 不发起 kb_* → agent_history 不含
+      kb_* → 升级钩子（langgraph_agent.py:302）不触发，qwen3.5-plus 从未被调用。
+      根因：方案 A 升级被卡在"8b 先成功发起 kb_*"这个 8b 最弱、本想补的前提上，
+      对最需要它的查询空转。代码正确，失效在**触发条件**，需改触发策略
+      （首轮即升级 / 意图路由送 planner / 下调阈值），属设计决策待 brainstorming。
+      证据 raw_arag_smoke_212026.log；详见记忆 project_plan_a_escalation_gap
 
 🟡 上线准备（4.14 ~）
   ├── ✅ 创建只读数据库账号（2026-04-14）
@@ -395,7 +400,7 @@ L5  Autonomous Agent   ← 远期（定时任务 + 自动执行 + 通知）
 | ~~ECharts 可视化~~ | ★★★★ | ~~1 天~~ | ✅ 已完成（2026-04-28） |
 | ~~智能填报建议~~ | ★★★★ | ~~1 天~~ | ✅ 已完成（2026-04-28，2026-04-29 合入 main） |
 | ~~批量工时填报~~ | ★★★★ | ~~1.5 天~~ | ✅ 已完成（2026-04-29） |
-| **模型分层（方案 A）** | ★★★★ | 0.5-1 天 | 🟠 进行中（复杂场景切 API，补已知 8b 多步缺陷） |
+| **模型分层（方案 A）** | ★★★★ | 0.5-1 天 | 🔴 已启用但升级触发条件失效：升级卡在 8b 首轮先发起 kb_*（8b 最弱环节），需改触发策略（2026-05-16） |
 | MCP Server 批量接入 | ★★★★ | 1-2 天 | 🟡 工具数已 10，触发条件满足，看后续接口增长 |
 | Multi-Agent | ★★★ | 3-5 天 | 🔵 等业务场景驱动 |
 | Self-Reflection | ★★★ | 0.5 天 | 🚫 已放弃（面试雷区） |
