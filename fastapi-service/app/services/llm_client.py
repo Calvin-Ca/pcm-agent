@@ -16,6 +16,46 @@ import aiohttp
 logger = logging.getLogger(__name__)
 
 
+def _parse_text_tool_call(content: str) -> Optional[Dict[str, Any]]:
+    """从文本格式的 <tool_call>{...}</tool_call> 中解析工具调用。
+
+    部分 vLLM 版本不走标准 tool_calls 字段，而是把工具调用以文本形式
+    塞进 content。此处解析该 fallback 格式。
+
+    解析失败时返回 None 并 logger.warning（技术债 #12：此前 except: pass
+    静默吞掉，导致 tool_call 丢失却无任何线索可排查）。
+
+    Args:
+        content: 已去除 <think> 的模型输出文本
+
+    Returns:
+        {"name": ..., "arguments": {...}}；无 <tool_call> 或解析失败时 None。
+    """
+    import re as _re
+    import json as _json
+
+    if "<tool_call>" not in content:
+        return None
+    m = _re.search(r"<tool_call>\s*(\{.*?\})\s*(?:</tool_call>|$)", content, _re.DOTALL)
+    if not m:
+        return None
+    try:
+        tc_data = _json.loads(m.group(1))
+    except Exception as e:
+        logger.warning(
+            "文本格式 tool_call JSON 解析失败，已忽略该工具调用: %s; 原文片段=%s",
+            e,
+            m.group(1)[:200],
+        )
+        return None
+    name = tc_data.get("name") or tc_data.get("tool")
+    if not name:
+        logger.warning("文本格式 tool_call 缺少 name/tool 字段，已忽略: %s", tc_data)
+        return None
+    args = tc_data.get("arguments") or tc_data.get("parameters") or {}
+    return {"name": name, "arguments": args}
+
+
 class LLMClient:
     """
     LLM 客户端，使用 OpenAI 兼容格式。
@@ -266,17 +306,13 @@ class LLMClient:
                             if "<think>" in content:
                                 content = _re.sub(r"<think>.*", "", content, flags=_re.DOTALL).strip()
                             # fallback：部分 vLLM 版本以文本格式输出工具调用
-                            if "<tool_call>" in content:
-                                m = _re.search(r"<tool_call>\s*(\{.*?\})\s*(?:</tool_call>|$)", content, _re.DOTALL)
-                                if m:
-                                    try:
-                                        tc_data = _json.loads(m.group(1))
-                                        name = tc_data.get("name") or tc_data.get("tool")
-                                        args = tc_data.get("arguments") or tc_data.get("parameters") or {}
-                                        if name:
-                                            return {"finish_reason": "tool_calls", "content": None, "tool_calls": [{"name": name, "arguments": args}]}
-                                    except Exception:
-                                        pass
+                            _parsed_tc = _parse_text_tool_call(content)
+                            if _parsed_tc is not None:
+                                return {
+                                    "finish_reason": "tool_calls",
+                                    "content": None,
+                                    "tool_calls": [_parsed_tc],
+                                }
                         return {"finish_reason": "stop", "content": content, "tool_calls": []}
                     else:
                         _status = "error"

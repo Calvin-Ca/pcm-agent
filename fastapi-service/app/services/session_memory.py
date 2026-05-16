@@ -116,11 +116,11 @@ class SessionMemoryService:
         session = await self._load_session(session_id)
         if session is None:
             return []
-        # 续期 TTL
+        # 续期 TTL（失败不影响读取，但不静默吞掉——记录以便排查 Redis 抖动）
         try:
             await self._redis.expire(self._key(session_id), self._ttl)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"会话 TTL 续期失败 session_id={session_id}: {e}")
         return session.messages
 
     async def add_messages(
