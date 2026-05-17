@@ -1366,7 +1366,7 @@ async def stream_agent_response(
                                 if item.get("type") == "chunk":
                                     text = item.get("content", "")
                                     _full_response += text
-                                    yield _format_sse("response", {"message": text})
+                                    yield _format_sse("response", {"chunk": text})
                                 elif item.get("type") == "done":
                                     _final_sources = item.get("sources", [])
                                     _final_retrieved_count = item.get("retrieved_count", 0)
@@ -1386,7 +1386,7 @@ async def stream_agent_response(
                                 source_names = [s.get("source", "") for s in _final_sources if s.get("source")]
                                 if source_names:
                                     yield _format_sse("response", {
-                                        "message": f"\n\n---\n📚 **来源：** " + " | ".join(source_names)
+                                        "chunk": f"\n\n---\n📚 **来源：** " + " | ".join(source_names)
                                     })
                                     _full_response += f"\n\n---\n📚 **来源：** " + " | ".join(source_names)
                             _collected_assistant_response = _full_response
@@ -1701,7 +1701,8 @@ async def _generate_llm_summary(tool_name: str, result: Dict[str, Any], user_mes
         "1. 不要提及工具名称、字段名、JSON 结构等技术细节；"
         "2. 直接告诉用户他能理解的信息；"
         "3. 如果涉及数据，用列表或简短描述呈现，不要直接输出 JSON；"
-        "4. 控制在 300 字以内。"
+        "4. 控制在 300 字以内；"
+        "5. 禁止在回复中展示 UUID 格式的技术 ID（如 project_id、record_id、user_id 等），只展示名称。"
     )
 
     prompt = (

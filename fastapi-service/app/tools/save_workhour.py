@@ -186,6 +186,7 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
         request_headers["Authorization"] = token
 
     # 2a. 解析 project_id：LLM 可能填入项目名称（如"AI平台"），需转换为数字 ID
+    original_project_name = project_id  # 保留用户输入的项目名称，用于展示
     resolved_project_id, project_err = await resolve_project_id(project_id, auth_token, base_url, user_id=user_id)
     if project_err:
         return {"success": False, "error": f"项目解析失败：{project_err}"}
@@ -225,7 +226,7 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
                 "payload": payload,
                 "summary": (
                     f"预览（未写入）：{date_str} {duration}h，"
-                    f"项目 {project_id}，类别 {workhour_type}/{resolved_work_type}"
+                    f"项目 {original_project_name}，类别 {workhour_type}/{resolved_work_type}"
                 ),
             },
             "message": "以上为预览，确认无误后再提交。",
@@ -257,9 +258,9 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
 
         return {
             "success": True,
-            "message": f"工时填报成功：{date_str} {duration}h（项目 {project_id}）",
+            "message": f"工时填报成功：{date_str} {duration}h（项目 {original_project_name}）",
             "record_id": str(saved_id) if saved_id else None,
-            "project_id": project_id,
+            "project_name": original_project_name,
             "date": date_str,
             "duration": duration,
             "description": description,
