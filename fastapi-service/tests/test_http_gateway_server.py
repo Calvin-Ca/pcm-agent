@@ -55,3 +55,31 @@ async def test_save_workhour_confirm_true_forwards_dry_run_false(monkeypatch):
         project_id="AI平台", date="2026-05-10", duration=8, confirm=True,
     )
     assert captured["params"]["dry_run"] is False
+
+
+async def test_query_timesheet_forwards_filtered_params(monkeypatch):
+    m = _mod()
+    captured = {}
+
+    async def fake_forward(tool_name, params):
+        captured["tool"] = tool_name
+        captured["params"] = params
+        return {"success": True}
+
+    monkeypatch.setattr(m, "forward_to_ai_service", fake_forward)
+    await m._query_timesheet_impl(member_id=None, project_id="P1",
+                                  start_date=None, end_date="2026-05-10")
+    assert captured["tool"] == "query_timesheet"
+    # None 不传，让 ai-service 用默认
+    assert captured["params"] == {"project_id": "P1", "end_date": "2026-05-10"}
+
+
+def test_all_expected_tools_registered():
+    m = _mod()
+    names = set(m.list_tool_names())
+    assert names == {
+        "save_workhour", "query_timesheet", "query_project",
+        "compute_statistics", "generate_weekly_report", "sql_query",
+        "kb_outline", "kb_keyword_search", "kb_semantic_search",
+        "kb_read_section",
+    }
