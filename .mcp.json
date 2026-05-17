@@ -105,6 +105,21 @@
       },
       "disabled": false,
       "autoApprove": []
+    },
+    "workhour-save": {
+      "command": "E:/huan/工时管理系统/trunk/1 源代码/1.0 系统代码/ai-service/fastapi-service/.venv/Scripts/python.exe",
+      "args": [
+        "E:/huan/工时管理系统/trunk/1 源代码/1.0 系统代码/ai-service/fastapi-service/mcp_servers/save_workhour_mcp_server.py"
+      ],
+      "env": {
+        "AI_SERVICE_URL": "http://localhost:8000",
+        "MCP_TEST_USER_ID": "",
+        "MCP_TEST_ENTITY_TYPE": "employee",
+        "MCP_TEST_AUTH_TOKEN": "",
+        "PYTHONIOENCODING": "utf-8"
+      },
+      "disabled": false,
+      "autoApprove": []
     }
   }
 }
