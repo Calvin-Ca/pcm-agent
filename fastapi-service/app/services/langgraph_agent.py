@@ -1520,7 +1520,6 @@ async def stream_agent_response(
 
         # 写会话日志（失败不影响主流程）
         try:
-            import os
             from app.services.conversation_logger import get_conversation_logger
             from app.models.conversation import ConversationLogEntry
             from app.services.database import get_db_service
@@ -1593,8 +1592,6 @@ async def _try_extract_long_term_memory(
     - 用户表达偏好（"我一般"、"我习惯"、"我通常"）
     - 用户说明工作场景（"我是 XX 部门"、"我负责 XX 项目"）
     """
-    import re
-
     patterns = [
         # 身份信息
         (r"我的?(user_?id|工号|员工号|账号)[是为：:]\s*(\S+)", 0.9),
