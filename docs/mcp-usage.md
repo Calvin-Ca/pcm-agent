@@ -103,3 +103,28 @@ B 类（1 个，直连）：MCP client → kb_mcp_server.py → Milvus + 本地 
 - `.mcp.json` 里 token 字段**默认空 = 安全默认**：未配合法 JWT 时 SpringBoot 拒写，防误写生产库。
 - 内部端点 `/api/internal/tools/*` 生产环境必须由 nginx 限源 IP，禁止公网直达。
 - 写白名单：目前只有 `save_workhour` 允许经内部端点写；新增写工具须显式评审 + 加白名单。
+
+## 9. 远程 HTTP 接入（方案 2，推荐给团队开发者）
+
+无需本机仓库/venv/起 ai-service。前提：外网开发者先连公司 VPN（连上即内网，可达 172）。
+
+`.mcp.json` 配置（替换原 stdio 条目，或新增）：
+
+```json
+"workhour-gateway": {
+  "type": "http",
+  "url": "http://172.19.3.136:8765/mcp",
+  "headers": {
+    "X-Gateway-Token": "<向管理员索取的网关 token>",
+    "X-Auth-Token": "<你自己的 SpringBoot JWT，见 §4>",
+    "X-User-ID": "<你的用户 ID>",
+    "X-Entity-Type": "employee"
+  }
+}
+```
+
+- 改完重启 MCP 客户端（重开会话）生效。
+- `X-Gateway-Token` 向管理员索取，不入 git。
+- `X-Auth-Token` 是你自己的 JWT（§4 方式获取，过期重取）；写工时的真实权限由它决定。
+- save_workhour 仍二段确认：先 confirm=False 看预览，确认无误再 confirm=True。
+- 排错：401 → 网关 token 缺/错；连接超时 → 未连 VPN 或网关未起；写 401 → JWT 过期。
