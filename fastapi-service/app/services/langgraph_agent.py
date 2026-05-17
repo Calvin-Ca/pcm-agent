@@ -1529,14 +1529,9 @@ async def stream_agent_response(
             duration_ms = int((datetime.now() - start_time).total_seconds() * 1000)
             model = os.getenv("CHAT_LLM_MODEL", os.getenv("LLM_MODEL", "unknown"))
 
-            # 截断过大的 JSON 字段，防止单行超 MB
-            safe_snapshot = log_context_snapshot
-            if safe_snapshot and len(json.dumps(safe_snapshot, ensure_ascii=False)) > 8000:
-                safe_snapshot = {
-                    "history": safe_snapshot.get("history", [])[-2:],
-                    "memories": (safe_snapshot.get("memories") or "")[:500] or None,
-                    "truncated": True,
-                }
+            # 上下文快照渐进式压缩（技术债 #11：汇总→裁剪→硬截断，降级安全）
+            from app.services.context_compressor import compress_context_snapshot
+            safe_snapshot = compress_context_snapshot(log_context_snapshot, max_chars=8000)
 
             total_tokens = 0
             get_conversation_logger().log_conversation(
