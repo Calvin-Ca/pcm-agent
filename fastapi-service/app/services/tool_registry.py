@@ -113,7 +113,8 @@ class ToolRegistry:
         handler: Callable,
         category: ToolCategory = ToolCategory.DATA_QUERY,
         timeout: int = 30,
-        requires_permission: bool = True
+        requires_permission: bool = True,
+        is_write: bool = False
     ) -> ToolDefinition:
         """注册新工具
         
@@ -155,6 +156,7 @@ class ToolRegistry:
                 json_schema=json_schema,
                 timeout=timeout,
                 requires_permission=requires_permission,
+                is_write=is_write,
                 created_at=datetime.now(),
                 updated_at=datetime.now()
             )
@@ -181,15 +183,20 @@ class ToolRegistry:
     
     def get_handler(self, name: str) -> Optional[Callable]:
         """获取工具处理函数
-        
+
         Args:
             name: 工具名称
-            
+
         Returns:
             Callable: 工具处理函数，不存在则返回None
         """
         return self._handlers.get(name)
-    
+
+    def is_write_tool(self, name: str) -> bool:
+        """该工具是否为写操作工具（未注册视为 False）。"""
+        tool = self._tools.get(name)
+        return bool(tool.is_write) if tool else False
+
     def list_tools(
         self,
         category: Optional[ToolCategory] = None

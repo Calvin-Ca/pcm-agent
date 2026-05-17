@@ -45,6 +45,7 @@ class ToolDefinition(BaseModel):
     json_schema: Dict[str, Any] = Field(..., description="JSON Schema参数定义")
     timeout: int = Field(default=30, description="超时时间（秒）", ge=1, le=300)
     requires_permission: bool = Field(default=True, description="是否需要权限验证")
+    is_write: bool = Field(default=False, description="是否为写操作工具（MCP 写白名单/审计据此区分）")
     created_at: datetime = Field(default_factory=datetime.now, description="创建时间")
     updated_at: datetime = Field(default_factory=datetime.now, description="更新时间")
     
