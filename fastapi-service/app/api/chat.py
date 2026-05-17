@@ -90,6 +90,20 @@ class ChatResponse(BaseModel):
     error: Optional[str] = Field(None, description="错误信息")
 
 
+def _accumulate_response_text(prev: Optional[str], data: Dict[str, Any]) -> Optional[str]:
+    """非流式聚合 response 事件文本。
+
+    SSE `response` 事件按流式约定为增量分片：流式 RAG 路径会发多个 chunk
+    事件 + 末尾来源事件，必须累积而非覆盖（历史 bug：用 `=` 覆盖导致只剩
+    最后一个事件 = 来源 footer，答案体丢失）。单事件全量路径（工具/LLM/
+    澄清/计划）只发一个 response 事件，累积后等价于自身，不会重复。
+    """
+    chunk_msg = data.get("message") or data.get("result", {}).get("response", "")
+    if not chunk_msg:
+        return prev
+    return (prev or "") + chunk_msg
+
+
 # 全局组件实例（在应用启动时初始化）
 intent_router: Optional[IntentRouter] = None
 task_executor: Optional[TaskExecutor] = None
@@ -367,7 +381,7 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
                         detected_tool = data.get("tool_name")
                         tool_name = detected_tool
                     elif event_type == "response":
-                        final_response = data.get("message") or data.get("result", {}).get("response", "")
+                        final_response = _accumulate_response_text(final_response, data)
                         if data.get("result"):
                             tool_result = data.get("result")
                     elif event_type == "error":
