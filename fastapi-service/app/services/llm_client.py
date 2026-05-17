@@ -5,6 +5,7 @@ LLM Client - 大语言模型客户端
 使用 OpenAI 兼容格式，可对接 DashScope、OpenAI 等多种后端。
 """
 
+import asyncio
 import os
 import json
 import logging
@@ -13,7 +14,78 @@ from typing import AsyncGenerator, Dict, Any, List, Optional
 
 import aiohttp
 
+from app.services.retry_util import retry_async
+
 logger = logging.getLogger(__name__)
+
+
+# 瞬时网络错误（aiohttp 家族）：连接断开 / 服务端提前关闭 / DNS 等。
+# retry_util.is_retriable_exception 只识别 httpx / asyncio.TimeoutError，
+# 不识别 aiohttp。为复用 retry_util（不改它），此处把 aiohttp 瞬时错误与
+# 5xx 统一转换为 asyncio.TimeoutError（retry_util 视为可重试）；4xx / 鉴权 /
+# 缺 key / 业务错误转/保持为 ValueError（retry_util 视为不可重试，立即抛）。
+_TRANSIENT_AIOHTTP_ERRORS = (
+    aiohttp.ClientConnectionError,
+    aiohttp.ServerDisconnectedError,
+    aiohttp.ServerTimeoutError,
+    aiohttp.ClientPayloadError,
+)
+
+
+class _RetriableLLMError(asyncio.TimeoutError):
+    """瞬时 LLM 调用错误（网络抖动 / 5xx）。
+
+    继承 asyncio.TimeoutError 以便 retry_util.is_retriable_exception 直接
+    识别为可重试，无需修改 retry_util。
+    """
+
+
+# ── 限流：进程级 LLM 并发上限 ────────────────────────────────────────────────
+# retry_util 只管重试、不管限流。此处用一个进程级信号量限制同时在途的 LLM
+# HTTP 调用数（所有 LLMClient 共享同一上游 DashScope 端点）。默认上限较宽松
+# （16），正常负载下行为不变；高并发时排队、避免压垮上游触发 429/5xx。
+# 通过环境变量 LLM_MAX_CONCURRENCY 调整；<=0 视为不限流。
+_LLM_SEMAPHORE: Optional[asyncio.Semaphore] = None
+
+
+def _get_llm_semaphore() -> Optional[asyncio.Semaphore]:
+    """惰性创建进程级信号量（须在事件循环内首次调用）。
+
+    返回 None 表示不限流（LLM_MAX_CONCURRENCY <= 0）。
+    """
+    global _LLM_SEMAPHORE
+    if _LLM_SEMAPHORE is not None:
+        return _LLM_SEMAPHORE
+    try:
+        limit = int(os.getenv("LLM_MAX_CONCURRENCY", "16"))
+    except (TypeError, ValueError):
+        limit = 16
+    if limit <= 0:
+        return None
+    _LLM_SEMAPHORE = asyncio.Semaphore(limit)
+    return _LLM_SEMAPHORE
+
+
+def _raise_for_status(model: str, status: int, error_text: str) -> None:
+    """根据 HTTP 状态码分流：5xx → 可重试；4xx / 其它 → 不可重试。"""
+    if 500 <= status < 600:
+        raise _RetriableLLMError(
+            f"LLM API 5xx ({model}): {status} - {error_text}"
+        )
+    raise ValueError(f"LLM API 错误 ({model}): {status} - {error_text}")
+
+
+async def _limited_retry(func, *, op_name: str):
+    """限流 + 重试组合：先取并发令牌，再走 retry_util.retry_async。
+
+    令牌在整个重试周期内持有（一次逻辑调用算一个并发），重试不会额外占用
+    更多令牌。不限流时直接走 retry_async。
+    """
+    sem = _get_llm_semaphore()
+    if sem is None:
+        return await retry_async(func, op_name=op_name)
+    async with sem:
+        return await retry_async(func, op_name=op_name)
 
 
 def _parse_text_tool_call(content: str) -> Optional[Dict[str, Any]]:
@@ -142,28 +214,33 @@ class LLMClient:
         except ImportError:
             _has_metrics = False
 
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.post(url, headers=headers, json=payload) as resp:
-                    if resp.status == 200:
-                        data = await resp.json()
-                        usage = data.get("usage", {})
-                        if _has_metrics:
-                            LLM_TOKENS.labels(model=self.model, token_type="prompt").inc(usage.get("prompt_tokens", 0))
-                            LLM_TOKENS.labels(model=self.model, token_type="completion").inc(usage.get("completion_tokens", 0))
-                        content = data["choices"][0]["message"]["content"]
-                        if content:
-                            import re
-                            content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL).strip()
-                            if "<think>" in content:
-                                content = re.sub(r"<think>.*", "", content, flags=re.DOTALL).strip()
-                        return content
-                    else:
-                        _status = "error"
+        async def _attempt() -> str:
+            try:
+                async with aiohttp.ClientSession() as session:
+                    async with session.post(url, headers=headers, json=payload) as resp:
+                        if resp.status == 200:
+                            data = await resp.json()
+                            usage = data.get("usage", {})
+                            if _has_metrics:
+                                LLM_TOKENS.labels(model=self.model, token_type="prompt").inc(usage.get("prompt_tokens", 0))
+                                LLM_TOKENS.labels(model=self.model, token_type="completion").inc(usage.get("completion_tokens", 0))
+                            content = data["choices"][0]["message"]["content"]
+                            if content:
+                                import re
+                                content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL).strip()
+                                if "<think>" in content:
+                                    content = re.sub(r"<think>.*", "", content, flags=re.DOTALL).strip()
+                            return content
                         error_text = await resp.text()
-                        raise ValueError(
-                            f"LLM API 错误 ({self.model}): {resp.status} - {error_text}"
-                        )
+                        _raise_for_status(self.model, resp.status, error_text)
+            except _TRANSIENT_AIOHTTP_ERRORS as exc:
+                raise _RetriableLLMError(f"LLM 网络瞬时错误 ({self.model}): {exc}") from exc
+
+        try:
+            return await _limited_retry(_attempt, op_name=f"llm.generate[{self.model}]")
+        except Exception:
+            _status = "error"
+            raise
         finally:
             if _has_metrics:
                 duration = time.monotonic() - _start
@@ -213,29 +290,43 @@ class LLMClient:
             "Content-Type": "application/json",
         }
 
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=payload) as resp:
-                if resp.status != 200:
-                    error_text = await resp.text()
-                    raise ValueError(
-                        f"LLM API 错误 ({self.model}): {resp.status} - {error_text}"
-                    )
+        # 流式调用：仅对"建立连接 + 首个响应状态"阶段重试（此时尚未 yield
+        # 任何 token，重连安全）。一旦开始接收数据流则不再重试，避免重复 token。
+        async def _open_session():
+            session = aiohttp.ClientSession()
+            try:
+                resp = await session.post(url, headers=headers, json=payload)
+            except _TRANSIENT_AIOHTTP_ERRORS as exc:
+                await session.close()
+                raise _RetriableLLMError(
+                    f"LLM 流式连接瞬时错误 ({self.model}): {exc}"
+                ) from exc
+            if resp.status != 200:
+                error_text = await resp.text()
+                resp.release()
+                await session.close()
+                _raise_for_status(self.model, resp.status, error_text)
+            return session, resp
 
-                async for line in resp.content:
-                    line = line.decode("utf-8").strip()
-                    if not line or not line.startswith("data: "):
-                        continue
-                    data_str = line[6:]
-                    if data_str == "[DONE]":
-                        break
-                    try:
-                        data = json.loads(data_str)
-                        delta = data.get("choices", [{}])[0].get("delta", {})
-                        content = delta.get("content", "")
-                        if content:
-                            yield content
-                    except json.JSONDecodeError:
-                        continue
+        session, resp = await _limited_retry(
+            _open_session, op_name=f"llm.stream_generate[{self.model}]"
+        )
+        async with session, resp:
+            async for line in resp.content:
+                line = line.decode("utf-8").strip()
+                if not line or not line.startswith("data: "):
+                    continue
+                data_str = line[6:]
+                if data_str == "[DONE]":
+                    break
+                try:
+                    data = json.loads(data_str)
+                    delta = data.get("choices", [{}])[0].get("delta", {})
+                    content = delta.get("content", "")
+                    if content:
+                        yield content
+                except json.JSONDecodeError:
+                    continue
 
     async def generate_with_tools(
         self,
@@ -282,42 +373,53 @@ class LLMClient:
         except ImportError:
             _has_metrics = False
 
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.post(url, headers=headers, json=payload) as resp:
-                    if resp.status == 200:
-                        data = await resp.json()
-                        choice = data["choices"][0]
-                        finish_reason = choice.get("finish_reason")
-                        msg = choice.get("message", {})
-                        if finish_reason == "tool_calls":
-                            calls = [
-                                {
-                                    "name": tc["function"]["name"],
-                                    "arguments": json.loads(tc["function"]["arguments"]),
-                                }
-                                for tc in msg.get("tool_calls", [])
-                            ]
-                            return {"finish_reason": "tool_calls", "content": None, "tool_calls": calls}
-                        content = msg.get("content", "")
-                        if content:
-                            import re as _re, json as _json
-                            content = _re.sub(r"<think>.*?</think>", "", content, flags=_re.DOTALL).strip()
-                            if "<think>" in content:
-                                content = _re.sub(r"<think>.*", "", content, flags=_re.DOTALL).strip()
-                            # fallback：部分 vLLM 版本以文本格式输出工具调用
-                            _parsed_tc = _parse_text_tool_call(content)
-                            if _parsed_tc is not None:
-                                return {
-                                    "finish_reason": "tool_calls",
-                                    "content": None,
-                                    "tool_calls": [_parsed_tc],
-                                }
-                        return {"finish_reason": "stop", "content": content, "tool_calls": []}
-                    else:
-                        _status = "error"
+        async def _attempt() -> Dict[str, Any]:
+            try:
+                async with aiohttp.ClientSession() as session:
+                    async with session.post(url, headers=headers, json=payload) as resp:
+                        if resp.status == 200:
+                            data = await resp.json()
+                            choice = data["choices"][0]
+                            finish_reason = choice.get("finish_reason")
+                            msg = choice.get("message", {})
+                            if finish_reason == "tool_calls":
+                                calls = [
+                                    {
+                                        "name": tc["function"]["name"],
+                                        "arguments": json.loads(tc["function"]["arguments"]),
+                                    }
+                                    for tc in msg.get("tool_calls", [])
+                                ]
+                                return {"finish_reason": "tool_calls", "content": None, "tool_calls": calls}
+                            content = msg.get("content", "")
+                            if content:
+                                import re as _re, json as _json
+                                content = _re.sub(r"<think>.*?</think>", "", content, flags=_re.DOTALL).strip()
+                                if "<think>" in content:
+                                    content = _re.sub(r"<think>.*", "", content, flags=_re.DOTALL).strip()
+                                # fallback：部分 vLLM 版本以文本格式输出工具调用
+                                _parsed_tc = _parse_text_tool_call(content)
+                                if _parsed_tc is not None:
+                                    return {
+                                        "finish_reason": "tool_calls",
+                                        "content": None,
+                                        "tool_calls": [_parsed_tc],
+                                    }
+                            return {"finish_reason": "stop", "content": content, "tool_calls": []}
                         err = await resp.text()
-                        raise ValueError(f"Function Calling API 错误 ({self.model}): {resp.status} - {err}")
+                        _raise_for_status(self.model, resp.status, err)
+            except _TRANSIENT_AIOHTTP_ERRORS as exc:
+                raise _RetriableLLMError(
+                    f"Function Calling 网络瞬时错误 ({self.model}): {exc}"
+                ) from exc
+
+        try:
+            return await _limited_retry(
+                _attempt, op_name=f"llm.generate_with_tools[{self.model}]"
+            )
+        except Exception:
+            _status = "error"
+            raise
         finally:
             if _has_metrics:
                 duration = time.monotonic() - _start
