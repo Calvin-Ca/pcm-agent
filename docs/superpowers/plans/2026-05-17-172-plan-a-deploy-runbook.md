@@ -10,7 +10,9 @@
 - 172 `git HEAD = b76e2d9`，落后 `origin/main`（`5087db3`）**47 个 commit**
 - 172 工作树 `fastapi-service/app/services/langgraph_agent.py` 处 `M`（未提交修改），sha256 `2e49102f0cc500244d3d521194822272d84ee58b8b9187e8781a319df0e7e23d`，1631 行，mtime `2026-04-29 19:38`
 - 该 94 行未提交手改 = 纯 `suggest_workhour` 结果格式化 + `_generate_llm_summary` 兜底，**已被 main 字节等价吸收**（main 5087db3 行1687 含 `_generate_llm_summary`，suggest_workhour 格式化齐全）→ **部署不丢任何独有生产逻辑**，stash 仅作冗余保险
-- 172 `.env` 已设 `PLANNER_LLM_MODEL=qwen3.5-plus` / `SQL_AGENT_LLM_MODEL=qwen3.5-plus`，另存 `.env.bak.20260516`（**不要覆盖它**）
+- ⚠️ `.env` 在 **repo 根**（`/home/caic/code/workhour/workhour_agent/.env`），**不是** `fastapi-service/.env`（首版 runbook 笔误，2026-05-17 部署实测更正）。已设 `PLANNER_LLM_MODEL=qwen3.5-plus` / `SQL_AGENT_LLM_MODEL=qwen3.5-plus`，另存根目录 `.env.bak.20260516`（**不要覆盖它**）
+- ⚠️ 健康端点是 `/health/health`（main.py 把 health.router 挂在 prefix `/health`，路由本身又是 `/health`）；`/health` 返回 404 是端点名笔误非故障。功能门以 `/api/ai/chat` 冒烟为准
+- ⚠️ 2026-05-17 首次部署发现 origin/main 当时 `55ce941` 含 chat 必崩 bug（`stream_agent_response` 函数内裸 `import os` 遮蔽 → line 1254 `os.getenv` UnboundLocalError），已回滚。**已修复并 push（`77ec242`：删 os/re 遮蔽 import + ast 回归守卫测试）**，本次重试以 `77ec242` 或更新为目标
 - 172 工作树另有未跟踪：`fastapi-service/tests/benchmark/`、`tests/benchmark/results/latency_*_20260515.csv`（无害，勿动）
 
 **Tech Stack:** SSH(`ssh caic@172.19.3.136`)、git、docker compose。172 上是 bash（`tee`/`sha256sum` 可正常用，无 PowerShell UTF-16 坑）。
@@ -19,8 +21,8 @@
 
 ## 硬停条件（命中则不回滚、不即兴，立即上报等人工裁决）
 
-- `origin/main` ≠ `5087db3`（有人又 push，本 runbook 前提失效）
-- `b76e2d9..origin/main` commit 数 ≠ 47
+- `origin/main` 的 `langgraph_agent.py` **不含**方案 A 标记（`grep -c "rag_strategy\|_rag_fallback\|_probe_planner_availability"` 应 >0，约 19）或**不含本次 os 修复**（`grep -c "^            import os" ` 在 `stream_agent_response` 段应为 0）
+- `b76e2d9..origin/main` commit 数显著 < 47（目标版本应 ≥ `77ec242`）
 - `git status` 出现**除 `langgraph_agent.py` 以外**的已跟踪文件被修改/新增（可能有未知生产手术，必须先查清）
 - `git pull` 非 fast-forward（HEAD 已分叉）
 - `.env` 中 PLANNER/SQL model 不是 `qwen3.5-plus`
@@ -55,7 +57,7 @@ ssh caic@172.19.3.136 'cd /home/caic/code/workhour/workhour_agent && { \
   echo "== status =="; git status --porcelain; \
   echo "== langgraph sha256 =="; sha256sum fastapi-service/app/services/langgraph_agent.py; \
   echo "== container =="; docker ps --filter name=ai-assistant-service --format "{{.Names}} {{.Status}}"; \
-  echo "== env model =="; grep -E "^(PLANNER_LLM_MODEL|SQL_AGENT_LLM_MODEL)=" fastapi-service/.env; \
+  echo "== env model =="; grep -E "^(PLANNER_LLM_MODEL|SQL_AGENT_LLM_MODEL)=" .env; \
   } 2>&1 | tee /tmp/deploy_172_20260517.log'
 ```
 Expected: HEAD=`b76e2d9...`；status 仅 ` M fastapi-service/app/services/langgraph_agent.py`（+ 已知未跟踪 benchmark）；sha256=`2e49102f…`；容器 Up；model 均 `qwen3.5-plus`。
@@ -68,8 +70,8 @@ Expected: HEAD=`b76e2d9...`；status 仅 ` M fastapi-service/app/services/langgr
 ```bash
 ssh caic@172.19.3.136 'cd /home/caic/code/workhour/workhour_agent && \
   cp -n fastapi-service/app/services/langgraph_agent.py fastapi-service/app/services/langgraph_agent.py.bak.20260517 && \
-  cp -n fastapi-service/.env fastapi-service/.env.bak.20260517-deploy && \
-  ls -l fastapi-service/app/services/langgraph_agent.py.bak.20260517 fastapi-service/.env.bak.20260517-deploy 2>&1 | tee -a /tmp/deploy_172_20260517.log'
+  cp -n .env .env.bak.20260517-deploy && \
+  ls -l fastapi-service/app/services/langgraph_agent.py.bak.20260517 .env.bak.20260517-deploy 2>&1 | tee -a /tmp/deploy_172_20260517.log'
 ```
 > `cp -n` 不覆盖已存在文件，保护 `.env.bak.20260516`。
 
@@ -129,7 +131,7 @@ Expected: 容器 Up（健康）；日志无致命 traceback / 启动失败。
 - [ ] **Step 2: 基础冒烟（健康端点 + 一条 knowledge 类对话）**
 
 ```bash
-ssh caic@172.19.3.136 'curl -s -m 10 http://localhost:8000/health 2>&1; echo; curl -s -m 60 -X POST http://localhost:8000/api/ai/chat -H "Content-Type: application/json" -d "{\"message\":\"公司加班调休政策是怎么规定的\",\"user_context\":{\"user_id\":\"\",\"entity_type\":\"employee\"}}" 2>&1 | head -c 600 | tee -a /tmp/deploy_172_20260517.log'
+ssh caic@172.19.3.136 'curl -s -m 10 http://localhost:8000/health/health 2>&1; echo; curl -s -m 60 -X POST http://localhost:8000/api/ai/chat -H "Content-Type: application/json" -d "{\"message\":\"公司加班调休政策是怎么规定的\",\"user_context\":{\"user_id\":\"\",\"entity_type\":\"employee\"}}" 2>&1 | head -c 600 | tee -a /tmp/deploy_172_20260517.log'
 ```
 Expected: health 200；chat 有知识库回答（非报错、非空）。
 
@@ -155,8 +157,29 @@ ssh caic@172.19.3.136 'sha256sum /tmp/deploy_172_20260517.log'
 
 ## 验收标准
 
-1. 172 HEAD = `5087db3`，langgraph_agent.py 含方案 A 标记
-2. 容器健康、基础冒烟通过
+1. 172 HEAD ≥ `77ec242`（含 os/re 遮蔽修复），langgraph_agent.py 含方案 A 标记
+2. 容器健康、`/api/ai/chat` 冒烟返回 `success:true`（**关键：不再有 UnboundLocalError**）
 3. 日志实证 knowledge 类请求走 `qwen3.5-plus`（方案 A 首次生产生效）
 4. 全程原始日志落盘 + sha256，无编造
 5. 备份与 stash 句柄齐全，回滚路径可用
+
+---
+
+## 重试增量（2026-05-17 第二次部署 — 取代上方 Task 1/2 的首版预期）
+
+第一次部署后已 `git reset --hard b76e2d9` 回滚。当前 172 真实态（2026-05-17 已只读核验）：
+
+- HEAD = `b76e2d9`，`langgraph_agent.py` = **b76e2d9 pristine**，sha256 `947c5c52540942a641d1f1e91b4abbf90cf95177ebaf909fdb1af0e480c907a8`（**不再是** 2e49102f；94 行 scratch 已不在运行文件中）
+- `git status` 中该文件**不再是 `M`**（reset --hard 后干净）
+- 备份**已存在**（勿重建，`cp -n` 会自动跳过）：`fastapi-service/app/services/langgraph_agent.py.bak.20260517`（74113 B）、根目录 `.env.bak.20260517-deploy`（2649 B）
+- `stash@{0}` = 94 行 scratch（已在）；`stash@{1}` = 无关的他人 WIP，**勿动**
+- 容器 Up，chat 200 可用（走 b76e2d9 rag_engine 路径）
+
+**二次部署简化路径（跳过 Task 2 备份/stash，已完成）：**
+
+1. **预检**（改判据）：确认 HEAD=`b76e2d9`、langgraph sha256=`947c5c5…`、该文件 git 干净（非 `M`）、`.env`（**repo 根**）model 仍 `qwen3.5-plus`、容器 Up。任一不符 → 硬停上报。
+2. 直接 Task 3：`git fetch origin` → 校验 `origin/main` ≥ `77ec242` 且含方案 A 标记 + 含 os 修复（`grep -c "^            import os" fastapi-service/app/services/langgraph_agent.py` 应为 0）→ `git pull --ff-only origin main`。
+3. Task 4：`docker compose up -d --force-recreate ai-service`（仅此 service）。
+4. Task 5 验证，**重点确认 chat 不再抛 UnboundLocalError**（这是上次失败点），再查日志 knowledge 类是否走 `qwen3.5-plus`。
+5. 失败回滚仍用「预定义回滚」段（cp .bak → reset --hard b76e2d9 → recreate）。
+6. 过渡期注意：当前 prod 是 b76e2d9 pristine，比首次部署前少 94 行 suggest_workhour 格式化（仅存 .bak + stash@{0}）。部署成功即被 main 等价逻辑覆盖，无需单独恢复。
