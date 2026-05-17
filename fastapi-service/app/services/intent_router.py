@@ -7,6 +7,7 @@ Intent Router - 意图路由器
 
 import logging
 import os
+from pathlib import Path
 from typing import Dict, Any, List, Optional, Union, Callable, Awaitable
 from enum import Enum
 from pydantic import BaseModel, Field
@@ -21,6 +22,138 @@ from .task_executor import TaskExecutor
 from .permission_validator import PermissionContext
 
 logger = logging.getLogger(__name__)
+
+
+# ── 意图规则关键词外置（技术债 #5） ──────────────────────────────────────────
+# 关键词从 IntentRouter.__init__ 提取到 config/intent_rules.yaml。
+# IntentRouter 是 LLM 不可用时的降级 fallback：yaml 缺失/损坏/字段不全时
+# 必须回退到下面的内置默认（与 yaml 初始值逐字一致），降级路径绝不能因缺
+# 配置崩溃——这是硬约束。打分算法不外置，仅外置关键词清单（等价重构）。
+
+# fastapi-service/config/intent_rules.yaml
+_INTENT_RULES_PATH = str(
+    Path(__file__).resolve().parents[2] / "config" / "intent_rules.yaml"
+)
+
+# 内置默认（= yaml 初始值的代码内副本，作为降级兜底，不可删）
+_DEFAULT_KNOWLEDGE_KEYWORDS: List[str] = [
+    "什么是", "如何", "怎么", "为什么", "规则", "制度", "政策", "流程",
+    "说明", "介绍", "解释", "定义", "faq", "常见问题", "帮助",
+    "填写", "申请", "方法", "步骤",
+    "截止", "截止时间", "规定", "要求", "期限", "时限", "多久",
+    "什么时候", "几点", "几日", "不得", "须", "应当", "必须",
+    "类型", "有哪些", "哪些类型", "分类", "种类", "有什么类型",
+    "分为哪些", "包括哪些", "有几种",
+]
+
+_DEFAULT_TOOL_KEYWORDS: Dict[str, List[str]] = {
+    "query_timesheet": [
+        "查询工时", "我的工时", "查看工时", "本人工时", "工时记录",
+        "工时", "工作时间", "加班", "考勤", "打卡", "上班", "下班",
+        "本周工时", "本月工时",
+    ],
+    "query_project": [
+        "查询项目", "项目信息", "项目详情", "项目成员", "项目进度",
+        "查看项目", "显示项目",
+        "项目",
+    ],
+    "compute_statistics": [
+        "统计", "汇总", "报表", "分析", "总计", "平均", "对比",
+        "统计数据", "数据分析",
+        "统计部门", "统计工时", "统计项目", "部门统计", "项目统计",
+    ],
+}
+
+_DEFAULT_COMPLEX_INDICATORS: List[str] = [
+    "并且", "然后", "接着", "同时", "另外", "还要", "以及",
+    "生成报告", "制作图表", "发送邮件", "导出数据", "批量处理",
+    "并生成", "并统计", "然后", "同时",
+]
+
+_DEFAULT_CHAT_KEYWORDS: List[str] = [
+    "你好", "您好", "嗨", "hello", "hi",
+    "谢谢", "感谢", "多谢",
+    "再见", "拜拜", "bye",
+    "很高兴", "随便聊聊", "天气",
+]
+
+
+def _builtin_default_rules() -> Dict[str, Any]:
+    """返回内置默认规则的深拷贝（防止调用方原地修改污染默认）。"""
+    import copy
+
+    return {
+        "knowledge_keywords": copy.deepcopy(_DEFAULT_KNOWLEDGE_KEYWORDS),
+        "tool_keywords": copy.deepcopy(_DEFAULT_TOOL_KEYWORDS),
+        "complex_indicators": copy.deepcopy(_DEFAULT_COMPLEX_INDICATORS),
+        "chat_keywords": copy.deepcopy(_DEFAULT_CHAT_KEYWORDS),
+    }
+
+
+def _load_intent_rules() -> Dict[str, Any]:
+    """加载意图规则关键词。
+
+    优先读 _INTENT_RULES_PATH 的 yaml；任何异常（文件缺失、yaml 语法错、
+    PyYAML 未安装、结构非 dict）均回退到内置默认，并 logger.warning 留痕，
+    绝不抛出——降级路径自身不能因缺配置崩溃。
+
+    对 yaml 中缺失/类型不对的单个字段，逐字段回退到对应内置默认。
+    """
+    defaults = _builtin_default_rules()
+    try:
+        import yaml  # PyYAML
+    except ImportError:
+        logger.warning(
+            "[intent_rules] 未安装 PyYAML，使用内置默认意图关键词（降级安全）"
+        )
+        return defaults
+
+    try:
+        with open(_INTENT_RULES_PATH, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+    except FileNotFoundError:
+        logger.warning(
+            "[intent_rules] 配置文件不存在 (%s)，使用内置默认（降级安全）",
+            _INTENT_RULES_PATH,
+        )
+        return defaults
+    except Exception as e:  # yaml 语法错 / 编码错 / 其它
+        logger.warning(
+            "[intent_rules] 配置文件加载失败 (%s): %s；使用内置默认（降级安全）",
+            _INTENT_RULES_PATH,
+            e,
+        )
+        return defaults
+
+    if not isinstance(data, dict):
+        logger.warning(
+            "[intent_rules] 配置内容非 dict（实际 %s），使用内置默认（降级安全）",
+            type(data).__name__,
+        )
+        return defaults
+
+    rules = dict(defaults)
+    # knowledge_keywords / complex_indicators / chat_keywords: list[str]
+    for key in ("knowledge_keywords", "complex_indicators", "chat_keywords"):
+        val = data.get(key)
+        if isinstance(val, list) and all(isinstance(x, str) for x in val):
+            rules[key] = val
+        elif val is not None:
+            logger.warning(
+                "[intent_rules] 字段 %s 类型非法，该字段回退内置默认", key
+            )
+    # tool_keywords: dict[str, list[str]]
+    tk = data.get("tool_keywords")
+    if isinstance(tk, dict) and all(
+        isinstance(v, list) and all(isinstance(x, str) for x in v)
+        for v in tk.values()
+    ):
+        rules["tool_keywords"] = tk
+    elif tk is not None:
+        logger.warning(
+            "[intent_rules] 字段 tool_keywords 类型非法，回退内置默认"
+        )
+    return rules
 
 
 class IntentType(str, Enum):
@@ -60,57 +193,18 @@ class IntentRouter:
     """意图路由器"""
     
     def __init__(self):
-        """初始化意图路由器"""
-        self.knowledge_keywords = [
-            "什么是", "如何", "怎么", "为什么", "规则", "制度", "政策", "流程",
-            "说明", "介绍", "解释", "定义", "faq", "常见问题", "帮助",
-            "填写", "申请", "方法", "步骤",
-            # 制度/规定类关键词
-            "截止", "截止时间", "规定", "要求", "期限", "时限", "多久",
-            "什么时候", "几点", "几日", "不得", "须", "应当", "必须",
-            # 类型/分类类关键词
-            "类型", "有哪些", "哪些类型", "分类", "种类", "有什么类型",
-            "分为哪些", "包括哪些", "有几种"
-        ]
+        """初始化意图路由器
 
-        self.tool_keywords = {
-            "query_timesheet": [
-                # 组合词（高分）
-                "查询工时", "我的工时", "查看工时", "本人工时", "工时记录",
-                # 基础词（中分）
-                "工时", "工作时间", "加班", "考勤", "打卡", "上班", "下班",
-                # 时间限定
-                "本周工时", "本月工时"
-            ],
-            "query_project": [
-                # 组合词（高分）
-                "查询项目", "项目信息", "项目详情", "项目成员", "项目进度",
-                "查看项目", "显示项目",
-                # 基础词（中分）
-                "项目"
-            ],
-            "compute_statistics": [
-                # 统计词（高分）
-                "统计", "汇总", "报表", "分析", "总计", "平均", "对比",
-                "统计数据", "数据分析",
-                # 组合词
-                "统计部门", "统计工时", "统计项目", "部门统计", "项目统计"
-            ]
-        }
-
-        self.complex_indicators = [
-            "并且", "然后", "接着", "同时", "另外", "还要", "以及",
-            "生成报告", "制作图表", "发送邮件", "导出数据", "批量处理",
-            "并生成", "并统计", "然后", "同时"
-        ]
-
+        关键词/规则从 config/intent_rules.yaml 加载（技术债 #5）。
+        yaml 缺失/损坏时 _load_intent_rules() 回退内置默认，构造不会崩溃，
+        保证降级路径（LLM 不可用时的规则匹配）始终可用。
+        """
+        _rules = _load_intent_rules()
+        self.knowledge_keywords = _rules["knowledge_keywords"]
+        self.tool_keywords = _rules["tool_keywords"]
+        self.complex_indicators = _rules["complex_indicators"]
         # 通用对话关键词（用于排除）
-        self.chat_keywords = [
-            "你好", "您好", "嗨", "hello", "hi",
-            "谢谢", "感谢", "多谢",
-            "再见", "拜拜", "bye",
-            "很高兴", "随便聊聊", "天气"
-        ]
+        self.chat_keywords = _rules["chat_keywords"]
         
         # 路由处理器映射
         self.route_handlers: Dict[RouteTarget, Callable] = {}
