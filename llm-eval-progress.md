@@ -35,16 +35,22 @@
 - [x] qwen3.6-plus LLM-judge 盲评 completeness（108 条）
 - 报告：`docs/benchmarks/llm-quality-bakeoff-2026-05-16.md`
 
-### Phase 5: 方案 A 启用 + 真冒烟（2026-05-16）— 🔴 升级未触发
+### Phase 5: 方案 A 启用 + 真冒烟（2026-05-16）→ 升级缺口修复（2026-05-17）— 🟢 bench 已闭合
 - [x] 172 .env PLANNER/SQL_AGENT model → qwen3.5-plus，容器 recreate 健康
-- [ ] 方案 A 升级链路验证 — **未触发**
-- 实证（生产 /chat + bench progressive smoke 两路径）：8b 首轮 FC `tool_calls=0`
-  不发起 kb_* → `agent_history` 不含 kb_* → 升级钩子（`langgraph_agent.py:302`）
-  不触发，qwen3.5-plus 从未被调用
-- 根因：方案 A 升级被卡在"8b 先成功发起 kb_*"这个 8b 最弱、本想补的前提上，
-  对最需要它的查询空转。代码正确，失效在**触发条件**，需改触发策略
-  （首轮即升级 / 意图路由送 planner / 下调阈值），属设计决策待 brainstorming
-- 原始证据：`fastapi-service/tests/benchmark/results/raw_arag_smoke_212026.log`
+- [x] 2026-05-16 真冒烟发现升级链路未触发：8b 首轮 FC `tool_calls=0` 不发起
+  kb_* → `agent_history` 不含 kb_* → 升级钩子不触发。根因：升级卡在"8b 先
+  发起 kb_*"这个 8b 最弱、本想补的前提上（证据 raw_arag_smoke_212026.log）
+- [x] 2026-05-17 升级触发策略修复 — knowledge_qa 改道方案
+  - 设计 spec：`docs/superpowers/specs/2026-05-17-plan-a-escalation-trigger-design.md`（66b2189）
+  - 实现：263ff1f feat(llm) + c0c5127 feat(bench) + 5a0e980 test(rag)，本地 main 未 push
+  - bench 实证：L01 真实走云端 5 步 kb_* 链（kb_outline→semantic→keyword→read×2），
+    `model=qwen3.5-plus` ×4，`tool_calls=5 coverage=100%`
+  - 单测 10 passed（独立复跑核验，非采信报告）
+  - 原始证据：`fastapi-service/tests/benchmark/results/raw_arag_dispatch_20260517_005729.log`
+    （sha256 `15bfcc7d64c6d3582b0a35b503b111c59b6fc6668f79b40e92238874848b7ecc`，
+    UTF-16LE 编码须直读字节核验；回退用例 raw_arag_fallback_20260517_010454.log）
+- [ ] 生产验收 — 待 push + 172 容器 recreate + 查 conversation_logs 真实流量
+  knowledge 类 model_name→qwen3.5-plus（属生产动作，需用户在场授权）
 
 ## 评测结果摘要
 

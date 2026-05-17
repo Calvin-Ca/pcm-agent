@@ -308,7 +308,7 @@ Code Interpreter Python 沙箱（让 LLM 生成 Python 代码处理复杂数据�
   └── ✅ 精度回归验证（2026-04-13）
       layer1_v6: 87.0%（2000 case），与 v5 持平，无回归
 
-🔴 第五阶段（2026-05-15，2026-05-16 启用）— 模型分层（方案 A）：代码已合入 + 已启用，但升级触发条件失效（详见末尾 🔴）
+🟢 第五阶段（2026-05-15 合入，2026-05-16 启用，2026-05-17 升级缺口已修复）— 模型分层（方案 A）：代码已合入 + 已启用 + 升级触发已修复并 bench 实证，待生产验收（详见末尾）
   背景：自评测（docs project_progressive_rag_eval_2026-05-05）显示 qwen3-8b
         在 A-RAG 多步工具选择上不稳（44% 退化 / 22% 跑完 3 步）。
         复杂场景切托管 API，轻量场景留本地 8b，按"能力"而非"模块"分 3 层。
@@ -326,13 +326,21 @@ Code Interpreter Python 沙箱（让 LLM 生成 Python 代码处理复杂数据�
   ├── ✅ 启用（2026-05-16）：172 .env PLANNER/SQL_AGENT model = qwen3.5-plus
   │   （qwen-plus 在该 key 权限外、原配置是坏的），备份 .env.bak.20260516，
   │   容器 recreate 后健康，基础 RAG 端到端可用
-  └── 🔴 真冒烟发现：升级链路**实证未触发**（生产 /chat + bench progressive smoke
-      两路径均证），8b 首轮 FC tool_calls=0 不发起 kb_* → agent_history 不含
-      kb_* → 升级钩子（langgraph_agent.py:302）不触发，qwen3.5-plus 从未被调用。
-      根因：方案 A 升级被卡在"8b 先成功发起 kb_*"这个 8b 最弱、本想补的前提上，
-      对最需要它的查询空转。代码正确，失效在**触发条件**，需改触发策略
-      （首轮即升级 / 意图路由送 planner / 下调阈值），属设计决策待 brainstorming。
-      证据 raw_arag_smoke_212026.log；详见记忆 project_plan_a_escalation_gap
+  ├── 🟡 真冒烟（2026-05-16）曾发现升级链路实证未触发：8b 首轮 FC tool_calls=0
+  │   不发起 kb_* → agent_history 不含 kb_* → 升级钩子（langgraph_agent.py:302）
+  │   不触发。根因：升级被卡在"8b 先成功发起 kb_*"这个 8b 最弱、本想补的前提上
+  └── ✅ 升级触发策略修复（2026-05-17）— knowledge_qa 改道方案
+      设计 spec：docs/superpowers/specs/2026-05-17-plan-a-escalation-trigger-design.md（66b2189）
+      实现：263ff1f feat(llm) + c0c5127 feat(bench) + 5a0e980 test(rag)，本地 main，未 push
+      ├── knowledge_qa 在 planner 探活通过时改道回 llm_with_tools 自循环
+      │   （首轮即 qwen3.5-plus + kb_* schema），探活只查 key+构造不发请求
+      ├── planner 掉线经 _rag_fallback 最高优先级短路 force_end→summarize 回退 8b
+      ├── bench 实证：L01 真实走云端 5 步 kb_* 链，model=qwen3.5-plus ×4，
+      │   tool_calls=5 coverage=100%（raw_arag_dispatch_20260517_005729.log，
+      │   sha256 15bfcc7d…7ecc，已 git/日志独立核验非造假）
+      ├── 单测 10 passed（独立复跑核验）
+      └── ⬜ 待生产验收：需 push + 172 容器 recreate + 查 conversation_logs
+          真实流量 knowledge 类 model_name→qwen3.5-plus（属生产动作，需授权）
 
 🟡 上线准备（4.14 ~）
   ├── ✅ 创建只读数据库账号（2026-04-14）
@@ -400,7 +408,7 @@ L5  Autonomous Agent   ← 远期（定时任务 + 自动执行 + 通知）
 | ~~ECharts 可视化~~ | ★★★★ | ~~1 天~~ | ✅ 已完成（2026-04-28） |
 | ~~智能填报建议~~ | ★★★★ | ~~1 天~~ | ✅ 已完成（2026-04-28，2026-04-29 合入 main） |
 | ~~批量工时填报~~ | ★★★★ | ~~1.5 天~~ | ✅ 已完成（2026-04-29） |
-| **模型分层（方案 A）** | ★★★★ | 0.5-1 天 | 🔴 已启用但升级触发条件失效：升级卡在 8b 首轮先发起 kb_*（8b 最弱环节），需改触发策略（2026-05-16） |
+| **模型分层（方案 A）** | ★★★★ | 0.5-1 天 | 🟢 已启用 + 升级触发缺口已修复并 bench 实证（knowledge_qa 改道 qwen3.5-plus 5 步导航），本地 main 未 push，待生产验收（2026-05-17） |
 | MCP Server 批量接入 | ★★★★ | 1-2 天 | 🟡 工具数已 10，触发条件满足，看后续接口增长 |
 | Multi-Agent | ★★★ | 3-5 天 | 🔵 等业务场景驱动 |
 | Self-Reflection | ★★★ | 0.5 天 | 🚫 已放弃（面试雷区） |
