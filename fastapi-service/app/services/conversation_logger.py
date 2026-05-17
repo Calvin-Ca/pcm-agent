@@ -4,7 +4,7 @@
 import logging
 from datetime import datetime
 from typing import Optional, List, Dict, Any
-from app.models.conversation import ConversationLog
+from app.models.conversation import ConversationLog, ConversationLogEntry
 from app.services.database import get_db_service
 
 logger = logging.getLogger(__name__)
@@ -16,84 +16,49 @@ class ConversationLogger:
     def __init__(self):
         self.db_service = get_db_service()
     
-    def log_conversation(
-        self,
-        session_id: str,
-        user_id: str,
-        user_message: str,
-        route_type: str,
-        ai_response: Optional[str] = None,
-        intent: Optional[str] = None,
-        history_turns_count: int = 0,
-        memory_count: int = 0,
-        context_snapshot: Optional[Dict] = None,
-        tools_called: Optional[List[Dict]] = None,
-        has_task_plan: bool = False,
-        task_plan: Optional[Dict] = None,
-        duration_ms: Optional[int] = None,
-        prompt_tokens: int = 0,
-        completion_tokens: int = 0,
-        model_name: Optional[str] = None,
-        status: str = "success",
-        error_message: Optional[str] = None,
-        extra_data: Optional[Dict] = None
-    ) -> int:
+    def log_conversation(self, entry: ConversationLogEntry) -> int:
         """
-        记录会话日志
-        
+        记录会话日志（技术债 #7：参数收敛为 ConversationLogEntry 模型）
+
         Args:
-            session_id: 会话ID
-            user_id: 用户ID
-            user_message: 用户消息
-            route_type: 路由类型
-            ai_response: AI响应
-            intent: 识别的意图
-            tools_called: 调用的工具列表
-            has_task_plan: 是否有任务规划
-            task_plan: 任务规划详情
-            duration_ms: 处理耗时
-            prompt_tokens: 输入token数
-            completion_tokens: 输出token数
-            status: 状态
-            error_message: 错误信息
-            extra_data: 额外数据
-            
+            entry: 会话日志参数模型，字段与默认值同原签名一一对应
+
         Returns:
-            int: 日志记录ID
+            int: 日志记录ID（失败返回 -1，不抛异常以免影响主流程）
         """
         try:
             with self.db_service.get_session() as session:
                 log = ConversationLog(
-                    session_id=session_id,
-                    user_id=user_id,
-                    user_message=user_message,
+                    session_id=entry.session_id,
+                    user_id=entry.user_id,
+                    user_message=entry.user_message,
                     request_time=datetime.now(),
-                    route_type=route_type,
-                    intent=intent,
-                    history_turns_count=history_turns_count,
-                    memory_count=memory_count,
-                    context_snapshot=context_snapshot,
-                    tools_called=tools_called,
-                    tool_count=len(tools_called) if tools_called else 0,
-                    has_task_plan=has_task_plan,
-                    task_plan=task_plan,
-                    ai_response=ai_response,
+                    route_type=entry.route_type,
+                    intent=entry.intent,
+                    history_turns_count=entry.history_turns_count,
+                    memory_count=entry.memory_count,
+                    context_snapshot=entry.context_snapshot,
+                    tools_called=entry.tools_called,
+                    tool_count=len(entry.tools_called) if entry.tools_called else 0,
+                    has_task_plan=entry.has_task_plan,
+                    task_plan=entry.task_plan,
+                    ai_response=entry.ai_response,
                     response_time=datetime.now(),
-                    duration_ms=duration_ms,
-                    prompt_tokens=prompt_tokens,
-                    completion_tokens=completion_tokens,
-                    total_tokens=prompt_tokens + completion_tokens,
-                    model_name=model_name,
-                    status=status,
-                    error_message=error_message,
-                    extra_data=extra_data
+                    duration_ms=entry.duration_ms,
+                    prompt_tokens=entry.prompt_tokens,
+                    completion_tokens=entry.completion_tokens,
+                    total_tokens=entry.prompt_tokens + entry.completion_tokens,
+                    model_name=entry.model_name,
+                    status=entry.status,
+                    error_message=entry.error_message,
+                    extra_data=entry.extra_data
                 )
                 
                 session.add(log)
                 session.flush()
                 
                 log_id = log.id
-                logger.info(f"Conversation logged: id={log_id}, user={user_id}, route={route_type}")
+                logger.info(f"Conversation logged: id={log_id}, user={entry.user_id}, route={entry.route_type}")
                 
                 return log_id
                 

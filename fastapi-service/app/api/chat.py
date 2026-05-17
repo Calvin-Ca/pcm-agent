@@ -446,17 +446,20 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
         # 记录会话日志 + Prometheus 指标
         try:
             duration_ms = int((datetime.now() - start_time).total_seconds() * 1000)
+            from app.models.conversation import ConversationLogEntry
             conv_logger = get_conversation_logger()
 
             conv_logger.log_conversation(
-                session_id=(effective_session_id if 'effective_session_id' in locals() else request.session_id) or "unknown",
-                user_id=user_id if 'user_id' in locals() else "anonymous",
-                user_message=request.message,
-                route_type=route_type or "unknown",
-                intent=intent_value,
-                duration_ms=duration_ms,
-                status=status,
-                error_message=error_message
+                ConversationLogEntry(
+                    session_id=(effective_session_id if 'effective_session_id' in locals() else request.session_id) or "unknown",
+                    user_id=user_id if 'user_id' in locals() else "anonymous",
+                    user_message=request.message,
+                    route_type=route_type or "unknown",
+                    intent=intent_value,
+                    duration_ms=duration_ms,
+                    status=status,
+                    error_message=error_message
+                )
             )
         except Exception as log_error:
             logger.error(f"Failed to log conversation: {log_error}")

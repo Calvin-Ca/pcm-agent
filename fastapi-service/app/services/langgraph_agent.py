@@ -1522,6 +1522,7 @@ async def stream_agent_response(
         try:
             import os
             from app.services.conversation_logger import get_conversation_logger
+            from app.models.conversation import ConversationLogEntry
             from app.services.database import get_db_service
             from app.models.ai_session import AiSession
 
@@ -1539,20 +1540,22 @@ async def stream_agent_response(
 
             total_tokens = 0
             get_conversation_logger().log_conversation(
-                session_id=effective_session_id,
-                user_id=user_id,
-                user_message=message,
-                route_type=log_route_type or "unknown",
-                intent=log_intent,
-                history_turns_count=log_history_turns,
-                memory_count=log_memory_count,
-                context_snapshot=safe_snapshot,
-                tools_called=log_tools_called or None,
-                ai_response=log_ai_response or None,
-                duration_ms=duration_ms,
-                model_name=model,
-                status=log_status,
-                error_message=log_error,
+                ConversationLogEntry(
+                    session_id=effective_session_id,
+                    user_id=user_id,
+                    user_message=message,
+                    route_type=log_route_type or "unknown",
+                    intent=log_intent,
+                    history_turns_count=log_history_turns,
+                    memory_count=log_memory_count,
+                    context_snapshot=safe_snapshot,
+                    tools_called=log_tools_called or None,
+                    ai_response=log_ai_response or None,
+                    duration_ms=duration_ms,
+                    model_name=model,
+                    status=log_status,
+                    error_message=log_error,
+                )
             )
 
             # 同步更新 ai_sessions 汇总（upsert）
