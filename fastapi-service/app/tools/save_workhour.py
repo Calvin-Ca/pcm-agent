@@ -50,6 +50,10 @@ SAVE_WORKHOUR_SCHEMA = {
             "type": "string",
             "description": "用户ID（可选，不填则使用当前登录用户）",
         },
+        "dry_run": {
+            "type": "boolean",
+            "description": "true=仅预览校验不写入；缺省由调用环境决定（MCP 写工具端点会强制默认 true）",
+        },
     },
     "required": [],
     "additionalProperties": False,
@@ -155,6 +159,7 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
     duration: float = float(kwargs.get("duration", 0))
     description: str = kwargs.get("description", "")
     user_id: Optional[str] = kwargs.get("user_id")
+    dry_run: bool = bool(kwargs.get("dry_run", False))
 
     # 1. 基础参数校验
     if not project_id:
@@ -211,6 +216,20 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
         payload["workContent"] = description
     if user_id:
         payload["memberId"] = user_id
+
+    if dry_run:
+        return {
+            "success": True,
+            "dry_run": True,
+            "preview": {
+                "payload": payload,
+                "summary": (
+                    f"预览（未写入）：{date_str} {duration}h，"
+                    f"项目 {project_id}，类别 {workhour_type}/{resolved_work_type}"
+                ),
+            },
+            "message": "以上为预览，确认无误后再提交。",
+        }
 
     try:
         url = f"{base_url}/api/workhour"
@@ -317,6 +336,7 @@ def register_save_workhour_tool():
             category=ToolCategory.WORKHOUR,
             timeout=30,
             requires_permission=True,
+            is_write=True,
         )
         logger.info("工时填报工具注册成功")
     except Exception as e:
