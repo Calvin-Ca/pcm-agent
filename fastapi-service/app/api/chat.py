@@ -6,6 +6,7 @@ AI Chat API - AI聊天接口
 
 from datetime import datetime
 import logging
+import re
 from typing import Dict, Any, Optional
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
@@ -88,6 +89,25 @@ class ChatResponse(BaseModel):
     session_id: Optional[str] = Field(None, description="会话ID")
     result: Optional[Dict[str, Any]] = Field(None, description="执行结果")
     error: Optional[str] = Field(None, description="错误信息")
+
+
+_THINK_BLOCK_RE = re.compile(r"<think>[\s\S]*?</think>", re.DOTALL)
+
+
+def _strip_reasoning_trace(text: str) -> str:
+    """剥离推理模型的 <think>...</think> 思维链，仅保留面向用户的答案。
+
+    qwen3 系（含方案 A 推理层 qwen3.5-plus）默认输出 reasoning，会把
+    「自言自语」混进用户可见答案。本仓库 llm_client/intent_router/sql_query
+    均做服务端剥离，知识问答聚合路径此前遗漏。
+
+    只剥离**良构闭合**的 <think>...</think>（非贪婪）。故意不实现「遇未闭合
+    <think> 就删到结尾」的贪婪兜底——那会在模型被截断/未闭合时把整段答案
+    一并删掉，正是刚修复的「答案体丢失」同类陷阱。未闭合时宁可原样返回。
+    """
+    if not text or "<think>" not in text:
+        return text
+    return _THINK_BLOCK_RE.sub("", text).strip()
 
 
 def _accumulate_response_text(prev: Optional[str], data: Dict[str, Any]) -> Optional[str]:
@@ -409,7 +429,7 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
         intent_value = detected_intent
 
         # 构建与旧格式兼容的 result
-        response_text = final_response or "请求处理完成"
+        response_text = _strip_reasoning_trace(final_response or "请求处理完成")
         result = {
             "route_info": {
                 "target": route_type,

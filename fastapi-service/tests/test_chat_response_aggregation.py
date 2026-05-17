@@ -9,7 +9,7 @@
 工具/LLM/澄清/计划路径只发单个全量 response 事件，累积后等价自身，不重复。
 """
 
-from app.api.chat import _accumulate_response_text
+from app.api.chat import _accumulate_response_text, _strip_reasoning_trace
 
 
 def _run(events):
@@ -63,3 +63,39 @@ def test_response_fallback_field():
 
 def test_no_response_events_returns_none():
     assert _run([]) is None
+
+
+# ── _strip_reasoning_trace：剥离 <think> 思维链 ──────────────────────────────
+
+def test_strip_wellformed_think_keeps_answer_and_footer():
+    """生产实测形态：<think>推理</think> + 答案 + footer → 去推理留答案+footer。"""
+    text = (
+        "<think>\n好的，用户问加班费怎么算，我需要看知识库...\n</think>\n\n"
+        "**加班费计算方式**：\n1. 计算基数：月固定工资\n2. 工作日 1.5 倍\n\n"
+        "---\n📚 **来源：** 加班费计算规则.md"
+    )
+    out = _strip_reasoning_trace(text)
+    assert "<think>" not in out and "</think>" not in out
+    assert "加班费计算方式" in out
+    assert "📚 **来源：**" in out
+    assert "我需要看知识库" not in out
+
+
+def test_strip_no_think_unchanged():
+    assert _strip_reasoning_trace("纯答案，无思维链") == "纯答案，无思维链"
+
+
+def test_unclosed_think_preserved_not_nuked():
+    """未闭合 <think>：故意不删到结尾（避免重蹈答案体丢失陷阱），原样返回。"""
+    text = "<think>\n模型被截断，没有闭合标签，但这里其实有答案正文..."
+    assert _strip_reasoning_trace(text) == text
+
+
+def test_strip_multiple_think_blocks():
+    text = "<think>一</think>答案A<think>二</think>答案B"
+    assert _strip_reasoning_trace(text) == "答案A答案B"
+
+
+def test_strip_empty_or_none_safe():
+    assert _strip_reasoning_trace("") == ""
+    assert _strip_reasoning_trace(None) is None
