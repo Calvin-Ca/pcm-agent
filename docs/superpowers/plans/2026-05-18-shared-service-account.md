@@ -104,7 +104,7 @@ Expected：打印 `HTTP 200`、顶层键列表、疑似角色字段、token/user
 在本计划文件 Task 1 末尾追加一行（替换下方占位为实测结果）：
 
 ```
-> SPIKE 结论（实测 YYYY-MM-DD）：角色字段键名 = `<实测键名 或 "无，全程回退 env">`，token/userId 键名 = `token`/`userId`，原始响应见 mcp_servers/logs/spike_mcp_token_response.json
+> SPIKE 结论（实测 2026-05-18）：角色字段键名 = `entityType`，token/userId 键名 = `token`/`userId`，原始响应见 mcp_servers/logs/spike_mcp_token_response.json
 ```
 
 后续 Task 4 的 `_ROLE_KEY` 常量取此实测键名。
