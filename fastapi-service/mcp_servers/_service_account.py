@@ -35,6 +35,9 @@ _cached_token: str | None = None
 _cached_user_id: str | None = None
 _cached_entity_type: str | None = None
 
+# Task 1 spike 实测确认的角色字段键名
+_ROLE_KEY = "entityType"
+
 
 def auth_configured() -> bool:
     """预配 token 或 (entity_id + api_key) 任一齐备即视为已配置。"""
@@ -59,5 +62,32 @@ async def ensure_auth() -> tuple[str, str, str]:
             _cached_entity_type or ENTITY_TYPE,
             _cached_token,
         )
+
+    if MCP_ENTITY_ID and MCP_API_KEY:
+        import httpx
+
+        logger.info("auth source=service_account fetching entity_id=%s", MCP_ENTITY_ID)
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            resp = await client.post(
+                f"{AI_SERVICE_URL}/api/internal/auth/mcp-token",
+                json={"entity_id": MCP_ENTITY_ID, "api_key": MCP_API_KEY},
+            )
+            resp.raise_for_status()
+            data = resp.json()
+
+        token = data.get("token", "")
+        if not token:
+            raise RuntimeError("Service Account 认证返回空 token")
+        user_id = data.get("userId", "")
+        role = data.get(_ROLE_KEY) or ENTITY_TYPE  # 解析不到安全回退 env，绝不空
+
+        _cached_token = token
+        _cached_user_id = user_id
+        _cached_entity_type = role
+        logger.info(
+            "auth resolved source=service_account user_id=%s entity_type=%s(from=%s)",
+            user_id, role, _ROLE_KEY if data.get(_ROLE_KEY) else "env-fallback",
+        )
+        return (user_id, role, token)
 
     return ("", "", "")

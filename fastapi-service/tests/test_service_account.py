@@ -54,3 +54,73 @@ async def test_ensure_auth_cache_hit(monkeypatch):
     m._cached_entity_type = "regionAdmin"
     uid, etype, tok = await m.ensure_auth()
     assert (uid, etype, tok) == ("cu", "regionAdmin", "CT")
+
+
+from unittest.mock import patch
+
+
+class _FakeResp:
+    def __init__(self, payload, status=200):
+        self._p = payload
+        self.status_code = status
+
+    def raise_for_status(self):
+        if self.status_code >= 400:
+            raise RuntimeError(f"HTTP {self.status_code}")
+
+    def json(self):
+        return self._p
+
+
+async def test_ensure_auth_sa_fetch_parses_role(monkeypatch):
+    m = _reload(monkeypatch, MCP_ENTITY_ID="E1", MCP_API_KEY="K1",
+                MCP_TEST_ENTITY_TYPE="employee")
+    payload = {"token": "SAJWT", "userId": "sa-uid", "entityType": "deptAdmin"}
+
+    async def fake_post(self, url, json=None, headers=None, timeout=None):
+        return _FakeResp(payload)
+
+    with patch("httpx.AsyncClient.post", new=fake_post):
+        uid, etype, tok = await m.ensure_auth()
+    assert (uid, etype, tok) == ("sa-uid", "deptAdmin", "SAJWT")
+    # 缓存已写入
+    assert m._cached_token == "SAJWT" and m._cached_entity_type == "deptAdmin"
+
+
+async def test_ensure_auth_sa_role_missing_falls_back_to_env(monkeypatch):
+    m = _reload(monkeypatch, MCP_ENTITY_ID="E1", MCP_API_KEY="K1",
+                MCP_TEST_ENTITY_TYPE="regionAdmin")
+    payload = {"token": "SAJWT", "userId": "sa-uid"}  # 无角色字段
+
+    async def fake_post(self, url, json=None, headers=None, timeout=None):
+        return _FakeResp(payload)
+
+    with patch("httpx.AsyncClient.post", new=fake_post):
+        uid, etype, tok = await m.ensure_auth()
+    assert etype == "regionAdmin"  # 回退 env 默认，绝不空
+
+
+async def test_ensure_auth_sa_empty_token_raises(monkeypatch):
+    m = _reload(monkeypatch, MCP_ENTITY_ID="E1", MCP_API_KEY="K1")
+    payload = {"token": "", "userId": "x"}
+
+    async def fake_post(self, url, json=None, headers=None, timeout=None):
+        return _FakeResp(payload)
+
+    with patch("httpx.AsyncClient.post", new=fake_post):
+        with pytest.raises(RuntimeError, match="返回空 token"):
+            await m.ensure_auth()
+
+
+async def test_ensure_auth_sa_called_once_then_cached(monkeypatch):
+    m = _reload(monkeypatch, MCP_ENTITY_ID="E1", MCP_API_KEY="K1")
+    calls = {"n": 0}
+
+    async def fake_post(self, url, json=None, headers=None, timeout=None):
+        calls["n"] += 1
+        return _FakeResp({"token": "T", "userId": "u", "entityType": "employee"})
+
+    with patch("httpx.AsyncClient.post", new=fake_post):
+        await m.ensure_auth()
+        await m.ensure_auth()
+    assert calls["n"] == 1  # 第二次走缓存
