@@ -91,11 +91,26 @@ class GatewayAuthMiddleware(BaseHTTPMiddleware):
                 status_code=401,
             )
 
-        ident = Identity(
-            user_id=request.headers.get("X-User-ID", ""),
-            entity_type=request.headers.get("X-Entity-Type", "employee"),
-            auth_token=request.headers.get("X-Auth-Token", ""),
-        )
+        entity_id = request.headers.get("X-Entity-ID", "")
+        if not entity_id:
+            return JSONResponse(
+                {"error": "missing or invalid X-Entity-ID"},
+                status_code=401,
+            )
+
+        try:
+            ident = await resolve_identity(entity_id)
+        except Exception as e:  # noqa: BLE001
+            # 不回显 token/key/上游 detail；内部日志不记密钥
+            logger.error(
+                "[gateway] identity resolution failed entity_id=%s err=%s",
+                entity_id, type(e).__name__,
+            )
+            return JSONResponse(
+                {"error": "identity resolution failed"},
+                status_code=502,
+            )
+
         token = _IDENTITY.set(ident)
         try:
             return await call_next(request)

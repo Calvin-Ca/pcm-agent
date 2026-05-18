@@ -47,16 +47,58 @@ def test_health_bypasses_auth(monkeypatch):
     assert r.status_code == 200
 
 
-def test_identity_populated_from_headers(monkeypatch):
-    client = TestClient(_app(monkeypatch))
-    r = client.get("/probe", headers={
-        "X-Gateway-Token": "GW_SECRET",
-        "X-Auth-Token": "JWT123",
-        "X-User-ID": "u42",
-        "X-Entity-Type": "deptAdmin",
-    })
+def _app_resolved(monkeypatch, fetch_impl):
+    monkeypatch.setenv("MCP_GATEWAY_TOKEN", "GW_SECRET")
+    monkeypatch.setenv("MCP_API_KEY", "SHARED")
+    import importlib
+    importlib.reload(gc)
+    monkeypatch.setattr(gc, "fetch_service_account_token", fetch_impl)
+
+    async def probe(request):
+        i = gc.get_identity()
+        return PlainTextResponse(f"{i.user_id}|{i.entity_type}|{i.auth_token}|{i.entity_id}")
+
+    app = Starlette(routes=[
+        Route("/probe", probe),
+        Route("/health/health", lambda r: PlainTextResponse("ok")),
+    ])
+    app.add_middleware(gc.GatewayAuthMiddleware)
+    return app
+
+
+def test_identity_resolved_via_service_account(monkeypatch):
+    async def fake_fetch(entity_id, api_key, *, ai_service_url,
+                         role_key="entityType", fallback_entity_type="employee"):
+        return ("JWTx", "uuid-99", "deptAdmin")
+
+    client = TestClient(_app_resolved(monkeypatch, fake_fetch))
+    r = client.get("/probe", headers={"X-Gateway-Token": "GW_SECRET",
+                                      "X-Entity-ID": "ding-99"})
     assert r.status_code == 200
-    assert r.text == "u42|deptAdmin|JWT123"
+    assert r.text == "uuid-99|deptAdmin|JWTx|ding-99"
+
+
+def test_missing_entity_id_401(monkeypatch):
+    async def fake_fetch(*a, **k):
+        raise AssertionError("不应被调用")
+
+    client = TestClient(_app_resolved(monkeypatch, fake_fetch))
+    r = client.get("/probe", headers={"X-Gateway-Token": "GW_SECRET"})
+    assert r.status_code == 401
+    assert "X-Entity-ID" in r.text
+
+
+def test_sa_failure_502_no_secret(monkeypatch):
+    async def boom(entity_id, api_key, *, ai_service_url,
+                   role_key="entityType", fallback_entity_type="employee"):
+        raise RuntimeError("Service Account 认证返回空 token")
+
+    client = TestClient(_app_resolved(monkeypatch, boom))
+    r = client.get("/probe", headers={"X-Gateway-Token": "GW_SECRET",
+                                      "X-Entity-ID": "ding-1"})
+    assert r.status_code == 502
+    assert "SHARED" not in r.text and "JWT" not in r.text
+    assert "identity resolution failed" in r.text
 
 
 async def test_forward_passes_identity_headers(monkeypatch):
