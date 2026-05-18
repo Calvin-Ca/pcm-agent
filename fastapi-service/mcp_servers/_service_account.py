@@ -91,3 +91,28 @@ async def ensure_auth() -> tuple[str, str, str]:
         return (user_id, role, token)
 
     return ("", "", "")
+
+
+async def call_ai_service_tool(tool_name: str, params: dict[str, Any]) -> dict[str, Any]:
+    """解析认证后转发到 ai-service 内部工具端点。
+
+    异常不在此吞，由各 server 工具函数体 try/except 兜成 {"error": ...}。
+    """
+    import httpx
+
+    user_id, entity_type, auth_token = await ensure_auth()
+    logger.info("forward tool=%s user_id=%s", tool_name, user_id)
+
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        resp = await client.post(
+            f"{AI_SERVICE_URL}/api/internal/tools/{tool_name}",
+            json=params,
+            headers={
+                "X-User-ID": user_id,
+                "X-Entity-Type": entity_type,
+                "X-Auth-Token": auth_token,
+            },
+        )
+        resp.raise_for_status()
+        return resp.json()
+

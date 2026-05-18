@@ -124,3 +124,46 @@ async def test_ensure_auth_sa_called_once_then_cached(monkeypatch):
         await m.ensure_auth()
         await m.ensure_auth()
     assert calls["n"] == 1  # 第二次走缓存
+
+
+async def test_call_ai_service_tool_headers_and_url(monkeypatch):
+    m = _reload(monkeypatch, MCP_TEST_AUTH_TOKEN="JWT",
+                MCP_TEST_USER_ID="u1", MCP_TEST_ENTITY_TYPE="employee",
+                AI_SERVICE_URL="http://ai-svc:8000")
+    captured = {}
+
+    class R:
+        def raise_for_status(self): pass
+        def json(self): return {"ok": True}
+
+    async def fake_post(self, url, json=None, headers=None, timeout=None):
+        captured.update(url=url, json=json, headers=headers)
+        return R()
+
+    with patch("httpx.AsyncClient.post", new=fake_post):
+        out = await m.call_ai_service_tool("query_timesheet", {"a": 1})
+
+    assert out == {"ok": True}
+    assert captured["url"] == "http://ai-svc:8000/api/internal/tools/query_timesheet"
+    assert captured["headers"] == {
+        "X-User-ID": "u1", "X-Entity-Type": "employee", "X-Auth-Token": "JWT"}
+    assert captured["json"] == {"a": 1}
+
+
+async def test_call_logs_no_token(monkeypatch, caplog):
+    m = _reload(monkeypatch, MCP_TEST_AUTH_TOKEN="SECRET_JWT",
+                MCP_TEST_USER_ID="u1")
+
+    class R:
+        def raise_for_status(self): pass
+        def json(self): return {}
+
+    async def fake_post(self, url, json=None, headers=None, timeout=None):
+        return R()
+
+    import logging as _lg
+    with caplog.at_level(_lg.INFO, logger="mcp-service-account"):
+        with patch("httpx.AsyncClient.post", new=fake_post):
+            await m.call_ai_service_tool("query_project", {})
+    assert "SECRET_JWT" not in caplog.text
+    assert "query_project" in caplog.text
