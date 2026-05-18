@@ -72,7 +72,7 @@ async def save_workhour(
 
     1. 首次 confirm=False（默认）→ 返回预览，不写库。把 preview 原样给用户。
     2. 用户明确同意后，相同参数 + confirm=True 再调一次才真写。
-    只为当前请求身份（X-Auth-Token 对应的人）填报，不接受代填他人。
+    只为本请求 X-Entity-ID 经 Service Account 换取的身份填报，不接受代填他人。
 
     Args:
         project_id: 项目名称或 ID（系统解析）

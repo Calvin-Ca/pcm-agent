@@ -83,3 +83,20 @@ def test_all_expected_tools_registered():
         "kb_outline", "kb_keyword_search", "kb_semantic_search",
         "kb_read_section",
     }
+
+
+def test_save_workhour_docstring_reflects_sa_identity():
+    import importlib
+    m = importlib.import_module("mcp_servers.http_gateway_server")
+    doc = m.save_workhour.__doc__ or ""
+    assert "X-Auth-Token" not in doc
+    assert "X-Entity-ID" in doc and "Service Account" in doc
+
+
+def test_save_workhour_impl_no_target_user_id():
+    """G4 结构性保护：网关 save 参数不含目标 user_id（保持）。"""
+    import importlib, inspect
+    m = importlib.import_module("mcp_servers.http_gateway_server")
+    src = inspect.getsource(m._save_workhour_impl)
+    assert '"user_id"' not in src and "'user_id'" not in src
+    assert "memberId" not in src
