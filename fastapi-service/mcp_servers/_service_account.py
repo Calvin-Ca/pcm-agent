@@ -39,3 +39,25 @@ _cached_entity_type: str | None = None
 def auth_configured() -> bool:
     """预配 token 或 (entity_id + api_key) 任一齐备即视为已配置。"""
     return bool(AUTH_TOKEN) or bool(MCP_ENTITY_ID and MCP_API_KEY)
+
+
+async def ensure_auth() -> tuple[str, str, str]:
+    """返回 (user_id, entity_type, auth_token)。
+
+    优先级：预配 token → 进程级缓存 → Service Account 自取（Task 4 补）。
+    """
+    global _cached_token, _cached_user_id, _cached_entity_type
+
+    if AUTH_TOKEN:
+        logger.info("auth source=preconfigured user_id=%s", USER_ID or MCP_ENTITY_ID)
+        return (USER_ID or MCP_ENTITY_ID, ENTITY_TYPE, AUTH_TOKEN)
+
+    if _cached_token:
+        logger.info("auth source=cache user_id=%s", _cached_user_id or MCP_ENTITY_ID)
+        return (
+            _cached_user_id or MCP_ENTITY_ID,
+            _cached_entity_type or ENTITY_TYPE,
+            _cached_token,
+        )
+
+    return ("", "", "")
