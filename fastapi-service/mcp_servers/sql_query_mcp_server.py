@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -39,39 +38,9 @@ logger = logging.getLogger("sql-query-mcp")
 
 from mcp.server.fastmcp import FastMCP
 
-# ─── 配置 ────────────────────────────────────────────────────────────────────
-AI_SERVICE_URL = os.getenv("AI_SERVICE_URL", "http://localhost:8000")
-
-# PoC 阶段：从 env 注入测试用户身份
-# 生产环境应通过 MCP Resource 协议或客户端显式传参
-USER_ID = os.getenv("MCP_TEST_USER_ID", "")
-ENTITY_TYPE = os.getenv("MCP_TEST_ENTITY_TYPE", "employee")
-AUTH_TOKEN = os.getenv("MCP_TEST_AUTH_TOKEN", "")
+from mcp_servers._service_account import auth_configured, call_ai_service_tool
 
 mcp = FastMCP("workhour-sql-query")
-
-
-# ─── 内部 HTTP 调用 ──────────────────────────────────────────────────────────
-
-async def _call_ai_service_tool(
-    tool_name: str,
-    params: dict[str, Any],
-) -> dict[str, Any]:
-    """调用 ai-service 内部工具接口。"""
-    import httpx
-
-    async with httpx.AsyncClient(timeout=60.0) as client:
-        response = await client.post(
-            f"{AI_SERVICE_URL}/api/internal/tools/{tool_name}",
-            json=params,
-            headers={
-                "X-User-ID": USER_ID,
-                "X-Entity-Type": ENTITY_TYPE,
-                "X-Auth-Token": AUTH_TOKEN,
-            },
-        )
-        response.raise_for_status()
-        return response.json()
 
 
 # ─── MCP Tools ───────────────────────────────────────────────────────────────
@@ -90,11 +59,13 @@ async def sql_query(
     """
     logger.info(f"sql_query called: question={question!r}")
 
-    if not USER_ID or not AUTH_TOKEN:
+    if not auth_configured():
         return json.dumps(
             {
-                "error": "MCP server not configured: 缺少 MCP_TEST_USER_ID / MCP_TEST_AUTH_TOKEN env",
-                "hint": "请在 .mcp.json 的 env 中配置 MCP_TEST_USER_ID 和 MCP_TEST_AUTH_TOKEN",
+                "error": "MCP server not configured",
+                "hint": "请配置以下任一组认证信息：\n"
+                        "1) Service Account（推荐）: MCP_ENTITY_ID + MCP_API_KEY\n"
+                        "2) 预配 Token: MCP_TEST_USER_ID + MCP_TEST_AUTH_TOKEN",
             },
             ensure_ascii=False,
             indent=2,
@@ -103,7 +74,7 @@ async def sql_query(
     params: dict[str, Any] = {"question": question}
 
     try:
-        result = await _call_ai_service_tool("sql_query", params)
+        result = await call_ai_service_tool("sql_query", params)
         return json.dumps(result, ensure_ascii=False, indent=2)
     except Exception as e:
         logger.error(f"sql_query failed: {e}", exc_info=True)
@@ -115,8 +86,5 @@ async def sql_query(
 
 
 if __name__ == "__main__":
-    logger.info(
-        f"Starting sql_query MCP server, AI_SERVICE_URL={AI_SERVICE_URL}, "
-        f"USER_ID={'set' if USER_ID else 'NOT SET'}"
-    )
+    logger.info("Starting MCP server, auth_configured=%s", auth_configured())
     mcp.run()
