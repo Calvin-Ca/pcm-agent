@@ -113,6 +113,8 @@
       ],
       "env": {
         "AI_SERVICE_URL": "http://localhost:8000",
+        "MCP_ENTITY_ID": "",
+        "MCP_API_KEY": "",
         "MCP_TEST_USER_ID": "",
         "MCP_TEST_ENTITY_TYPE": "employee",
         "MCP_TEST_AUTH_TOKEN": "",
