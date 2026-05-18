@@ -39,6 +39,37 @@ _cached_entity_type: str | None = None
 _ROLE_KEY = "entityType"
 
 
+async def fetch_service_account_token(
+    entity_id: str,
+    api_key: str,
+    *,
+    ai_service_url: str,
+    role_key: str = _ROLE_KEY,
+    fallback_entity_type: str = ENTITY_TYPE,
+) -> tuple[str, str, str]:
+    """纯取数：POST mcp-token 换 (token, user_id, entity_type)。
+
+    无 env 读取、无缓存、无全局态。stdio ensure_auth 与网关 resolver 共用。
+    token 空 → RuntimeError；角色键缺失 → 回退 fallback_entity_type（绝不空）。
+    """
+    import httpx
+
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        resp = await client.post(
+            f"{ai_service_url}/api/internal/auth/mcp-token",
+            json={"entity_id": entity_id, "api_key": api_key},
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+    token = data.get("token", "")
+    if not token:
+        raise RuntimeError("Service Account 认证返回空 token")
+    user_id = data.get("userId", "")
+    entity_type = data.get(role_key) or fallback_entity_type
+    return token, user_id, entity_type
+
+
 def auth_configured() -> bool:
     """预配 token 或 (entity_id + api_key) 任一齐备即视为已配置。"""
     return bool(AUTH_TOKEN) or bool(MCP_ENTITY_ID and MCP_API_KEY)
@@ -64,29 +95,19 @@ async def ensure_auth() -> tuple[str, str, str]:
         )
 
     if MCP_ENTITY_ID and MCP_API_KEY:
-        import httpx
-
         logger.info("auth source=service_account fetching entity_id=%s", MCP_ENTITY_ID)
-        async with httpx.AsyncClient(timeout=10.0) as client:
-            resp = await client.post(
-                f"{AI_SERVICE_URL}/api/internal/auth/mcp-token",
-                json={"entity_id": MCP_ENTITY_ID, "api_key": MCP_API_KEY},
-            )
-            resp.raise_for_status()
-            data = resp.json()
-
-        token = data.get("token", "")
-        if not token:
-            raise RuntimeError("Service Account 认证返回空 token")
-        user_id = data.get("userId", "")
-        role = data.get(_ROLE_KEY) or ENTITY_TYPE  # 解析不到安全回退 env，绝不空
-
+        token, user_id, role = await fetch_service_account_token(
+            MCP_ENTITY_ID, MCP_API_KEY,
+            ai_service_url=AI_SERVICE_URL,
+            role_key=_ROLE_KEY,
+            fallback_entity_type=ENTITY_TYPE,
+        )
         _cached_token = token
         _cached_user_id = user_id
         _cached_entity_type = role
         logger.info(
-            "auth resolved source=service_account user_id=%s entity_type=%s(from=%s)",
-            user_id, role, _ROLE_KEY if data.get(_ROLE_KEY) else "env-fallback",
+            "auth resolved source=service_account user_id=%s entity_type=%s",
+            user_id, role,
         )
         return (user_id, role, token)
 

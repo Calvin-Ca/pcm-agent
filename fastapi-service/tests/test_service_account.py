@@ -167,3 +167,36 @@ async def test_call_logs_no_token(monkeypatch, caplog):
             await m.call_ai_service_tool("query_project", {})
     assert "SECRET_JWT" not in caplog.text
     assert "query_project" in caplog.text
+
+
+async def test_fetch_service_account_token_parses(monkeypatch):
+    m = _reload(monkeypatch)
+
+    async def fake_post(self, url, json=None, headers=None, timeout=None):
+        assert url.endswith("/api/internal/auth/mcp-token")
+        assert json == {"entity_id": "E9", "api_key": "K9"}
+        return _FakeResp({"token": "T9", "userId": "uid9", "entityType": "deptAdmin"})
+
+    with patch("httpx.AsyncClient.post", new=fake_post):
+        tok, uid, et = await m.fetch_service_account_token(
+            "E9", "K9", ai_service_url="http://ai-svc:8000")
+    assert (tok, uid, et) == ("T9", "uid9", "deptAdmin")
+
+
+async def test_fetch_service_account_token_role_fallback_and_empty(monkeypatch):
+    m = _reload(monkeypatch)
+
+    async def fake_no_role(self, url, json=None, headers=None, timeout=None):
+        return _FakeResp({"token": "T", "userId": "u"})  # 无角色键
+
+    with patch("httpx.AsyncClient.post", new=fake_no_role):
+        tok, uid, et = await m.fetch_service_account_token(
+            "E", "K", ai_service_url="http://x", fallback_entity_type="regionAdmin")
+    assert et == "regionAdmin"  # 回退，绝不空
+
+    async def fake_empty(self, url, json=None, headers=None, timeout=None):
+        return _FakeResp({"token": "", "userId": "u"})
+
+    with patch("httpx.AsyncClient.post", new=fake_empty):
+        with pytest.raises(RuntimeError, match="返回空 token"):
+            await m.fetch_service_account_token("E", "K", ai_service_url="http://x")
