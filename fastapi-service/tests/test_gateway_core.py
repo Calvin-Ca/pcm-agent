@@ -89,3 +89,46 @@ async def test_forward_passes_identity_headers(monkeypatch):
     assert captured["headers"]["X-Entity-Type"] == "employee"
     assert captured["headers"]["X-Auth-Token"] == "T1"
     assert captured["json"] == {"project_id": "P"}
+
+
+async def test_resolve_identity_caches_per_entity(monkeypatch):
+    monkeypatch.setenv("MCP_GATEWAY_TOKEN", "GW")
+    monkeypatch.setenv("MCP_API_KEY", "SHARED")
+    monkeypatch.setenv("AI_SERVICE_URL", "http://ai-svc:8000")
+    import importlib
+    importlib.reload(gc)
+    calls = {"n": 0}
+
+    async def fake_fetch(entity_id, api_key, *, ai_service_url,
+                         role_key="entityType", fallback_entity_type="employee"):
+        calls["n"] += 1
+        return ("TOK-" + entity_id, "uuid-" + entity_id, "employee")
+
+    monkeypatch.setattr(gc, "fetch_service_account_token", fake_fetch)
+
+    i1 = await gc.resolve_identity("E1")
+    i1b = await gc.resolve_identity("E1")          # 命中缓存
+    i2 = await gc.resolve_identity("E2")           # 不同人，另起
+    assert calls["n"] == 2
+    assert i1.user_id == "uuid-E1" and i1.auth_token == "TOK-E1"
+    assert i1.entity_id == "E1" and i1b is i1
+    assert i2.user_id == "uuid-E2"
+
+
+async def test_resolve_identity_ttl_expiry(monkeypatch):
+    monkeypatch.setenv("MCP_GATEWAY_TOKEN", "GW")
+    monkeypatch.setenv("MCP_API_KEY", "SHARED")
+    monkeypatch.setenv("MCP_GATEWAY_TOKEN_TTL", "0")  # 立即过期
+    import importlib
+    importlib.reload(gc)
+    calls = {"n": 0}
+
+    async def fake_fetch(entity_id, api_key, *, ai_service_url,
+                         role_key="entityType", fallback_entity_type="employee"):
+        calls["n"] += 1
+        return ("T", "u", "employee")
+
+    monkeypatch.setattr(gc, "fetch_service_account_token", fake_fetch)
+    await gc.resolve_identity("E1")
+    await gc.resolve_identity("E1")   # TTL=0 → 再次 fetch
+    assert calls["n"] == 2

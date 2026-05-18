@@ -14,10 +14,13 @@ from __future__ import annotations
 import contextvars
 import logging
 import os
+import time
 from dataclasses import dataclass
 from typing import Any, Dict
 
 import httpx
+
+from mcp_servers._service_account import fetch_service_account_token
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -26,6 +29,8 @@ logger = logging.getLogger("mcp-gateway")
 
 GATEWAY_TOKEN = os.getenv("MCP_GATEWAY_TOKEN", "")
 AI_SERVICE_URL = os.getenv("AI_SERVICE_URL", "http://ai-service:8000")
+MCP_API_KEY = os.getenv("MCP_API_KEY", "")
+MCP_GATEWAY_TOKEN_TTL = int(os.getenv("MCP_GATEWAY_TOKEN_TTL", "1500"))
 
 # 健康检查路径前缀放行（不需网关 token，供 compose healthcheck）
 _HEALTH_PREFIXES = ("/health",)
@@ -36,6 +41,7 @@ class Identity:
     user_id: str = ""
     entity_type: str = "employee"
     auth_token: str = ""
+    entity_id: str = ""
 
 
 _IDENTITY: contextvars.ContextVar[Identity] = contextvars.ContextVar(
@@ -45,6 +51,30 @@ _IDENTITY: contextvars.ContextVar[Identity] = contextvars.ContextVar(
 
 def get_identity() -> Identity:
     return _IDENTITY.get()
+
+
+_TOKEN_CACHE: dict[str, tuple[Identity, float]] = {}
+
+
+async def resolve_identity(entity_id: str) -> Identity:
+    """按自声明 entity_id 换 JWT，per-entity_id TTL 缓存。"""
+    now = time.monotonic()
+    hit = _TOKEN_CACHE.get(entity_id)
+    if hit and hit[1] > now:
+        return hit[0]
+    token, user_id, etype = await fetch_service_account_token(
+        entity_id, MCP_API_KEY, ai_service_url=AI_SERVICE_URL
+    )
+    ident = Identity(
+        user_id=user_id, entity_type=etype,
+        auth_token=token, entity_id=entity_id,
+    )
+    _TOKEN_CACHE[entity_id] = (ident, now + MCP_GATEWAY_TOKEN_TTL)
+    return ident
+
+
+def _evict(entity_id: str) -> None:
+    _TOKEN_CACHE.pop(entity_id, None)
 
 
 class GatewayAuthMiddleware(BaseHTTPMiddleware):
