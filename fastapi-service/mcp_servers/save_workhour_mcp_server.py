@@ -35,20 +35,7 @@ logger = logging.getLogger("save-workhour-mcp")
 
 from mcp.server.fastmcp import FastMCP
 
-AI_SERVICE_URL = os.getenv("AI_SERVICE_URL", "http://localhost:8000")
-
-# Service Account 认证（推荐）
-MCP_ENTITY_ID = os.getenv("MCP_ENTITY_ID", "")
-MCP_API_KEY = os.getenv("MCP_API_KEY", "")
-
-# 传统预配 token（fallback）
-USER_ID = os.getenv("MCP_TEST_USER_ID", "")
-ENTITY_TYPE = os.getenv("MCP_TEST_ENTITY_TYPE", "employee")
-AUTH_TOKEN = os.getenv("MCP_TEST_AUTH_TOKEN", "")
-
-# 运行时缓存
-_cached_auth_token: str | None = None
-_cached_user_id: str | None = None
+from mcp_servers._service_account import auth_configured, call_ai_service_tool
 
 mcp = FastMCP("workhour-save")
 
@@ -64,73 +51,6 @@ def _build_params(
         "description": description,
         "dry_run": not confirm,
     }
-
-
-async def _fetch_token_via_service_account() -> tuple[str, str]:
-    """通过 Service Account 从 FastAPI 获取 JWT token 和 userId。"""
-    import httpx
-
-    logger.info("Fetching JWT token via Service Account (entity_id=%s)", MCP_ENTITY_ID)
-    async with httpx.AsyncClient(timeout=10.0) as client:
-        response = await client.post(
-            f"{AI_SERVICE_URL}/api/internal/auth/mcp-token",
-            json={"entity_id": MCP_ENTITY_ID, "api_key": MCP_API_KEY},
-        )
-        response.raise_for_status()
-        data = response.json()
-        token = data.get("token", "")
-        user_id = data.get("userId", "")
-        if not token:
-            raise RuntimeError("Service Account 认证返回空 token")
-        logger.info("Service Account 认证成功: userId=%s", user_id)
-        return token, user_id
-
-
-async def _ensure_auth() -> tuple[str, str]:
-    """确保有有效的认证信息。返回 (user_id, auth_token)。
-
-    优先级：
-    1. 预配的 MCP_TEST_AUTH_TOKEN（已设置则直接使用）
-    2. 缓存的 Service Account token
-    3. 首次通过 Service Account 获取 token 并缓存
-    """
-    global _cached_auth_token, _cached_user_id
-
-    # 优先使用预配 token
-    if AUTH_TOKEN:
-        return USER_ID or MCP_ENTITY_ID, AUTH_TOKEN
-
-    # 使用缓存的 Service Account token
-    if _cached_auth_token:
-        return _cached_user_id or MCP_ENTITY_ID, _cached_auth_token
-
-    # 通过 Service Account 获取新 token
-    if MCP_ENTITY_ID and MCP_API_KEY:
-        token, user_id = await _fetch_token_via_service_account()
-        _cached_auth_token = token
-        _cached_user_id = user_id
-        return user_id, token
-
-    return "", ""
-
-
-async def _call_ai_service_tool(tool_name: str, params: dict[str, Any]) -> dict[str, Any]:
-    import httpx
-
-    user_id, auth_token = await _ensure_auth()
-
-    async with httpx.AsyncClient(timeout=30.0) as client:
-        response = await client.post(
-            f"{AI_SERVICE_URL}/api/internal/tools/{tool_name}",
-            json=params,
-            headers={
-                "X-User-ID": user_id,
-                "X-Entity-Type": ENTITY_TYPE,
-                "X-Auth-Token": auth_token,
-            },
-        )
-        response.raise_for_status()
-        return response.json()
 
 
 @mcp.tool()
@@ -162,8 +82,7 @@ async def save_workhour(
         f"duration={duration!r}, confirm={confirm!r}"
     )
 
-    # 检查认证配置
-    if not AUTH_TOKEN and not (MCP_ENTITY_ID and MCP_API_KEY):
+    if not auth_configured():
         return json.dumps({
             "error": "MCP server not configured",
             "hint": "请配置以下任一组认证信息：\n"
@@ -173,7 +92,7 @@ async def save_workhour(
 
     params = _build_params(project_id, date, duration, description, confirm)
     try:
-        result = await _call_ai_service_tool("save_workhour", params)
+        result = await call_ai_service_tool("save_workhour", params)
         return json.dumps(result, ensure_ascii=False, indent=2)
     except Exception as e:
         logger.error(f"save_workhour failed: {e}", exc_info=True)
@@ -181,13 +100,6 @@ async def save_workhour(
 
 
 if __name__ == "__main__":
-    auth_mode = (
-        "ServiceAccount" if (MCP_ENTITY_ID and MCP_API_KEY)
-        else "PreconfiguredToken" if AUTH_TOKEN
-        else "NOT_CONFIGURED"
-    )
-    logger.info(
-        f"Starting save_workhour MCP server, AI_SERVICE_URL={AI_SERVICE_URL}, "
-        f"auth_mode={auth_mode}"
-    )
+    from mcp_servers._service_account import auth_configured as _ac
+    logger.info("Starting save_workhour MCP server, auth_configured=%s", _ac())
     mcp.run()
