@@ -174,3 +174,53 @@ async def test_resolve_identity_ttl_expiry(monkeypatch):
     await gc.resolve_identity("E1")
     await gc.resolve_identity("E1")   # TTL=0 → 再次 fetch
     assert calls["n"] == 2
+
+
+async def test_forward_reauth_on_401(monkeypatch):
+    monkeypatch.setenv("MCP_GATEWAY_TOKEN", "GW")
+    monkeypatch.setenv("MCP_API_KEY", "SHARED")
+    monkeypatch.setenv("AI_SERVICE_URL", "http://ai-svc:8000")
+    import importlib
+    importlib.reload(gc)
+
+    fetch_calls = {"n": 0}
+
+    async def fake_fetch(entity_id, api_key, *, ai_service_url,
+                         role_key="entityType", fallback_entity_type="employee"):
+        fetch_calls["n"] += 1
+        return (f"TOK{fetch_calls['n']}", "uid", "employee")
+
+    monkeypatch.setattr(gc, "fetch_service_account_token", fake_fetch)
+
+    import httpx
+    post_calls = {"n": 0, "tokens": []}
+
+    class Resp401:
+        status_code = 401
+        def raise_for_status(self):
+            raise httpx.HTTPStatusError(
+                "401", request=httpx.Request("POST", "http://x"),
+                response=httpx.Response(401))
+        def json(self): return {}
+
+    class RespOK:
+        def raise_for_status(self): pass
+        def json(self): return {"ok": True}
+
+    async def fake_post(self, url, json=None, headers=None):
+        post_calls["n"] += 1
+        post_calls["tokens"].append(headers["X-Auth-Token"])
+        return Resp401() if post_calls["n"] == 1 else RespOK()
+
+    ident = await gc.resolve_identity("E1")           # 预热缓存
+    tok = gc._IDENTITY.set(ident)
+    try:
+        with patch("httpx.AsyncClient.post", new=fake_post):
+            out = await gc.forward_to_ai_service("query_timesheet", {})
+    finally:
+        gc._IDENTITY.reset(tok)
+
+    assert out == {"ok": True}
+    assert post_calls["n"] == 2                        # 重发一次
+    assert fetch_calls["n"] == 2                        # evict 后重换
+    assert post_calls["tokens"][0] != post_calls["tokens"][1]

@@ -121,19 +121,32 @@ class GatewayAuthMiddleware(BaseHTTPMiddleware):
 async def forward_to_ai_service(
     tool_name: str, params: Dict[str, Any]
 ) -> Dict[str, Any]:
-    """转发到同机 ai-service 内部端点，带 contextvar 里的身份头。"""
+    """转发到同机 ai-service 内部端点。ai-service 返 401 → 重换 token 重发一次。"""
     ident = get_identity()
     url = f"{AI_SERVICE_URL}/api/internal/tools/{tool_name}"
     logger.info(f"[gateway] forward tool={tool_name} user={ident.user_id}")
-    async with httpx.AsyncClient(timeout=30.0) as client:
-        resp = await client.post(
-            url,
-            json=params,
-            headers={
-                "X-User-ID": ident.user_id,
-                "X-Entity-Type": ident.entity_type,
-                "X-Auth-Token": ident.auth_token,
-            },
-        )
+
+    async def _post(identity: Identity) -> httpx.Response:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            return await client.post(
+                url,
+                json=params,
+                headers={
+                    "X-User-ID": identity.user_id,
+                    "X-Entity-Type": identity.entity_type,
+                    "X-Auth-Token": identity.auth_token,
+                },
+            )
+
+    resp = await _post(ident)
+    try:
         resp.raise_for_status()
-        return resp.json()
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code == 401 and ident.entity_id:
+            _evict(ident.entity_id)
+            ident = await resolve_identity(ident.entity_id)
+            resp = await _post(ident)
+            resp.raise_for_status()
+        else:
+            raise
+    return resp.json()
