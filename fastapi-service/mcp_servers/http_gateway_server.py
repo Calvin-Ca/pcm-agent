@@ -30,6 +30,7 @@ logging.basicConfig(
 logger = logging.getLogger("mcp-gateway")
 
 from mcp.server.fastmcp import FastMCP
+from mcp.server.transport_security import TransportSecuritySettings
 from starlette.responses import PlainTextResponse
 from starlette.routing import Route
 
@@ -38,7 +39,10 @@ from mcp_servers._gateway_core import (
     forward_to_ai_service,
 )
 
-mcp = FastMCP("workhour-gateway")
+mcp = FastMCP(
+    "workhour-gateway",
+    transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
+)
 
 
 async def _save_workhour_impl(
