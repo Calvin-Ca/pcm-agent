@@ -158,7 +158,9 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
     date_str: str = kwargs.get("date", "")
     duration: float = float(kwargs.get("duration", 0))
     description: str = kwargs.get("description", "")
-    user_id: Optional[str] = kwargs.get("user_id")
+    # user_id 可能来自顶层参数（chat 接口），也可能来自 user_context（internal 工具端点）
+    user_ctx = kwargs.get("user_context", {}) or {}
+    user_id: Optional[str] = kwargs.get("user_id") or user_ctx.get("user_id")
     dry_run: bool = bool(kwargs.get("dry_run", False))
 
     # 1. 基础参数校验
@@ -208,7 +210,7 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
     # workhourDate 需要 ISO instant 格式（SpringBoot Instant 类型）
     payload: Dict[str, Any] = {
         "projectId": project_id,
-        "workhourDate": f"{date_str}T00:00:00.000Z",
+        "workhourDate": f"{date_str}T00:00:00Z",
         "workhour": duration,
         "workType": resolved_work_type,
         "workhourType": workhour_type,
