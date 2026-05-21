@@ -665,17 +665,36 @@ async def node_execute_tool(state: AgentState) -> dict:
         }
 
 
-def _truncate_observation(observation: Any, max_chars: int = 1500) -> Any:
+# 对 LLM 无价值的技术字段：记录 UUID、项目 UUID（已有 project_name）、空时间戳
+# 注意：user_id 保留——跨用户查询时 LLM 需要它区分不同人的记录
+_LLM_NOISE_KEYS = frozenset({"id", "project_id", "created_at"})
+
+
+def _strip_noise_fields(obj: Any) -> Any:
+    """递归删除对 LLM 无价值的技术字段，保留 user_id 供跨用户查询区分身份。"""
+    if isinstance(obj, dict):
+        return {
+            k: _strip_noise_fields(v)
+            for k, v in obj.items()
+            if k not in _LLM_NOISE_KEYS
+        }
+    if isinstance(obj, list):
+        return [_strip_noise_fields(item) for item in obj]
+    return obj
+
+
+def _truncate_observation(observation: Any, max_chars: int = 8000) -> Any:
     """
-    把 observation 截短到 ~500 tokens (字符数 / 3 ≈ tokens)。
-    保留 dict 的关键字段, 其它字段截断后存到 _truncated_json。
+    观察结果送入 LLM 前先剥噪声字段再限制长度。
+    剥后每条工时记录约 80 字符（保留 user_id），8000 上限可覆盖 ~100 条。
     """
+    cleaned = _strip_noise_fields(observation)
     try:
-        s = json.dumps(observation, ensure_ascii=False, default=str)
+        s = json.dumps(cleaned, ensure_ascii=False, default=str)
     except Exception:
-        s = str(observation)
+        s = str(cleaned)
     if len(s) <= max_chars:
-        return observation
+        return cleaned
     return {
         "_truncated": True,
         "_preview": s[:max_chars],
@@ -1767,10 +1786,14 @@ def _extract_user_facing_data(tool_name: str, result: Optional[Dict[str, Any]]) 
         }
 
     if tool_name == "query_timesheet":
+        _display = {"user_id", "project_name", "date", "duration", "description"}
         return {
             "total_hours": inner.get("total_hours", 0),
             "record_count": inner.get("record_count", 0),
-            "records": inner.get("records", [])[:20],  # 最多 20 条
+            "records": [
+                {k: v for k, v in r.items() if k in _display}
+                for r in inner.get("records", [])[:20]
+            ],
         }
 
     if tool_name == "suggest_workhour":

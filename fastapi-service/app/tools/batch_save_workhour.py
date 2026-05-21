@@ -628,7 +628,7 @@ async def _save_single_workhour(
 
     payload = {
         "projectId": record["project_id"],
-        "workhourDate": f"{record['date']}T00:00:00.000Z",
+        "workhourDate": f"{record['date']}T00:00:00Z",
         "workhour": record["hours"],
         "workType": resolved_work_type,
         "workhourType": workhour_type,
