@@ -37,14 +37,15 @@ gst.thsware.com (116.205.174.57)
     |-- Ollama         (11434) 备用
     |
     |-- Docker 部署（ai-assistant-*）
-    |     |-- ai-service  (8000)
-    |     |-- redis       (16379)
-    |     |-- milvus      (29530)
-    |     |-- minio       (29000/29001)
-    |     |-- etcd        (2379)
+    |     |-- ai-service    (8000)
+    |     |-- mcp-gateway   (8765)  C1 MCP 网关，团队接入入口
+    |     |-- redis         (16379)
+    |     |-- milvus        (29530)
+    |     |-- minio         (29000/29001)
+    |     |-- etcd          (2379)
     |
     +--> HTTP 调用 Spring Boot 业务接口 (116.205.174.57:9900)
-    +--> MySQL (192.168.0.94:3306, 库名 workhour)
+    +--> MySQL (172.29.0.1:3308 → SSH隧道 → 116 → 192.168.0.94:3306, 库名 workhour)
     +--> LLM 推理（本地 vLLM/Ollama）
 ```
 
@@ -55,6 +56,7 @@ gst.thsware.com (116.205.174.57)
 | 宿主机端口 | 容器端口 | 服务 |
 |-----------|---------|------|
 | 8000 | 8000 | ai-service |
+| 8765 | 8765 | mcp-gateway（C1 MCP 网关） |
 | 16379 | 6379 | Redis |
 | 29530 | 19530 | Milvus |
 | 29000 | 9000 | MinIO API |
@@ -206,6 +208,7 @@ ai-service 与依赖服务（Redis、Milvus、MinIO）通过 Docker Compose 部�
 172.19.3.136
 ├── Docker（ai-assistant-* 容器）
 │     ├── ai-service      (127.0.0.1:8000)
+│     ├── mcp-gateway     (0.0.0.0:8765)  C1 MCP 网关
 │     ├── redis           (16379)
 │     ├── milvus          (29530)
 │     ├── minio           (29000/29001)
@@ -771,7 +774,7 @@ ai-service (172.19.3.136, Docker 内)
     |
     +--[redis:6379]---------> Redis (Docker)    容器内服务名
     +--[milvus:19530]-------> Milvus (Docker)   容器内服务名
-    +--[192.168.0.94:3306]-> MySQL              跨机内网
+    +--[172.29.0.1:3308]---> MySQL (SSH隧道→116→192.168.0.94:3306)
     +--[172.19.3.136:8099]-> vLLM qwen3-8b      本机 GPU
     +--[172.19.3.136:8097]-> vLLM bge-large     本机 GPU，Embedding
     +--[DashScope HTTPS]-----> 阿里云             外网，RAG Embedding

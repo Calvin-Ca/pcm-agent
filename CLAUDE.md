@@ -45,6 +45,50 @@ ssh caic@172.19.3.136 "ssh useryzk@116.205.174.57 'cd /home/gongshi && sudo bash
 
 反向 SSH 隧道（常驻 172）：`autossh -M 0 -N -R 9901:127.0.0.1:8000 useryzk@116.205.174.57`
 
+**systemd 管理命令**：
+```bash
+# 查看状态
+sudo systemctl status workhour-ai-tunnel.service
+
+# 重启隧道
+sudo systemctl restart workhour-ai-tunnel.service
+
+# 开机自启（已启用）
+sudo systemctl enable workhour-ai-tunnel.service
+
+# 查看日志
+sudo journalctl -u workhour-ai-tunnel.service -f
+```
+
+> 隧道配置了 `ServerAliveInterval=30`，每 30 秒发保活包，网络抖动时自动重连。
+
+### MySQL 数据库隧道（172 → 116 → 192）
+
+ai-service 容器通过 `172.29.0.1:3308`（Docker 网桥网关）访问 MySQL，实际链路：
+
+```
+ai-service(容器) → 172.29.0.1:3308(172宿主机) → SSH隧道 → 116:3306转发 → 192.168.0.94:3306
+```
+
+**建立隧道命令（172 上执行）**：
+```bash
+# 172 上建立到 192 的 SSH 隧道（经 116 跳转）
+nohup ssh -N -o ServerAliveInterval=60 -o ServerAliveCountMax=3 \
+  -L 0.0.0.0:3308:192.168.0.94:3306 useryzk@116.205.174.57 \
+  > /tmp/mysql-tunnel.log 2>&1 &
+```
+
+**验证**：
+```bash
+# 宿主机测试
+nc -zv 127.0.0.1 3308
+
+# 容器内测试
+docker exec ai-assistant-service bash -c 'echo > /dev/tcp/172.29.0.1/3308' && echo OK
+```
+
+> 注意：172 无法直接访问 192.168.0.94（内网地址），必须通过 116 跳转。
+
 ### ⚠️ 公网测试必读：华为云 WAF 会限流开发机 IP
 
 从**本地开发机** curl 公网 `https://gst.thsware.com/api/ai/chat` 多次后会出现 **403（0.04s 快速拒绝）**，这是华为云 WAF 对该 IP 的 CC 防护，**不是路径白名单问题，不是服务故障**。识别指纹：响应头带 `Set-Cookie: HWWAFSESID` + `Server: CW`。
@@ -64,10 +108,32 @@ ssh caic@172.19.3.136 "ssh useryzk@116.205.174.57 'cd /home/gongshi && sudo bash
 
 ### 获取 JWT Token（用于 API 测试）
 
+**方式一：浏览器（最方便）**
+登录 https://gst.thsware.com → DevTools → Network → `authenticate` → Response → 复制 `data.token`
+
+**方式二：命令行（密码为前端加密后的密文）**
+
 ```bash
-# 从接口获取（密码需加密，见 reference_e2e_testing.md）
-# 或从浏览器 DevTools → Network → authenticate → Response → data.token
-TOKEN="<从浏览器复制的 Bearer token，去掉 Bearer 前缀>"
+# 普通用户（employee）
+TOKEN=$(curl -s -X POST https://gst.thsware.com/api/authenticate \
+  -H "Content-Type: application/json" \
+  -d '{"username":"159****0206","password":"XJEfcsX225otcABQT02b/icW0yLJxlJMd6BbTc9tuPKrDt/5B0qzEhxgvGeA3KaiyoeGb1mBKHK1LMpeLbIvWO5B9bdG8Ldwe24VAjxOkvYHbyRkN5+cb3cClH5zh3gDRsb0xrmn+16iVuuFqgA2VBfoNbQVUqOo8uL9HEjj2DveRs/VUkV38+/q5C5fyxWnqUXNKnbVx1hM3lWmBBnywHdvRVr+IB8Ewme3pzKnfJSAn9ZU/dOI4IiJY3tqPv0YS63Na5t+yM+lO8KNNCxPB/Nfhj8Z5TD4+5/CLEyGP1Q7cbgVIO72hOqHP03Nv6qYcIwtjyaEYmgDDFkWEn17rg==","rememberMe":false}' \
+  | python -c "import sys,json; print(json.load(sys.stdin)['data']['token'])")
+echo "Token: ${TOKEN:0:50}..."
+```
+
+**测试账号**
+
+| 类型 | 登录名 | 用途 |
+|------|--------|------|
+| employee | `159****0206` | 工时填报、查询 |
+| deptAdmin | `thsware` | 跨用户查询、统计 |
+
+**账号解锁**（失败 5 次会锁）：
+```sql
+-- 在 192.168.0.94 workhour 库执行
+UPDATE jhi_user SET failed_attempts = 0, locked_date = NULL
+WHERE login IN ('159****0206', 'thsware');
 ```
 
 ---
@@ -138,7 +204,7 @@ Spring Boot (8080)
   → POST /api/ai/chat/stream（FastAPI 8000）
     → 入口路由优先读取 body.user_context.*，header X-User-ID 等作为兜底
     → LangGraph Agent
-      → node_llm_with_tools（Function Calling 主节点，qwen-plus + tools schema）
+      → node_llm_with_tools（Function Calling 主节点，qwen3-8b(vLLM) + tools schema）
           ├─ tool_calls → ParamResolver（名称→ID）→ PermissionValidator → TaskExecutor → 调用工具
           ├─ knowledge_qa → LangChain RAG（Milvus + BM25 + CrossEncoder Reranker）
           ├─ general_chat → LLM 直接回复
@@ -178,10 +244,10 @@ Spring Boot (8080)
 
 | 用途 | 模型 | 说明 |
 |------|------|------|
-| 意图识别 | qwen-flash | 轻量快速 |
-| 主对话生成 | qwen-plus | 能力更强 |
+| 意图识别 | qwen3-8b | vLLM 本地推理（172.19.3.136:8099） |
+| 主对话生成 | qwen3-8b | vLLM 本地推理（172.19.3.136:8099） |
 
-均使用阿里云 DashScope API（OpenAI 兼容格式），通过 `.env` 中的 `DASHSCOPE_API_KEY` 配置。
+生产均使用本地 vLLM（172.19.3.136:8099）。DashScope API Key（`DASHSCOPE_API_KEY`）仅 RAG Embedding 使用，LLM 不走 DashScope。
 
 ### 权限角色体系
 

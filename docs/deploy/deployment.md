@@ -93,8 +93,7 @@
 │  │ • compute_stats  │  │                                   │   │
 │  │ • generate_weekly│  │  PromptBuilder                    │   │
 │  │ • save_workhour  │  │  • 合并 base_system + 记忆 + 历史 │   │
-│  │ • approve_workhour│ │                                   │   │
-│  │ • export_report  │  │                                   │   │
+│  │ • batch_save_wh  │  │                                   │   │
 │  │ • sql_query ──┐  │  │                                   │   │
 │  │   (SQL Agent) │  │  │                                   │   │
 │  └───────────────┼──┘  └──────────────────────────────────┘   │

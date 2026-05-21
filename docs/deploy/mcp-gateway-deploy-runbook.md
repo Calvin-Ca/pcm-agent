@@ -1,6 +1,6 @@
 # C1 MCP 网关 — 部署 Runbook
 
-> 状态：**待执行**。代码已完成并 push（origin/main `1017b3d`），41 单测过；网关**尚未部署到 172**。
+> 状态：**已部署**。代码已完成并 push（origin/main `1017b3d`），41 单测过；网关已于 2026-05-20 部署到 172，容器 `ai-assistant-mcp-gateway` 运行中（0.0.0.0:8765）。
 > 关联设计：`docs/superpowers/specs/2026-05-19-mcp-gateway-c1-identity-design.md` §9/§10
 >
 > ⚠️ **生产动作，须用户在场执行，不在无人值守批**。本文档是给管理员照着跑的清单，Claude 不自动执行。
