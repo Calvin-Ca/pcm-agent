@@ -49,6 +49,23 @@ tool_registry = None
 permission_validator = None
 
 
+def _resolve_knowledge_base_path() -> str:
+    """Resolve knowledge-base path for both Docker and local debug runs."""
+    env_path = os.getenv("KB_PATH")
+    if env_path:
+        return str(Path(env_path).expanduser().resolve())
+
+    service_dir = Path(__file__).resolve().parent
+    candidates = [
+        service_dir / "knowledge-base",         # Docker mount: /app/knowledge-base
+        service_dir.parent / "knowledge-base",  # Local repo: repo/knowledge-base
+    ]
+    for path in candidates:
+        if path.exists():
+            return str(path)
+    return str(candidates[0])
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """应用生命周期管理"""
@@ -142,8 +159,8 @@ async def lifespan(app: FastAPI):
                 logger.warning(f"[WARN]  SQL Engine 初始化失败，SQL Agent 功能将不可用: {sql_err}")
 
         # 初始化 LangChain RAG 服务（混合检索：Milvus + BM25）
-        # knowledge-base 在本文件所在目录的子目录（ai-service/fastapi-service/knowledge-base）
-        _kb_path = os.path.join(os.path.dirname(__file__), "knowledge-base")
+        _kb_path = _resolve_knowledge_base_path()
+        logger.info(f"Knowledge base path: {_kb_path}")
         kb_result = await initialize_langchain_rag(kb_path=_kb_path)
         if kb_result.get("success"):
             logger.info(
