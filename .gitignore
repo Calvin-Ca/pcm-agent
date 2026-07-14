@@ -12,6 +12,12 @@ __pycache__/
 .idea/
 .vscode/
 .kiro/
+.DS_Store
+
+# 本地数据库备份/恢复产物
+*.nb3
+*_restore.sql
+*.sql.gz
 
 # 日志
 *.log
