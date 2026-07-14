@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 背景说明
+
+本项目是**同事的项目**，我（仓库当前使用者）拿来作为 **Agent 开发岗位面试** 的准备/练手材料。
+据此理解工作语境：目标是吃透这套 FastAPI + LangGraph Agent 的架构与实现，用于面试展示，而非该项目的原始生产维护者。
+
 ## 生产环境速查（执行任务必读）
 
 ### 服务器 SSH 连接
@@ -135,6 +140,67 @@ echo "Token: ${TOKEN:0:50}..."
 UPDATE jhi_user SET failed_attempts = 0, locked_date = NULL
 WHERE login IN ('159****0206', 'thsware');
 ```
+
+---
+
+## 本地开发调试（VSCode + uv + SSH 隧道）
+
+本仓库 = **FastAPI AI 服务**（Python 编排层）。SpringBoot 主后端是独立项目、不在此库。
+
+**本地 Mac 可直接调试，不需要 GPU**：LLM 推理、Embedding、Reranker 等重活全在 172，本地只跑编排层调远程。
+
+### 一次性环境搭建（uv）
+
+```bash
+# 仓库根目录执行；已建 .venv(Python 3.11) 则跳过
+uv venv --python 3.11 .venv
+uv pip install --python .venv -r fastapi-service/requirements.txt
+```
+
+`.vscode/launch.json` 已配好两个 debugpy 配置（已 pin `.venv/bin/python`，无需手选解释器）：
+- **FastAPI AI Service (debug main.py)** — 推荐，内部 uvicorn `reload=False`，断点最稳，端口 8000
+- **FastAPI AI Service (uvicorn module)** — 备选，可加 `--reload`
+
+`F5` 启动 → 见 `Uvicorn running on http://0.0.0.0:8000` 即成功 → Swagger http://localhost:8000/docs 发请求。
+
+### 本地依赖指向（`.env.local`，`main.py` 以 override=True 加载）
+
+本机**不跑** Milvus/Redis，全部指向 172（均实测可达）。核实手法：`nc -z -G 3 <host> <port>`。
+
+| 服务 | 本地指向 | 说明 |
+|------|---------|------|
+| vLLM（LLM） | `172.19.3.136:8099` | — |
+| Embedding | `172.19.3.136:8097` | `langchain_rag.py` 内 `USE_EMBEDDING="vllm"` 硬编码 |
+| Milvus | `172.19.3.136:19530` | 容器 `ce-milvus`，已对外 |
+| Redis | `172.19.3.136:6380` | **6380 非 6379**，无密码，PING 回 `+PONG` |
+| SpringBoot | `127.0.0.1:9900` | 需手动起下方隧道；只调只读工具时才需要 |
+| SQL Agent | 关闭 | `SQL_AGENT_ENABLED=false`，内网 MySQL(192) 未建隧道 |
+
+> Reranker 默认关（`langchain_rag.py:327` `USE_RERANKER=False`）：只影响 RAG 知识问答的**排序精度**（召回不降，不报错），换取无 GPU 环境的轻量与低延迟。想开改成 `True` 即可（本地 CPU 能跑，首次下模型 + 每次问答变慢）。
+
+### 起本地 → 生产 SpringBoot 隧道（方案A，嵌套 SSH）
+
+调用查工时/项目等业务工具前需先起。**外层不能加 `-N`**（否则内层远程命令不执行，172:9900 空着 → connection refused）：
+
+```bash
+# 1) 起隧道前先查 172 上有无孤儿内层 ssh（占 172:9900，重建会 Address already in use）
+#    注意用括号技巧 [s]sh 避免 pgrep/pkill 自匹配自身命令行
+ssh caic@172.19.3.136 "pgrep -af '[s]sh -N.*9900:127.0.0.1:9900 useryzk' || echo 无孤儿"
+#    有孤儿再清理（同样避免自匹配，勿直接 pkill -f 端口串）：
+ssh caic@172.19.3.136 "pkill -f '[s]sh -N.*9900:127.0.0.1:9900 useryzk'"
+
+# 2) 起隧道（后台常驻；外层无 -N，内层有 -N）
+ssh -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 \
+  -L 127.0.0.1:9900:127.0.0.1:9900 caic@172.19.3.136 \
+  "ssh -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -L 127.0.0.1:9900:127.0.0.1:9900 useryzk@116.205.174.57" &
+
+# 3) 验证：本地 9900 通 + 打 SpringBoot（400 = 空 body 被拒，属正常，证明打到活后端）
+nc -z 127.0.0.1 9900 && echo OPEN
+curl -s -o /dev/null -w "HTTP %{http_code}\n" -m 8 -X POST http://127.0.0.1:9900/api/authenticate \
+  -H "Content-Type: application/json" -d '{}'
+```
+
+> ⚠️ 此隧道连的是**生产 SpringBoot → 生产 MySQL(192)**。本地**只测只读工具**（query_*），别碰 `save_workhour`/`approve_workhour`。真写隔离需路B（本地 SpringBoot + 本地库）。
 
 ---
 
