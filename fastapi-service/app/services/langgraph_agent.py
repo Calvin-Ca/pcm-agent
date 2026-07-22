@@ -1195,7 +1195,7 @@ async def stream_agent_response(
     # ── Task 40: 通过 PromptBuilder 构建带历史的 messages ─────────────────────
     conversation_history: list = []
     if _prompt_builder:
-        try:
+        try:    # 算一堆日期：因为用户会说「本周工时」「上个月呢」这种相对时间,LLM 自己不知道"今天"是哪天、"本周"从哪到哪。
             from datetime import timedelta as _timedelta
             _today = datetime.now().date()
             _week_start = _today - _timedelta(days=_today.weekday())
@@ -1210,7 +1210,7 @@ async def stream_agent_response(
                 base_system = get_prompt_manager().format(
                     "system",
                     user_id=user_id if user_id != "anonymous" else "未知",
-                    user_name=user_ctx.get("user_name", user_id or "用户"),
+                    user_name=user_ctx.get("user_name", user_id or "用户"), # 提示词注入用户信息
                     entity_type=user_ctx.get("entity_type", "employee"),
                     department_id=user_ctx.get("department_id", ""),
                     today=str(_today),
@@ -1226,10 +1226,10 @@ async def stream_agent_response(
             except Exception:
                 base_system = "你是一个专业的企业工时管理助手。请用简洁、友好的方式回答用户问题。"
             conversation_history = await _prompt_builder.build_messages_with_history(
-                user_message=message,
-                session_id=effective_session_id,
-                user_id=user_id if user_id != "anonymous" else None,
-                base_system_prompt=base_system,
+                user_message=message,    # 用户这句话
+                session_id=effective_session_id,        # 本次会话
+                user_id=user_id if user_id != "anonymous" else None,  # 匿名则传 None(匿名不查长期记忆)
+                base_system_prompt=base_system, # 上面拼好的系统提示
             )
             # 统计注入的历史轮次和记忆条数（用于日志）
             # conversation_history = [system, user1, asst1, ..., current_user]
@@ -1282,6 +1282,22 @@ async def stream_agent_response(
 
     # 用于收集本轮 assistant 响应（供 finally 块保存记忆）
     _collected_assistant_response: str = ""
+
+    # ── Langfuse：把本轮所有 LLM generation 归到同一条 trace，打 user/session ──
+    from app.services.langfuse_client import trace_context as _lf_trace_context, flush as _lf_flush
+    _lf_trace = _lf_trace_context(
+        user_id=user_id,
+        session_id=effective_session_id,
+        tags=["workhour-agent"],
+        trace_name="chat",
+        metadata={
+            # 数据集构建需要：角色（越权/权限标注）、部门；user_message 作为 prompt
+            "entity_type": user_ctx.get("entity_type"),
+            "department_id": user_ctx.get("department_id"),
+            "user_message": message,
+        },
+    )
+    _lf_trace.__enter__()
 
     try:
         async for chunk in _graph.astream(initial_state):
@@ -1500,6 +1516,13 @@ async def stream_agent_response(
         yield _format_sse("error", {"message": f"处理请求时发生错误: {e}"})
 
     finally:
+        # ── Langfuse：关闭本轮 trace 上下文并尽力上报（失败不影响主流程）──────────
+        try:
+            _lf_trace.__exit__(None, None, None)
+            _lf_flush()
+        except Exception:
+            pass
+
         # ── Task 40: 保存本轮对话到短期记忆（失败不影响主流程）─────────────────
         if _prompt_builder and log_status == "success":
             try:

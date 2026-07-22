@@ -206,6 +206,7 @@ class LLMClient:
 
         _start = time.monotonic()
         _status = "success"
+        _usage_holder: dict = {}
 
         # Lazy import to avoid circular dependency at module load
         try:
@@ -221,6 +222,7 @@ class LLMClient:
                         if resp.status == 200:
                             data = await resp.json()
                             usage = data.get("usage", {})
+                            _usage_holder.update(usage or {})
                             if _has_metrics:
                                 LLM_TOKENS.labels(model=self.model, token_type="prompt").inc(usage.get("prompt_tokens", 0))
                                 LLM_TOKENS.labels(model=self.model, token_type="completion").inc(usage.get("completion_tokens", 0))
@@ -236,16 +238,34 @@ class LLMClient:
             except _TRANSIENT_AIOHTTP_ERRORS as exc:
                 raise _RetriableLLMError(f"LLM 网络瞬时错误 ({self.model}): {exc}") from exc
 
-        try:
-            return await _limited_retry(_attempt, op_name=f"llm.generate[{self.model}]")
-        except Exception:
-            _status = "error"
-            raise
-        finally:
-            if _has_metrics:
-                duration = time.monotonic() - _start
-                LLM_CALL_COUNT.labels(model=self.model, call_type="generate", status=_status).inc()
-                LLM_CALL_LATENCY.labels(model=self.model, call_type="generate").observe(duration)
+        from app.services.langfuse_client import log_generation
+        with log_generation(
+            name="generate",
+            model=self.model,
+            inputs=msgs,
+            model_parameters={
+                "temperature": temperature if temperature is not None else self.default_temperature,
+                "max_tokens": max_tokens or self.default_max_tokens,
+            },
+        ) as _gen:
+            try:
+                _content = await _limited_retry(_attempt, op_name=f"llm.generate[{self.model}]")
+                _gen.set_output(
+                    _content,
+                    usage={
+                        "input": _usage_holder.get("prompt_tokens", 0),
+                        "output": _usage_holder.get("completion_tokens", 0),
+                    } if _usage_holder else None,
+                )
+                return _content
+            except Exception:
+                _status = "error"
+                raise
+            finally:
+                if _has_metrics:
+                    duration = time.monotonic() - _start
+                    LLM_CALL_COUNT.labels(model=self.model, call_type="generate", status=_status).inc()
+                    LLM_CALL_LATENCY.labels(model=self.model, call_type="generate").observe(duration)
 
     async def stream_generate(
         self,
@@ -366,6 +386,7 @@ class LLMClient:
 
         _start = time.monotonic()
         _status = "success"
+        _usage_holder: dict = {}
 
         try:
             from app.core.metrics import LLM_CALL_COUNT, LLM_CALL_LATENCY
@@ -379,6 +400,7 @@ class LLMClient:
                     async with session.post(url, headers=headers, json=payload) as resp:
                         if resp.status == 200:
                             data = await resp.json()
+                            _usage_holder.update(data.get("usage") or {})
                             choice = data["choices"][0]
                             finish_reason = choice.get("finish_reason")
                             msg = choice.get("message", {})
@@ -413,18 +435,34 @@ class LLMClient:
                     f"Function Calling 网络瞬时错误 ({self.model}): {exc}"
                 ) from exc
 
-        try:
-            return await _limited_retry(
-                _attempt, op_name=f"llm.generate_with_tools[{self.model}]"
-            )
-        except Exception:
-            _status = "error"
-            raise
-        finally:
-            if _has_metrics:
-                duration = time.monotonic() - _start
-                LLM_CALL_COUNT.labels(model=self.model, call_type="function_calling", status=_status).inc()
-                LLM_CALL_LATENCY.labels(model=self.model, call_type="function_calling").observe(duration)
+        from app.services.langfuse_client import log_generation
+        with log_generation(
+            name="generate_with_tools",
+            model=self.model,
+            inputs=messages,
+            model_parameters={"temperature": temperature, "tool_choice": tool_choice, "max_tokens": max_tokens},
+            metadata={"tool_names": [t.get("function", {}).get("name") for t in tools]},
+        ) as _gen:
+            try:
+                _result = await _limited_retry(
+                    _attempt, op_name=f"llm.generate_with_tools[{self.model}]"
+                )
+                _gen.set_output(
+                    _result,
+                    usage={
+                        "input": _usage_holder.get("prompt_tokens", 0),
+                        "output": _usage_holder.get("completion_tokens", 0),
+                    } if _usage_holder else None,
+                )
+                return _result
+            except Exception:
+                _status = "error"
+                raise
+            finally:
+                if _has_metrics:
+                    duration = time.monotonic() - _start
+                    LLM_CALL_COUNT.labels(model=self.model, call_type="function_calling", status=_status).inc()
+                    LLM_CALL_LATENCY.labels(model=self.model, call_type="function_calling").observe(duration)
 
     def _build_messages(
         self,

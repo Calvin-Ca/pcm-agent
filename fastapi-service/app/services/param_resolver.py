@@ -70,21 +70,37 @@ async def resolve_project_id(
 
     value = project_id_or_name.strip()
 
-    if _is_numeric_id(value):
-        return value, None
+    # ── Langfuse：记录"模型给的值 → 解析结果"，这是 项目名当ID 的 DPO 信号源 ──
+    from app.services.langfuse_client import log_span
+    _is_name = not _is_numeric_id(value)
+    with log_span(
+        name="resolve_project_id",
+        inputs={"raw": value, "is_name": _is_name},
+        metadata={"is_name": str(_is_name)},
+    ) as _sp:
+        if _is_numeric_id(value):
+            _sp.set_output({"resolved_id": value, "source": "numeric"})
+            return value, None
 
-    resolved_base = base_url or _get_base_url()
-    cache_key = f"project:{resolved_base}:{value}"
+        resolved_base = base_url or _get_base_url()
+        cache_key = f"project:{resolved_base}:{value}"
 
-    if cache_key in _resolve_cache:
-        cached = _resolve_cache[cache_key]
-        if cached is None:
-            return None, f"未找到名为「{value}」的项目，请确认项目名称是否正确或提供项目ID"
-        return cached, None
+        if cache_key in _resolve_cache:
+            cached = _resolve_cache[cache_key]
+            if cached is None:
+                _err = f"未找到名为「{value}」的项目，请确认项目名称是否正确或提供项目ID"
+                _sp.set_output({"resolved_id": None, "source": "cache", "error": _err}, level="WARNING")
+                return None, _err
+            _sp.set_output({"resolved_id": cached, "source": "cache"})
+            return cached, None
 
-    project_id, error = await _search_project_by_name(value, auth_token, resolved_base, user_id)
-    _resolve_cache[cache_key] = project_id
-    return project_id, error
+        project_id, error = await _search_project_by_name(value, auth_token, resolved_base, user_id)
+        _resolve_cache[cache_key] = project_id
+        _sp.set_output(
+            {"resolved_id": project_id, "source": "search", "error": error},
+            level=None if project_id else "WARNING",
+        )
+        return project_id, error
 
 
 async def resolve_member_id(

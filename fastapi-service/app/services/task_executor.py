@@ -155,41 +155,59 @@ class TaskExecutor:
             Dict[str, Any]: 任务执行结果
         """
         logger.info(f"开始执行任务: {task.task_id} ({task.task_type})")
-        
+
         # 开始执行
         task.start_execution()
-        
-        try:
-            # 使用超时控制
-            result = await asyncio.wait_for(
-                self._execute_task_by_type(task, permission_context),
-                timeout=timeout
-            )
-            
-            # 执行成功
-            task.complete_execution(result)
-            self.execution_results[task.task_id] = result
-            
-            logger.info(f"任务执行成功: {task.task_id}")
-            return result
-            
-        except asyncio.TimeoutError:
-            error_msg = f"任务执行超时 ({timeout}秒)"
-            logger.error(f"任务 {task.task_id} 执行超时")
-            task.fail_execution(error_msg)
-            return {"success": False, "error": error_msg}
 
-        except PermissionError as e:
-            error_msg = str(e)
-            logger.warning(f"任务 {task.task_id} 权限拒绝: {error_msg}")
-            task.fail_execution(error_msg)
-            return {"success": False, "error": error_msg}
+        # ── Langfuse：把工具执行记为一个 span（含最终参数 + 结果，供数据集构建）──
+        from app.services.langfuse_client import log_span
+        _span = log_span(
+            name=f"tool:{task.tool_name or task.task_type}",
+            inputs=getattr(task, "parameters", None),
+            metadata={"tool_name": task.tool_name, "task_type": str(task.task_type)},
+        )
 
-        except Exception as e:
-            error_msg = f"任务执行异常: {str(e)}"
-            logger.error(f"任务 {task.task_id} 执行异常: {e}", exc_info=True)
-            task.fail_execution(error_msg)
-            return {"success": False, "error": error_msg}
+        with _span:
+            try:
+                # 使用超时控制
+                result = await asyncio.wait_for(
+                    self._execute_task_by_type(task, permission_context),
+                    timeout=timeout
+                )
+
+                # 执行成功
+                task.complete_execution(result)
+                self.execution_results[task.task_id] = result
+
+                logger.info(f"任务执行成功: {task.task_id}")
+                _ok = bool(result.get("success", True)) if isinstance(result, dict) else True
+                _span.set_output(
+                    result,
+                    level=None if _ok else "ERROR",
+                    status_message=None if _ok else str(result.get("error") if isinstance(result, dict) else ""),
+                )
+                return result
+
+            except asyncio.TimeoutError:
+                error_msg = f"任务执行超时 ({timeout}秒)"
+                logger.error(f"任务 {task.task_id} 执行超时")
+                task.fail_execution(error_msg)
+                _span.set_output({"success": False, "error": error_msg}, level="ERROR", status_message=error_msg)
+                return {"success": False, "error": error_msg}
+
+            except PermissionError as e:
+                error_msg = str(e)
+                logger.warning(f"任务 {task.task_id} 权限拒绝: {error_msg}")
+                task.fail_execution(error_msg)
+                _span.set_output({"success": False, "error": error_msg}, level="ERROR", status_message=error_msg)
+                return {"success": False, "error": error_msg}
+
+            except Exception as e:
+                error_msg = f"任务执行异常: {str(e)}"
+                logger.error(f"任务 {task.task_id} 执行异常: {e}", exc_info=True)
+                task.fail_execution(error_msg)
+                _span.set_output({"success": False, "error": error_msg}, level="ERROR", status_message=error_msg)
+                return {"success": False, "error": error_msg}
     
     async def _execute_task_by_type(
         self, 
