@@ -1,0 +1,51 @@
+{"_comment": "用户消息池 - 作为数据集里 user role 的 content。字段：id / dim(优化维度) / tool(预期工具,null=不调工具) / trap(DPO陷阱类型,null=正常SFT正样本) / content。后续由 build_finetune_data.py 给每条挂 chosen(+rejected)。dim 取值：tool_select / intent_route / date_reason / dpo_project_id / dpo_missing_param / dpo_over_privilege / dpo_param_range。"}
+{"id": "p001", "dim": "tool_select", "tool": "save_workhour", "trap": null, "content": "今天在工时系统做了测试工作，两个小时"}
+{"id": "p002", "dim": "tool_select", "tool": "save_workhour", "trap": null, "content": "帮我填一下今天投资智能评审系统的8小时"}
+{"id": "p003", "dim": "tool_select", "tool": "save_workhour", "trap": null, "content": "记一下今天写文档花了3个半小时"}
+{"id": "p004", "dim": "tool_select", "tool": "save_workhour", "trap": null, "content": "今天开会一上午，填3小时会议"}
+{"id": "p005", "dim": "tool_select", "tool": "query_timesheet", "trap": null, "content": "本周我一共填了多少工时？"}
+{"id": "p006", "dim": "tool_select", "tool": "query_timesheet", "trap": null, "content": "看看我这个月的工时记录"}
+{"id": "p007", "dim": "tool_select", "tool": "query_timesheet", "trap": null, "content": "我昨天填了几条工时？"}
+{"id": "p008", "dim": "tool_select", "tool": "query_timesheet", "trap": null, "content": "查一下我上周的填报情况"}
+{"id": "p009", "dim": "tool_select", "tool": "query_project", "trap": null, "content": "查询我参与的项目信息"}
+{"id": "p010", "dim": "tool_select", "tool": "query_project", "trap": null, "content": "我现在都在哪些项目上？"}
+{"id": "p011", "dim": "tool_select", "tool": "query_project", "trap": null, "content": "看下投资智能评审系统这个项目的负责人是谁"}
+{"id": "p012", "dim": "tool_select", "tool": "compute_statistics", "trap": null, "content": "统计一下我这个月每个项目分别花了多少工时"}
+{"id": "p013", "dim": "tool_select", "tool": "compute_statistics", "trap": null, "content": "我这季度平均每天工时是多少？"}
+{"id": "p014", "dim": "tool_select", "tool": "generate_weekly_report", "trap": null, "content": "帮我生成这周的周报"}
+{"id": "p015", "dim": "tool_select", "tool": "generate_weekly_report", "trap": null, "content": "根据我这周的工时出一份周报"}
+{"id": "p016", "dim": "tool_select", "tool": "batch_save_workhour", "trap": null, "content": "周一到周五每天在投资智能评审系统上填8小时"}
+{"id": "p017", "dim": "tool_select", "tool": "batch_save_workhour", "trap": null, "content": "这周一二做需求分析各4小时，三四五编码各8小时，帮我批量填了"}
+{"id": "p018", "dim": "tool_select", "tool": "sql_query", "trap": null, "content": "把我们部门这个月工时最多的前5个人列出来"}
+{"id": "p019", "dim": "tool_select", "tool": "sql_query", "trap": null, "content": "统计各事业部本季度总工时并按从高到低排序"}
+{"id": "p020", "dim": "intent_route", "tool": null, "content": "加班费是怎么计算的？"}
+{"id": "p021", "dim": "intent_route", "tool": null, "content": "年假有多少天，怎么申请？"}
+{"id": "p022", "dim": "intent_route", "tool": null, "content": "工时填报的截止时间是每周几？"}
+{"id": "p023", "dim": "intent_route", "tool": null, "content": "调休和补休有什么区别？"}
+{"id": "p024", "dim": "intent_route", "tool": null, "content": "出差期间的工时怎么算？"}
+{"id": "p025", "dim": "intent_route", "tool": null, "content": "你能帮我做什么？"}
+{"id": "p026", "dim": "intent_route", "tool": null, "content": "谢谢，辛苦了"}
+{"id": "p027", "dim": "intent_route", "tool": null, "content": "你好"}
+{"id": "p028", "dim": "date_reason", "tool": "query_timesheet", "trap": null, "content": "查一下我上个月的工时"}
+{"id": "p029", "dim": "date_reason", "tool": "query_timesheet", "trap": null, "content": "看看我前天的填报"}
+{"id": "p030", "dim": "date_reason", "tool": "query_timesheet", "trap": null, "content": "本季度我的工时汇总"}
+{"id": "p031", "dim": "date_reason", "tool": "save_workhour", "trap": null, "content": "把上周五做的4小时测试补一下"}
+{"id": "p032", "dim": "date_reason", "tool": "batch_save_workhour", "trap": null, "content": "最近三个工作日每天填8小时开发"}
+{"id": "p033", "dim": "dpo_project_id", "tool": "save_workhour", "trap": "project_name_as_id", "content": "今天在电商平台项目上做了8小时"}
+{"id": "p034", "dim": "dpo_project_id", "tool": "save_workhour", "trap": "project_name_as_id", "content": "帮我给预管理系统填今天的6小时"}
+{"id": "p035", "dim": "dpo_project_id", "tool": "save_workhour", "trap": "project_name_as_id", "content": "在广州大区高校业务支持上记4小时"}
+{"id": "p036", "dim": "dpo_project_id", "tool": "save_workhour", "trap": "project_name_as_id", "content": "那个AI评审的项目今天填一天"}
+{"id": "p037", "dim": "dpo_missing_param", "tool": "query_timesheet", "trap": "missing_time_range", "content": "查一下我的工时"}
+{"id": "p038", "dim": "dpo_missing_param", "tool": "query_timesheet", "trap": "missing_time_range", "content": "我填了多少工时了？"}
+{"id": "p039", "dim": "dpo_missing_param", "tool": "save_workhour", "trap": "missing_duration", "content": "今天在投资智能评审系统上填一下工时"}
+{"id": "p040", "dim": "dpo_missing_param", "tool": "save_workhour", "trap": "missing_date", "content": "在测试工作上填2小时"}
+{"id": "p041", "dim": "dpo_over_privilege", "tool": "query_timesheet", "trap": "query_others", "content": "查一下李四这个月的工时"}
+{"id": "p042", "dim": "dpo_over_privilege", "tool": "query_timesheet", "trap": "query_others", "content": "看看张三上周填了多少"}
+{"id": "p043", "dim": "dpo_over_privilege", "tool": "query_timesheet", "trap": "query_others", "content": "把我们组每个人的工时都调出来给我"}
+{"id": "p044", "dim": "dpo_over_privilege", "tool": "save_workhour", "trap": "fill_for_others", "content": "帮王五把今天的8小时也填了"}
+{"id": "p045", "dim": "dpo_param_range", "tool": "save_workhour", "trap": "duration_over_24h", "content": "帮我把昨天在测试工作上的30个小时填了"}
+{"id": "p046", "dim": "dpo_param_range", "tool": "save_workhour", "trap": "duration_over_limit", "content": "今天写代码填15小时"}
+{"id": "p047", "dim": "dpo_param_range", "tool": "save_workhour", "trap": "duration_not_half_step", "content": "今天开发填2.3小时"}
+{"id": "p048", "dim": "dpo_param_range", "tool": "save_workhour", "trap": "future_date", "content": "帮我把明天的8小时开发先填了"}
+{"id": "p049", "dim": "dpo_param_range", "tool": "save_workhour", "trap": "duration_zero_or_negative", "content": "今天填0小时占个位"}
+{"id": "p050", "dim": "dpo_missing_param", "tool": "query_timesheet", "trap": "missing_time_range", "content": "我最近的工时怎么样"}
