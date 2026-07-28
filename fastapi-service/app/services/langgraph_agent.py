@@ -1354,6 +1354,13 @@ async def stream_agent_response(
                                 or inner_result.get("summary")
                                 or inner_result.get("message")
                             )
+                            # query_timesheet / compute_statistics 的 summary 是**结构化 dict**
+                            # （date_range/total_hours/projects…），不是展示文本。直接当消息用会：
+                            # 非流式路径 str+dict 抛 TypeError → 整个请求 500；
+                            # 流式路径把 dict 塞进 message → 前端渲染成 [object Object]。
+                            # 非字符串一律丢弃，落到下面 _build_fallback_message 生成 Markdown 表格。
+                            if not isinstance(summary_text, str):
+                                summary_text = None
 
                         # 如果 LLM 没有提供 summary，自动生成 Markdown 表格 fallback
                         if not summary_text:

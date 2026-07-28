@@ -121,6 +121,11 @@ def _accumulate_response_text(prev: Optional[str], data: Dict[str, Any]) -> Opti
     chunk_msg = data.get("message") or data.get("result", {}).get("response", "")
     if not chunk_msg:
         return prev
+    # 防御：上游若塞进 dict/list（如工具返回的结构化 summary），str+dict 会抛
+    # TypeError 把整个请求打成 500。宁可降级成 JSON 文本，也不让端点挂掉。
+    if not isinstance(chunk_msg, str):
+        logger.warning("response 事件的 message 非字符串（%s），已降级序列化", type(chunk_msg).__name__)
+        chunk_msg = json.dumps(chunk_msg, ensure_ascii=False, default=str)
     return (prev or "") + chunk_msg
 
 
@@ -357,6 +362,10 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
         )
 
         # 构建权限上下文
+        # 这是把"这个人是谁、什么角色、属于哪个部门、带什么 token"这四样东西打包成一个类型化的 PermissionContext 对象，
+        # 挂在 user_context 上，作为后续所有工具调用（查工时、填报等）做权限校验的唯一凭证来源。如果 entity_type 缺失就不建，
+        # 相当于"匿名/无角色请求不给权限上下文"，
+        # 下游工具执行时会因为拿不到 permission_context 而走无权限路径（一般会被 PermissionValidator 拒绝或走受限查询）。
         if user_id and entity_type:
             permission_context = PermissionContext(
                 user_id=user_id,

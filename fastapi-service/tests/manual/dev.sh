@@ -135,7 +135,9 @@ except urllib.error.URLError as e:
     raise SystemExit(f"✗ 请求失败: {e.reason}（服务起了吗？{os.environ['BASE']}）")
 r = d.get("result") or {}
 ri = r.get("route_info") or {}
-print(f"[route={ri.get(\"intent_type\")} target={ri.get(\"target\")} tool={r.get(\"tool_name\")}]")
+# 先取值再拼——f-string 表达式内不能出现反斜杠（Py<3.12），转义引号会 SyntaxError
+intent, target, tool = ri.get("intent_type"), ri.get("target"), r.get("tool_name")
+print(f"[route={intent} target={target} tool={tool}]")
 print(d.get("message"))'
 }
 
@@ -156,9 +158,13 @@ repl()  { (cd "$_WH_DIR" && python3 chat_repl.py "$@"); }
 # ── 状态 ──────────────────────────────────────────────────────────────────────
 dev_status() {
   nc -z 127.0.0.1 9900 2>/dev/null && echo "  隧道 9900   ✅" || echo "  隧道 9900   ❌ 运行 tunnel_up"
-  curl -s -m 3 -o /dev/null "$BASE/health" \
+  # 路径是 /health/ping：main.py 以 prefix="/health" 挂载，router 内又是 @get("/ping")
+  # 必须看状态码——curl 拿到 404 也是退出码 0，会把"服务在但路径错"误判为健康
+  local _code
+  _code=$(curl -s -m 3 -o /dev/null -w '%{http_code}' "$BASE/health/ping" 2>/dev/null)
+  [ "$_code" = "200" ] \
     && echo "  服务 $BASE ✅" \
-    || echo "  服务 $BASE ❌ VSCode F5 或 cd fastapi-service && python main.py"
+    || echo "  服务 $BASE ❌ (HTTP ${_code:-无响应}) VSCode F5 或 cd fastapi-service && python main.py"
   _wh_token_valid "$TOKEN" && echo "  token       ✅ ($ENTITY $USER_ID)" \
                            || echo "  token       ❌ 运行 token_refresh"
   grep -q '^WRITE_DRY_RUN_DEFAULT=true' "$_WH_DIR/../../../.env.local" 2>/dev/null \
