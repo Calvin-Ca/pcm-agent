@@ -19,6 +19,7 @@ from app.models.tool import ToolCategory
 from app.services.tool_registry import tool_registry
 from app.services.param_resolver import resolve_project_id
 from app.services.work_type_resolver import resolve_work_type
+from app.tools._write_guard import resolve_dry_run
 
 logger = logging.getLogger(__name__)
 
@@ -161,7 +162,8 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
     # user_id 可能来自顶层参数（chat 接口），也可能来自 user_context（internal 工具端点）
     user_ctx = kwargs.get("user_context", {}) or {}
     user_id: Optional[str] = kwargs.get("user_id") or user_ctx.get("user_id")
-    dry_run: bool = bool(kwargs.get("dry_run", False))
+    # 默认直写；WRITE_DRY_RUN_DEFAULT=true 时强制预览（本地测试防误写生产）
+    dry_run: bool = resolve_dry_run(kwargs, fallback=False)
 
     # 1. 基础参数校验
     if not project_id:

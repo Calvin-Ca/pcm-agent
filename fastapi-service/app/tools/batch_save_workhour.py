@@ -20,6 +20,7 @@ from app.services.tool_registry import tool_registry
 from app.services.param_resolver import resolve_project_id, _fetch_user_recent_projects, _find_best_match
 from app.services.work_type_resolver import resolve_work_type
 from app.services.llm_client import LLMClient, get_planner_llm_client
+from app.tools._write_guard import resolve_dry_run
 
 logger = logging.getLogger(__name__)
 
@@ -826,9 +827,8 @@ async def batch_save_workhour_handler(**kwargs) -> Dict[str, Any]:
     user_id = context.get("user_id") or kwargs.get("user_id")
 
     text = kwargs.get("text", "").strip()
-    dry_run = kwargs.get("dry_run", True)
-    if isinstance(dry_run, str):
-        dry_run = dry_run.lower() in ("true", "1", "yes")
+    # 默认预览（批量写风险高，必须先让用户确认）；安全阀开启时同样强制预览
+    dry_run = resolve_dry_run(kwargs, fallback=True)
 
     if not text:
         return {"success": False, "error": "文本（text）不能为空"}

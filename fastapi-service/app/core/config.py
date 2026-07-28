@@ -75,6 +75,11 @@ class Settings(BaseSettings):
     # 工具配置
     TOOL_TIMEOUT_SECONDS: int = 30
 
+    # 写操作安全阀：置 true 时强制所有写工具走 dry_run 预览，不实际入库。
+    # 本地开发在 .env.local 置 true，避免经方案A隧道误写生产库。
+    # 单向阀——只会让行为更安全，为 false 时各写工具沿用自身默认（见 tools/_write_guard.py）。
+    WRITE_DRY_RUN_DEFAULT: bool = False
+
     # SpringBoot 后端地址（工具调用时使用）
     SPRINGBOOT_BASE_URL: str = "http://localhost:8080"
 
