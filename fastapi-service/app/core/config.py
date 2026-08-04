@@ -75,6 +75,11 @@ class Settings(BaseSettings):
     # 工具配置
     TOOL_TIMEOUT_SECONDS: int = 30
 
+    # 会话审计日志开关：写入 MySQL 的 conversation_logs 表。
+    # 本地开发置 false——① MYSQL_HOST 指向内网 192.168.0.94，Mac 上不可达，
+    # 每次请求白等数秒 TCP 超时；② 该表是微调数据集的来源，不该混入本地测试流量。
+    CONVERSATION_LOG_ENABLED: bool = True
+
     # 写操作安全阀：置 true 时强制所有写工具走 dry_run 预览，不实际入库。
     # 本地开发在 .env.local 置 true，避免经方案A隧道误写生产库。
     # 单向阀——只会让行为更安全，为 false 时各写工具沿用自身默认（见 tools/_write_guard.py）。

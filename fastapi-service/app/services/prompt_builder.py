@@ -78,7 +78,7 @@ class PromptBuilder:
             {"role": "system", "content": system_content}
         ]
 
-        # 2. 加载短期会话历史
+        # 2. 加载短期会话历史（短期记忆）
         if session_id and self._session_memory:
             try:
                 history = await self._session_memory.get_conversation_history(session_id)

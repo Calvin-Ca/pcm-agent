@@ -80,6 +80,7 @@ def test_conversation_log_entry_full_payload():
 
 @patch("app.services.conversation_logger.ConversationLog")
 @patch("app.services.conversation_logger.get_db_service")
+@patch("app.services.conversation_logger.settings.CONVERSATION_LOG_ENABLED", True)
 def test_log_conversation_writes_equivalent_fields(mock_get_db, mock_log_model):
     from app.services.conversation_logger import ConversationLogger
     from app.models.conversation import ConversationLogEntry
@@ -140,6 +141,7 @@ def test_log_conversation_writes_equivalent_fields(mock_get_db, mock_log_model):
 
 
 @patch("app.services.conversation_logger.get_db_service")
+@patch("app.services.conversation_logger.settings.CONVERSATION_LOG_ENABLED", True)
 def test_log_conversation_returns_minus_one_on_failure(mock_get_db):
     from app.services.conversation_logger import ConversationLogger
     from app.models.conversation import ConversationLogEntry
@@ -156,3 +158,22 @@ def test_log_conversation_returns_minus_one_on_failure(mock_get_db):
         route_type="LLM_SERVICE",
     )
     assert cl.log_conversation(entry) == -1
+
+
+@patch("app.services.conversation_logger.get_db_service")
+@patch("app.services.conversation_logger.settings.CONVERSATION_LOG_ENABLED", False)
+def test_log_conversation_skips_database_when_disabled(mock_get_db):
+    from app.services.conversation_logger import ConversationLogger
+    from app.models.conversation import ConversationLogEntry
+
+    cl = ConversationLogger()
+    entry = ConversationLogEntry(
+        session_id="s",
+        user_id="u",
+        user_message="m",
+        route_type="LLM_SERVICE",
+    )
+
+    assert cl.log_conversation(entry) == -1
+    mock_get_db.assert_called_once_with()
+    mock_get_db.return_value.get_session.assert_not_called()

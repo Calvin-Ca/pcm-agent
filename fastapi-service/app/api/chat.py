@@ -118,7 +118,17 @@ def _accumulate_response_text(prev: Optional[str], data: Dict[str, Any]) -> Opti
     最后一个事件 = 来源 footer，答案体丢失）。单事件全量路径（工具/LLM/
     澄清/计划）只发一个 response 事件，累积后等价于自身，不会重复。
     """
-    chunk_msg = data.get("message") or data.get("result", {}).get("response", "")
+    # 三种键名对应三类来源，缺一不可：
+    #   message         — 工具/LLM/澄清/计划路径的单事件全量文本
+    #   chunk           — **流式 RAG** 的增量分片（langgraph_agent 发的是 {"chunk": …}）
+    #   result.response — 旧格式兼容
+    # 曾漏掉 chunk：knowledge_qa 走非流式接口时分片全被丢弃，final_response 恒为 None，
+    # 最终返回兜底文案「请求处理完成」，答案体整段丢失。
+    chunk_msg = (
+        data.get("message")
+        or data.get("chunk")
+        or data.get("result", {}).get("response", "")
+    )
     if not chunk_msg:
         return prev
     # 防御：上游若塞进 dict/list（如工具返回的结构化 summary），str+dict 会抛
@@ -392,7 +402,7 @@ async def chat_non_stream(request: ChatRequest, http_request: Request):
         ):
             # 解析 SSE 事件
             if event_str.startswith("event:"):
-                lines = event_str.strip().split("\n")
+                lines = event_str.strip().split("\n")       # [event: tool_call',data:{"tool_name":....}] 事件类型及对应信息
                 event_type = lines[0].replace("event:", "").strip()
                 if len(lines) > 1 and lines[1].startswith("data:"):
                     data_str = lines[1].replace("data:", "").strip()

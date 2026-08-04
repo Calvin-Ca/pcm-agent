@@ -278,6 +278,22 @@ async def node_llm_with_tools(state: AgentState) -> dict:
             # 在 conversation_history 之后追加, 使 LLM 看到 [system, ...对话历史..., user, assistant_tc, tool, ...]
             messages = list(messages) + history_msgs
 
+        ### Ollama：请求级设置 16K/32K,vLLM：使用服务端已经配置好的上下文上限
+        # 获取完整 messages
+        #         ↓
+        # 根据原始历史长度选择 16K/32K
+        #         ↓
+        # 消息超过9条？
+        #         ├─ 是：保留 system + 最后8条
+        #         └─ 否：不处理
+        #         ↓
+        # 粗略估算消息和工具 schema token
+        #         ↓
+        # 估算超过12K？
+        #         ├─ 是：进一步缩减为 system + 最后4条
+        #         └─ 否：保持当前结果
+        #         ↓
+        # 调用模型
         # num_ctx 自适应：历史超过 2000 字用大 context
         history_chars = sum(
             len(m.get("content") or "") for m in messages
@@ -292,12 +308,14 @@ async def node_llm_with_tools(state: AgentState) -> dict:
             # vLLM 或 DashScope：关闭 thinking mode
             extra = {"enable_thinking": False}
 
-        # FC 调用时截短会话历史，防止 input tokens 超出模型上下文限制（32K context）
+        # FC 调用时截短会话历史(messages)，防止 input tokens 超出模型上下文限制（32K context）
         # 策略1：按条数截断（保留 system + 最近 6 条 + 当前消息）
+        ### 第一层截断
         if len(messages) > 9:
             messages = [messages[0]] + messages[-8:]
 
         # 策略2：按估算 token 数截断（字符数/3 + tools schema ~200 tokens/个）
+        ### 第二层截断
         total_chars = sum(len(m.get("content") or "") for m in messages)
         estimated_tokens = total_chars // 3 + len(tools) * 200
         if estimated_tokens > 12000:
@@ -647,12 +665,12 @@ async def node_execute_tool(state: AgentState) -> dict:
     user_ctx = state.get("user_context") or {}
     permission_ctx = user_ctx.get("permission_context")
 
-    try:
+    try:  # 带着用户的权限上下文来执行工具
         result = await _task_executor.execute_single_task(task, permission_ctx)
         return {
             "tool_result": result,
             "agent_iterations": state.get("agent_iterations", 0) + 1,
-            "agent_history": _append_agent_history(state, observation=result),
+            "agent_history": _append_agent_history(state, observation=result),   # _append_agent_history不在图中
         }
     except Exception as e:
         logger.error(f"工具执行节点异常: {e}")
@@ -1010,7 +1028,7 @@ def _route_by_intent(state: AgentState) -> str:
         "complex_request": "plan_and_execute",   # 多步规划 + 并行执行
         "general_chat": "execute_llm",
         "clarify": "clarify_node",
-    }.get(intent, "execute_llm")
+    }.get(intent, "execute_llm") # 如果意图是"tool_execution"就执行工具...
 
 
 # ─── A-RAG Agent Loop 守卫 ────────────────────────────────────────────────────
@@ -1031,7 +1049,7 @@ def _agent_loop_should_continue(state: AgentState) -> str:
     """
     # 最高优先级：planner 回退标志 → 立即结束
     if state.get("_rag_fallback"):
-        return "force_end"
+        return "force_end"                      #############
 
     iters = state.get("agent_iterations", 0)
     max_iters = state.get("agent_max_iterations", 5) or 5
@@ -1040,7 +1058,7 @@ def _agent_loop_should_continue(state: AgentState) -> str:
     # 闸 1: 达到上限
     if iters >= max_iters:
         logger.warning(f"Agent loop 达到 max_iterations={max_iters}, 强制 summarize 收尾")
-        return "force_end"
+        return "force_end"                      #############
 
     # 闸 2: 重复 tool_call 检测 (最近 3 次中同 (tool, args) 出现 ≥ 2 次)
     if len(history) >= 2:
@@ -1058,7 +1076,7 @@ def _agent_loop_should_continue(state: AgentState) -> str:
         for s in set(signatures):
             if signatures.count(s) >= 2:
                 logger.warning(f"Agent loop 检测到重复 tool_call {s[0]}, 提前结束")
-                return "end"
+                return "end"                 #############
 
     # 闸 3: 连续 3 次异常 → 提前结束 (避免持续失败的工具调用浪费 token)
     if len(history) >= 3:
@@ -1119,7 +1137,7 @@ def _build_graph():
     # ── execute_tool: A-RAG agent loop, 不再固定 → END ──────────────────────
     builder.add_conditional_edges(
         "execute_tool",
-        _agent_loop_should_continue,
+        _agent_loop_should_continue,       # 条件边的执行结果如果是"continue"，则路由到"llm_with_tools"节点
         {
             "continue": "llm_with_tools",   # 回到主节点形成循环
             "end": END,                     # 重复/连续异常 → 提前结束
@@ -1253,10 +1271,10 @@ async def stream_agent_response(
             logger.warning(f"构建带历史 messages 失败，降级为无历史模式: {e}")
 
     initial_state: AgentState = {
-        "user_message": message,
-        "user_context": user_ctx,
+        "user_message": message,                # 当前run的用户消息
+        "user_context": user_ctx,               # 用户身份、权限上下文
         "session_id": effective_session_id,
-        "conversation_history": conversation_history,
+        "conversation_history": conversation_history, # {"role": ** ,"content": ** ,}
         "intent": None,
         "tool_name": None,
         "tool_params": {},
@@ -1602,7 +1620,11 @@ async def stream_agent_response(
             )
 
             # 同步更新 ai_sessions 汇总（upsert）
-            if user_id != "anonymous":
+            # 这是本块**第二处**写库，与上面的 conversation_logs 各走一次连接：
+            # 只挡住 log_conversation 是不够的，这里仍会去连内网 MySQL，
+            # 本地每请求照样白等数秒 TCP 超时（见 CONVERSATION_LOG_ENABLED 注释）。
+            from app.core.config import settings as _settings
+            if user_id != "anonymous" and _settings.CONVERSATION_LOG_ENABLED:
                 db = get_db_service()
                 with db.get_session() as sess:
                     session_row = sess.query(AiSession).filter_by(session_id=effective_session_id).first()

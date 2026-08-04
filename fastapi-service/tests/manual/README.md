@@ -5,6 +5,8 @@
 
 - 数据：`agent_probe_requests.jsonl`（37 条：33 只读 + 4 写）
 - 跑只读集：`run_probe.py`（纯标准库，无需 jq）
+- 单发调试：`send.sh`（配合断点，单次非流式请求）
+- 多轮交互调试：`chat_repl.py`（同一 session_id 连续对话，配合断点，纯标准库）
 
 ## 请求会流经的路径（对照 CLAUDE.md「请求处理流程」）
 

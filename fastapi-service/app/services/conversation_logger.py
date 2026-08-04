@@ -4,18 +4,21 @@
 import logging
 from datetime import datetime
 from typing import Optional, List, Dict, Any
+from app.core.config import settings
 from app.models.conversation import ConversationLog, ConversationLogEntry
 from app.services.database import get_db_service
 
 logger = logging.getLogger(__name__)
 
+_disabled_warned = False
+
 
 class ConversationLogger:
     """会话日志记录器"""
-    
+
     def __init__(self):
         self.db_service = get_db_service()
-    
+
     def log_conversation(self, entry: ConversationLogEntry) -> int:
         """
         记录会话日志（技术债 #7：参数收敛为 ConversationLogEntry 模型）
@@ -26,6 +29,15 @@ class ConversationLogger:
         Returns:
             int: 日志记录ID（失败返回 -1，不抛异常以免影响主流程）
         """
+        if not settings.CONVERSATION_LOG_ENABLED:
+            # 本地开发默认关闭：内网 MySQL 不可达会每请求白等数秒 TCP 超时，
+            # 且 conversation_logs 是微调数据集来源，不该混入测试流量。
+            global _disabled_warned
+            if not _disabled_warned:
+                logger.info("CONVERSATION_LOG_ENABLED=false，会话审计日志已跳过（仅提示一次）")
+                _disabled_warned = True
+            return -1
+
         try:
             with self.db_service.get_session() as session:
                 log = ConversationLog(

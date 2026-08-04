@@ -358,6 +358,11 @@ class TaskExecutor:
                     exec_params["auth_token"] = permission_context.auth_token
 
                 # 为需要 permission_context 的工具注入上下文
+                ### 为什么只给这三个工具注入？
+                # 因为它们不是单纯的“拿参数直接调用 API”：
+                # - sql_query 需要身份生成 SQL 权限约束
+                # - batch_save_workhour 需要确定数据归属人
+                # - suggest_workhour 需要根据用户历史做个性化查询
                 if task.tool_name in ("sql_query", "batch_save_workhour", "suggest_workhour"):
                     exec_params["context"] = {
                         "user_id": permission_context.user_id,
@@ -472,6 +477,7 @@ class TaskExecutor:
         Returns:
             Dict[str, Any]: 处理后的参数
         """
+        # 多步任务之间的数据接线器：前一个任务输出结果，后一个任务用 {task_id.result.field} 引用它，执行器在真正调用工具前完成替换。
         if not parameters:
             return {}
         

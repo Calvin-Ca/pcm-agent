@@ -66,7 +66,7 @@ def select_relevant_tables(question: str) -> list:
     tables = set(CORE_TABLES)
     question_lower = question.lower()
     for table, keywords in TABLE_KEYWORDS.items():
-        if any(kw in question_lower for kw in keywords):
+        if any(kw in question_lower for kw in keywords):  # 每个表枚举一些关键词
             tables.add(table)
     return sorted(tables)
 
@@ -116,7 +116,7 @@ class SQLEngine:
         否则返回全部表。
         """
         if question:
-            tables = select_relevant_tables(question)
+            tables = select_relevant_tables(question) 
         else:
             tables = sorted(COMPACT_SCHEMAS.keys())
         return build_compact_schema(tables)

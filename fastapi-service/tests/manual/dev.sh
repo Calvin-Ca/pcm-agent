@@ -13,7 +13,7 @@
 #   repl                    多轮对话调试
 #   dev_status              看隧道/服务/token 状态
 #   token_refresh           强制重换 token
-#
+#   有记忆，而且默认所有 ask 共用一个会话
 # 密钥不落本地：MCP_API_KEY 只在 172 上展开；token 缓存在仓库外
 # ~/.cache/workhour-agent/tokens.json（0600）。
 
@@ -167,9 +167,13 @@ dev_status() {
     || echo "  服务 $BASE ❌ (HTTP ${_code:-无响应}) VSCode F5 或 cd fastapi-service && python main.py"
   _wh_token_valid "$TOKEN" && echo "  token       ✅ ($ENTITY $USER_ID)" \
                            || echo "  token       ❌ 运行 token_refresh"
-  grep -q '^WRITE_DRY_RUN_DEFAULT=true' "$_WH_DIR/../../../.env.local" 2>/dev/null \
+  local _envlocal="$_WH_DIR/../../../.env.local"
+  grep -q '^WRITE_DRY_RUN_DEFAULT=true' "$_envlocal" 2>/dev/null \
     && echo "  写安全阀    ✅ 开启（写工具只预览，不写生产库）" \
     || echo "  写安全阀    ⚠️  关闭 — 填报类请求会真写生产库！"
+  grep -q '^CONVERSATION_LOG_ENABLED=false' "$_envlocal" 2>/dev/null \
+    && echo "  审计日志    ✅ 已关（避免内网 MySQL 超时 + 污染微调数据集）" \
+    || echo "  审计日志    ⚠️  开启 — 每请求会白等数秒连 192.168.0.94"
 }
 
 

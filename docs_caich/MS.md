@@ -1,5 +1,3 @@
-# 项目经历
-
 ## 工时管理系统 · AI 智能助手（Agent 后端）
 
 **角色**：Agent 应用开发
@@ -24,7 +22,7 @@
 项目最终形成覆盖查询、填报、统计、周报、知识问答和 SQL 分析的 7 类工具能力，并完成 AI 服务、Spring Boot 网关、内网数据库和公网访问链路的生产联调。
 
 
-## 二、面试问答（逐条预判追问）
+## 二、问答（逐条预判追问）
 
 ### 第 1 条：简要介绍一下这个项目
 这是一套工时管理系统的 AI 智能助手服务，让用户可以用自然语言完成工时的查询、填报、统计、周报生成等操作，替代原来在表单里逐格填写的方式。我负责的是其中的 Agent 服务模块，用 FastAPI + LangGraph 构建，独立部署，与 Java（Spring Boot）主后端集成。
@@ -37,11 +35,16 @@ Spring Boot 网关 → POST /api/ai/chat/stream → LangGraph Agent → SSE 流�
 1. 工具调用（tool_calls）——查工时、填工时、统计、周报等业务动作
 2. 知识问答（knowledge_qa）——走 LangChain RAG（Milvus 向量 + BM25 + CrossEncoder 重排）
 3. 闲聊（general_chat）——LLM 直接回复
-
 另外有一条降级链路：当 LLM 不可用时，退回到基于规则匹配的 IntentRouter，保证服务不完全挂掉。
 
 我认为设计上几个关键点
 - 工具执行前有三道处理：ParamResolver（把"项目名/成员名"这类自然语言参数解析成后端要的 ID，带缓存）→ PermissionValidator（基于角色的细粒度权限校验）→ TaskExecutor（依赖注入 + 实际调用）。这样把"参数解析""权限""执行"三个关注点拆开了。
+   
+  PermissionValidator：先根据工具类型、数据可见性
+  
+  工具调用由 TaskExecutor 统一编排：先完成依赖参数注入和 PermissionValidator 权限校验，再注入认证上下文并调用工具 handler；handler 在访问 Spring Boot 前通过 ParamResolver 将项目名、成员名等自然语言参数解析为业务 ID。这样把参数标准化、权限治理和执行控制三个关注点解耦。
+
+
 - 工具层有 7 个业务工具，6 个通过 HTTP 调 Spring Boot 现有接口，1 个是 SQL Agent（自然语言转 SQL，直接查库，用于复杂分析场景）。
 - 记忆分两层：短期会话记忆和长期用户记忆，都放 Redis。
 - 权限体系是六级角色（employee 到 superAdmin），由网关注入请求头，Agent 侧每次工具调用前校验。
@@ -273,3 +276,71 @@ Spring Boot 网关 → POST /api/ai/chat/stream → LangGraph Agent → SSE 流�
 
 **Q4（陷阱）：你的数据从哪来？`conversation_logs` 真能支撑参数级微调吗？**
 > 实测发现一个关键限制：**当前 `tools_called` 只存了 `{tool_name, success}`，没存工具参数和结果**（`langgraph_agent.py` 拼日志那几行只挑了工具名和成功标志）。所以：存量数据够训"工具选择"，但**训不了"参数填写"**——项目名→ID 这类参数级 DPO 现在造不出规模数据。**真正的第一步不是训练，是补 `tools_called` 埋点**（把 `arguments` + `result` 写进去），再攒几周新数据，或用 on-policy 自采样 + dry_run 校验临时造。这个卡点我是查了生产库才发现的，不是文档假设的。
+
+### 项目的用户/角色有哪些？spring 后端是如何和AI Service 交互的？
+普通员工、部门管理员、大区管理员、超级管理员
+前端通过 nginx 访问 spring 后端，spring 后端透传JWT，从 JWT 中解析用户身份信息，AI service 根据信息
+注入上下文、记忆，基于 Langgraph 分析用户请求
+
+### 整个agent有哪些工具？graph中的节点和边是什么？
+
+### Rag是怎么做的？为什么用这种方案？
+
+### 长期记忆
+- 写入
+  每次 run 结束后，用户触发了 tool_execution ，且有实际回复 fastapi-service/app/services/langgraph_agent.py:1549
+  基于正则规则识别后写入redis：
+    patterns = [
+      身份信息
+      (r"我的?(user_?id|工号|员工号|账号)[是为：:]\s*(\S+)", 0.9),
+      组织信息
+      (r"我[在是](.{2,10}部门)", 0.7),
+      (r"我负责(.{2,20}项目)", 0.7),
+      用户偏好
+      (r"我(一般|习惯|通常|喜欢|倾向)(.{4,30})", 0.6),
+  ]
+- 储存：redis：每个用户最多保存 50 条长期记忆。
+- 注入：基于用户 query 检索
+  BM25关键词相关度 × 时间衰减 × 记忆重要度。fastapi-service/app/services/user_memory.py:119
+  注入 system prompt：使用 user_id 
+  
+### 短期记忆
+- 写入
+  每次 run 结束后：  
+- 存储：redis：TTL 默认 30 分钟，默认最多保存 10 条消息，10 条消息约等于 5 轮对话，超出上限后删除最早的消息
+- 注入：以真实历史对话轮次注入 message
+
+### systemprompt
+  system.yaml
+    ↓ 填入用户身份、部门、当前日期
+  base_system
+    ↓
+  PromptBuilder.build_messages_with_history()
+    ├─ 检索长期记忆 → 拼进 system 消息
+    ├─ 读取短期记忆 → 添加历史 user/assistant 消息
+    └─ 添加当前 user 消息
+    ↓
+  conversation_history
+    ↓
+  写入 AgentState
+    ↓
+  传给 Function Calling / 普通 LLM
+  最终构造出的消息类似：
+  [
+      {
+          "role": "system",
+          "content": """
+          你是工时管理助手……
+          当前用户：张三
+          部门：研发部
+
+          关于该用户的已知信息：
+          - 用户习惯查看本周工时
+          - 用户负责 A 项目
+          """
+      },
+      {"role": "user", "content": "查询一下本周工时"},
+      {"role": "assistant", "content": "你本周已填报 32 小时"},
+      {"role": "user", "content": "那上周呢"}  # 当前消息
+  ]
+
