@@ -94,9 +94,9 @@ A、B 必须使用同一个模型，否则结果只能说明模型差异，不�
 运行命令（在 `fastapi-service` 目录执行）：
 
 ```powershell
-..\.venv\Scripts\python.exe tests/evaluation/run_unified_ab_evaluation.py --variant A --concurrency 8 --output ..\docs_caich\test_by_caic\function_calling_experiment_validation\A_two_stage_unified_vllm_qwen3_8b_run2.json
+..\.venv\Scripts\python.exe tests/evaluation/run_unified_ab_evaluation.py --variant A --concurrency 8 --output ..\docs_caich\test_by_caic\function_calling_experiment_validation\A_two_stage_unified_runN.json
 
-..\.venv\Scripts\python.exe tests/evaluation/run_unified_ab_evaluation.py --variant B --concurrency 8 --output ..\docs_caich\test_by_caic\function_calling_experiment_validation\B_function_calling_unified_vllm_qwen3_8b_run2.json
+..\.venv\Scripts\python.exe tests/evaluation/run_unified_ab_evaluation.py --variant B --concurrency 8 --output ..\docs_caich\test_by_caic\function_calling_experiment_validation\B_function_calling_unified_runN.json
 ```
 
 中断后在原命令末尾增加 `--resume`。仅当结果文件中的 `complete` 为 `true`，且 `summary.errors`、`fallback_audit` 已完成审查时，才可纳入正式 A/B 结论。
