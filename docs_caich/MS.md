@@ -52,6 +52,161 @@ Spring Boot 网关 → POST /api/ai/chat/stream → LangGraph Agent → SSE 流�
 部署现状
 生产是三台机器：GPU 服务器跑 AI 服务和 vLLM，公网机跑 Spring Boot + nginx，还有内网数据库。中间用反向 SSH 隧道打通内外网。
 
+### 一次“填工时”的完整调用链
+
+用户输入“帮我填今天 AI 平台 8 小时，完成后端开发”后，完整链路如下：
+
+```text
+聊天接口接收请求和用户身份
+  ↓
+LangGraph 注入长短期记忆并构建 Prompt/State
+  ↓
+LLM 选择 save_workhour 并提取结构化参数
+  ↓
+TaskExecutor 完成权限校验、认证注入和执行控制
+  ↓
+save_workhour handler 校验、补全并解析业务参数
+  ↓
+dry-run 安全闸门
+  ↓
+Spring Boot POST /api/workhour
+  ↓
+返回成功、预览或业务错误
+```
+
+#### 1. 接收请求与身份上下文
+
+聊天请求除用户消息外，还会携带用户身份：
+
+```json
+{
+  "user_id": "u123",
+  "entity_type": "employee",
+  "auth_token": "JWT..."
+}
+```
+
+接口层将这些信息组装为权限上下文。LangGraph 层读取长短期记忆、构建 Prompt 和 AgentState，再驱动图中的节点根据 state 持续更新和路由。
+
+#### 2. Function Calling 选择工具并提取参数
+
+模型判断用户要填报工时，选择 `save_workhour`，生成类似参数：
+
+```json
+{
+  "project_id": "AI平台",
+  "date": "2026-07-31",
+  "duration": 8,
+  "description": "完成后端开发"
+}
+```
+
+这里的 `project_id` 可能暂时还是用户输入的项目名称，后续由确定性解析层转换为真实业务 ID。若项目、日期或时长缺失，系统应先追问，而不是直接写入。
+
+#### 3. TaskExecutor 接管执行
+
+`TaskExecutor` 根据工具名找到 handler，负责：
+
+- 检查当前角色是否有填报权限。
+- 注入 JWT、`user_id` 等认证上下文。
+- 统一处理执行超时、异常和重试。
+
+传给 handler 的参数大致为：
+
+```json
+{
+  "project_id": "AI平台",
+  "date": "2026-07-31",
+  "duration": 8,
+  "description": "完成后端开发",
+  "auth_token": "JWT...",
+  "user_id": "u123"
+}
+```
+
+#### 4. handler 校验基础参数
+
+`save_workhour` handler 检查：
+
+- 项目是否为空。
+- 日期格式是否合法。
+- 时长是否处于允许范围。
+- 时长是否符合 0.5 小时的递增步长。
+
+例如 `duration=7.3` 会被拒绝，因为它不符合 0.5 小时步长要求。
+
+#### 5. 确定填报主体
+
+当前用户通常按以下优先级确定：
+
+```python
+user_id = kwargs.get("user_id") or user_ctx.get("user_id")
+```
+
+随后转换为后端请求中的 `memberId`。这一步确保普通用户的工时默认记到本人名下，不能仅依赖模型自由填写人员 ID。
+
+#### 6. 将项目名称解析为业务 ID
+
+Spring Boot 需要真实 `projectId`，因此 handler 会调用 `resolve_project_id()`：
+
+```text
+“AI平台” → 查询项目接口 → projectId “128”
+```
+
+若找不到对应项目，返回“项目解析失败”，不会继续写入。项目名到 ID 的转换属于确定性业务解析，不交给 LLM 猜测。
+
+#### 7. 补齐后端字段
+
+系统补充 `workhourType`、`workType`、`workContent` 和 ISO 格式日期，最终 payload 类似：
+
+```json
+{
+  "projectId": "128",
+  "memberId": "u123",
+  "workhourDate": "2026-07-31T00:00:00Z",
+  "workhour": 8,
+  "workType": "研发工作",
+  "workhourType": "正常工时",
+  "workContent": "完成后端开发"
+}
+```
+
+#### 8. dry-run 写操作闸门
+
+当 `WRITE_DRY_RUN_DEFAULT=true` 时，handler 只完成参数解析和必要查询，返回预览，不发送写入请求：
+
+```json
+{
+  "success": true,
+  "dry_run": true,
+  "preview": {
+    "payload": {},
+    "summary": "预览（未写入）"
+  }
+}
+```
+
+本地联调默认启用该配置，避免误写生产数据。
+
+#### 9. Spring Boot 最终写入与业务校验
+
+只有 `dry_run=false` 时才调用：
+
+```http
+POST /api/workhour
+Authorization: Bearer <JWT>
+```
+
+Spring Boot 继续校验 JWT、用户项目权限、日期、项目 ID 和每日工时上限。因此 FastAPI 的校验属于前置风控，Spring Boot 才是业务写入的最终权威。
+
+需要注意：`save_workhour.py` 虽然保留了查询当天已有工时的相关函数，但当前 handler 并未依赖它完成每日上限判断；该限制主要由 Spring Boot 最终校验。
+
+#### 10. 返回执行结果
+
+成功时返回填报日期、时长、项目和记录 ID；失败时透传或归一化后端业务错误，例如“当天正常工时总和不能超过 8 小时”。
+
+一句话总结：LLM 负责把自然语言转换为工具参数；`TaskExecutor` 负责身份、权限和执行控制；handler 负责参数校验、补全和项目解析；只有通过 dry-run 闸门后，才会向 Spring Boot 发起真实写入。
+
 ### 第 1 条：Function Calling 单次调用
 
 **Q1：为什么单次 FC 调用能比两段式快？具体省了什么？**
