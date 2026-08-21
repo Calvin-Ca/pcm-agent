@@ -6,6 +6,7 @@ Pytest configuration file
 # LLMClient 直接读取 os.getenv，conftest 最先被 pytest 加载，此处 load_dotenv
 # 可确保后续所有测试文件 import app.* 时环境变量已就绪。
 from pathlib import Path as _Path
+import os as _os
 try:
     from dotenv import load_dotenv as _load_dotenv
     _base_dir = _Path(__file__).parent.parent  # ai-service/
@@ -13,6 +14,18 @@ try:
     _load_dotenv(_base_dir / ".env.local", override=True)
 except ImportError:
     pass
+
+# 基准测试可在 dotenv 加载完成后锁定目标，避免 .env.local 的 override=True
+# 静默覆盖命令行配置，造成不同模型之间的无效对照。
+if _os.getenv("BENCHMARK_LLM_API_BASE"):
+    _os.environ["CHAT_LLM_API_BASE"] = _os.environ["BENCHMARK_LLM_API_BASE"]
+    _os.environ["INTENT_LLM_API_BASE"] = _os.environ["BENCHMARK_LLM_API_BASE"]
+if _os.getenv("BENCHMARK_LLM_MODEL"):
+    _os.environ["CHAT_LLM_MODEL"] = _os.environ["BENCHMARK_LLM_MODEL"]
+    _os.environ["INTENT_LLM_MODEL"] = _os.environ["BENCHMARK_LLM_MODEL"]
+if _os.getenv("BENCHMARK_LLM_API_KEY"):
+    _os.environ["CHAT_LLM_API_KEY"] = _os.environ["BENCHMARK_LLM_API_KEY"]
+    _os.environ["INTENT_LLM_API_KEY"] = _os.environ["BENCHMARK_LLM_API_KEY"]
 # ─────────────────────────────────────────────────────────────────────────────
 
 import pytest
