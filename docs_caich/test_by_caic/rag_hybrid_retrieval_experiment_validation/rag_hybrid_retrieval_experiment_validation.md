@@ -3,6 +3,8 @@
 > 验证对象：向量检索 + BM25 + 查询改写 + Reranker  
 > 文档性质：检索消融实验与回答质量验收方案
 
+实验执行结果与逐项验收回应见：[rag_hybrid_retrieval_experiment_validation_report.md](rag_hybrid_retrieval_experiment_validation_report.md)。
+
 ## 1. 验证目标
 
 验证以下组件对复杂问句和长尾场景的增量价值：

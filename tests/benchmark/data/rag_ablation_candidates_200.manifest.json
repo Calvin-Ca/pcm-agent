@@ -1,0 +1,35 @@
+{
+  "status": "frozen_human_confirmed",
+  "count": 200,
+  "category_counts": {
+    "direct_fact": 30,
+    "synonym_rewrite": 30,
+    "proper_noun_code": 30,
+    "long_tail": 30,
+    "multi_constraint": 30,
+    "multi_hop": 30,
+    "unanswerable": 20
+  },
+  "knowledge_base_markdown_files": 72,
+  "eligible_chunks": 638,
+  "chunking": {
+    "chunk_size": 512,
+    "chunk_overlap": 50
+  },
+  "llm_url": "http://172.19.3.136:8099/v1/chat/completions",
+  "llm_model": "qwen3-8b",
+  "seed": 20260806,
+  "split_seed": 20260806,
+  "split_counts": {
+    "blind_test": 120,
+    "validation": 40,
+    "development": 40
+  },
+  "review_file": "tests/benchmark/data/rag_ablation_candidates_200.review.csv",
+  "reviewed_count": 200,
+  "accepted_count": 200,
+  "revised_count": 0,
+  "rejected_count": 0,
+  "frozen_at": "2026-08-06T22:58:08+08:00",
+  "dataset_sha256": "11847e99d19c4bb46b1977f1567647c4b69c6fa685487f1ebbd323ade35e24c0"
+}

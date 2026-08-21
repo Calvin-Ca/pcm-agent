@@ -177,11 +177,19 @@ async def run_benchmark():
         weights=[0.6, 0.4],
     )
 
-    try:
-        reranker = _init_reranker()
-        logger.info("CrossEncoderReranker 初始化完成")
-    except Exception as e:
-        logger.warning(f"Reranker 初始化失败: {e}")
+    enable_reranker = os.getenv("RAG_BENCH_ENABLE_RERANKER", "true").lower() in {
+        "1", "true", "yes", "on",
+    }
+    if enable_reranker:
+        logger.info("开始初始化 CrossEncoderReranker")
+        try:
+            reranker = _init_reranker()
+            logger.info("CrossEncoderReranker 初始化完成")
+        except Exception as e:
+            logger.warning(f"Reranker 初始化失败: {e}")
+            reranker = None
+    else:
+        logger.info("CrossEncoderReranker 已通过 RAG_BENCH_ENABLE_RERANKER 禁用")
         reranker = None
 
     # 4. 定义 4 组策略
@@ -196,7 +204,8 @@ async def run_benchmark():
     # 5. 逐条测试
     all_results = {name: [] for name in strategies}
 
-    for case in cases:
+    for case_index, case in enumerate(cases, start=1):
+        logger.info(f"执行用例 {case_index}/{len(cases)}: {case['id']}")
         q = case["question"]
         expected_doc = case["expected_doc"]
 
