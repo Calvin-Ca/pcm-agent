@@ -41,6 +41,14 @@ services:
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --workers 2
     environment:
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      # Production API mode: reuse the configured hosted planner credentials.
+      # The secret remains in .env and is never duplicated in Compose.
+      - CHAT_LLM_API_KEY=${PLANNER_LLM_API_KEY}
+      - CHAT_LLM_API_BASE=${PLANNER_LLM_API_BASE}
+      - CHAT_LLM_MODEL=${PLANNER_LLM_MODEL}
+      - INTENT_LLM_API_KEY=${PLANNER_LLM_API_KEY}
+      - INTENT_LLM_API_BASE=${PLANNER_LLM_API_BASE}
+      - INTENT_LLM_MODEL=${PLANNER_LLM_MODEL}
     # 资源限制：防止单个服务耗尽宿主机资源
     deploy:
       resources:

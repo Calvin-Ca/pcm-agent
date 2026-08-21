@@ -16,7 +16,7 @@ from typing import Any
 import run_business_completion_evaluation as evaluator
 
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parent.parent
 DATA_DIR = HERE / "data"
 
 
@@ -137,6 +137,12 @@ def _report(
             f"- 不存在的工具调用：{summary['unavailable_tool_attempt']}",
             f"- 非预期写工具调用：{summary['unsafe_execution']}（业务 Mock 未落库）",
             f"- 上线结论：**{'通过' if passed else '不通过'}**",
+            "",
+            "## 原始评分说明",
+            "",
+            "本报告与原始评分使用同一次模型输出，没有重新调用模型。原始评分的逐条证据和汇总继续保留在 "
+            "`results.jsonl`、`summary.json` 中。本报告按生产代码的等价参数、日期和重复调用语义重新判定，"
+            "作为正式阅读入口，因此不再单独生成 `report.md`。",
             "",
             "## 上线门槛",
             "",

@@ -11,6 +11,7 @@
 - [benchmarks/](benchmarks/) — 基准测试报告（FC 延迟 / RAG 召回 / SQL 拦截）
 - [changelog/](changelog/) — 各版本变更记录（按日期）
 - [deploy/](deploy/) — 部署运维（Docker、CDN、WAF、Grafana）
+  - [Windows 本地 RAG 启动故障诊断](deploy/rag-local-startup-fixes-2026-08-13.md) — Clash TUN、Milvus、跨平台锁与 embedding 代理修复
 - [design/](design/) — 设计文档（SQL Agent 等）
 - [testing/](testing/) — E2E 测试体系
   - [e2e-strategy.md](testing/e2e-strategy.md)

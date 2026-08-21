@@ -93,7 +93,7 @@
   },
   "model": "qwen-plus",
   "mode": "baseline",
-  "run_name": "qwen-plus-2026-08-08-code-fix-full-final",
+  "run_name": "evaluation-results",
   "generated_at": "2026-08-08T10:14:46.919999+00:00",
   "dataset": {
     "status": "human_review_approved",

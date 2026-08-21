@@ -8,10 +8,14 @@ LangChain RAG 服务
 """
 
 import asyncio
+from contextlib import contextmanager
+import errno
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional, AsyncGenerator
+import tempfile
+import time
+from typing import Any, AsyncGenerator, Dict, Iterator, List, Optional, TextIO
 
 from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
@@ -28,6 +32,43 @@ logger = logging.getLogger(__name__)
 
 # 全局 RAG 服务实例
 _rag_service: Optional["LangChainRAGService"] = None
+
+
+@contextmanager
+def _exclusive_file_lock(lock_file: TextIO) -> Iterator[None]:
+    """跨进程独占文件锁，兼容 Linux 容器和 Windows 本地开发。"""
+    if os.name == "nt":
+        import msvcrt
+
+        # msvcrt.locking 从当前文件位置开始锁定指定字节；确保第 0 字节存在。
+        lock_file.seek(0, os.SEEK_END)
+        if lock_file.tell() == 0:
+            lock_file.write("\0")
+            lock_file.flush()
+
+        while True:
+            lock_file.seek(0)
+            try:
+                msvcrt.locking(lock_file.fileno(), msvcrt.LK_NBLCK, 1)
+                break
+            except OSError as exc:
+                if exc.errno not in (errno.EACCES, errno.EAGAIN, errno.EDEADLK):
+                    raise
+                time.sleep(0.1)
+
+        try:
+            yield
+        finally:
+            lock_file.seek(0)
+            msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
+    else:
+        import fcntl
+
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
 
 
 def _load_documents_from_dir(kb_path: str) -> List[Document]:
@@ -229,12 +270,19 @@ class LangChainRAGService:
         USE_EMBEDDING = "vllm"   # ← 切换时改这里
 
         if USE_EMBEDDING == "vllm":
+            import httpx
+
+            # Windows 上 httpx 会从系统设置读取 Clash HTTP 代理，但不会可靠应用
+            # ProxyOverride 中的内网绕过规则。vLLM 是固定内网服务，显式直连，避免
+            # /embeddings 被发往 Clash 后每次等待 30 秒并最终返回 502/timeout。
             self.embeddings = OpenAIEmbeddings(
                 model="/model",
                 openai_api_key="EMPTY",
                 openai_api_base="http://172.19.3.136:8097/v1",
                 chunk_size=100,
                 check_embedding_ctx_length=False,
+                http_client=httpx.Client(trust_env=False),
+                http_async_client=httpx.AsyncClient(trust_env=False),
             )
             logger.info("Embeddings 初始化完成（vLLM bge-large-zh-v1.5, dim=1024）")
         elif USE_EMBEDDING == "ollama":
@@ -266,12 +314,22 @@ class LangChainRAGService:
 
         # 2. 初始化 LLM
         # langchain-openai: ChatOpenAI 用 openai_api_key / openai_api_base
+        api_base_lower = (api_base or "").lower()
+        if "11434" in api_base_lower:
+            rag_extra_body = {"think": False}
+        elif "dashscope" in api_base_lower:
+            rag_extra_body = {"enable_thinking": False}
+        else:
+            rag_extra_body = {
+                "chat_template_kwargs": {"enable_thinking": False}
+            }
         self.llm = ChatOpenAI(
             model=chat_model,
             openai_api_key=api_key,
             openai_api_base=api_base,
             temperature=0.1,
-            max_tokens=1000,
+            max_tokens=800,
+            extra_body=rag_extra_body,
         )
         logger.info(f"LLM 初始化完成（{chat_model}）")
 
@@ -374,13 +432,44 @@ class LangChainRAGService:
 
             _MilvusClient.__init__ = _patched_init
             try:
-                self.vector_store = Milvus.from_documents(
-                    documents=documents,
-                    embedding=self.embeddings,
-                    connection_args={"uri": milvus_uri},
-                    collection_name="knowledge_base",
-                    drop_old=True,
+                # Uvicorn workers run lifespan concurrently. Serialize the destructive
+                # collection rebuild and let the remaining workers attach to it.
+                lock_path = Path(
+                    os.getenv(
+                        "RAG_MILVUS_INIT_LOCK",
+                        str(Path(tempfile.gettempdir()) / "workhour-rag-milvus-init.lock"),
+                    )
                 )
+                try:
+                    startup_token = Path("/proc/1/stat").read_text().split()[21]
+                except (OSError, IndexError):
+                    startup_token = str(os.getppid())
+                ready_path = Path(f"{lock_path}.{startup_token}.ready")
+                lock_path.parent.mkdir(parents=True, exist_ok=True)
+
+                with lock_path.open("a+") as lock_file:
+                    with _exclusive_file_lock(lock_file):
+                        if ready_path.exists():
+                            self.vector_store = Milvus(
+                                embedding_function=self.embeddings,
+                                connection_args={"uri": milvus_uri},
+                                collection_name="knowledge_base",
+                                enable_dynamic_field=True,
+                            )
+                            logger.info(
+                                "Milvus collection initialized by another worker; "
+                                "reusing knowledge_base"
+                            )
+                        else:
+                            self.vector_store = Milvus.from_documents(
+                                documents=documents,
+                                embedding=self.embeddings,
+                                connection_args={"uri": milvus_uri},
+                                collection_name="knowledge_base",
+                                drop_old=True,
+                                enable_dynamic_field=True,
+                            )
+                            ready_path.touch()
             finally:
                 _MilvusClient.__init__ = _orig_init
             self._use_milvus = True

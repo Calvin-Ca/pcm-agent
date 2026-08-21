@@ -28,14 +28,19 @@ class FakeRegistry:
             FakeToolDef("kb_read_section"),
         ]
 
+    def get_tool(self, name):
+        return next((tool for tool in self.list_tools() if tool.name == name), None)
+
 
 class FakeLLMClient:
     def __init__(self, model="qwen3-8b"):
         self.model = model
         self.api_base = "http://test/v1"
         self.api_key = "test-key"
+        self.last_kwargs = None
 
     async def generate_with_tools(self, **kw):
+        self.last_kwargs = kw
         return {
             "finish_reason": "tool_calls",
             "tool_calls": [{"name": "knowledge_qa", "arguments": {"query": "test query"}}],
@@ -71,35 +76,49 @@ def knowledge_qa_state():
     }
 
 
-# ─── 测试 1: planner 可用时 knowledge_qa 路由到 agent 循环 ─────────────────────
+# ─── 测试 1: planner 可用时 knowledge_qa 仍走单步快速通道 ─────────────────────
 
 @pytest.mark.asyncio
-async def test_knowledge_qa_routes_to_agent_when_planner_ok(monkeypatch, knowledge_qa_state):
-    """mock planner 可用 -> 断言 rag_strategy=='agent'、条件边去 llm_with_tools、
-    首轮 _fc_client 的 .model 为 planner 模型。"""
+async def test_knowledge_qa_uses_fast_path_when_planner_ok(monkeypatch, knowledge_qa_state):
+    """knowledge_qa 已是单步 RAG 决策，不应再升级 planner 重复分类。"""
     monkeypatch.setenv("PLANNER_LLM_API_KEY", "test-key")
     monkeypatch.setenv("PLANNER_LLM_API_BASE", "https://test/v1")
 
-    lg._llm_client = FakeLLMClient()
+    llm_client = FakeLLMClient()
+    lg._llm_client = llm_client
     lg._tool_registry = FakeRegistry()
 
-    planner_client = FakePlannerClient()
-    monkeypatch.setattr(lg, "get_planner_llm_client", lambda *a, **k: planner_client)
+    def unexpected_planner(*args, **kwargs):
+        raise AssertionError("knowledge_qa fast path must not call planner")
+
+    monkeypatch.setattr(lg, "get_planner_llm_client", unexpected_planner)
 
     result = await lg.node_llm_with_tools(knowledge_qa_state)
 
     # ① 返回 knowledge_qa 意图
     assert result["intent"] == "knowledge_qa"
-    # ② rag_strategy 被设为 agent
-    assert result.get("rag_strategy") == "agent"
+    # ② 单步 RAG，不进入 agent 自循环
+    assert result.get("rag_strategy") is None
 
-    # ③ 条件边路由到 llm_with_tools（复用现有循环）
+    # ③ 条件边直接路由到 execute_rag
     route = lg._route_by_intent(result)
-    assert route == "llm_with_tools"
+    assert route == "execute_rag"
+    assert llm_client.last_kwargs["extra"] == {
+        "chat_template_kwargs": {"enable_thinking": False}
+    }
 
-    # ④ 升级门首轮 _fc_client.model 为 planner 模型
-    #    直接验证 upgrade gate 逻辑：rag_strategy=='agent' 时 get_planner_llm_client 被调用
-    assert planner_client.model == "qwen3.5-plus"
+
+@pytest.mark.asyncio
+async def test_streaming_rag_defers_non_stream_generation():
+    result = await lg.node_execute_rag({
+        "stream_response": True,
+        "query": "工时填报规则是什么",
+        "user_message": "工时填报规则是什么",
+    })
+
+    assert result == {
+        "rag_result": {"success": True, "deferred_stream": True}
+    }
 
 
 # ─── 测试 2: planner 不可用时回退到单步 RAG ──────────────────────────────────

@@ -131,7 +131,7 @@ class UserMemoryService:
         if not all_memories:
             return []
 
-        scored = self._score_memories(all_memories, query)
+        scored = self._score_memories(all_memories, query)  # 根据用户输入来计算每条记忆的得分
         scored.sort(key=lambda x: x[1], reverse=True)
         top_memories = [m for m, _ in scored[:top_k]]
 
@@ -256,6 +256,7 @@ class UserMemoryService:
         for memory in memories:
             decay = self._time_decay_factor(memory.last_accessed)
             bm25 = self._bm25_score(query_tokens, self._tokenize(memory.content))
+            # 记忆重要性分数是基于规则的，记忆衰减系数由该条记忆上一次被访问的时间决定，越短越高，max=1
             # 即使 BM25 分数为 0，重要性和时间衰减仍有基础分（避免完全过滤掉高重要性记忆）
             score = memory.importance * decay * (0.3 + 0.7 * bm25)
             result.append((memory, score))

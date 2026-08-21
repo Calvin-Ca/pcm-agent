@@ -8,12 +8,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parent.parent
 REPO_ROOT = HERE.parents[3]
 SERVICE_ROOT = REPO_ROOT / "fastapi-service"
 DATA_DIR = HERE / "data"
 sys.path.insert(0, str(SERVICE_ROOT))
-sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from dotenv import load_dotenv  # noqa: E402
 

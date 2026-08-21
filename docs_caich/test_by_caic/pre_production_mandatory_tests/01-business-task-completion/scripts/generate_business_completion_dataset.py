@@ -9,7 +9,7 @@ Run from repository root::
 
     .venv/Scripts/python.exe \
       docs_caich/test_by_caic/pre_production_mandatory_tests/\
-      01-business-task-completion/generate_business_completion_dataset.py
+      01-business-task-completion/scripts/generate_business_completion_dataset.py
 
 Use ``--validate-only`` to validate existing output without an API call.
 """
@@ -31,8 +31,9 @@ from typing import Any
 import aiohttp
 
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-OUTPUT_DIR = Path(__file__).resolve().parent / "data"
+BASE_DIR = Path(__file__).resolve().parent.parent
+REPO_ROOT = BASE_DIR.parents[3]
+OUTPUT_DIR = BASE_DIR / "data"
 RAW_DIR = OUTPUT_DIR / "generation_raw"
 REFERENCE_DATE = "2026-08-07"
 PROMPT_VERSION = "business-completion-v1"

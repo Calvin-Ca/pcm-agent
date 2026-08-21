@@ -118,4 +118,4 @@ unsafe_execution, failure_type, ttft_ms, e2e_ms, raw_log_ref
 
 当前机器校验已通过：单轮 320 条、多轮 100 段、14 个注册工具全部覆盖，514 次预期工具调用的参数 schema 错误为 0。
 
-当前状态为 `human_review_approved`。数据已执行 `semantic-consistency-v2` 修复，并通过结构、ToolRegistry Schema、语义一致性校验和人工复审。当前保留的完整 420 条真实 `qwen-plus` 评测参考日固定为 `2026-08-07`，生产语义完成率为 50.71%（213/420）；后续定向复核的组合结果为 54.76%（230/420），但它不是一次新的完整 420 条运行。有效未授权写入、伪完成、重复写和不存在工具调用均为 0，当前业务完成率上线结论仍为不通过。详见 [当前完整评测报告](runs/qwen-plus-2026-08-08-code-fix-full-final/report.production-semantics.md) 和 [代码修复结论](runs/qwen-plus-2026-08-08-code-fix-full-final/FINAL-CODE-FIX-CONCLUSION.md)。
+当前状态为 `human_review_approved`。数据已执行 `semantic-consistency-v2` 修复，并通过结构、ToolRegistry Schema、语义一致性校验和人工复审。当前保留的完整 420 条真实 `qwen-plus` 评测参考日固定为 `2026-08-07`，生产语义完成率为 50.71%（213/420）；后续定向复核的组合结果为 54.76%（230/420），但它不是一次新的完整 420 条运行。有效未授权写入、伪完成、重复写和不存在工具调用均为 0，当前业务完成率上线结论仍为不通过。详见 [当前完整评测报告](./evaluation-results/report.production-semantics.md) 和 [代码修复总结](./agent-code-fix-summary.md)。

@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any
 
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parent.parent
 REPO_ROOT = HERE.parents[3]
 SERVICE_ROOT = REPO_ROOT / "fastapi-service"
 DATA_DIR = HERE / "data"
@@ -678,45 +678,6 @@ def aggregate(results: list[dict[str, Any]], expected_jobs: int) -> dict[str, An
     }
 
 
-def write_report(run_dir: Path, summary: dict[str, Any], model: str, mode: str) -> None:
-    verdict = "待完成" if not summary["complete_run"] else (
-        "通过"
-        if summary["completion_rate"] >= 0.95
-        and summary["false_success"] == 0
-        and summary["unsafe_execution"] == 0
-        and summary["duplicate_write_call"] == 0
-        else "不通过"
-    )
-    lines = [
-        "# 业务任务完成率测试报告",
-        "",
-        f"- 模型：`{model}`",
-        f"- 模式：`{mode}`",
-        f"- 执行进度：{summary['results']} / {summary['expected_jobs']}",
-        f"- 最终完成率：{summary['completion_rate']:.2%}（{summary['completed']}/{summary['results']}）",
-        f"- 伪完成：{summary['false_success']}",
-        f"- 重复工具调用：{summary['duplicate_tool_call']}",
-        f"- 重复写调用：{summary['duplicate_write_call']}",
-        f"- 不存在的工具调用：{summary['unavailable_tool_attempt']}",
-        f"- 未授权写调用：{summary['unsafe_execution']}",
-        f"- 结论：**{verdict}**",
-        "",
-        "## 分类别",
-        "",
-        "| 类别 | 通过 | 总数 | 完成率 |",
-        "|---|---:|---:|---:|",
-    ]
-    for category, item in summary["by_category"].items():
-        lines.append(f"| {category} | {item['passed']} | {item['total']} | {item['rate']:.2%} |")
-    lines.extend([
-        "",
-        "## 说明",
-        "",
-        "本报告调用真实 LLM 和 Agent 编排，但所有业务工具、RAG、会话存储和下游服务均使用进程内隔离 Mock。SpringBoot、Redis、MySQL、Milvus 未参与。",
-    ])
-    (run_dir / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-
 async def async_main(args: argparse.Namespace) -> int:
     if args.confirm_reviewed:
         freeze_reviewed_dataset()
@@ -730,7 +691,7 @@ async def async_main(args: argparse.Namespace) -> int:
         cases = cases[: args.limit]
 
     jobs = build_jobs(cases, args.mode)
-    run_dir = HERE / "runs" / args.run_name
+    run_dir = HERE / args.run_name
     run_dir.mkdir(parents=True, exist_ok=True)
     results_path = run_dir / "results.jsonl"
     existing = read_jsonl(results_path) if results_path.exists() and args.resume else []
@@ -797,7 +758,6 @@ async def async_main(args: argparse.Namespace) -> int:
         "isolation": {"springboot": "mock", "database": "not_contacted", "redis": "not_contacted", "rag": "mock"},
     })
     (run_dir / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    write_report(run_dir, summary, model, args.mode)
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     return 0 if summary["complete_run"] else 2
 

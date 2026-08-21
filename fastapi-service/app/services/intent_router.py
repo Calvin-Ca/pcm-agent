@@ -431,8 +431,15 @@ class IntentRouter:
                 {"role": "user", "content": prompt}
             ],
             "temperature": 0.1,
-            "max_tokens": 200
+            "max_tokens": 128,
         }
+        api_base_lower = api_base.lower()
+        if "11434" in api_base_lower:
+            payload["think"] = False
+        elif "dashscope" in api_base_lower:
+            payload["enable_thinking"] = False
+        else:
+            payload["chat_template_kwargs"] = {"enable_thinking": False}
 
         async with aiohttp.ClientSession() as session:
             async with session.post(url, headers=headers, json=payload) as resp:

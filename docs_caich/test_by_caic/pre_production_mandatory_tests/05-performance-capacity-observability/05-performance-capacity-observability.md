@@ -119,6 +119,10 @@ SpringBoot 等待时间可以作为共享指标，但必须单独标记，不能
 
 ## 8. 现有性能测试
 
+本轮生产等价环境性能测试、RAG 瓶颈定位、本地/API 模式对比和 500 人容量评估见：
+
+- [performance-test-report-2026-08-10.md](performance-test-report-2026-08-10.md)
+
 ```powershell
 cd fastapi-service
 ..\.venv\Scripts\python.exe -m pytest tests/performance/test_response_time.py -v -s

@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parent.parent
 DATA_DIR = HERE / "data"
 FILES = ("single_turn_320.jsonl", "multi_turn_100.jsonl")
 REVISION = "semantic-consistency-v2"

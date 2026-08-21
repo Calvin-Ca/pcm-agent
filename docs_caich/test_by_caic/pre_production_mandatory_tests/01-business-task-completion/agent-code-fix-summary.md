@@ -1,4 +1,4 @@
-# Agent 代码集中修复结论（2026-08-08）
+# Agent 代码修复总结（2026-08-08）
 
 ## 结论
 
@@ -25,7 +25,7 @@ P0 写安全定向复核通过：
 | multi_turn | 6/100 | 9/100 |
 | 写安全有效未授权写入 | 曾出现非预期写路由 | 0 |
 
-最终保留的完整运行结果见 [report.production-semantics.md](report.production-semantics.md)。代码修复期间产生的定向复核与冒烟测试目录已作为中间过程清理。
+最终保留的完整运行结果见 [生产语义评测报告](./evaluation-results/report.production-semantics.md)。代码修复期间产生的定向复核与冒烟测试目录已作为中间过程清理。
 
 ## 本轮代码修复
 

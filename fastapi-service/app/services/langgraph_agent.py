@@ -115,6 +115,7 @@ class AgentState(TypedDict):
     user_message: str
     user_context: Dict[str, Any]
     session_id: Optional[str]
+    stream_response: bool           # 流式入口延迟 RAG 生成，避免同一请求生成两次
     # 记忆上下文（Task 40）
     conversation_history: list     # OpenAI messages 格式的历史消息列表
     business_state: Dict[str, Any]  # Redis 中带 TTL 的结构化多轮业务状态
@@ -1216,13 +1217,6 @@ async def node_llm_with_tools(state: AgentState) -> dict:
         # 当前应用期望 vLLM  最长按 32K 配置。
         num_ctx = 32768 if history_chars > 2000 else 16384
 
-        is_ollama = "11434" in (_llm_client.api_base or "")
-        if is_ollama:
-            extra = {"num_ctx": num_ctx, "think": False}
-        else:
-            # vLLM 或 DashScope：关闭 thinking mode
-            extra = {"enable_thinking": False}
-
         # FC 调用时截短会话历史(messages)，防止 input tokens 超出模型上下文限制（32K context）
         # 策略1：按条数截断（保留 system + 最近 6 条 + 当前消息）
         ### 第一层截断
@@ -1242,9 +1236,14 @@ async def node_llm_with_tools(state: AgentState) -> dict:
 
         # ── A-RAG 受控破例（方案 A）：rag_strategy 指定 agent 或已进入 kb 多步导航 → 升级推理层 API ──
         _fc_client = _llm_client
-        if state.get("rag_strategy") == "agent" or any(     #  当普通聊天模型识别到知识库问题，代码会设置state["rag_strategy"] = "agent"，然后进入多步知识库导航
-            (h.get("tool") in _AGENT_LOOP_TOOL_NAMES) for h in (agent_history or [])   # 已经执行过知识库工具
-        ):
+        should_upgrade_planner = (
+            state.get("rag_strategy") == "agent"
+            or any(
+                h.get("tool") in _AGENT_LOOP_TOOL_NAMES
+                for h in (agent_history or [])
+            )
+        ) and _probe_planner_availability()
+        if should_upgrade_planner:
             try:
                 _fc_client = get_planner_llm_client(temperature=0.1, max_tokens=1024)
                 logger.info("A-RAG 多步导航：FC 调用升级至推理层客户端 (model=%s)", getattr(_fc_client, "model", "unknown"))
@@ -1253,6 +1252,16 @@ async def node_llm_with_tools(state: AgentState) -> dict:
                 _fc_client = _llm_client
                 state["rag_strategy"] = None
                 state["_rag_fallback"] = True
+
+        fc_api_base = (_fc_client.api_base or "").lower()
+        if "11434" in fc_api_base:
+            extra = {"num_ctx": num_ctx, "think": False}
+        elif "dashscope" in fc_api_base:
+            extra = {"enable_thinking": False}
+        else:
+            # vLLM OpenAI API：Qwen3 的 hard switch 必须放在
+            # chat_template_kwargs 中，顶层 enable_thinking 不会生效。
+            extra = {"chat_template_kwargs": {"enable_thinking": False}}
 
         # llm 基于 messages 自动判别调用工具还是生成回复
         result = await _fc_client.generate_with_tools(
@@ -1404,11 +1413,9 @@ async def node_llm_with_tools(state: AgentState) -> dict:
                 "tool_params": {},
                 "query": tool_params.get("query", state["user_message"]),
             }
-            # 只在首轮（8b 判定）设置 rag_strategy；已进入 agent 循环后若仍 knowledge_qa 则回退 RAG，避免死循环
-            if state.get("rag_strategy") == "agent":
-                result["rag_strategy"] = None
-            elif _probe_planner_availability():
-                result["rag_strategy"] = "agent"
+            # knowledge_qa 是单步 RAG 快速通道。需要渐进检索时模型应直接选择
+            # kb_* 工具；不要再升级 planner 做一次重复意图判定。
+            result["rag_strategy"] = None
             return result
 
         if tool_name == "save_workhour":
@@ -1632,8 +1639,8 @@ async def node_classify_intent(state: AgentState) -> dict:
         "tool_params": {},
         "query": intent_result.parameters.get("query", state["user_message"]),
     }
-    if intent_result.intent_type.value == "knowledge_qa" and _probe_planner_availability():
-        result["rag_strategy"] = "agent"
+    if intent_result.intent_type.value == "knowledge_qa":
+        result["rag_strategy"] = None
     return result
 
 
@@ -2056,6 +2063,11 @@ async def node_summarize(state: AgentState) -> dict:
 
 async def node_execute_rag(state: AgentState) -> dict:
     """节点：LangChain RAG 知识库查询（混合检索 + LLM 生成）"""
+    if state.get("stream_response"):
+        # stream_agent_response 会在收到 execute_rag 节点事件后直接调用
+        # langchain_rag_stream_query。此处只交接，避免先非流式生成、再流式生成。
+        return {"rag_result": {"success": True, "deferred_stream": True}}
+
     from app.services.langchain_rag import langchain_rag_query
 
     try:
@@ -2342,6 +2354,8 @@ async def stream_agent_response(
                 base_system = _filter_system_prompt_for_available_tools(base_system)
             except Exception:
                 base_system = "你是一个专业的企业工时管理助手。请用简洁、友好的方式回答用户问题。"
+
+            # 长短期记忆注入
             conversation_history = await _prompt_builder.build_messages_with_history(
                 user_message=message,    # 用户这句话
                 session_id=effective_session_id,        # 本次会话
@@ -2376,26 +2390,35 @@ async def stream_agent_response(
             logger.warning(f"加载结构化会话状态失败，降级为文本历史: {e}")
 
     initial_state: AgentState = {
+        # 用户级：用户带来了什么
         "user_message": message,                # 当前run的用户消息
         "user_context": user_ctx,               # 用户身份、权限上下文
         "session_id": effective_session_id,
+        "stream_response": True,
         "conversation_history": conversation_history, # {"role": ** ,"content": ** ,}
         "business_state": business_state,
+
+        # agent 认为要做什么
         "intent": None,
         "tool_name": None,
         "tool_params": {},
-        "query": message,
+        "query": message,     # 用于 RAG 知识库查询：有处理后的 query，优先使用；没有 query，就使用用户原话兜底。
         "clarify_message": None,
+
+        # 结果
         "tool_result": None,
         "rag_result": None,
         "llm_result": None,
         "error": None,
+
+        # 复杂任务
         "task_plan": None,
         "plan_results": None,
+
         # ── Agent Loop 默认值 ─────────────────────────────────────────────
-        "agent_iterations": 0,
-        "agent_max_iterations": int(os.getenv("AGENT_MAX_ITERATIONS", "5") or 5),
-        "agent_history": [],
+        "agent_iterations": 0,    # 工具执行次数
+        "agent_max_iterations": int(os.getenv("AGENT_MAX_ITERATIONS", "5") or 5),   # 工具执行次数最大值
+        "agent_history": [],    # 一条条工具执行详情：工具名称、参数、结果
     }
 
     yield _format_sse("start", {
