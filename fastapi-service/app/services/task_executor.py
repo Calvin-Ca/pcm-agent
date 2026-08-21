@@ -98,7 +98,26 @@ class TaskExecutor:
             # 所有任务执行完成
             task_plan.complete_execution()
             logger.info(f"任务计划执行完成: {task_plan.name}")
-            
+
+            # _build_execution_summary() 构造
+            # 成功示例：
+            # {
+            #     "plan_id": "plan-001",
+            #     "plan_name": "本周工时分析",
+            #     "status": TaskStatus.COMPLETED,
+            #     "progress": {
+            #         "total": 3,
+            #         "completed": 3,
+            #         "failed": 0,
+            #     },
+            #     "execution_time": 2.7,
+            #     "task_results": {
+            #         "t1": {...},
+            #         "t2": {...},
+            #         "t3": {...},
+            #     },
+            #     "success": True,
+            # }
             return self._build_execution_summary(task_plan)
             
         except Exception as e:
@@ -171,7 +190,7 @@ class TaskExecutor:
             try:
                 # 使用超时控制
                 result = await asyncio.wait_for(
-                    self._execute_task_by_type(task, permission_context),
+                    self._execute_task_by_type(task, permission_context), # 真正调用工具
                     timeout=timeout
                 )
 

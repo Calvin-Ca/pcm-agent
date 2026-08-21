@@ -400,6 +400,14 @@ class LLMClient:
                     async with session.post(url, headers=headers, json=payload) as resp:
                         if resp.status == 200:
                             data = await resp.json()
+                            # OpenAI 兼容接口由模型服务端返回的 token 用量统计：
+                            # - prompt_tokens：完整输入 token 数，包含 system prompt、对话消息、
+                            #   工具定义以及 chat template 等服务端附加内容。
+                            # - completion_tokens：模型本次生成的 token 数；tool_calls 的名称和参数也计入。
+                            # - total_tokens：本次请求总 token 数，通常为前两项之和。
+                            # - prompt_tokens_details.cached_tokens：命中前缀缓存的输入 token 数，
+                            # 已包含在 prompt_tokens 中，不应重复累加；部分兼容服务可能不返回该字段。
+                            # 9932token
                             _usage_holder.update(data.get("usage") or {})
                             choice = data["choices"][0]
                             finish_reason = choice.get("finish_reason")

@@ -234,7 +234,7 @@ async def node_llm_with_tools(state: AgentState) -> dict:
     if not _llm_client or not _tool_registry:
         return await node_classify_intent(state)
 
-    try:
+    try: # 工具注册
         tools = _build_openai_tools(_tool_registry)
         if not tools:
             return await node_classify_intent(state)
@@ -298,7 +298,12 @@ async def node_llm_with_tools(state: AgentState) -> dict:
         history_chars = sum(
             len(m.get("content") or "") for m in messages
         )
-        # vLLM / Ollama 统一按 32K 配置
+        # 上下文长度包含输入和输出，必须满足：prompt_tokens + max_tokens <= max_model_len。
+        # vLLM 则由服务启动参数 --max-model-len 控制，
+        # 未显式设置时会从模型配置自动推导。若不清楚模型上限，不要随意调大，
+        # 应优先省略该启动参数或使用受当前 vLLM 版本支持的 --max-model-len auto。
+        # 只有模型本身支持且显存足够时才能使用更长上下文；主动调小则可降低 KV cache 压力。
+        # 当前应用期望 vLLM  最长按 32K 配置。
         num_ctx = 32768 if history_chars > 2000 else 16384
 
         is_ollama = "11434" in (_llm_client.api_base or "")
@@ -331,8 +336,8 @@ async def node_llm_with_tools(state: AgentState) -> dict:
             "kb_read_section", "kb_semantic_search",
         }
         _fc_client = _llm_client
-        if state.get("rag_strategy") == "agent" or any(
-            (h.get("tool") in _KB_TOOLS) for h in (agent_history or [])
+        if state.get("rag_strategy") == "agent" or any(     #  当普通聊天模型识别到知识库问题，代码会设置state["rag_strategy"] = "agent"，然后进入多步知识库导航
+            (h.get("tool") in _KB_TOOLS) for h in (agent_history or [])   # 已经执行过知识库工具
         ):
             try:
                 _fc_client = get_planner_llm_client(temperature=0.1, max_tokens=1024)
@@ -343,11 +348,15 @@ async def node_llm_with_tools(state: AgentState) -> dict:
                 state["rag_strategy"] = None
                 state["_rag_fallback"] = True
 
+        # llm 基于 messages 自动判别调用工具还是生成回复
         result = await _fc_client.generate_with_tools(
             messages=messages,
             tools=tools,
             tool_choice="auto",
             temperature=0.1,
+            # 本次最多生成 1024 个输出 token，并非固定生成量；模型可以提前结束。
+            # 此值不负责截断输入，需与服务端 max_model_len 共同满足：
+            # prompt_tokens + max_tokens <= max_model_len。
             max_tokens=1024,
             extra=extra,
         )
@@ -361,7 +370,7 @@ async def node_llm_with_tools(state: AgentState) -> dict:
 
     if result.get("finish_reason") == "tool_calls":
         tool_calls = result.get("tool_calls", [])
-        if not tool_calls:
+        if not tool_calls:   #  正常情况下：finish_reason == "tool_calls"应该必然伴随非空的：tool_calls，但代码仍然检查，这是防御性处理
             return await node_classify_intent(state)
 
         user_ctx = state.get("user_context") or {}
@@ -468,8 +477,8 @@ async def node_llm_with_tools(state: AgentState) -> dict:
                 missing.append("**工时时长**（小时，如 8 或 4.5）")
             if missing:
                 clarify_msg = await _build_workhour_clarify_message(
-                    tool_params,
-                    missing,
+                    tool_params,    # llm根据用户消息得到的参数
+                    missing,        # 对照后端接口和实际得到的参数，对比得到缺少的参数
                     user_id=user_ctx.get("user_id"),
                     auth_token=user_ctx.get("auth_token"),
                 )
@@ -755,7 +764,7 @@ async def _build_workhour_clarify_message(
     if already:
         lines.append(f"\n（已获取：{', '.join(already)}）")
 
-    # 注入基于历史的智能推荐
+    # 注入基于历史的智能推荐，调用spring后端接口
     if user_id:
         base_url = os.getenv("SPRINGBOOT_BASE_URL") or (
             f"http://{os.getenv('SPRINGBOOT_HOST', 'host.docker.internal')}:8080"
@@ -794,7 +803,7 @@ async def node_plan_and_execute(state: AgentState) -> dict:
     两条入口：
     A. state["task_plan"]["source"] == "multi_tool_calls"
        → LLM 已返回多个 tool_calls，直接执行，跳过 PlannerAgent
-    B. intent == "complex_request"（来自规则路由降级）
+    B. intent == "complex_request"（来自规则路由降级），node_classify_intent
        → 调用 PlannerAgent 生成 TaskPlan，再执行
     """
     from app.models.task_plan import TaskPlan, TaskNode, TaskType, PlannerAgent
@@ -821,11 +830,14 @@ async def node_plan_and_execute(state: AgentState) -> dict:
             )
             task_plan.add_task(node)
 
-    # ── 路径 B：complex_request，调用 PlannerAgent ──────────────────────────
+    # ── 路径 B：complex_request，调用 PlannerAgent，再构建 task_plan ──────────────────────────
+    # 模型声明调用工具，但调用列表为空
+    # node_llm_with_tools 调用主模型失败，走备用 node_classify_intent
     else:
         if not _llm_client or not _tool_registry:
             return {"llm_result": "抱歉，多步规划功能暂时不可用。", "error": "规划组件未初始化"}
 
+        # Plan-and-Execute（先规划、后执行）架构
         planner = PlannerAgent(
             tool_registry=_tool_registry,
             llm_client=get_planner_llm_client(),
@@ -844,6 +856,24 @@ async def node_plan_and_execute(state: AgentState) -> dict:
         return {"llm_result": "任务执行器未初始化。", "error": "TaskExecutor 未初始化"}
 
     try:
+            # 成功示例：
+            # {
+            #     "plan_id": "plan-001",
+            #     "plan_name": "本周工时分析",
+            #     "status": TaskStatus.COMPLETED,
+            #     "progress": {
+            #         "total": 3,
+            #         "completed": 3,
+            #         "failed": 0,
+            #     },
+            #     "execution_time": 2.7,
+            #     "task_results": {
+            #         "t1": {...},
+            #         "t2": {...},
+            #         "t3": {...},
+            #     },
+            #     "success": True,
+            # }
         summary = await _task_executor.execute_plan(
             task_plan=task_plan,
             permission_context=permission_ctx,
@@ -1028,7 +1058,7 @@ def _route_by_intent(state: AgentState) -> str:
         "complex_request": "plan_and_execute",   # 多步规划 + 并行执行
         "general_chat": "execute_llm",
         "clarify": "clarify_node",
-    }.get(intent, "execute_llm") # 如果意图是"tool_execution"就执行工具...
+    }.get(intent, "execute_llm") 
 
 
 # ─── A-RAG Agent Loop 守卫 ────────────────────────────────────────────────────
