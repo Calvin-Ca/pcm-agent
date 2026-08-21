@@ -1,5 +1,7 @@
 # Layer 1 意图分类精度测试报告
 
+> 原文件名：`layer1-ollama-qwen3-8b-2026-04-09.md`
+
 **测试时间**: 2026-04-09
 **测试模型**: Ollama qwen3:8b（本地部署，Q4_K_M 量化）
 **对比基准**: DashScope qwen-plus（云端）

@@ -1,5 +1,7 @@
 # AI Service 改进结果报告（2026-04-10）
 
+> 原文件名：`improvement-results-2026-04-10.md`
+
 **测试环境**：Ollama qwen3:8b (Q4_K_M 量化) + qwen3-embedding:8b (Q4_K_M 量化)
 **配置**：Reranker 关闭 (USE_RERANKER=False)
 **测试时间**：2026-04-10
@@ -67,39 +69,6 @@
 **现象**："早上好，请问能帮我看看工时吗" 被识别为 tool_execution，期望 general_chat。
 
 **评估**：这是模型更智能的判断——优先响应了工时意图。此用例期望值可能需要更新。**不视为真正的问题。**
-
----
-
-## 二、RAG TTFT 性能
-
-### 测试方法
-发送知识问答请求，测量从 RAG 检索开始到首个内容 token 的时间。
-
-### 结果
-
-| 场景 | TTFT | 说明 |
-|------|------|------|
-| RAG 检索开始 | 1.9s | 模型 thinking 后开始调用 RAG |
-| 首个 RAG 内容 | 15.7s | 冷启动（qwen3-embedding:8b 加载到 GPU） |
-| **RAG 净 TTFT（冷）** | **~13.8s** | embedding 模型冷启动是主因 |
-| RAG 暖启动 | 2.7s | embedding 模型已缓存 |
-
-### Embedding 模型对比路径
-
-**当前**：`qwen3-embedding:8b`（Ollama，Q4_K_M，4096维）
-- 优点：本地推理，无网络延迟
-- 缺点：冷启动 ~13s（GPU 加载 4.6GB 模型）
-
-**对比方案**：
-
-| 方案 | 冷启动 | 质量 | 操作 |
-|------|--------|------|------|
-| DashScope text-embedding-v2 | **无**（云端 API） | 1536维 FP16 | 改 USE_OLLAMA_EMBEDDING=False |
-| bge-base-zh-v1.5 | 待测 | 中文优化Embedding | Ollama 无，需单独部署 |
-
-**建议行动**：将 `USE_OLLAMA_EMBEDDING=False` 切换到 DashScope text-embedding-v2，测 20 条知识问答的召回质量 + TTFT。直接验证量化版 vs FP16 版的差距。
-
----
 
 ## 三、改进项实施状态
 

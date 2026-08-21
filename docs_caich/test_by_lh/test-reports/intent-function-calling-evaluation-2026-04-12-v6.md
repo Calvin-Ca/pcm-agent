@@ -1,5 +1,7 @@
 # 意图分类精度测试报告（vLLM qwen3-8b）— v3
 
+> 原文件名：`accuracy-vllm-qwen3-8b-2026-04-12.md`
+
 **测试时间**：2026-04-12
 **测试模型**：vLLM qwen3-8b（GPU 2，`--served-model-name qwen3-8b`）
 **测试环境**：容器内 pytest-xdist 8 workers

@@ -1,5 +1,7 @@
 # 意图分类精度测试报告（2026-04-10）
 
+> 原文件名：`full-accuracy-2026-04-10.md`
+
 **测试环境**：Ollama qwen3:4b（意图分类）+ qwen3:8b（主对话，Function Calling）
 **运行时间**：2h30m
 **并发**：4 worker（pytest-xdist）
