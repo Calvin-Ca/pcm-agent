@@ -14,12 +14,29 @@
 #   dev_status              看隧道/服务/token 状态
 #   token_refresh           强制重换 token
 #   有记忆，而且默认所有 ask 共用一个会话
-# 密钥不落本地：MCP_API_KEY 只在 172 上展开；token 缓存在仓库外
-# ~/.cache/workhour-agent/tokens.json（0600）。
+# 默认走生产隧道；完全本地联调可用：
+#   WORKHOUR_BACKEND=mock source fastapi-service/tests/manual/dev.sh
+# 密钥不落本地：MCP_API_KEY 只在 172 上展开；真实 token 缓存在仓库外
+# ~/.cache/workhour-agent/tokens.json（0600），mock token 使用独立缓存。
 
 _WH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-${(%):-%x}}")" && pwd)"
-_WH_CACHE="$HOME/.cache/workhour-agent/tokens.json"
-_WH_TUNNEL_LOG="$HOME/.cache/workhour-agent/tunnel.log"
+_WH_BACKEND="${WORKHOUR_BACKEND:-tunnel}"
+_WH_CACHE_DIR="${WORKHOUR_CACHE_DIR:-$HOME/.cache/workhour-agent}"
+case "$_WH_BACKEND" in
+  tunnel|mock) ;;
+  *)
+    echo "  ✗ WORKHOUR_BACKEND 仅支持 tunnel 或 mock（当前：$_WH_BACKEND）"
+    return 1 2>/dev/null || exit 1
+    ;;
+esac
+if [ "$_WH_BACKEND" = "mock" ]; then
+  _WH_CACHE="$_WH_CACHE_DIR/mock-tokens.json"
+else
+  _WH_CACHE="$_WH_CACHE_DIR/tokens.json"
+fi
+_WH_TUNNEL_LOG="$_WH_CACHE_DIR/tunnel.log"
+_WH_MOCK_LOG="$_WH_CACHE_DIR/mock-springboot.log"
+_WH_MOCK_PID="$_WH_CACHE_DIR/mock-springboot.pid"
 _WH_GPU="caic@172.19.3.136"
 _WH_REMOTE_DIR="/home/caic/code/workhour/workhour_agent"
 _WH_PROJECT_ROOT="$(cd "$_WH_DIR/../../.." && pwd)"
@@ -41,10 +58,64 @@ _wh_port_open() {
   (exec 3<>"/dev/tcp/$1/$2") 2>/dev/null
 }
 
+_wh_mock_ready() {
+  curl -fsS -m 2 http://127.0.0.1:9900/__mock__/health 2>/dev/null \
+    | grep -q 'workhour-springboot-mock'
+}
+
 # 三个测试身份：entity_id 用于换 token，user_id 是 sys_user.id（= 工时表 memberId）
 _WH_EMP_ENTITY='0103163734221037995'; _WH_EMP_UID='d1e88d66-cc87-40c7-bbe3-2dff2d093b41'
 _WH_ADM_ENTITY='020832615020860355';  _WH_ADM_UID='4cbabf4b-6ba2-4b12-aacc-15077187f47a'
 _WH_SUP_ENTITY='123';                 _WH_SUP_UID='5565b9e2-1348-4c4b-b7f2-386e67a3c02b'
+
+
+# ── 本地 SpringBoot Mock ──────────────────────────────────────────────────────
+mock_up() {
+  if _wh_mock_ready; then
+    echo "  SpringBoot Mock 9900 已运行"
+    return 0
+  fi
+  if _wh_port_open 127.0.0.1 9900; then
+    echo "  ✗ 9900 已被其他服务占用；请先关闭现有隧道或改用 WORKHOUR_BACKEND=tunnel"
+    return 1
+  fi
+
+  echo "  SpringBoot Mock 未运行，正在启动…"
+  mkdir -p "$(dirname "$_WH_MOCK_LOG")"
+  : > "$_WH_MOCK_LOG"
+  WORKHOUR_MOCK_SCENARIO="${WORKHOUR_MOCK_SCENARIO:-normal}" \
+    "$_WH_PYTHON" "$_WH_DIR/mock_springboot.py" --host 127.0.0.1 --port 9900 \
+    >>"$_WH_MOCK_LOG" 2>&1 </dev/null &
+  echo $! > "$_WH_MOCK_PID"
+
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    sleep 1
+    _wh_mock_ready && { echo "  SpringBoot Mock 9900 已启动"; return 0; }
+  done
+  echo "  ✗ SpringBoot Mock 启动失败，日志："
+  sed 's/^/    /' "$_WH_MOCK_LOG" 2>/dev/null || true
+  return 1
+}
+
+mock_down() {
+  if [ ! -s "$_WH_MOCK_PID" ]; then
+    echo "  SpringBoot Mock 没有 PID 记录"
+    return 0
+  fi
+  local pid
+  pid=$(cat "$_WH_MOCK_PID")
+  if ! _wh_mock_ready; then
+    echo "  SpringBoot Mock 已停止（清理旧 PID）"
+    rm -f "$_WH_MOCK_PID"
+    return 0
+  fi
+  kill "$pid" 2>/dev/null || {
+    echo "  ✗ 无法停止 PID $pid，请手动结束后再清理 $_WH_MOCK_PID"
+    return 1
+  }
+  rm -f "$_WH_MOCK_PID"
+  echo "  SpringBoot Mock 已停止"
+}
 
 
 # ── 隧道 ──────────────────────────────────────────────────────────────────────
@@ -101,6 +172,46 @@ sys.exit(0 if exp - time.time() > 300 else 1)     # 留 5 分钟余量
 PY
 }
 
+_wh_make_mock_tokens() {
+  echo "  正在生成本地 mock token…"
+  mkdir -p "$(dirname "$_WH_CACHE")"
+  "$_WH_PYTHON" - "$_WH_CACHE" \
+    "$_WH_EMP_UID" "$_WH_ADM_UID" "$_WH_SUP_UID" <<'PY'
+import base64, json, os, sys, time
+
+path = sys.argv[1]
+roles = {
+    "employee": sys.argv[2],
+    "deptAdmin": sys.argv[3],
+    "superAdmin": sys.argv[4],
+}
+
+def enc(value):
+    raw = json.dumps(value, separators=(",", ":")).encode()
+    return base64.urlsafe_b64encode(raw).rstrip(b"=").decode()
+
+now = int(time.time())
+header = enc({"alg": "none", "typ": "JWT"})
+result = {}
+for role, user_id in roles.items():
+    payload = enc({
+        "sub": user_id,
+        "entity_type": role,
+        "iat": now,
+        "exp": now + 86400,
+        "iss": "workhour-local-mock",
+    })
+    result[role] = {"token": f"{header}.{payload}.mock", "user_id": user_id}
+with open(path, "w", encoding="utf-8") as fh:
+    json.dump(result, fh)
+try:
+    os.chmod(path, 0o600)
+except OSError:
+    pass
+PY
+  echo "  mock token 已生成（24h 有效，不访问生产环境）"
+}
+
 _wh_fetch_tokens() {
   echo "  正在经 172 换取 token（MCP_API_KEY 不落本地）…"
   mkdir -p "$(dirname "$_WH_CACHE")"
@@ -137,7 +248,17 @@ print(d.get("token", ""), d.get("user_id", ""))
   export ENTITY="$role"
 }
 
-token_refresh() { _wh_fetch_tokens && _wh_load_role "${ENTITY:-employee}" && echo "  当前身份: $ENTITY ($USER_ID)"; }
+token_refresh() {
+  if [ "$_WH_BACKEND" = "mock" ]; then
+    _wh_make_mock_tokens
+  else
+    _wh_fetch_tokens
+  fi
+  local rc=$?
+  [ "$rc" -eq 0 ] && _wh_load_role "${ENTITY:-employee}" \
+    && echo "  当前身份: $ENTITY ($USER_ID)"
+  return "$rc"
+}
 
 as_emp() { _wh_load_role employee;   echo "→ employee  罗欢    $USER_ID"; }
 as_adm() { _wh_load_role deptAdmin;  echo "→ deptAdmin 刘会超  $USER_ID"; }
@@ -184,7 +305,15 @@ repl()  { (cd "$_WH_DIR" && "$_WH_PYTHON" chat_repl.py "$@"); }
 
 # ── 状态 ──────────────────────────────────────────────────────────────────────
 dev_status() {
-  _wh_port_open 127.0.0.1 9900 && echo "  隧道 9900   ✅" || echo "  隧道 9900   ❌ 运行 tunnel_up"
+  if [ "$_WH_BACKEND" = "mock" ]; then
+    _wh_mock_ready \
+      && echo "  Mock  9900   ✅（不连接生产 SpringBoot）" \
+      || echo "  Mock  9900   ❌ 运行 mock_up"
+  else
+    _wh_port_open 127.0.0.1 9900 \
+      && echo "  隧道 9900   ✅" \
+      || echo "  隧道 9900   ❌ 运行 tunnel_up"
+  fi
   # 路径是 /health/ping：main.py 以 prefix="/health" 挂载，router 内又是 @get("/ping")
   # 必须看状态码——curl 拿到 404 也是退出码 0，会把"服务在但路径错"误判为健康
   local _code
@@ -192,8 +321,9 @@ dev_status() {
   [ "$_code" = "200" ] \
     && echo "  服务 $BASE ✅" \
     || echo "  服务 $BASE ❌ (HTTP ${_code:-无响应}) VSCode F5 或 cd fastapi-service && python main.py"
-  _wh_token_valid "$TOKEN" && echo "  token       ✅ ($ENTITY $USER_ID)" \
-                           || echo "  token       ❌ 运行 token_refresh"
+  _wh_token_valid "$TOKEN" \
+    && echo "  token       ✅ ($ENTITY $USER_ID${_WH_BACKEND:+, $_WH_BACKEND})" \
+    || echo "  token       ❌ 运行 token_refresh"
   local _envlocal="$_WH_DIR/../../../.env.local"
   grep -q '^WRITE_DRY_RUN_DEFAULT=true' "$_envlocal" 2>/dev/null \
     && echo "  写安全阀    ✅ 开启（写工具只预览，不写生产库）" \
@@ -205,11 +335,19 @@ dev_status() {
 
 
 # ── 初始化 ────────────────────────────────────────────────────────────────────
-echo "workhour 联调环境"
-tunnel_up
+echo "workhour 联调环境（backend=$_WH_BACKEND）"
+if [ "$_WH_BACKEND" = "mock" ]; then
+  mock_up
+else
+  tunnel_up
+fi
 _wh_load_role employee
 if ! _wh_token_valid "$TOKEN"; then
-  _wh_fetch_tokens && _wh_load_role employee
+  if [ "$_WH_BACKEND" = "mock" ]; then
+    _wh_make_mock_tokens && _wh_load_role employee
+  else
+    _wh_fetch_tokens && _wh_load_role employee
+  fi
 else
   echo "  token 未过期，复用缓存"
 fi
@@ -217,3 +355,4 @@ echo
 dev_status
 echo
 echo "  ask \"问题\" | asks（流式）| as_emp/as_adm/as_sup | probe | repl | dev_status"
+[ "$_WH_BACKEND" = "mock" ] && echo "  mock_up | mock_down | POST /__mock__/scenario/{normal|empty|unauthorized|forbidden|server_error|slow}"

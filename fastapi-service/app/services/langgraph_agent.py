@@ -1145,7 +1145,8 @@ async def node_llm_with_tools(state: AgentState) -> dict:
             "clarify_message": "已识别到一条工时明细，但尚未收到保存或预览指令。请确认要先预览，还是仅解析内容。",
         }
 
-    try: # 工具注册
+    try:
+        # 工具注册
         tools = _build_openai_tools(_tool_registry)
         if not tools:
             return await node_classify_intent(state)

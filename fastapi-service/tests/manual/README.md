@@ -8,6 +8,38 @@
 - 单发调试：`send.sh`（配合断点，单次非流式请求）
 - 多轮交互调试：`chat_repl.py`（同一 session_id 连续对话，配合断点，纯标准库）
 
+## 无隧道联调：本地 SpringBoot Mock
+
+172 或生产 SpringBoot 不可达时，可让 `dev.sh` 启动本地 Mock：
+
+```bash
+WORKHOUR_BACKEND=mock source fastapi-service/tests/manual/dev.sh
+ask "我这周填了多少工时？"
+```
+
+Mock 只监听 `127.0.0.1:9900`，提供项目、成员、工时、工作日历、填报、审核和导出接口；
+token 使用独立的本地假 JWT，不读取 `MCP_API_KEY`，也不访问生产数据库。数据按当前周动态生成，
+写入只保存在 Mock 进程内存中，重启或执行下面的 reset 即恢复：
+
+```bash
+curl -s -X POST http://127.0.0.1:9900/__mock__/reset
+mock_down
+```
+
+可以切换错误场景，验证 Agent 的异常处理：
+
+```bash
+curl -s -X POST http://127.0.0.1:9900/__mock__/scenario/empty
+curl -s -X POST http://127.0.0.1:9900/__mock__/scenario/unauthorized
+curl -s -X POST http://127.0.0.1:9900/__mock__/scenario/forbidden
+curl -s -X POST http://127.0.0.1:9900/__mock__/scenario/server_error
+curl -s -X POST http://127.0.0.1:9900/__mock__/scenario/slow
+curl -s -X POST http://127.0.0.1:9900/__mock__/scenario/normal
+```
+
+Mock 仅替代 SpringBoot 链路。`.env.local` 中的 Redis、Milvus/Embedding 若仍指向 172，
+对应的会话记忆和语义 RAG 能力仍可能降级；DashScope LLM、Agent 编排和业务工具代码保持真实运行。
+
 ## 请求会流经的路径（对照 CLAUDE.md「请求处理流程」）
 
 ```
@@ -42,7 +74,7 @@ POST /api/ai/chat → node_llm_with_tools（Function Calling 主节点）
 
 - **read**：只读，随便跑，包括经方案A隧道打生产 SpringBoot。
 - **write**（`WRITE-01/02`、`PERM-02`、`CLARIFY-01`）：会写库。
-  ⛔ **本地方案A隧道连的是生产库**，这些**只在本地 SpringBoot(路B) 环境跑**。默认脚本跳过。
+  ⛔ **隧道模式连的是生产库**，默认脚本跳过；Mock 模式写入仅修改进程内存，可以安全验证。
 
 ## 怎么跑
 
