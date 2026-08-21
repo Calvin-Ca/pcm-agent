@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Optional
 from app.models.tool import ToolCategory
 from app.services.tool_registry import tool_registry
 from app.services.prompt_manager import get_prompt_manager
+from app.services.param_resolver import resolve_member_id
 
 logger = logging.getLogger(__name__)
 
@@ -30,14 +31,18 @@ GENERATE_WEEKLY_REPORT_SCHEMA = {
             "type": "string",
             "description": "用户ID（可选，不填则查询当前登录用户）",
         },
+        "member_name": {
+            "type": "string",
+            "description": "成员姓名（可选，用于生成指定人员周报，Handler 会解析为 user_id）",
+        },
         "week": {
             "type": "string",
             "description": (
-                "周次参数（可选）。"
+                "周次参数。"
                 "支持：'thisWeek'（本周）、'lastWeek'（上周）、"
                 "'YYYY-WNN'（如 '2024-W01'）、"
                 "'YYYY-MM-DD'（该日期所在周）。"
-                "默认为本周。"
+                "用户未说明周次时应先追问，不得由模型自行假设。"
             ),
         },
     },
@@ -165,7 +170,13 @@ async def generate_weekly_report_handler(**kwargs) -> Dict[str, Any]:
     """
     auth_token = kwargs.pop("auth_token", None)
     user_id: Optional[str] = kwargs.get("user_id")
+    member_name: Optional[str] = kwargs.get("member_name")
     week: Optional[str] = kwargs.get("week")
+
+    if member_name and not user_id:
+        user_id, resolve_error = await resolve_member_id(member_name, auth_token)
+        if resolve_error:
+            return {"success": False, "error": resolve_error, "report": None}
 
     # 1. 解析日期范围
     start, end = _resolve_week_range(week)

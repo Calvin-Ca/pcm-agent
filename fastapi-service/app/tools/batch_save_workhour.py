@@ -660,6 +660,15 @@ async def _save_single_workhour(
 
     except httpx.HTTPStatusError as e:
         err_msg = _extract_error_message(e)
+        if e.response.status_code >= 500:
+            return {
+                "success": False,
+                "status": "unknown",
+                "error_code": "WRITE_RESULT_UNKNOWN",
+                "record": record,
+                "error_message": "提交结果未知，请查询确认",
+                "suggested_fix": "请先查询该条记录是否已保存，确认后再决定是否重试",
+            }
         suggested_fix = _suggest_fix(err_msg, record)
         return {
             "success": False,
@@ -667,12 +676,24 @@ async def _save_single_workhour(
             "error_message": err_msg,
             "suggested_fix": suggested_fix,
         }
-    except Exception as e:
+    except httpx.HTTPError:
         return {
             "success": False,
+            "status": "unknown",
+            "error_code": "WRITE_RESULT_UNKNOWN",
             "record": record,
-            "error_message": f"网络异常: {e}",
-            "suggested_fix": "请稍后重试，或联系管理员",
+            "error_message": "提交结果未知，请查询确认",
+            "suggested_fix": "请先查询该条记录是否已保存，确认后再决定是否重试",
+        }
+    except Exception as e:
+        logger.error("批量工时单条写入异常: %s", e, exc_info=True)
+        return {
+            "success": False,
+            "status": "unknown",
+            "error_code": "WRITE_RESULT_UNKNOWN",
+            "record": record,
+            "error_message": "提交结果未知，请查询确认",
+            "suggested_fix": "请先查询该条记录是否已保存，确认后再决定是否重试",
         }
 
 
@@ -758,6 +779,7 @@ async def _save_records(
     """循环调 POST /api/workhour，逐条入库，部分失败逐条返回原因"""
     succeeded: List[Dict[str, Any]] = []
     failed: List[Dict[str, Any]] = []
+    unknown: List[Dict[str, Any]] = []
 
     for r in records:
         # 跳过无 project_id 的记录
@@ -782,6 +804,16 @@ async def _save_records(
                 "content": r["content"],
                 "workhour_id": result.get("workhour_id"),
             })
+        elif result.get("status") == "unknown":
+            unknown.append({
+                "date": r["date"],
+                "project_name": r["project_name"],
+                "hours": r["hours"],
+                "error_message": "提交结果未知，请查询确认",
+                "suggested_fix": result["suggested_fix"],
+            })
+            # 当前记录可能已经落库。停止后续写入，避免在状态不明时扩大影响面。
+            break
         else:
             failed.append({
                 "date": r["date"],
@@ -793,21 +825,34 @@ async def _save_records(
 
     success_count = len(succeeded)
     failed_count = len(failed)
+    unknown_count = len(unknown)
     total_hours = sum(s["hours"] for s in succeeded)
 
     summary_text = f"✅ 成功填报 {success_count} 条共 {total_hours} 小时"
     if failed_count > 0:
         summary_text += f"；❌ {failed_count} 条失败，详情见 failed_items"
+    if unknown_count > 0:
+        summary_text += "；⚠️ 1 条提交结果未知，已停止后续写入，请查询确认"
 
-    return {
-        "success": failed_count == 0 or success_count > 0,
+    response = {
+        "success": unknown_count == 0 and (failed_count == 0 or success_count > 0),
         "dry_run": False,
         "success_count": success_count,
         "failed_count": failed_count,
+        "unknown_count": unknown_count,
         "succeeded_items": succeeded,
         "failed_items": failed,
+        "unknown_items": unknown,
         "summary_text": summary_text,
     }
+    if unknown_count > 0:
+        response.update({
+            "status": "unknown",
+            "error_code": "WRITE_RESULT_UNKNOWN",
+            "error": "提交结果未知，请查询确认",
+            "message": "提交结果未知，请查询确认",
+        })
+    return response
 
 
 # ─── 主 Handler ───────────────────────────────────────────────────────────────
@@ -941,6 +986,7 @@ def register_batch_save_workhour_tool():
             category=ToolCategory.WORKHOUR,
             timeout=120,
             requires_permission=True,
+            is_write=True,
         )
         logger.info("批量工时填报工具注册成功")
     except Exception as e:

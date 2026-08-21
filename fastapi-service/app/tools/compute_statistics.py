@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field
 from enum import Enum
 
 from app.models.tool import ToolCategory
+from app.services.param_resolver import resolve_member_id
 from app.services.tool_registry import tool_registry
 from app.core.config import settings
 
@@ -34,6 +35,7 @@ class StatisticsQueryParams(BaseModel):
     start_date: str = Field(..., description="开始日期 (YYYY-MM-DD)")
     end_date: str = Field(..., description="结束日期 (YYYY-MM-DD)")
     user_id: Optional[str] = Field(None, description="用户ID（可选）")
+    member_name: Optional[str] = Field(None, description="成员姓名（可选，系统会解析为用户ID）")
     project_id: Optional[str] = Field(None, description="项目ID（可选）")
     department_id: Optional[str] = Field(None, description="部门ID（可选）")
     work_type: Optional[str] = Field(None, description="工时类型筛选（可选），如'其他工时'表示加班工时。不填则统计全部工时。")
@@ -84,6 +86,10 @@ COMPUTE_STATISTICS_SCHEMA = {
             "type": "string",
             "description": "用户ID（可选），用于筛选特定用户"
         },
+        "member_name": {
+            "type": "string",
+            "description": "成员姓名（可选，用于统计指定人员，Handler 会解析为 user_id）"
+        },
         "project_id": {
             "type": "string",
             "description": "项目ID（可选），用于筛选特定项目"
@@ -116,6 +122,22 @@ async def compute_statistics_handler(**kwargs) -> Dict[str, Any]:
         # 提取非业务参数，避免污染 StatisticsQueryParams
         auth_token = kwargs.pop("auth_token", None)
         kwargs.pop("context", None)
+
+        member_name = kwargs.pop("member_name", None)
+        if member_name and not kwargs.get("user_id"):
+            resolved_user_id, resolve_error = await resolve_member_id(member_name, auth_token)
+            if resolve_error:
+                return {
+                    "success": False,
+                    "error": resolve_error,
+                    "statistics_type": kwargs.get("statistics_type", "unknown"),
+                    "date_range": f"{kwargs.get('start_date', '')} 至 {kwargs.get('end_date', '')}",
+                    "total_hours": 0,
+                    "total_records": 0,
+                    "items": [],
+                    "summary": {},
+                }
+            kwargs["user_id"] = resolved_user_id
 
         # 构建 Authorization header
         headers = {}

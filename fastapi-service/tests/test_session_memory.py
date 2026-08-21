@@ -204,6 +204,21 @@ async def test_message_timestamp_set(service):
         datetime.fromisoformat(msg.timestamp)  # 格式有效
 
 
+@pytest.mark.asyncio
+async def test_business_state_persists_without_credentials(service):
+    state = {
+        "last_tool": {
+            "name": "query_timesheet",
+            "params": {"member_name": "张三", "start_date": "2026-07-27", "end_date": "2026-08-02"},
+        }
+    }
+    await service.update_business_state("sess_state", "u-state", state)
+
+    loaded = await service.get_business_state("sess_state")
+
+    assert loaded == state
+
+
 # ─── clear_session ────────────────────────────────────────────────────────────
 
 @pytest.mark.asyncio

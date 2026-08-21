@@ -14,9 +14,9 @@ import json
 import logging
 import uuid
 from datetime import datetime
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +35,8 @@ class Session(BaseModel):
     """会话对象"""
     session_id: str
     user_id: str
-    messages: List[Message] = []
+    messages: List[Message] = Field(default_factory=list)
+    business_state: Dict[str, Any] = Field(default_factory=dict)
     created_at: str
     last_active: str
 
@@ -122,6 +123,37 @@ class SessionMemoryService:
         except Exception as e:
             logger.warning(f"会话 TTL 续期失败 session_id={session_id}: {e}")
         return session.messages
+
+    async def get_business_state(self, session_id: str) -> Dict[str, Any]:
+        """Return structured short-lived Agent state for multi-turn routing."""
+        session = await self._load_session(session_id)
+        if session is None:
+            return {}
+        try:
+            await self._redis.expire(self._key(session_id), self._ttl)
+        except Exception as e:
+            logger.warning(f"业务状态 TTL 续期失败 session_id={session_id}: {e}")
+        return dict(session.business_state)
+
+    async def update_business_state(
+        self,
+        session_id: str,
+        user_id: str,
+        business_state: Dict[str, Any],
+    ) -> None:
+        """Replace structured Agent state atomically with the conversation session."""
+        session = await self._load_session(session_id)
+        if session is None:
+            now = datetime.now().isoformat()
+            session = Session(
+                session_id=session_id,
+                user_id=user_id,
+                messages=[],
+                created_at=now,
+                last_active=now,
+            )
+        session.business_state = dict(business_state)
+        await self._save_session(session)
 
     async def add_messages(
         self,

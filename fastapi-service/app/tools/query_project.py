@@ -11,6 +11,7 @@ import httpx
 from pydantic import BaseModel, Field
 
 from app.models.tool import ToolCategory
+from app.services.param_resolver import resolve_project_id
 from app.services.tool_registry import tool_registry
 
 logger = logging.getLogger(__name__)
@@ -79,6 +80,7 @@ async def query_project_handler(**kwargs) -> Dict[str, Any]:
     """
     try:
         auth_token = kwargs.pop("auth_token", None)
+        user_id = kwargs.pop("user_id", None)
 
         # 参数验证和解析
         params = ProjectQueryParams(**{k: v for k, v in kwargs.items()
@@ -105,8 +107,21 @@ async def query_project_handler(**kwargs) -> Dict[str, Any]:
                 "error": None
             }
 
+        resolved_project_id, resolve_error = await resolve_project_id(
+            params.project_id,
+            auth_token,
+            base_url,
+            user_id=user_id,
+        )
+        if resolve_error or not resolved_project_id:
+            return {
+                "success": False,
+                "project": None,
+                "error": resolve_error or f"项目 {params.project_id} 不存在",
+            }
+
         # 构建查询URL（指定项目）
-        url = f"{base_url}/api/project-infos/{params.project_id}"
+        url = f"{base_url}/api/project-infos/{resolved_project_id}"
 
         # 调用SpringBoot API
         async with httpx.AsyncClient(timeout=30.0) as client:

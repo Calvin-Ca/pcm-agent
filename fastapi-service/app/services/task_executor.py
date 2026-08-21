@@ -5,17 +5,41 @@ Task Executor - 任务执行器
 """
 
 import asyncio
+import json
 import logging
+from contextvars import ContextVar
 from typing import Dict, Any, List, Optional, Set
 from datetime import datetime
 
 from ..models.task_plan import TaskPlan, TaskNode, TaskStatus, TaskType
 from .tool_registry import ToolRegistry
 from .permission_validator import PermissionValidator, PermissionContext
-from .retry_util import retry_async
+from .retry_util import is_retriable_exception, retry_async
 
 
 logger = logging.getLogger(__name__)
+
+
+class WriteResultUnknownError(RuntimeError):
+    """A non-idempotent write may have reached the downstream service."""
+
+
+WRITE_RESULT_UNKNOWN_MESSAGE = "提交结果未知，请查询确认"
+
+
+def _is_unknown_write_result(result: Any) -> bool:
+    """Return whether a handler reports an indeterminate write outcome.
+
+    Write handlers may catch transport exceptions themselves, so exception-only
+    handling in the executor is insufficient.  The structured marker is the
+    contract between a write handler and the executor.
+    """
+    if not isinstance(result, dict) or result.get("success") is not False:
+        return False
+    return (
+        str(result.get("status", "")).lower() == "unknown"
+        or result.get("error_code") == "WRITE_RESULT_UNKNOWN"
+    )
 
 
 class TaskExecutor:
@@ -40,9 +64,33 @@ class TaskExecutor:
         self.tool_registry = tool_registry
         self.permission_validator = permission_validator
         self.llm_client = llm_client
-        self.execution_results = {}  # 存储任务执行结果
-        
+        # ``execution_results`` is kept only as a compatibility scratchpad for
+        # diagnostics/tests.  Live plans use a ContextVar-backed request-local
+        # dictionary so concurrent requests can never see each other's tasks.
+        self.execution_results = {}
+        self._active_execution_results: ContextVar[Optional[Dict[str, Any]]] = ContextVar(
+            f"task_executor_results_{id(self)}",
+            default=None,
+        )
+
     async def execute_plan(
+        self,
+        task_plan: TaskPlan,
+        permission_context: PermissionContext = None,
+        timeout: int = 300,
+    ) -> Dict[str, Any]:
+        """Execute one plan with a request-local result store."""
+        token = self._active_execution_results.set({})
+        try:
+            return await self._execute_plan_isolated(
+                task_plan=task_plan,
+                permission_context=permission_context,
+                timeout=timeout,
+            )
+        finally:
+            self._active_execution_results.reset(token)
+
+    async def _execute_plan_isolated(
         self, 
         task_plan: TaskPlan, 
         permission_context: PermissionContext = None,
@@ -68,6 +116,16 @@ class TaskExecutor:
             logger.error(f"任务计划验证失败: {e}")
             task_plan.fail_execution(str(e))
             return self._build_execution_summary(task_plan, error=str(e))
+
+        duplicate_write_tasks = self._find_duplicate_write_tasks(task_plan)
+        if duplicate_write_tasks:
+            error_msg = (
+                "检测到重复写操作，已在执行前阻止："
+                + "、".join(duplicate_write_tasks)
+            )
+            logger.error(error_msg)
+            task_plan.fail_execution(error_msg)
+            return self._build_execution_summary(task_plan, error=error_msg)
         
         # 开始执行
         task_plan.start_execution()
@@ -194,12 +252,26 @@ class TaskExecutor:
                     timeout=timeout
                 )
 
-                # 执行成功
-                task.complete_execution(result)
-                self.execution_results[task.task_id] = result
+                # handler 返回 success=false 是业务失败，不能标记为任务完成。
+                business_success = not (
+                    isinstance(result, dict) and result.get("success") is False
+                )
+                if business_success:
+                    task.complete_execution(result)
+                else:
+                    business_error = str(
+                        result.get("message")
+                        or result.get("error")
+                        or "工具业务执行失败"
+                    )
+                    task.fail_execution(business_error)
+                self._record_execution_result(task.task_id, result)
 
-                logger.info(f"任务执行成功: {task.task_id}")
-                _ok = bool(result.get("success", True)) if isinstance(result, dict) else True
+                if business_success:
+                    logger.info(f"任务执行成功: {task.task_id}")
+                else:
+                    logger.warning(f"任务业务执行失败: {task.task_id}")
+                _ok = business_success
                 _span.set_output(
                     result,
                     level=None if _ok else "ERROR",
@@ -208,25 +280,57 @@ class TaskExecutor:
                 return result
 
             except asyncio.TimeoutError:
-                error_msg = f"任务执行超时 ({timeout}秒)"
-                logger.error(f"任务 {task.task_id} 执行超时")
+                tool_def = self.tool_registry.get_tool(task.tool_name) if task.tool_name else None
+                is_write = bool(tool_def and tool_def.is_write)
+                error_msg = (
+                    WRITE_RESULT_UNKNOWN_MESSAGE
+                    if is_write
+                    else f"任务执行超时 ({timeout}秒)"
+                )
+                logger.error(f"任务 {task.task_id} 执行超时（写入={is_write}）")
                 task.fail_execution(error_msg)
-                _span.set_output({"success": False, "error": error_msg}, level="ERROR", status_message=error_msg)
-                return {"success": False, "error": error_msg}
+                failure = {"success": False, "error": error_msg, "message": error_msg}
+                if is_write:
+                    failure.update({
+                        "status": "unknown",
+                        "error_code": "WRITE_RESULT_UNKNOWN",
+                    })
+                self._record_execution_result(task.task_id, failure)
+                _span.set_output(failure, level="ERROR", status_message=error_msg)
+                return failure
 
             except PermissionError as e:
                 error_msg = str(e)
                 logger.warning(f"任务 {task.task_id} 权限拒绝: {error_msg}")
                 task.fail_execution(error_msg)
-                _span.set_output({"success": False, "error": error_msg}, level="ERROR", status_message=error_msg)
-                return {"success": False, "error": error_msg}
+                failure = {"success": False, "error": error_msg, "message": error_msg}
+                self._record_execution_result(task.task_id, failure)
+                _span.set_output(failure, level="ERROR", status_message=error_msg)
+                return failure
+
+            except WriteResultUnknownError as e:
+                error_msg = str(e)
+                logger.error(f"任务 {task.task_id} 写入结果未知: {error_msg}")
+                task.fail_execution(error_msg)
+                failure = {
+                    "success": False,
+                    "status": "unknown",
+                    "error_code": "WRITE_RESULT_UNKNOWN",
+                    "error": error_msg,
+                    "message": error_msg,
+                }
+                self._record_execution_result(task.task_id, failure)
+                _span.set_output(failure, level="ERROR", status_message=error_msg)
+                return failure
 
             except Exception as e:
                 error_msg = f"任务执行异常: {str(e)}"
                 logger.error(f"任务 {task.task_id} 执行异常: {e}", exc_info=True)
                 task.fail_execution(error_msg)
-                _span.set_output({"success": False, "error": error_msg}, level="ERROR", status_message=error_msg)
-                return {"success": False, "error": error_msg}
+                failure = {"success": False, "error": error_msg, "message": error_msg}
+                self._record_execution_result(task.task_id, failure)
+                _span.set_output(failure, level="ERROR", status_message=error_msg)
+                return failure
     
     async def _execute_task_by_type(
         self, 
@@ -278,6 +382,38 @@ class TaskExecutor:
         
         # 处理参数中的依赖结果注入
         processed_params = self._inject_dependency_results(task.parameters)
+
+        # 在进入权限校验和 handler 之前 fail closed。auth_token/context 是
+        # Agent 内部注入字段，不属于模型的工具 Schema。
+        schema_properties = tool_def.json_schema.get("properties", {})
+        internal_only = {"auth_token", "context"}
+        # LangGraph injects the trusted current user into every call.  Some
+        # tools (for example query_project) do not expose user_id in their FC
+        # schema and simply ignore it, so it must not be treated as a model
+        # supplied additional property.
+        if "user_id" not in schema_properties:
+            internal_only.add("user_id")
+        schema_params = {
+            key: value for key, value in processed_params.items()
+            if key not in internal_only
+        }
+        params_valid, params_error = self.tool_registry.validate_params(
+            task.tool_name,
+            schema_params,
+        )
+        if not params_valid:
+            raise ValueError(params_error or f"工具 {task.tool_name} 参数校验失败")
+
+        if task.tool_name == "save_workhour":
+            missing = [
+                name for name in ("project_id", "date", "duration")
+                if schema_params.get(name) in (None, "", 0)
+            ]
+            if missing:
+                raise ValueError(
+                    "工时填报缺少必填参数，必须先向用户澄清："
+                    + "、".join(missing)
+                )
         
         # 权限验证
         if self.permission_validator and permission_context:
@@ -308,9 +444,20 @@ class TaskExecutor:
             elif task.tool_name == 'compute_statistics':
                 # 统计工具需要验证统计范围权限
                 filters = processed_params.get('filters', {})
-                user_ids = filters.get('user_ids', [])
-                project_ids = filters.get('project_ids', [])
-                department_ids = filters.get('department_ids', [])
+                user_ids = list(filters.get('user_ids', []))
+                project_ids = list(filters.get('project_ids', []))
+                department_ids = list(filters.get('department_ids', []))
+                if processed_params.get('user_id'):
+                    user_ids.append(processed_params['user_id'])
+                if processed_params.get('project_id'):
+                    project_ids.append(processed_params['project_id'])
+                if processed_params.get('department_id'):
+                    department_ids.append(processed_params['department_id'])
+                member_name = processed_params.get('member_name')
+                if member_name and permission_context.entity_type in ('employee', 'deptSubAdmin'):
+                    raise PermissionError(
+                        f"抱歉，您的角色（{permission_context.entity_type}）没有权限统计其他成员（{member_name}）的数据"
+                    )
 
                 for user_id in user_ids:
                     result = self.permission_validator.can_access_user_data(permission_context, user_id)
@@ -330,6 +477,16 @@ class TaskExecutor:
             elif task.tool_name in ['generate_weekly_report', 'save_workhour']:
                 # Phase 8 工具：只允许访问自己的数据，管理员除外
                 target_user_id = processed_params.get('user_id')
+                target_member_name = processed_params.get('member_name')
+                is_preview = task.tool_name == 'save_workhour' and processed_params.get('dry_run') is True
+                if (
+                    target_member_name
+                    and permission_context.entity_type in ('employee', 'deptSubAdmin')
+                    and (task.tool_name != 'save_workhour' or not is_preview)
+                ):
+                    raise PermissionError(
+                        f"无权限为其他成员（{target_member_name}）写入工时；可先执行 dry-run 预览"
+                    )
                 if target_user_id:
                     result = self.permission_validator.can_access_user_data(permission_context, target_user_id)
                     if not result.allowed:
@@ -400,14 +557,21 @@ class TaskExecutor:
                     )
                 return await asyncio.wait_for(coro, timeout=task.timeout)
 
-            # 技术债 #3：对可重试异常（网络 / 超时 / 5xx）做指数退避重试，
-            # 最多 3 次（0.5s / 1s）。业务错误 / 权限错误不重试（见 retry_util）。
+            # 非幂等写操作不允许网络层自动重试；断连/超时时必须返回
+            # "结果未知"，由用户或上游查询确认。只读工具仍保留最多 3 次尝试。
             result = await retry_async(
                 _invoke_handler,
-                max_attempts=3,
+                max_attempts=1 if tool_def.is_write else 3,
                 base_delay=0.5,
                 op_name=f"tool:{task.tool_name}",
             )
+
+            # Some handlers intentionally convert transport exceptions into a
+            # structured result.  Promote that marker back to an executor-level
+            # unknown result so callers cannot summarize it as an ordinary
+            # business failure (or, worse, as success).
+            if tool_def.is_write and _is_unknown_write_result(result):
+                raise WriteResultUnknownError(WRITE_RESULT_UNKNOWN_MESSAGE)
 
             # 检查业务层失败（handler 返回了 success=False 但未抛异常）
             if isinstance(result, dict) and result.get("success") is False:
@@ -428,6 +592,8 @@ class TaskExecutor:
             execution_time = (datetime.now() - start_time).total_seconds()
             error_msg = f"工具执行超时: {task.tool_name} (超时时间: {task.timeout}秒)"
             logger.error(error_msg)
+            if tool_def.is_write:
+                raise WriteResultUnknownError(WRITE_RESULT_UNKNOWN_MESSAGE)
             raise TimeoutError(error_msg)
         except PermissionError:
             _call_status = "permission_denied"
@@ -438,6 +604,8 @@ class TaskExecutor:
             _call_status = "error"
             execution_time = (datetime.now() - start_time).total_seconds()
             logger.error(f"工具执行失败: {task.tool_name}, 耗时: {execution_time:.2f}秒, 错误: {e}")
+            if tool_def.is_write and is_retriable_exception(e):
+                raise WriteResultUnknownError(WRITE_RESULT_UNKNOWN_MESSAGE) from e
             raise
         finally:
             TOOL_CALL_COUNT.labels(tool_name=task.tool_name, status=_call_status).inc()
@@ -518,8 +686,9 @@ class TaskExecutor:
                             field_path = parts[1:]  # 包含 "result" 作为起始路径
 
                             # 获取依赖任务的结果
-                            if task_id in self.execution_results:
-                                result = self.execution_results[task_id]
+                            execution_results = self._current_execution_results()
+                            if task_id in execution_results:
+                                result = execution_results[task_id]
                                 
                                 # 按路径提取字段值
                                 field_value = result
@@ -573,7 +742,7 @@ class TaskExecutor:
             "status": task_plan.status,
             "progress": progress,
             "execution_time": task_plan.total_execution_time,
-            "task_results": self.execution_results.copy(),
+            "task_results": self._current_execution_results().copy(),
             "success": task_plan.status == TaskStatus.COMPLETED
         }
         
@@ -592,8 +761,43 @@ class TaskExecutor:
         Returns:
             Optional[Dict[str, Any]]: 任务执行结果
         """
-        return self.execution_results.get(task_id)
+        return self._current_execution_results().get(task_id)
     
     def clear_results(self):
         """清除执行结果缓存"""
         self.execution_results.clear()
+        active = self._active_execution_results.get()
+        if active is not None:
+            active.clear()
+
+    def _current_execution_results(self) -> Dict[str, Any]:
+        active = self._active_execution_results.get()
+        return active if active is not None else self.execution_results
+
+    def _record_execution_result(self, task_id: str, result: Dict[str, Any]) -> None:
+        """Record only inside an active plan; direct calls return their result directly."""
+        active = self._active_execution_results.get()
+        if active is not None:
+            active[task_id] = result
+
+    def _find_duplicate_write_tasks(self, task_plan: TaskPlan) -> List[str]:
+        """Return duplicate non-idempotent write task IDs without executing them."""
+        seen: Dict[str, str] = {}
+        duplicates: List[str] = []
+        for task in task_plan.tasks.values():
+            if task.task_type != TaskType.TOOL_CALL or not task.tool_name:
+                continue
+            tool_def = self.tool_registry.get_tool(task.tool_name)
+            if not tool_def or not tool_def.is_write:
+                continue
+            signature = json.dumps(
+                {"tool": task.tool_name, "parameters": task.parameters},
+                sort_keys=True,
+                ensure_ascii=False,
+                default=str,
+            )
+            if signature in seen:
+                duplicates.append(f"{seen[signature]}/{task.task_id}")
+            else:
+                seen[signature] = task.task_id
+        return duplicates

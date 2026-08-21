@@ -16,7 +16,7 @@ import json
 import logging
 import os
 import re
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from typing import Any, AsyncGenerator, Dict, List, Optional
 
 from langgraph.graph import END, START, StateGraph
@@ -29,6 +29,56 @@ from app.services.hours_resolver import resolve_hours_suggestion
 from app.services.llm_client import get_planner_llm_client
 
 logger = logging.getLogger(__name__)
+
+_WRITE_TOOL_NAMES = frozenset({"save_workhour", "batch_save_workhour", "approve_workhour"})
+_AGENT_LOOP_TOOL_NAMES = frozenset({
+    "kb_keyword_search",
+    "kb_outline",
+    "kb_read_section",
+    "kb_semantic_search",
+})
+_WRITE_CONFIRMATION_RE = re.compile(r"^(?:确认(?:提交|保存|审批)?|提交|保存|没问题|可以)$")
+_UNVERIFIED_COMPLETION_RE = re.compile(
+    r"(?:已为您.{0,20}(?:保存|提交|补录|填报|批准|审批|生成|导出)|"
+    r"(?:工时|记录|申请|审批|周报|报表).{0,16}已(?:成功)?(?:保存|提交|补录|填报|批准|审批|生成|导出))"
+)
+_WORKHOUR_DATE_REFERENCE_RE = re.compile(
+    r"\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|\d{1,2}月\d{1,2}日|"
+    r"今天|昨天|前天|明天|后天|本周|这周|上周|下周|"
+    r"周[一二三四五六日天]|(?:星期|礼拜)[一二三四五六日天]"
+)
+_WORKHOUR_DURATION_REFERENCE_RE = re.compile(
+    r"(?:\d+(?:\.\d+)?|半)\s*(?:个)?(?:小时|h(?:ours?)?|天)",
+    re.IGNORECASE,
+)
+_CHINESE_DURATION_RE = re.compile(r"[零〇一二两三四五六七八九十百]+(?:个)?(?:半)?小时")
+_MONTH_DAY_WITHOUT_YEAR_RE = re.compile(r"\d{1,2}月\d{1,2}日")
+_EXPLICIT_YEAR_DATE_RE = re.compile(r"\d{4}(?:年|[-/.])\d{1,2}(?:月|[-/.])\d{1,2}日?")
+_SAVE_ACTION_RE = re.compile(r"保存|提交|填报|补录|录入|记录|记一下|记一笔|预存|dry\s*run|试运行|预检|^录", re.IGNORECASE)
+_BATCH_ACTION_RE = re.compile(r"批量.{0,8}(?:录|填|保存|提交)|(?:录|填|保存|提交).{0,8}批量")
+_APPROVE_ACTION_RE = re.compile(r"批准|审批|通过|同意|全批")
+_SIMPLE_PROJECT_ID_REPLY_RE = re.compile(r"^(?:项目ID(?:是|为)?\s*)?[A-Za-z][A-Za-z0-9_-]*$", re.IGNORECASE)
+_PROJECT_SLUG_RE = re.compile(r"^[a-z]+(?:-[a-z]+)+$")
+_PREVIEW_REQUEST_RE = re.compile(r"dry\s*run|试运行|预存|预览|预检|预校验|检查合法性|别真存|不实际(?:保存|提交)", re.IGNORECASE)
+_PENDING_WRITE_UPDATE_RE = re.compile(r"查到了|确实|改成|更正为|还是之前|项目ID|日期是|工时")
+_BATCH_MEMBER_PREFIX_RE = re.compile(r"(?:^|[\n；;])\s*([\u4e00-\u9fa5]{2,4})\s+(?=\d{4}|[A-Za-z])")
+_AGGREGATE_REQUEST_RE = re.compile(
+    r"总共|一共|总工时|占比|比例|平均|排名|排行|最多|最少|环比|同比|"
+    r"干了多少小时|用了多少工时|工时有多少|工时差多少|相差多少|多少小时|每天各|每月各|每周各|分别(?:是|有|用了|干了)?多少|"
+    r"按(?:天|日|周|月|项目|人员|部门|工作类型).{0,6}(?:统计|汇总|分组)"
+)
+_DETAIL_REQUEST_RE = re.compile(r"明细|记录|哪些工时|做了哪些|干了哪些|填报情况")
+_SUGGEST_REQUEST_RE = re.compile(r"该填(?:什么|哪些|多少)|要填(?:什么|哪些)?工时(?:吗)?|填\s*\d+(?:\.\d+)?\s*小时还是")
+_CANCEL_WRITE_RE = re.compile(r"^(?:取消|不要|不用|算了|别提交|别保存)[！!。\s]*$")
+_MEMBER_PATTERNS = (
+    re.compile(r"^(?P<name>[\u4e00-\u9fa5]{2,4})(?=在|从|这周|本周|上周|下周|今年|本月|上月|昨天|今天|20\d{2}|\d{1,2}月)"),
+    re.compile(r"(?:查|看|统计|算|生成|批准|审批|把)\s*(?P<name>[\u4e00-\u9fa5]{2,4})(?=在|从|这周|本周|上周|下周|今年|本月|上月|昨天|今天|20\d{2}|\d{1,2}月)"),
+)
+
+
+def _current_date() -> date:
+    """Return today's date; the evaluation harness may replace this provider."""
+    return date.today()
 
 # ─── 全局组件（由 initialize_agent 在应用启动时注入）──────────────────────────
 _tool_registry = None
@@ -67,6 +117,7 @@ class AgentState(TypedDict):
     session_id: Optional[str]
     # 记忆上下文（Task 40）
     conversation_history: list     # OpenAI messages 格式的历史消息列表
+    business_state: Dict[str, Any]  # Redis 中带 TTL 的结构化多轮业务状态
     # 分类结果
     intent: Optional[str]          # knowledge_qa | tool_execution | complex_request | general_chat | clarify
     tool_name: Optional[str]
@@ -107,19 +158,871 @@ def _probe_planner_availability() -> bool:
 
 def _build_openai_tools(tool_registry) -> list:
     """将 ToolRegistry 的 json_schema 转换为 OpenAI function calling 格式"""
+    from app.core.config import settings
+
     tools = []
     for tool_def in tool_registry.list_tools():
+        # SQL Agent 关闭时即使模块曾被其他入口 import，也不向模型暴露。
+        if tool_def.name == "sql_query" and not settings.SQL_AGENT_ENABLED:
+            continue
+        description = tool_def.description
+        if not settings.SQL_AGENT_ENABLED:
+            description = description.replace(
+                "应使用 sql_query 查询",
+                "当前工具集不支持直接查询",
+            )
         schema = {k: v for k, v in tool_def.json_schema.items()
                   if k != "additionalProperties"}
         tools.append({
             "type": "function",
             "function": {
                 "name": tool_def.name,
-                "description": tool_def.description,
+                "description": description,
                 "parameters": schema,
             }
         })
     return tools
+
+
+def _canonical_tool_value(value: Any) -> Any:
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    if isinstance(value, dict):
+        return {key: _canonical_tool_value(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_canonical_tool_value(item) for item in value]
+    return value
+
+
+def _tool_call_signature(tool_name: str, arguments: dict) -> str:
+    return json.dumps(
+        {"name": tool_name, "arguments": _canonical_tool_value(arguments)},
+        sort_keys=True,
+        ensure_ascii=False,
+        default=str,
+    )
+
+
+def _business_safe_params(arguments: dict) -> dict:
+    """Keep business context while excluding credentials and transport metadata."""
+    return {
+        key: value
+        for key, value in (arguments or {}).items()
+        if key not in {"auth_token", "context", "permission_context"}
+    }
+
+
+def _deduplicate_tool_calls(tool_calls: list) -> list:
+    """Keep the first exact tool call and drop model-emitted duplicates."""
+    unique = []
+    seen = set()
+    for call in tool_calls:
+        signature = _tool_call_signature(
+            call.get("name") or "",
+            call.get("arguments") or {},
+        )
+        if signature in seen:
+            logger.warning("已阻止模型生成的重复工具调用: %s", call.get("name"))
+            continue
+        seen.add(signature)
+        unique.append(call)
+    return unique
+
+
+def _prior_user_messages(state: AgentState) -> list[str]:
+    return [
+        str(item.get("content") or "")
+        for item in (state.get("conversation_history") or [])[:-1]
+        if item.get("role") == "user"
+    ]
+
+
+def _last_prior_assistant_message(state: AgentState) -> str:
+    for item in reversed((state.get("conversation_history") or [])[:-1]):
+        if item.get("role") == "assistant":
+            return str(item.get("content") or "")
+    return ""
+
+
+def _looks_like_batch_request(message: str) -> bool:
+    """Recognize a concrete multi-record preview even when the word 批量 is omitted."""
+    if not (_BATCH_ACTION_RE.search(message) or _PREVIEW_REQUEST_RE.search(message)):
+        return False
+    durations = _WORKHOUR_DURATION_REFERENCE_RE.findall(message)
+    dates = re.findall(r"20\d{2}[-/.年]\d{1,2}(?:[-/.月]\d{1,2}日?)?", message)
+    tabular = "\t" in message or message.count("\n") >= 2
+    separated_rows = message.count("；") + message.count(";") >= 1
+    return bool(len(durations) >= 2 or len(dates) >= 2 or tabular or separated_rows)
+
+
+def _looks_like_uncommanded_workhour_record(message: str) -> bool:
+    """Detect a record-shaped payload that has no save/preview instruction."""
+    if _SAVE_ACTION_RE.search(message) or _BATCH_ACTION_RE.search(message) or _PREVIEW_REQUEST_RE.search(message):
+        return False
+    has_date = bool(_WORKHOUR_DATE_REFERENCE_RE.search(message))
+    has_duration = bool(_WORKHOUR_DURATION_REFERENCE_RE.search(message))
+    has_project = bool(re.search(r"(?:^|\s)[A-Za-z][A-Za-z0-9_-]{1,20}(?:\s|$)", message))
+    return has_date and has_duration and has_project
+
+
+def _latest_prior_batch_text(state: AgentState) -> Optional[str]:
+    for message in reversed(_prior_user_messages(state)):
+        if _looks_like_batch_request(message):
+            return message
+    return None
+
+
+def _pending_single_save_arguments(state: AgentState) -> Optional[dict]:
+    """Recover a pending single write from user-authored history only.
+
+    This is intentionally limited to explicit values; assistant text and model
+    defaults are never treated as authorization or business data.
+    """
+    messages = [*_prior_user_messages(state), str(state.get("user_message") or "")]
+    combined = "\n".join(messages)
+    if not re.search(r"补录|填报|录入|保存|提交|记下|记一下|工时|小时", combined):
+        return None
+
+    date_matches = re.findall(r"(20\d{2})[-/.年](\d{1,2})[-/.月](\d{1,2})日?", combined)
+    if date_matches:
+        year, month, day = date_matches[-1]
+        date_value = date(int(year), int(month), int(day)).isoformat()
+    elif _WORKHOUR_DATE_REFERENCE_RE.search(combined):
+        date_value = _resolve_fill_date(combined)
+    else:
+        return None
+
+    durations = re.findall(r"(\d+(?:\.\d+)?)\s*(?:个)?(?:小时|h\b)", combined, re.IGNORECASE)
+    if not durations:
+        return None
+    duration = float(durations[-1])
+
+    project_matches = []
+    for pattern in (
+        r"项目ID(?:是|为)?\s*([A-Za-z][A-Za-z0-9_-]*)",
+        r"项目(?:是|为)\s*([A-Za-z][A-Za-z0-9_-]*)",
+        r"在[‘'\"]?([^，。；;\n]{2,24}?)[’'\"]?项目",
+        r"项目(?:是|为)\s*([\u4e00-\u9fa5A-Za-z0-9_-]{2,24})",
+    ):
+        project_matches.extend(re.findall(pattern, combined, re.IGNORECASE))
+    for message in messages:
+        stripped = message.strip()
+        if _SIMPLE_PROJECT_ID_REPLY_RE.fullmatch(stripped):
+            project_matches.append(re.sub(r"^项目ID(?:是|为)?\s*", "", stripped, flags=re.IGNORECASE))
+    if not project_matches:
+        return None
+
+    arguments = {
+        "project_id": project_matches[-1].strip(),
+        "date": date_value,
+        "duration": duration,
+    }
+    description_match = re.search(r"(?:做了?|完成|处理)([^，。；;\n]{2,30})", combined)
+    if description_match:
+        description = description_match.group(1).strip()
+        # “做了一次远程支持”中的“一次”是数量补语，不属于工作描述。
+        description = re.sub(r"^一次", "", description).strip()
+        if description:
+            arguments["description"] = description
+    return arguments
+
+
+def _resolve_fill_date(message: str) -> str:
+    today = _current_date()
+    explicit = re.search(r"(20\d{2})[-/.年](\d{1,2})[-/.月](\d{1,2})日?", message)
+    if explicit:
+        return date(int(explicit.group(1)), int(explicit.group(2)), int(explicit.group(3))).isoformat()
+    month_day = re.search(r"(\d{1,2})月(\d{1,2})日?", message)
+    if month_day:
+        return date(today.year, int(month_day.group(1)), int(month_day.group(2))).isoformat()
+    if "昨天" in message:
+        return (today - timedelta(days=1)).isoformat()
+    if "前天" in message:
+        return (today - timedelta(days=2)).isoformat()
+    if "明天" in message:
+        return (today + timedelta(days=1)).isoformat()
+    weekday_match = re.search(r"(上周|本周|这周|下周)([一二三四五六日天])", message)
+    if weekday_match:
+        weekday = "一二三四五六日天".index(weekday_match.group(2))
+        weekday = min(weekday, 6)
+        offset = {"上周": -7, "本周": 0, "这周": 0, "下周": 7}[weekday_match.group(1)]
+        monday = today - timedelta(days=today.weekday()) + timedelta(days=offset)
+        return (monday + timedelta(days=weekday)).isoformat()
+    return today.isoformat()
+
+
+def _extract_member_name(message: str, state: AgentState) -> Optional[str]:
+    current_name = str((state.get("user_context") or {}).get("user_name") or "")
+    for pattern in _MEMBER_PATTERNS:
+        match = pattern.search(message)
+        if not match:
+            continue
+        name = match.group("name")
+        for verb in ("查询", "统计", "生成", "批准", "审批", "查", "看", "算", "把"):
+            if name.startswith(verb) and len(name) - len(verb) >= 2:
+                name = name[len(verb):]
+                break
+        name = re.sub(r"[一二三四五六七八九十]+月$", "", name)
+        if name.startswith(("我", "本人", "自己", "今天", "昨天", "前天")):
+            continue
+        if (
+            name != current_name
+            and not any(token in name for token in ("项目", "部门", "工时", "周报"))
+            and not name.endswith(("部", "平台", "园区", "系统", "升级"))
+        ):
+            return name
+    return None
+
+
+def _extract_department_name(message: str) -> Optional[str]:
+    match = re.search(r"([\u4e00-\u9fa5]{2,16}部)", message)
+    if not match:
+        return None
+    candidate = match.group(1)
+    for delimiter in ("比", "和", "查", "统计", "看看", "看"):
+        if delimiter in candidate:
+            candidate = candidate.rsplit(delimiter, 1)[-1]
+    return candidate if 2 <= len(candidate) <= 12 else None
+
+
+def _infer_statistics_type(message: str, arguments: dict) -> str:
+    if (
+        re.search(r"每天|每日(?:分别|统计)?|每人每天|按天|按日", message)
+        and not re.search(r"平均每天", message)
+    ):
+        return "daily_hours"
+    if re.search(r"每周各|按周|自然周", message):
+        return "weekly_hours"
+    if arguments.get("member_name") or _extract_member_name(message, {"user_context": {}}):
+        return "user_hours"
+    if re.search(r"谁.{0,8}(?:最多|排名|排行)", message):
+        return "user_hours"
+    if arguments.get("department_id") or "部门" in message or _extract_department_name(message):
+        return "department_hours"
+    if "项目" in message or (arguments.get("project_id") and not re.search(r"需求分析|前端开发|后端开发|测试|文案", message)):
+        return "project_hours"
+    if re.search(r"每月|每个月|按月|月份|月度|环比|平均每个月", message):
+        return "monthly_hours"
+    return "user_hours"
+
+
+def _normalize_week_argument(message: str, arguments: dict) -> None:
+    explicit = re.search(r"(20\d{2})(?:年|-)(\d{1,2})(?:月|-)(\d{1,2})日?", message)
+    if explicit:
+        arguments["week"] = date(
+            int(explicit.group(1)), int(explicit.group(2)), int(explicit.group(3))
+        ).isoformat()
+    elif "上周" in message:
+        arguments["week"] = "lastWeek"
+    elif "本周" in message or "这周" in message:
+        arguments["week"] = "thisWeek"
+    else:
+        week_number = re.search(r"第\s*(\d{1,2})\s*周", message)
+        if week_number:
+            arguments["week"] = f"{_current_date().year}-W{int(week_number.group(1)):02d}"
+
+
+def _extract_project_reference(message: str) -> Optional[str]:
+    explicit = re.search(r"项目ID(?:是|为)?\s*([A-Za-z][A-Za-z0-9_-]*)", message, re.IGNORECASE)
+    if explicit:
+        return explicit.group(1)
+    match = re.search(r"([\u4e00-\u9fa5A-Za-z0-9_-]{2,20})项目", message)
+    if not match:
+        return None
+    candidate = match.group(1)
+    for prefix in ("请先确认", "请确认", "先确认", "确认", "查询", "查一下", "生成"):
+        if candidate.startswith(prefix):
+            candidate = candidate[len(prefix):]
+    return candidate or None
+
+
+def _forced_tool_calls_for_request(state: AgentState) -> Optional[list[dict]]:
+    message = (state.get("user_message") or "").strip()
+    pending_state = dict((state.get("business_state") or {}).get("pending_write") or {})
+    pending_state_params = _business_safe_params(pending_state.get("params") or {})
+    if _CANCEL_WRITE_RE.fullmatch(message):
+        return []
+    if _looks_like_batch_request(message):
+        return [{"name": "batch_save_workhour", "arguments": {"text": message, "dry_run": True}}]
+    if _WRITE_CONFIRMATION_RE.fullmatch(message):
+        pending_name = pending_state.get("name")
+        if pending_name in {"save_workhour", "batch_save_workhour"} and pending_state_params:
+            pending_state_params["dry_run"] = not bool(pending_state.get("preview_succeeded"))
+            return [{"name": pending_name, "arguments": pending_state_params}]
+        pending_batch = _latest_prior_batch_text(state)
+        if pending_batch:
+            return [{"name": "batch_save_workhour", "arguments": {"text": pending_batch, "dry_run": False}}]
+        pending_save = _pending_single_save_arguments(state)
+        if pending_save:
+            # 上一轮预检/工具执行失败时，“确认”不能升级成真实写入；
+            # 只能保持 dry-run，待预检成功后再次获得明确确认。
+            previous_assistant = _last_prior_assistant_message(state)
+            pending_save["dry_run"] = bool(
+                re.search(r"失败|无权|超时|未完成|未成功|无法|异常|不能", previous_assistant)
+            )
+            return [{"name": "save_workhour", "arguments": pending_save}]
+    if _prior_user_messages(state) and _SIMPLE_PROJECT_ID_REPLY_RE.fullmatch(message):
+        pending_save = pending_state_params or _pending_single_save_arguments(state)
+        if pending_save:
+            project_id = re.sub(r"^项目ID(?:是|为)?\s*", "", message, flags=re.IGNORECASE)
+            return [{"name": "query_project", "arguments": {"project_id": project_id or pending_save.get("project_id")}}]
+    if _prior_user_messages(state) and (
+        _PENDING_WRITE_UPDATE_RE.search(message)
+        or _PREVIEW_REQUEST_RE.search(message)
+        or re.search(r"项目(?:是|为)", message)
+    ):
+        pending_save = pending_state_params or _pending_single_save_arguments(state)
+        if pending_save:
+            explicit_project = re.search(r"项目ID(?:是|为)?\s*([A-Za-z][A-Za-z0-9_-]*)", message, re.IGNORECASE)
+            if explicit_project:
+                pending_save["project_id"] = explicit_project.group(1)
+            explicit_date = re.search(r"(20\d{2})[-/.年](\d{1,2})[-/.月](\d{1,2})日?", message)
+            if explicit_date:
+                pending_save["date"] = date(*map(int, explicit_date.groups())).isoformat()
+            explicit_duration = re.search(r"(\d+(?:\.\d+)?)\s*(?:个)?(?:小时|h\b)", message, re.IGNORECASE)
+            if explicit_duration:
+                pending_save["duration"] = float(explicit_duration.group(1))
+            pending_save["dry_run"] = True
+            return [{"name": "save_workhour", "arguments": pending_save}]
+    if _SUGGEST_REQUEST_RE.search(message):
+        return [{"name": "suggest_workhour", "arguments": {"fill_date": _resolve_fill_date(message)}}]
+    project_pair = re.search(
+        r"^([^和，。；;\s]{2,12})和([^，。；;\s]{2,12}?)(?=这周|本周|上周|下周)",
+        message,
+    )
+    if project_pair and _AGGREGATE_REQUEST_RE.search(message):
+        today = _current_date()
+        monday = today - timedelta(days=today.weekday())
+        if "上周" in message:
+            monday -= timedelta(days=7)
+        elif "下周" in message:
+            monday += timedelta(days=7)
+        return [
+            {"name": "compute_statistics", "arguments": {
+                "statistics_type": "project_hours",
+                "start_date": monday.isoformat(),
+                "end_date": (monday + timedelta(days=6)).isoformat(),
+                "project_id": project,
+            }}
+            for project in project_pair.groups()
+        ]
+    if _AGGREGATE_REQUEST_RE.search(message) and re.search(r"没(?:有)?归属项目|未归属项目|无项目", message):
+        month = re.search(r"(?<!\d)(\d{1,2})月", message)
+        if month:
+            today = _current_date()
+            month_number = int(month.group(1))
+            start = date(today.year, month_number, 1)
+            next_month = date(today.year + (month_number == 12), month_number % 12 + 1, 1)
+            return [{"name": "compute_statistics", "arguments": {
+                "statistics_type": "user_hours",
+                "start_date": start.isoformat(),
+                "end_date": (next_month - timedelta(days=1)).isoformat(),
+                "project_id": "",
+            }}]
+    if "比例" in message and not _has_date_evidence(message):
+        today = _current_date()
+        arguments = {
+            "statistics_type": _infer_statistics_type(message, {}),
+            "start_date": f"{today.year}-01-01",
+            "end_date": f"{today.year}-12-31",
+        }
+        project = _extract_project_reference(message)
+        department = _extract_department_name(message)
+        if project:
+            arguments["project_id"] = project
+        if department:
+            arguments["department_id"] = department
+        return [{"name": "compute_statistics", "arguments": arguments}]
+    if "周报" in message:
+        weekly_args = {}
+        _normalize_week_argument(message, weekly_args)
+        project = _extract_project_reference(message)
+        if weekly_args and project and "每人小时数统计" in message:
+            today = _current_date()
+            monday = today - timedelta(days=today.weekday())
+            return [
+                {"name": "query_project", "arguments": {"project_id": project}},
+                {"name": "compute_statistics", "arguments": {
+                    "statistics_type": "user_hours",
+                    "start_date": monday.isoformat(),
+                    "end_date": (monday + timedelta(days=6)).isoformat(),
+                }},
+            ]
+        if weekly_args and project and re.search(r"项目ID我忘了|先确认.+项目.+(?:存在|状态)", message):
+            return [
+                {"name": "query_project", "arguments": {"project_id": project}},
+                {"name": "generate_weekly_report", "arguments": weekly_args},
+            ]
+        if weekly_args and re.search(r"项目ID(?:是|为)", message, re.IGNORECASE):
+            return [{"name": "generate_weekly_report", "arguments": weekly_args}]
+    if _AGGREGATE_REQUEST_RE.search(message) and "今年" in message:
+        today = _current_date()
+        arguments = {
+            "statistics_type": _infer_statistics_type(message, {}),
+            "start_date": f"{today.year}-01-01",
+            "end_date": f"{today.year}-12-31",
+        }
+        return [{"name": "compute_statistics", "arguments": arguments}]
+    return None
+
+
+def _normalize_business_tool_calls(tool_calls: list, state: AgentState) -> list:
+    """Repair common FC routing/identity mistakes without inventing business data."""
+    forced = _forced_tool_calls_for_request(state)
+    if forced == []:
+        return []
+    if forced is not None:
+        # Deterministic routing chooses the path, but all calls must still pass
+        # the same identity/schema/date normalization as model-generated calls.
+        tool_calls = forced
+
+    message = (state.get("user_message") or "").strip()
+    member_name = _extract_member_name(message, state)
+    business_state = state.get("business_state") or {}
+    last_tool = business_state.get("last_tool") or {}
+    last_params = dict(last_tool.get("params") or {})
+    is_context_followup = bool(
+        re.search(r"呢[？?]?$|^再|^继续|^还是|^改成|^更正|^只看|^按.+(?:汇总|统计)|刚才|之前|同样", message)
+    )
+    if not member_name and is_context_followup and not re.search(r"(?:换|看|查)(?:我|自己)|我自己|本人", message):
+        member_name = last_params.get("member_name")
+    normalized = []
+    has_weekly = any(call.get("name") == "generate_weekly_report" for call in tool_calls)
+    aggregate = bool(
+        _AGGREGATE_REQUEST_RE.search(message)
+        and not _DETAIL_REQUEST_RE.search(message)
+        and not re.search(r"填了多少|报了多少", message)
+    )
+
+    for call in tool_calls:
+        name = call.get("name") or ""
+        arguments = dict(call.get("arguments") or {})
+
+        if is_context_followup and name == last_tool.get("name"):
+            for key in ("member_name", "project_id", "department_id", "work_type"):
+                if arguments.get(key) in (None, "") and last_params.get(key) not in (None, ""):
+                    arguments[key] = last_params[key]
+            if not _has_date_evidence(message):
+                for key in ("start_date", "end_date", "week"):
+                    if arguments.get(key) in (None, "") and last_params.get(key) not in (None, ""):
+                        arguments[key] = last_params[key]
+
+        if "周报" in message and name == "query_timesheet":
+            if has_weekly:
+                continue
+            name = "generate_weekly_report"
+            arguments = {key: value for key, value in arguments.items() if key in {"user_id", "member_name"}}
+
+        if "周报" in message and has_weekly and name == "export_report" and not re.search(r"Excel|报表|文件", message, re.IGNORECASE):
+            continue
+
+        if name == "query_timesheet" and aggregate:
+            name = "compute_statistics"
+            arguments["statistics_type"] = _infer_statistics_type(message, arguments)
+
+        if name == "compute_statistics" and _DETAIL_REQUEST_RE.search(message) and not aggregate:
+            name = "query_timesheet"
+            arguments.pop("statistics_type", None)
+            arguments.pop("department_id", None)
+            arguments.pop("work_type", None)
+
+        if name in {"query_timesheet", "compute_statistics", "generate_weekly_report", "save_workhour"} and member_name:
+            arguments["member_name"] = member_name
+            if arguments.get("user_id") == (state.get("user_context") or {}).get("user_id"):
+                arguments.pop("user_id", None)
+
+        if name == "compute_statistics":
+            department_name = _extract_department_name(message)
+            if department_name:
+                arguments["department_id"] = department_name
+                arguments.pop("member_name", None)
+            arguments["statistics_type"] = _infer_statistics_type(message, arguments)
+            work_type_map = {
+                "前端开发": "frontend_development",
+                "后端开发": "backend_development",
+                "需求分析": "requirement_analysis",
+            }
+            for label, value in work_type_map.items():
+                if label in message:
+                    arguments["work_type"] = value
+                    break
+            if "比例" in message and not _has_date_evidence(message):
+                today = _current_date()
+                arguments["start_date"] = f"{today.year}-01-01"
+                arguments["end_date"] = f"{today.year}-12-31"
+            if "本月" in message:
+                today = _current_date()
+                arguments["start_date"] = today.replace(day=1).isoformat()
+                arguments["end_date"] = today.isoformat()
+
+        if name == "generate_weekly_report":
+            _normalize_week_argument(message, arguments)
+
+        tool_def = _tool_registry.get_tool(name) if _tool_registry else None
+        if tool_def and tool_def.json_schema.get("additionalProperties") is False:
+            allowed = set((tool_def.json_schema.get("properties") or {}).keys())
+            arguments = {key: value for key, value in arguments.items() if key in allowed}
+
+        normalized.append({**call, "name": name, "arguments": arguments})
+
+    normalized = _deduplicate_tool_calls(normalized)
+
+    if "周报" in message and re.search(r"项目ID我忘了|先确认.+项目.+(?:存在|状态)", message):
+        project_calls = [call for call in normalized if call.get("name") == "query_project"]
+        weekly_calls = [call for call in normalized if call.get("name") == "generate_weekly_report"]
+        if project_calls and not weekly_calls:
+            weekly_args = {}
+            _normalize_week_argument(message, weekly_args)
+            normalized.append({"name": "generate_weekly_report", "arguments": weekly_args})
+
+    if "周报" in message and "每人小时数统计" in message:
+        today = _current_date()
+        monday = today - timedelta(days=today.weekday())
+        project_calls = [call for call in normalized if call.get("name") == "query_project"]
+        project_id = None
+        for call in normalized:
+            project_id = (call.get("arguments") or {}).get("project_id") or project_id
+        if not project_calls and project_id:
+            project_calls = [{"name": "query_project", "arguments": {"project_id": project_id}}]
+        normalized = project_calls + [{
+            "name": "compute_statistics",
+            "arguments": {
+                "statistics_type": "user_hours",
+                "start_date": monday.isoformat(),
+                "end_date": (monday + timedelta(days=6)).isoformat(),
+            },
+        }]
+
+    compute_calls = [call for call in normalized if call.get("name") == "compute_statistics"]
+    if len(compute_calls) == 1:
+        base = compute_calls[0]
+        base_args = dict(base.get("arguments") or {})
+
+        member_pair = re.search(r"([\u4e00-\u9fa5]{2,3})和([\u4e00-\u9fa5]{2,3})(?=在|这周|本周|上周|下周)", message)
+        project_pair = re.search(r"^([^和，。；;\s]{2,12})和([^，。；;\s]{2,12}?)(?=这周|本周|上周|下周|项目)", message)
+        member_department_comparison = bool(re.search(r"比.+部平均", message))
+        if member_department_comparison:
+            member = _extract_member_name(message, state)
+            department = _extract_department_name(message)
+            if member and department:
+                member_args = dict(base_args)
+                member_args["statistics_type"] = "user_hours"
+                member_args["member_name"] = member
+                member_args.pop("department_id", None)
+                member_args.pop("user_id", None)
+                department_args = dict(base_args)
+                department_args["statistics_type"] = "department_hours"
+                department_args["department_id"] = department
+                department_args.pop("member_name", None)
+                department_args.pop("user_id", None)
+                expanded = [
+                    {**base, "arguments": member_args},
+                    {**base, "arguments": department_args},
+                ]
+                normalized = [call for call in normalized if call is not base] + expanded
+                compute_calls = expanded
+        elif member_pair:
+            expanded = []
+            for name in member_pair.groups():
+                args = dict(base_args)
+                args["member_name"] = name
+                args.pop("user_id", None)
+                args["statistics_type"] = "user_hours"
+                expanded.append({**base, "arguments": args})
+            normalized = [call for call in normalized if call is not base] + expanded
+            compute_calls = expanded
+        elif project_pair and not re.search(r"李明|王芳|张伟|陈静|刘洋|赵敏", project_pair.group(1) + project_pair.group(2)):
+            expanded = []
+            for project in project_pair.groups():
+                args = dict(base_args)
+                args["project_id"] = project
+                args.pop("user_id", None)
+                args["statistics_type"] = "project_hours"
+                expanded.append({**base, "arguments": args})
+            normalized = [call for call in normalized if call is not base] + expanded
+            compute_calls = expanded
+        elif "占全公司" in message and base_args.get("department_id"):
+            company_args = {
+                "statistics_type": "monthly_hours",
+                "start_date": base_args.get("start_date"),
+                "end_date": base_args.get("end_date"),
+            }
+            normalized.append({"name": "compute_statistics", "arguments": company_args})
+
+    compute_calls = [call for call in normalized if call.get("name") == "compute_statistics"]
+    if len(compute_calls) == 1:
+        months = [int(value) for value in re.findall(r"(?<!\d)(\d{1,2})月", message)]
+        if "第二季度" in message and re.search(r"每个月|逐月|各月", message):
+            months = [4, 5, 6]
+        months = list(dict.fromkeys(month for month in months if 1 <= month <= 12))
+        should_expand_months = bool(re.search(r"这[两三四五六七八九十]个月|每月.{0,8}分别|每个月|各月|逐月|环比", message))
+        if len(months) >= 2 and should_expand_months:
+            base = compute_calls[0]
+            year_match = re.search(r"(20\d{2})年", message)
+            year = int(year_match.group(1)) if year_match else _current_date().year
+            expanded = []
+            for month in months:
+                month_start = date(year, month, 1)
+                if month == 12:
+                    month_end = date(year + 1, 1, 1) - timedelta(days=1)
+                else:
+                    month_end = date(year, month + 1, 1) - timedelta(days=1)
+                if year == _current_date().year and month == _current_date().month:
+                    month_end = min(month_end, _current_date())
+                args = dict(base.get("arguments") or {})
+                args["start_date"] = month_start.isoformat()
+                args["end_date"] = month_end.isoformat()
+                expanded.append({**base, "arguments": args})
+            normalized = [call for call in normalized if call is not base] + expanded
+
+    # 统计历史工时时，当前月的结束日期不得越过冻结的“今天”。
+    today = _current_date()
+    if re.search(r"(?:本月|这个月|\d{1,2}月)", message) and not re.search(r"本周|这周|上周|下周|自然周", message):
+        for call in normalized:
+            if call.get("name") != "compute_statistics":
+                continue
+            arguments = call.get("arguments") or {}
+            try:
+                start = date.fromisoformat(str(arguments.get("start_date") or ""))
+                end = date.fromisoformat(str(arguments.get("end_date") or ""))
+            except ValueError:
+                continue
+            if start.year == today.year and start.month == today.month and end > today:
+                arguments["end_date"] = today.isoformat()
+
+    return _deduplicate_tool_calls(normalized)
+
+
+def _enforce_write_confirmation(tool_calls: list, user_message: str) -> list:
+    """Force batch writes to preview unless this turn is an explicit confirmation."""
+    is_confirmation = bool(_WRITE_CONFIRMATION_RE.fullmatch(user_message.strip()))
+    for call in tool_calls:
+        if call.get("name") != "batch_save_workhour":
+            continue
+        arguments = dict(call.get("arguments") or {})
+        if not is_confirmation:
+            arguments["dry_run"] = True
+        call["arguments"] = arguments
+    return tool_calls
+
+
+def _missing_save_workhour_fields(arguments: dict, state: AgentState) -> list:
+    missing = []
+    if not arguments.get("project_id"):
+        missing.append("**项目名称或项目ID**")
+    if not arguments.get("date"):
+        missing.append("**工时日期**（如'今天'、'2026-03-26'）")
+    if not arguments.get("duration"):
+        missing.append("**工时时长**（小时，如 8 或 4.5）")
+
+    # On the first user turn the model must not invent a date merely because
+    # the prompt contains today's date.  Later turns may legitimately inherit
+    # an unambiguous pending write from conversation history.
+    messages = state.get("conversation_history") or []
+    prior_users = [
+        item for item in messages[:-1]
+        if item.get("role") == "user"
+    ]
+    user_message = state.get("user_message", "")
+    date_label = "**工时日期**（如'今天'、'2026-03-26'）"
+    if (
+        arguments.get("date")
+        and not prior_users
+        and not _WORKHOUR_DATE_REFERENCE_RE.search(user_message)
+        and date_label not in missing
+    ):
+        missing.append(date_label)
+
+    duration_label = "**有效工时时长**（0.5 小时的整数倍，且不超过 10 小时）"
+    if (
+        arguments.get("duration")
+        and not prior_users
+        and not _WORKHOUR_DURATION_REFERENCE_RE.search(user_message)
+        and duration_label not in missing
+    ):
+        missing.append(duration_label)
+    try:
+        duration = float(arguments.get("duration"))
+        if duration <= 0 or duration > 10 or abs(duration * 2 - round(duration * 2)) > 1e-9:
+            if duration_label not in missing:
+                missing.append(duration_label)
+    except (TypeError, ValueError):
+        if arguments.get("duration") is not None and duration_label not in missing:
+            missing.append(duration_label)
+    if ("分钟" in user_message or _CHINESE_DURATION_RE.search(user_message)) and duration_label not in missing:
+        missing.append(duration_label)
+
+    date_value = arguments.get("date")
+    if date_value:
+        try:
+            parsed_date = date.fromisoformat(str(date_value))
+            today = _current_date()
+            if parsed_date > today or parsed_date < today - timedelta(days=90):
+                if date_label not in missing:
+                    missing.append(date_label)
+        except ValueError:
+            if date_label not in missing:
+                missing.append(date_label)
+    if (
+        not prior_users
+        and _MONTH_DAY_WITHOUT_YEAR_RE.search(user_message)
+        and not _EXPLICIT_YEAR_DATE_RE.search(user_message)
+        and not re.search(r"今天|昨天|前天", user_message)
+        and date_label not in missing
+    ):
+        missing.append(date_label)
+    if re.search(r"不要\s*dry\s*run|非\s*dry\s*run|直接(?:保存|提交)", user_message, re.IGNORECASE):
+        missing.append("**写入确认**（请先预览并在下一轮明确确认提交）")
+    confirmation_label = "**写入确认**（请先预览并在下一轮明确确认提交）"
+    if not prior_users and not _PREVIEW_REQUEST_RE.search(user_message) and confirmation_label not in missing:
+        missing.append(confirmation_label)
+    return missing
+
+
+def _write_call_clarification(tool_name: str, arguments: dict, state: AgentState) -> Optional[str]:
+    """Fail closed when the current turn does not clearly authorize a write route."""
+    message = (state.get("user_message") or "").strip()
+    prior_users = [
+        item for item in (state.get("conversation_history") or [])[:-1]
+        if item.get("role") == "user"
+    ]
+    is_confirmation = bool(_WRITE_CONFIRMATION_RE.fullmatch(message))
+    is_simple_project_reply = bool(prior_users and _SIMPLE_PROJECT_ID_REPLY_RE.fullmatch(message))
+    is_pending_update = bool(prior_users and _PENDING_WRITE_UPDATE_RE.search(message))
+
+    if tool_name == "save_workhour":
+        if not (_SAVE_ACTION_RE.search(message) or is_confirmation or is_simple_project_reply or is_pending_update):
+            return "当前请求没有明确要求保存工时。请确认是否要保存，并补充完整的项目、日期和时长。"
+        missing = _missing_save_workhour_fields(arguments, state)
+        if missing:
+            return "写入条件不完整或不合法，请补充或确认：" + "、".join(missing) + "。"
+    elif tool_name == "batch_save_workhour":
+        if not (_BATCH_ACTION_RE.search(message) or _PREVIEW_REQUEST_RE.search(message) or is_confirmation):
+            return "当前请求没有明确要求批量写入。请先确认要批量填报的完整记录。"
+        if not is_confirmation and not (
+            _looks_like_batch_request(message) or _PREVIEW_REQUEST_RE.search(message)
+        ):
+            return "当前批量请求没有包含可执行的完整记录。请提供批量明细，并明确先预览或预检。"
+        batch_text = str(arguments.get("text") or "")
+        current_user_name = str((state.get("user_context") or {}).get("user_name") or "")
+        mentioned_members = _BATCH_MEMBER_PREFIX_RE.findall(batch_text)
+        privileged = str((state.get("user_context") or {}).get("entity_type") or "employee") in {
+            "deptAdmin", "regionAdmin", "companyAdmin", "superAdmin"
+        }
+        if arguments.get("dry_run") is not True and not privileged and any(name != current_user_name for name in mentioned_members):
+            return "批量填报只能写入当前登录用户的工时；检测到其他成员姓名，请确认数据归属。"
+    elif tool_name == "approve_workhour":
+        if not (_APPROVE_ACTION_RE.search(message) or is_confirmation):
+            return "当前请求没有明确要求执行审批。请确认审批对象和操作。"
+        ids = arguments.get("workhour_ids") or []
+        if isinstance(ids, str):
+            ids = [ids]
+        if not ids or any(not re.fullmatch(r"wh_\d+", str(item)) for item in ids):
+            return "工时记录 ID 格式无效，请提供形如 wh_8821 的有效记录 ID。"
+    return None
+
+
+def _all_user_text(state: AgentState) -> str:
+    return "\n".join([*_prior_user_messages(state), str(state.get("user_message") or "")])
+
+
+def _has_date_evidence(text: str) -> bool:
+    return bool(
+        _WORKHOUR_DATE_REFERENCE_RE.search(text)
+        or re.search(r"20\d{2}年\d{1,2}月|20\d{2}年第\d{1,2}周|\d{1,2}月|本月|上月|今年|季度", text)
+    )
+
+
+def _tool_call_clarification(tool_name: str, arguments: dict, state: AgentState) -> Optional[str]:
+    """Preflight every FC call so schema/semantic gaps become clarification, not execution errors."""
+    write_message = _write_call_clarification(tool_name, arguments, state)
+    if write_message:
+        return write_message
+
+    tool_def = _tool_registry.get_tool(tool_name) if _tool_registry else None
+    if tool_def:
+        required = tool_def.json_schema.get("required") or []
+        missing = [key for key in required if arguments.get(key) in (None, "", [])]
+        if missing:
+            labels = {
+                "start_date": "开始日期",
+                "end_date": "结束日期",
+                "statistics_type": "统计方式",
+                "text": "批量工时明细",
+                "workhour_ids": "工时记录ID",
+                "action": "审批动作",
+            }
+            readable = "、".join(labels.get(key, key) for key in missing)
+            return f"当前信息不足，请补充{readable}后再执行。"
+
+    all_user_text = _all_user_text(state)
+    if tool_name == "query_timesheet" and not _has_date_evidence(all_user_text):
+        return "请提供要查询的开始日期和结束日期，或明确说明本周、上周、本月等时间范围。"
+
+    if tool_name == "generate_weekly_report":
+        if not re.search(r"本周|这周|上周|下周|(?:20\d{2}年)?第\d{1,2}周|20\d{2}年\d{1,2}月\d{1,2}日", all_user_text):
+            return "请提供要生成周报的具体周次，例如本周、上周或某个日期所在周。"
+        current_weekly_message = state.get("user_message") or ""
+        has_named_user = bool(_extract_member_name(current_weekly_message, state))
+        has_explicit_project_id = bool(re.search(r"项目ID(?:是|为)?\s*[A-Za-z0-9_-]+", current_weekly_message, re.IGNORECASE))
+        if re.search(r"部门|合并|工作类型|开发类|测试类", current_weekly_message) or (
+            "项目" in current_weekly_message and not has_named_user and not has_explicit_project_id
+        ):
+            return "当前周报工具按单个用户生成，请补充具体员工；项目、部门或工作类型周报需要先查询统计条件。"
+
+    if tool_name == "suggest_workhour" and re.search(r"(?:正月|冬月|腊月|[一二三四五六七八九十]+月)?初[一二三四五六七八九十]", state.get("user_message") or ""):
+        return "当前日期表达可能是农历，请提供公历 YYYY-MM-DD 日期后再生成工时建议。"
+
+    if tool_name == "export_report":
+        current = state.get("user_message") or ""
+        explicit_dates = re.findall(r"20\d{2}[-/.年]\d{1,2}[-/.月]\d{1,2}日?", current)
+        bounded_relative = re.search(r"本周|这周|上周|本月|上月|季度|从.+到|至", current)
+        if len(explicit_dates) < 2 and not bounded_relative:
+            return "请提供报表的开始日期和结束日期，明确完整导出范围。"
+
+    if tool_name == "query_project":
+        current = (state.get("user_message") or "").strip()
+        if current in {"查项目", "查询项目", "找项目", "项目"}:
+            return "请提供项目名称或项目ID，或说明需要查询的项目范围。"
+        if re.search(r"谁负责|哪些项目上工作|负责的项目|重点项目|相关的.*项目|进行中或暂停", current):
+            return "当前项目查询需要项目名称或项目ID，请补充具体项目。"
+
+    start_value = arguments.get("start_date")
+    end_value = arguments.get("end_date")
+    if start_value or end_value:
+        try:
+            start = date.fromisoformat(str(start_value)) if start_value else None
+            end = date.fromisoformat(str(end_value)) if end_value else None
+        except ValueError:
+            return "日期格式无效，请使用 YYYY-MM-DD 格式重新提供日期范围。"
+        if start and end and start > end:
+            return "开始日期不能晚于结束日期，请确认正确的日期范围。"
+        if tool_name == "query_timesheet" and start and end:
+            today = _current_date()
+            if end > today or start < today - timedelta(days=90) or (end - start).days > 90:
+                return "查询日期超出当前支持范围，请提供不晚于今天且跨度不超过90天的日期范围。"
+
+    return None
+
+
+def _should_verify_project_before_save(arguments: dict, state: AgentState) -> bool:
+    project_id = str(arguments.get("project_id") or "")
+    if _PROJECT_SLUG_RE.fullmatch(project_id):
+        return True
+    return bool(
+        _prior_user_messages(state)
+        and _SIMPLE_PROJECT_ID_REPLY_RE.fullmatch((state.get("user_message") or "").strip())
+    )
+
+
+def _filter_system_prompt_for_available_tools(prompt: str) -> str:
+    """Remove SQL instructions whenever sql_query is not actually callable."""
+    if _tool_registry and _tool_registry.tool_exists("sql_query"):
+        from app.core.config import settings
+        if settings.SQL_AGENT_ENABLED:
+            return prompt
+    filtered = re.sub(r"\n\s*## sql_query 工具调用说明[\s\S]*$", "", prompt)
+    return filtered + "\n\n复杂统计、排名和趋势分析使用 compute_statistics；若现有工具无法完成，应明确说明能力边界。"
 
 
 def _expand_multi_day_date(date_str: str, duration: float) -> list:
@@ -133,9 +1036,7 @@ def _expand_multi_day_date(date_str: str, duration: float) -> list:
     - 相对日期："今天"、"昨天"、"明天"、"后天"及组合
     无法解析时返回空列表。
     """
-    from datetime import date, timedelta
-    
-    today = date.today()
+    today = _current_date()
     weekday_map = {"周一": 0, "周二": 1, "周三": 2, "周四": 3, "周五": 4, "周六": 5, "周日": 6}
     
     # 相对日期映射
@@ -234,6 +1135,15 @@ async def node_llm_with_tools(state: AgentState) -> dict:
     if not _llm_client or not _tool_registry:
         return await node_classify_intent(state)
 
+    if _looks_like_uncommanded_workhour_record(state.get("user_message") or ""):
+        return {
+            "intent": "clarify",
+            "tool_name": None,
+            "tool_params": {},
+            "query": state.get("user_message") or "",
+            "clarify_message": "已识别到一条工时明细，但尚未收到保存或预览指令。请确认要先预览，还是仅解析内容。",
+        }
+
     try: # 工具注册
         tools = _build_openai_tools(_tool_registry)
         if not tools:
@@ -331,13 +1241,9 @@ async def node_llm_with_tools(state: AgentState) -> dict:
         # tool call JSON 通常 100~600 tokens；qwen3-8b 8192 context，input ~4000-6000 时还有 2000+ 可用
 
         # ── A-RAG 受控破例（方案 A）：rag_strategy 指定 agent 或已进入 kb 多步导航 → 升级推理层 API ──
-        _KB_TOOLS = {
-            "kb_keyword_search", "kb_outline",
-            "kb_read_section", "kb_semantic_search",
-        }
         _fc_client = _llm_client
         if state.get("rag_strategy") == "agent" or any(     #  当普通聊天模型识别到知识库问题，代码会设置state["rag_strategy"] = "agent"，然后进入多步知识库导航
-            (h.get("tool") in _KB_TOOLS) for h in (agent_history or [])   # 已经执行过知识库工具
+            (h.get("tool") in _AGENT_LOOP_TOOL_NAMES) for h in (agent_history or [])   # 已经执行过知识库工具
         ):
             try:
                 _fc_client = get_planner_llm_client(temperature=0.1, max_tokens=1024)
@@ -360,6 +1266,18 @@ async def node_llm_with_tools(state: AgentState) -> dict:
             max_tokens=1024,
             extra=extra,
         )
+
+        forced_calls = _forced_tool_calls_for_request(state)
+        if forced_calls == []:
+            return {
+                "intent": "general_chat",
+                "tool_name": None,
+                "tool_params": {},
+                "query": state["user_message"],
+                "llm_result": "已取消，本次不会执行写入。",
+            }
+        if forced_calls:
+            result = {"finish_reason": "tool_calls", "tool_calls": forced_calls}
     except Exception as e:
         logger.warning(f"Function Calling 失败，降级到规则路由: {e}")
         # 方案 A：planner 调用失败时清除策略，避免循环回 llm_with_tools
@@ -369,11 +1287,73 @@ async def node_llm_with_tools(state: AgentState) -> dict:
         return await node_classify_intent(state)
 
     if result.get("finish_reason") == "tool_calls":
-        tool_calls = result.get("tool_calls", [])
+        tool_calls = _normalize_business_tool_calls(
+            _deduplicate_tool_calls(result.get("tool_calls", [])),
+            state,
+        )
         if not tool_calls:   #  正常情况下：finish_reason == "tool_calls"应该必然伴随非空的：tool_calls，但代码仍然检查，这是防御性处理
             return await node_classify_intent(state)
 
         user_ctx = state.get("user_context") or {}
+
+        # 批量写入首次必须预览。只有用户当前轮明确确认时，才允许
+        # dry_run=false；模型自行生成 false 不能绕过确认边界。
+        tool_calls = _enforce_write_confirmation(
+            tool_calls,
+            state.get("user_message", ""),
+        )
+
+        # 所有写工具都必须通过当前轮授权和参数边界；不能因为同轮
+        # 还有其他工具，或模型已生成完整参数，就绕过澄清节点。
+        for call in tool_calls:
+            tool_name = call.get("name") or ""
+            arguments = dict(call.get("arguments") or {})
+            clarify_msg = _tool_call_clarification(tool_name, arguments, state)
+            if clarify_msg:
+                return {
+                    "intent": "clarify",
+                    "tool_name": tool_name,
+                    "tool_params": arguments,
+                    "query": state["user_message"],
+                    "clarify_message": clarify_msg,
+                }
+            if tool_name == "save_workhour" and _should_verify_project_before_save(arguments, state):
+                if _SIMPLE_PROJECT_ID_REPLY_RE.fullmatch((state.get("user_message") or "").strip()):
+                    return {
+                        "intent": "tool_execution",
+                        "tool_name": "query_project",
+                        "tool_params": {"project_id": arguments["project_id"]},
+                        "query": state["user_message"],
+                    }
+                save_params = dict(arguments)
+                if user_ctx.get("user_id") and "user_id" not in save_params and "member_name" not in save_params:
+                    save_params["user_id"] = user_ctx["user_id"]
+                return {
+                    "intent": "complex_request",
+                    "tool_name": None,
+                    "tool_params": {},
+                    "query": state["user_message"],
+                    "task_plan": {
+                        "plan_name": "核验项目后预览工时",
+                        "source": "project_verification_guard",
+                        "tasks": [
+                            {
+                                "task_id": "verify_project",
+                                "task_type": "tool_call",
+                                "tool_name": "query_project",
+                                "parameters": {"project_id": arguments["project_id"]},
+                                "dependencies": [],
+                            },
+                            {
+                                "task_id": "preview_workhour",
+                                "task_type": "tool_call",
+                                "tool_name": "save_workhour",
+                                "parameters": save_params,
+                                "dependencies": ["verify_project"],
+                            },
+                        ],
+                    },
+                }
 
         # ── 多工具调用：构建并行 TaskPlan ──────────────────────────────────────
         if len(tool_calls) >= 2:
@@ -468,13 +1448,7 @@ async def node_llm_with_tools(state: AgentState) -> dict:
                 }
             
             # 单天或日期无效：走原有参数校验
-            missing = []
-            if not tool_params.get("project_id"):
-                missing.append("**项目名称或项目ID**")
-            if not tool_params.get("date"):
-                missing.append("**工时日期**（如'今天'、'2026-03-26'）")
-            if not tool_params.get("duration"):
-                missing.append("**工时时长**（小时，如 8 或 4.5）")
+            missing = _missing_save_workhour_fields(tool_params, state)
             if missing:
                 clarify_msg = await _build_workhour_clarify_message(
                     tool_params,    # llm根据用户消息得到的参数
@@ -500,6 +1474,12 @@ async def node_llm_with_tools(state: AgentState) -> dict:
     # finish_reason == "stop"：LLM 返回文字（闲聊/general_chat）
     content = result.get("content", "")
     user_message = state.get("user_message", "")
+
+    # 没有任何工具执行时，不接受模型直接宣称业务操作已完成。
+    # 转到确定性路由后，要么调用工具，要么澄清/拒绝。
+    if content and _UNVERIFIED_COMPLETION_RE.search(content):
+        logger.warning("已拦截未经工具证实的完成声明，转确定性路由")
+        return await node_classify_intent(state)
 
     # general_chat：预填 llm_result，避免再调一次 LLM
     return {
@@ -564,6 +1544,27 @@ async def node_classify_intent(state: AgentState) -> dict:
         if user_ctx.get("auth_token"):
             tool_params["auth_token"] = user_ctx["auth_token"]
 
+        if (
+            tool_name == "save_workhour"
+            and _should_verify_project_before_save(tool_params, state)
+        ):
+            return {
+                "intent": "tool_execution",
+                "tool_name": "query_project",
+                "tool_params": {"project_id": tool_params["project_id"]},
+                "query": state["user_message"],
+            }
+
+        clarify_msg = _tool_call_clarification(tool_name, tool_params, state)
+        if clarify_msg:
+            return {
+                "intent": "clarify",
+                "tool_name": tool_name,
+                "tool_params": tool_params,
+                "query": state["user_message"],
+                "clarify_message": clarify_msg,
+            }
+
         # 工时填报：检测必填参数是否缺失，缺失则转为引导对话
         if tool_name == "save_workhour":
             # ── 多天展开：检测"周一到周五"等日期范围 ─────────────────────────
@@ -602,13 +1603,7 @@ async def node_classify_intent(state: AgentState) -> dict:
                 }
             
             # 单天或日期无效：走原有参数校验
-            missing = []
-            if not tool_params.get("project_id"):
-                missing.append("**项目名称或项目ID**")
-            if not tool_params.get("date"):
-                missing.append("**工时日期**（如'今天'、'2026-03-26'）")
-            if not tool_params.get("duration"):
-                missing.append("**工时时长**（小时，如 8 或 4.5）")
+            missing = _missing_save_workhour_fields(tool_params, state)
             if missing:
                 clarify_msg = await _build_workhour_clarify_message(
                     tool_params,
@@ -658,6 +1653,35 @@ async def node_execute_tool(state: AgentState) -> dict:
             "agent_history": _append_agent_history(
                 state, observation={"error": "TaskExecutor 未初始化"}
             ),
+        }
+
+    current_tool = state.get("tool_name") or ""
+    current_args = state.get("tool_params") or {}
+    current_signature = _tool_call_signature(current_tool, current_args)
+    for previous in state.get("agent_history") or []:
+        previous_signature = _tool_call_signature(
+            previous.get("tool") or "",
+            previous.get("args") or {},
+        )
+        if previous_signature != current_signature:
+            continue
+        is_write = current_tool in _WRITE_TOOL_NAMES
+        message = (
+            "检测到重复写操作，已阻止再次提交"
+            if is_write else "检测到重复工具调用，已阻止再次执行"
+        )
+        blocked = {
+            "success": False,
+            "error_code": "DUPLICATE_WRITE_BLOCKED" if is_write else "DUPLICATE_CALL_BLOCKED",
+            "error": message,
+            "message": message,
+        }
+        logger.warning("%s: %s", message, current_tool)
+        return {
+            "tool_result": blocked,
+            "error": message,
+            "agent_iterations": state.get("agent_iterations", 0) + 1,
+            "agent_history": _append_agent_history(state, observation=blocked),
         }
 
     from app.models.task_plan import TaskNode, TaskType
@@ -916,6 +1940,33 @@ async def node_summarize(state: AgentState) -> dict:
     if not plan_results:
         return {"llm_result": "所有任务均已完成，但未产生可汇总的结果。"}
 
+    def _is_explicit_success(item: Any) -> bool:
+        if not isinstance(item, dict) or item.get("success") is not True:
+            return False
+        inner = item.get("result")
+        return not isinstance(inner, dict) or inner.get("success") is not False
+
+    failed_results = [item for item in plan_results.values() if not _is_explicit_success(item)]
+
+    def _safe_failure_summary() -> str:
+        messages = []
+        unknown = False
+        for item in failed_results:
+            if not isinstance(item, dict):
+                continue
+            inner = item.get("result") if isinstance(item.get("result"), dict) else item
+            status = str(inner.get("status") or item.get("status") or "")
+            error_code = str(inner.get("error_code") or item.get("error_code") or "")
+            if status == "unknown" or error_code == "WRITE_RESULT_UNKNOWN":
+                unknown = True
+            message = inner.get("message") or inner.get("error") or item.get("message") or item.get("error")
+            if message and str(message) not in messages:
+                messages.append(str(message))
+        if unknown:
+            return "提交结果未知，请查询确认。"
+        detail = "；".join(messages[:3])
+        return f"任务未完成：{detail}" if detail else "任务未完成，请检查参数或权限后重试。"
+
     if not _llm_client:
         # 降级：直接拼接各工具结果
         parts = []
@@ -923,7 +1974,9 @@ async def node_summarize(state: AgentState) -> dict:
             r = result.get("result", result)
             if isinstance(r, dict) and r.get("success"):
                 parts.append(str(r))
-        return {"llm_result": "\n\n".join(parts) if parts else "任务已完成。"}
+        if failed_results:
+            parts.append(_safe_failure_summary())
+        return {"llm_result": "\n\n".join(parts) if parts else _safe_failure_summary()}
 
     # 构建汇总 prompt — 截断过长的结果文本，防止超出模型上下文
     def _truncate_result_for_summary(tool_name: str, r: dict) -> str:
@@ -960,6 +2013,8 @@ async def node_summarize(state: AgentState) -> dict:
                 "你是工时管理系统的智能助手。"
                 "用户提出了一个需要多步操作的请求，系统已自动执行了多个工具并收集到结果。"
                 "请将这些结果综合分析，用简洁、友好的语言回答用户的原始问题。"
+                "只有工具结果明确 success=true 才能声称对应业务动作成功。"
+                "任意结果为 success=false、failed、timeout 或 unknown 时，必须如实说明未完成或结果未知，不得根据其他成功的查询结果推断写入成功。"
                 "如果有数据对比或排名，请用表格或列表呈现。"
             ),
         },
@@ -979,6 +2034,9 @@ async def node_summarize(state: AgentState) -> dict:
             temperature=0.3,
             max_tokens=1500,
         )
+        if failed_results and _UNVERIFIED_COMPLETION_RE.search(str(answer)):
+            logger.error("汇总模型将失败/未知工具结果误报为成功，已使用确定性失败摘要")
+            return {"llm_result": _safe_failure_summary()}
         return {"llm_result": answer}
     except Exception as e:
         logger.error(f"汇总节点 LLM 调用失败: {e}")
@@ -1080,6 +2138,11 @@ def _agent_loop_should_continue(state: AgentState) -> str:
     # 最高优先级：planner 回退标志 → 立即结束
     if state.get("_rag_fallback"):
         return "force_end"                      #############
+
+    # Agent Loop 只用于 A-RAG 渐进式检索。普通业务工具执行后已由
+    # SSE 处理器生成用户可见结果，若再回到 LLM 会诱发重复查询和重复写。
+    if state.get("tool_name") not in _AGENT_LOOP_TOOL_NAMES:
+        return "end"
 
     iters = state.get("agent_iterations", 0)
     max_iters = state.get("agent_max_iterations", 5) or 5
@@ -1234,6 +2297,10 @@ async def stream_agent_response(
     log_tool_name: str = ""           # 运行时从 classify_intent 节点获取
     log_tools_called: list = []       # 记录工具调用列表，用于 tool_count
     log_ai_response: str = ""         # 收集完整的 AI 响应文本
+    round_tool_name: str = ""
+    round_tool_params: Dict[str, Any] = {}
+    round_task_plan: Optional[Dict[str, Any]] = None
+    round_tool_result: Optional[Dict[str, Any]] = None
     _streaming_rag_active = False      # 知识问答时流式 RAG 标志
 
     # ── Task 40: 如果没有 session_id，自动生成一个 ─────────────────────────────
@@ -1242,10 +2309,11 @@ async def stream_agent_response(
 
     # ── Task 40: 通过 PromptBuilder 构建带历史的 messages ─────────────────────
     conversation_history: list = []
+    business_state: Dict[str, Any] = {}
     if _prompt_builder:
         try:    # 算一堆日期：因为用户会说「本周工时」「上个月呢」这种相对时间,LLM 自己不知道"今天"是哪天、"本周"从哪到哪。
             from datetime import timedelta as _timedelta
-            _today = datetime.now().date()
+            _today = _current_date()
             _week_start = _today - _timedelta(days=_today.weekday())
             _month_start = _today.replace(day=1)
             if _today.month == 12:
@@ -1271,6 +2339,7 @@ async def stream_agent_response(
                     last_month_start=str(_last_month_start),
                     last_month_end=str(_last_month_end),
                 ) or "你是一个专业的企业工时管理助手。请用简洁、友好的方式回答用户问题。"
+                base_system = _filter_system_prompt_for_available_tools(base_system)
             except Exception:
                 base_system = "你是一个专业的企业工时管理助手。请用简洁、友好的方式回答用户问题。"
             conversation_history = await _prompt_builder.build_messages_with_history(
@@ -1299,12 +2368,19 @@ async def stream_agent_response(
             }
         except Exception as e:
             logger.warning(f"构建带历史 messages 失败，降级为无历史模式: {e}")
+        try:
+            getter = getattr(_prompt_builder, "get_business_state", None)
+            if getter:
+                business_state = await getter(effective_session_id) or {}
+        except Exception as e:
+            logger.warning(f"加载结构化会话状态失败，降级为文本历史: {e}")
 
     initial_state: AgentState = {
         "user_message": message,                # 当前run的用户消息
         "user_context": user_ctx,               # 用户身份、权限上下文
         "session_id": effective_session_id,
         "conversation_history": conversation_history, # {"role": ** ,"content": ** ,}
+        "business_state": business_state,
         "intent": None,
         "tool_name": None,
         "tool_params": {},
@@ -1354,6 +2430,10 @@ async def stream_agent_response(
                 if node_name in ("classify_intent", "llm_with_tools"):
                     intent = state_delta.get("intent", "general_chat")
                     log_intent = intent
+                    candidate_tool = state_delta.get("tool_name") or ""
+                    if candidate_tool:
+                        round_tool_name = candidate_tool
+                        round_tool_params = dict(state_delta.get("tool_params") or {})
                     log_route_type = {
                         "knowledge_qa": "rag_engine",
                         "tool_execution": "tool_executor",
@@ -1373,10 +2453,13 @@ async def stream_agent_response(
                         _streaming_rag_active = True
                         yield _format_sse("thinking", {"message": "正在搜索知识库..."})
                     else:
+                        if intent == "complex_request":
+                            round_task_plan = state_delta.get("task_plan")
                         yield _format_sse("thinking", {"message": "正在生成回复..."})
 
                 elif node_name == "execute_tool":
                     result = state_delta.get("tool_result")
+                    round_tool_result = result if isinstance(result, dict) else None
                     error = state_delta.get("error")
                     if error or (result and not result.get("success", True)):
                         # 错误消息优先级：state.error > result.error > result.result.error > 默认值
@@ -1384,7 +2467,9 @@ async def stream_agent_response(
                         msg = (
                             error
                             or (result.get("error") if isinstance(result, dict) else None)
+                            or (result.get("message") if isinstance(result, dict) else None)
                             or (inner.get("error") if isinstance(inner, dict) else None)
+                            or (inner.get("message") if isinstance(inner, dict) else None)
                             or "工具执行失败"
                         )
                         log_status = "error"
@@ -1577,6 +2662,55 @@ async def stream_agent_response(
             _lf_flush()
         except Exception:
             pass
+
+        # 保存结构化多轮业务状态。该状态与会话使用相同 Redis TTL，
+        # 不保存 auth_token，也不依赖助手可见回复反向猜测工具参数。
+        if _prompt_builder:
+            try:
+                next_business_state = dict(business_state)
+                if _CANCEL_WRITE_RE.fullmatch(message.strip()):
+                    next_business_state.pop("pending_write", None)
+                if round_tool_name:
+                    safe_params = _business_safe_params(round_tool_params)
+                    next_business_state["last_tool"] = {
+                        "name": round_tool_name,
+                        "params": safe_params,
+                    }
+                    inner_result = (
+                        round_tool_result.get("result")
+                        if isinstance(round_tool_result, dict)
+                        else None
+                    )
+                    result_success = not (
+                        log_status == "error"
+                        or (isinstance(round_tool_result, dict) and round_tool_result.get("success") is False)
+                        or (isinstance(inner_result, dict) and inner_result.get("success") is False)
+                    )
+                    next_business_state["last_outcome"] = "success" if result_success else "failed"
+                    if round_tool_name in _WRITE_TOOL_NAMES:
+                        if safe_params.get("dry_run") is True or log_intent == "clarify" or not result_success:
+                            next_business_state["pending_write"] = {
+                                "name": round_tool_name,
+                                "params": safe_params,
+                                "preview_succeeded": bool(result_success and safe_params.get("dry_run") is True),
+                            }
+                        elif result_success:
+                            next_business_state.pop("pending_write", None)
+                if round_task_plan:
+                    next_business_state["last_plan"] = {
+                        "tasks": [
+                            {
+                                "tool_name": task.get("tool_name"),
+                                "parameters": _business_safe_params(task.get("parameters") or {}),
+                            }
+                            for task in (round_task_plan.get("tasks") or [])
+                        ]
+                    }
+                updater = getattr(_prompt_builder, "update_business_state", None)
+                if updater:
+                    await updater(effective_session_id, user_id, next_business_state)
+            except Exception as state_err:
+                logger.debug(f"保存结构化会话状态失败（非关键）: {state_err}")
 
         # ── Task 40: 保存本轮对话到短期记忆（失败不影响主流程）─────────────────
         if _prompt_builder and log_status == "success":

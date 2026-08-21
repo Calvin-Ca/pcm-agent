@@ -10,7 +10,7 @@ Save Workhour Tool - 工时填报工具
 
 import logging
 import os
-from datetime import datetime, date
+from datetime import date, datetime, timedelta
 from typing import Any, Dict, Optional, Tuple
 
 import httpx
@@ -31,11 +31,11 @@ SAVE_WORKHOUR_SCHEMA = {
     "properties": {
         "project_id": {
             "type": "string",
-            "description": "项目ID（可选，不填则由系统处理）",
+            "description": "项目ID或项目名称（必填）",
         },
         "date": {
             "type": "string",
-            "description": "工时日期，格式 YYYY-MM-DD（可选；用户未提及具体日期时，默认填今天的日期）",
+            "description": "工时日期，格式 YYYY-MM-DD（必填，用户未提供时必须追问）",
         },
         "duration": {
             "type": "number",
@@ -51,11 +51,17 @@ SAVE_WORKHOUR_SCHEMA = {
             "type": "string",
             "description": "用户ID（可选，不填则使用当前登录用户）",
         },
+        "member_name": {
+            "type": "string",
+            "description": "成员姓名（可选，仅有代填权限时使用；Handler 会解析为 user_id）",
+        },
         "dry_run": {
             "type": "boolean",
             "description": "true=仅预览校验不写入；缺省由调用环境决定（MCP 写工具端点会强制默认 true）",
         },
     },
+    # 保持 FC Schema 向后兼容；Agent 编排层和 TaskExecutor 会在调用
+    # handler 前确定性拦截缺失的写参数。
     "required": [],
     "additionalProperties": False,
 }
@@ -92,6 +98,8 @@ def _validate_date(date_str: str) -> Optional[str]:
 
     if record_date > date.today():
         return f"不能填报未来日期的工时：{date_str}"
+    if record_date < date.today() - timedelta(days=90):
+        return f"不能填报超过 90 天的历史工时：{date_str}"
     return None
 
 
@@ -162,8 +170,16 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
     # user_id 可能来自顶层参数（chat 接口），也可能来自 user_context（internal 工具端点）
     user_ctx = kwargs.get("user_context", {}) or {}
     user_id: Optional[str] = kwargs.get("user_id") or user_ctx.get("user_id")
+    member_name: Optional[str] = kwargs.get("member_name")
     # 默认直写；WRITE_DRY_RUN_DEFAULT=true 时强制预览（本地测试防误写生产）
     dry_run: bool = resolve_dry_run(kwargs, fallback=False)
+
+    if member_name and not kwargs.get("user_id"):
+        from app.services.param_resolver import resolve_member_id
+
+        user_id, resolve_error = await resolve_member_id(member_name, auth_token)
+        if resolve_error:
+            return {"success": False, "error": resolve_error}
 
     # 1. 基础参数校验
     if not project_id:
@@ -287,14 +303,34 @@ async def save_workhour_handler(**kwargs) -> Dict[str, Any]:
         except Exception:
             err_msg = e.response.text or ""
         logger.error(f"工时填报 API 调用失败: HTTP {e.response.status_code}, body: {err_msg}, payload: {payload}")
+        if e.response.status_code >= 500:
+            return {
+                "success": False,
+                "status": "unknown",
+                "error_code": "WRITE_RESULT_UNKNOWN",
+                "error": "提交结果未知，请查询确认",
+                "message": "提交结果未知，请查询确认",
+            }
         # 直接透传 SpringBoot 的原始错误文案，不包 HTTP 前缀
         return {"success": False, "error": err_msg or f"服务调用失败 (HTTP {e.response.status_code})"}
     except httpx.HTTPError as e:
         logger.error(f"工时填报网络错误: {e}")
-        return {"success": False, "error": f"网络请求失败: {e}"}
+        return {
+            "success": False,
+            "status": "unknown",
+            "error_code": "WRITE_RESULT_UNKNOWN",
+            "error": "提交结果未知，请查询确认",
+            "message": "提交结果未知，请查询确认",
+        }
     except Exception as e:
         logger.error(f"工时填报异常: {e}", exc_info=True)
-        return {"success": False, "error": f"填报异常: {e}"}
+        return {
+            "success": False,
+            "status": "unknown",
+            "error_code": "WRITE_RESULT_UNKNOWN",
+            "error": "提交结果未知，请查询确认",
+            "message": "提交结果未知，请查询确认",
+        }
 
 
 async def _get_daily_total(
@@ -335,7 +371,7 @@ def register_save_workhour_tool():
     try:
         tool_registry.register_tool(
             name="save_workhour",
-            description="填报/记录工时（适用：填工时/记录工时/登记工作时间/帮我填）。即使参数不完整也应调用，系统会自动处理缺失参数。project_id 可直接填项目名称，系统内部自动解析为ID。",
+            description="填报/记录单条工时（适用：填工时/记录工时/登记工作时间/帮我填）。只有用户已明确提供项目、日期和时长时才能调用；缺少任一项时必须先追问，不得自行补默认值。project_id 可直接填项目名称，系统内部自动解析为ID。",
             json_schema=SAVE_WORKHOUR_SCHEMA,
             handler=save_workhour_handler,
             category=ToolCategory.WORKHOUR,

@@ -270,11 +270,15 @@ async def test_handler_springboot_returns_failure():
 
 @pytest.mark.asyncio
 async def test_handler_http_network_error():
-    """网络请求异常应返回 success=False"""
+    """写请求断连时不能断言失败，必须返回结果未知。"""
     import httpx
 
     mock_daily = AsyncMock(return_value=0.0)
-    with patch("app.tools.save_workhour._get_daily_total", mock_daily):
+    with patch("app.tools._write_guard.settings.WRITE_DRY_RUN_DEFAULT", False), \
+         patch("app.tools.save_workhour.resolve_project_id", new=AsyncMock(return_value=("123", None))), \
+         patch("app.tools.save_workhour._get_workhour_type_for_date", new=AsyncMock(return_value="正常工时")), \
+         patch("app.tools.save_workhour.resolve_work_type", new=AsyncMock(return_value="研发工作")), \
+         patch("app.tools.save_workhour._get_daily_total", mock_daily):
         with patch("httpx.AsyncClient") as mock_client_cls:
             mock_ctx = AsyncMock()
             mock_ctx.__aenter__ = AsyncMock(return_value=mock_ctx)
@@ -283,13 +287,15 @@ async def test_handler_http_network_error():
             mock_client_cls.return_value = mock_ctx
 
             result = await save_workhour_handler(
-                project_id="p1",
+                project_id="123",
                 date=date.today().isoformat(),
                 duration=4.0,
             )
 
     assert result["success"] is False
-    assert "网络" in result["error"] or "失败" in result["error"]
+    assert result["status"] == "unknown"
+    assert result["error_code"] == "WRITE_RESULT_UNKNOWN"
+    assert result["message"] == "提交结果未知，请查询确认"
 
 
 # ─── 成功消息验证 ─────────────────────────────────────────────────────────────

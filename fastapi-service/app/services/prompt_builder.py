@@ -111,6 +111,32 @@ class PromptBuilder:
             logger.warning(f"获取会话历史失败: {e}")
             return []
 
+    async def get_business_state(self, session_id: Optional[str]) -> Dict[str, Any]:
+        if not session_id or not self._session_memory:
+            return {}
+        try:
+            return await self._session_memory.get_business_state(session_id)
+        except Exception as e:
+            logger.warning(f"获取会话业务状态失败: {e}")
+            return {}
+
+    async def update_business_state(
+        self,
+        session_id: Optional[str],
+        user_id: Optional[str],
+        business_state: Dict[str, Any],
+    ) -> None:
+        if not session_id or not self._session_memory:
+            return
+        try:
+            await self._session_memory.update_business_state(
+                session_id=session_id,
+                user_id=user_id or "anonymous",
+                business_state=business_state,
+            )
+        except Exception as e:
+            logger.warning(f"保存会话业务状态失败: {e}")
+
 
 # ─── 全局实例 ─────────────────────────────────────────────────────────────────
 

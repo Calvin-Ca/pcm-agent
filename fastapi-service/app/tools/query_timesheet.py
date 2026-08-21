@@ -52,7 +52,11 @@ QUERY_TIMESHEET_SCHEMA = {
     "properties": {
         "user_id": {
             "type": "string",
-            "description": "用户ID，必填"
+            "description": "用户ID（可选，不填则查询当前登录用户）"
+        },
+        "member_name": {
+            "type": "string",
+            "description": "成员姓名（可选，用于查询指定人员，Handler 会解析为 user_id）"
         },
         "start_date": {
             "type": "string",

@@ -1,0 +1,119 @@
+{
+  "complete_run": true,
+  "results": 420,
+  "expected_jobs": 420,
+  "completed": 213,
+  "completion_rate": 0.5071428571428571,
+  "false_success": 0,
+  "duplicate_tool_call": 0,
+  "duplicate_write_call": 0,
+  "unavailable_tool_attempt": 0,
+  "unsafe_execution": 3,
+  "by_category": {
+    "approve_workhour": {
+      "passed": 4,
+      "total": 12,
+      "rate": 0.3333333333333333
+    },
+    "batch_save_workhour": {
+      "passed": 30,
+      "total": 30,
+      "rate": 1.0
+    },
+    "complex_task": {
+      "passed": 4,
+      "total": 20,
+      "rate": 0.2
+    },
+    "compute_statistics": {
+      "passed": 16,
+      "total": 30,
+      "rate": 0.5333333333333333
+    },
+    "export_report": {
+      "passed": 6,
+      "total": 12,
+      "rate": 0.5
+    },
+    "general_chat": {
+      "passed": 12,
+      "total": 20,
+      "rate": 0.6
+    },
+    "generate_weekly_report": {
+      "passed": 23,
+      "total": 25,
+      "rate": 0.92
+    },
+    "kb_navigation": {
+      "passed": 5,
+      "total": 24,
+      "rate": 0.20833333333333334
+    },
+    "knowledge_qa": {
+      "passed": 24,
+      "total": 25,
+      "rate": 0.96
+    },
+    "multi_turn": {
+      "passed": 6,
+      "total": 100,
+      "rate": 0.06
+    },
+    "query_project": {
+      "passed": 21,
+      "total": 25,
+      "rate": 0.84
+    },
+    "query_timesheet": {
+      "passed": 20,
+      "total": 30,
+      "rate": 0.6666666666666666
+    },
+    "robustness": {
+      "passed": 7,
+      "total": 20,
+      "rate": 0.35
+    },
+    "save_workhour": {
+      "passed": 25,
+      "total": 35,
+      "rate": 0.7142857142857143
+    },
+    "suggest_workhour": {
+      "passed": 10,
+      "total": 12,
+      "rate": 0.8333333333333334
+    }
+  },
+  "latency_ms": {
+    "mean": 6657.415059523808,
+    "p95": 16180.905,
+    "max": 28832.959
+  },
+  "model": "qwen-plus",
+  "mode": "baseline",
+  "run_name": "qwen-plus-2026-08-08-code-fix-full-final",
+  "generated_at": "2026-08-08T10:14:46.919999+00:00",
+  "dataset": {
+    "status": "human_review_approved",
+    "semantic_revision": "semantic-consistency-v2",
+    "reference_date": "2026-08-07",
+    "files": {
+      "single_turn_320.jsonl": {
+        "rows": 320,
+        "sha256": "caf66a9dce2ca5f662dbcd1a023ebfcca41c73b63edb11f616f854695be07ce3"
+      },
+      "multi_turn_100.jsonl": {
+        "rows": 100,
+        "sha256": "ce3e4561bb0e54bcf8a24c5382f2545dd5293ef2dc066d1ce1c24becae694ad6"
+      }
+    }
+  },
+  "isolation": {
+    "springboot": "mock",
+    "database": "not_contacted",
+    "redis": "not_contacted",
+    "rag": "mock"
+  }
+}

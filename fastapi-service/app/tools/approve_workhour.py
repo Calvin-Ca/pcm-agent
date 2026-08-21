@@ -106,13 +106,33 @@ async def approve_workhour_handler(**kwargs) -> Dict[str, Any]:
         logger.error(f"工时审核 API 调用失败: {e}")
         if e.response.status_code == 403:
             return {"success": False, "error": "权限不足：您没有审核工时的权限"}
+        if e.response.status_code >= 500:
+            return {
+                "success": False,
+                "status": "unknown",
+                "error_code": "WRITE_RESULT_UNKNOWN",
+                "error": "提交结果未知，请查询确认",
+                "message": "提交结果未知，请查询确认",
+            }
         return {"success": False, "error": f"服务调用失败: HTTP {e.response.status_code}"}
     except httpx.HTTPError as e:
         logger.error(f"工时审核网络错误: {e}")
-        return {"success": False, "error": f"网络请求失败: {e}"}
+        return {
+            "success": False,
+            "status": "unknown",
+            "error_code": "WRITE_RESULT_UNKNOWN",
+            "error": "提交结果未知，请查询确认",
+            "message": "提交结果未知，请查询确认",
+        }
     except Exception as e:
         logger.error(f"工时审核异常: {e}", exc_info=True)
-        return {"success": False, "error": f"审核异常: {e}"}
+        return {
+            "success": False,
+            "status": "unknown",
+            "error_code": "WRITE_RESULT_UNKNOWN",
+            "error": "提交结果未知，请查询确认",
+            "message": "提交结果未知，请查询确认",
+        }
 
 
 # ─── 注册 ─────────────────────────────────────────────────────────────────────
@@ -133,6 +153,7 @@ def register_approve_workhour_tool():
             category=ToolCategory.WORKHOUR,
             timeout=30,
             requires_permission=True,
+            is_write=True,
         )
         logger.info("工时审核工具注册成功")
     except Exception as e:

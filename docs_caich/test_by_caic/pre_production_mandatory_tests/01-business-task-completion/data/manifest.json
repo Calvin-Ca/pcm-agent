@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0",
+  "dataset_name": "business_completion_preproduction",
+  "status": "human_review_approved",
+  "reference_date": "2026-08-07",
+  "files": {
+    "single_turn_320.jsonl": {
+      "rows": 320,
+      "sha256": "caf66a9dce2ca5f662dbcd1a023ebfcca41c73b63edb11f616f854695be07ce3"
+    },
+    "multi_turn_100.jsonl": {
+      "rows": 100,
+      "sha256": "ce3e4561bb0e54bcf8a24c5382f2545dd5293ef2dc066d1ce1c24becae694ad6"
+    }
+  },
+  "generation": {
+    "generated_at": "2026-08-07T13:01:02.470395+00:00",
+    "generator_model": "qwen-plus",
+    "api_base_host": "dashscope.aliyuncs.com",
+    "prompt_version": "business-completion-v1",
+    "reference_date": "2026-08-07",
+    "usage_current_process": {},
+    "usage_scope": "current_process_only; resumed/cache runs are not cumulative",
+    "raw_response_file_count": 37,
+    "contains_api_key": false,
+    "production_data_sent": false,
+    "generation_wall_seconds": 0.021
+  },
+  "historical_assets": {
+    "existing_regression_case_count": 2000,
+    "existing_data_root": "fastapi-service/tests/data",
+    "existing_function_calling_result": "docs_caich/test_by_caic/function_calling_experiment_validation/B_function_calling_unified_cloud_qwen_plus_run2.json",
+    "reuse_policy": "Historical cases remain a regression pool and are not counted as the new blind set."
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "counts": {
+      "single_turn": 320,
+      "multi_turn": 100,
+      "single_by_category": {
+        "approve_workhour": 12,
+        "batch_save_workhour": 30,
+        "complex_task": 20,
+        "compute_statistics": 30,
+        "export_report": 12,
+        "general_chat": 20,
+        "generate_weekly_report": 25,
+        "kb_navigation": 24,
+        "knowledge_qa": 25,
+        "query_project": 25,
+        "query_timesheet": 30,
+        "robustness": 20,
+        "save_workhour": 35,
+        "suggest_workhour": 12
+      },
+      "multi_by_scenario": {
+        "ambiguous_reference": 10,
+        "clarification_completion": 10,
+        "context_inheritance": 10,
+        "identity_switch": 10,
+        "interruption_resume": 10,
+        "parameter_correction": 10,
+        "partial_tool_failure": 10,
+        "task_switch": 10,
+        "tool_failure_recovery": 10,
+        "write_confirmation": 10
+      },
+      "tool_coverage": {
+        "approve_workhour": 7,
+        "batch_save_workhour": 54,
+        "compute_statistics": 138,
+        "export_report": 9,
+        "generate_weekly_report": 39,
+        "kb_keyword_search": 8,
+        "kb_outline": 8,
+        "kb_read_section": 9,
+        "kb_semantic_search": 10,
+        "knowledge_qa": 30,
+        "query_project": 82,
+        "query_timesheet": 65,
+        "save_workhour": 75,
+        "suggest_workhour": 10
+      },
+      "outcome_coverage": {
+        "connection_lost_unknown": 18,
+        "dry_run_success": 45,
+        "empty_result": 45,
+        "not_applicable": 205,
+        "partial_failure": 16,
+        "permission_denied": 61,
+        "success": 128,
+        "timeout": 33,
+        "timeout_unknown": 17,
+        "tool_error": 65,
+        "validation_error": 18
+      }
+    }
+  },
+  "registry_validation": {
+    "valid": true,
+    "schema_checked_tool_calls": 514,
+    "schema_error_count": 0,
+    "missing_registered_tools": []
+  },
+  "human_review": {
+    "approved": true,
+    "approved_at": "2026-08-08T09:46:15.655287+00:00",
+    "source": "user_confirmation"
+  },
+  "semantic_revision": {
+    "version": "semantic-consistency-v2",
+    "repaired_at": "2026-08-07T15:16:07.708471+00:00",
+    "changes": {
+      "relative_dates": 84,
+      "mock_payloads": 163,
+      "response_contracts": 523,
+      "identity_references": 227
+    },
+    "archive": null,
+    "archive_status": "removed_after_human_review",
+    "scope_excluded": [
+      "clarify-versus-default product policy"
+    ]
+  },
+  "semantic_validation": {
+    "valid": true,
+    "error_count": 0
+  }
+}

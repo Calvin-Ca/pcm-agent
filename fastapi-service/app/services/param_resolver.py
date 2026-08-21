@@ -94,7 +94,17 @@ async def resolve_project_id(
             _sp.set_output({"resolved_id": cached, "source": "cache"})
             return cached, None
 
-        project_id, error = await _search_project_by_name(value, auth_token, resolved_base, user_id)
+        try:
+            project_id, error = await _search_project_by_name(value, auth_token, resolved_base, user_id)
+        except httpx.HTTPStatusError as exc:
+            status = exc.response.status_code if exc.response is not None else "unknown"
+            error = f"项目查询服务返回 HTTP {status}，请稍后重试"
+            _sp.set_output({"resolved_id": None, "source": "http", "error": error}, level="ERROR")
+            return None, error
+        except httpx.RequestError as exc:
+            error = f"项目查询服务不可用：{exc}"
+            _sp.set_output({"resolved_id": None, "source": "http", "error": error}, level="ERROR")
+            return None, error
         _resolve_cache[cache_key] = project_id
         _sp.set_output(
             {"resolved_id": project_id, "source": "search", "error": error},
@@ -257,6 +267,10 @@ async def _contains_search(
             return data
         elif isinstance(data, dict):
             return data.get("data", data.get("content", []))
+    except httpx.HTTPStatusError:
+        raise
+    except httpx.RequestError:
+        raise
     except Exception as e:
         logger.debug(f"项目搜索请求失败: query={query_name!r}, err={e}")
     return []

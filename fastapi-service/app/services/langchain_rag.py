@@ -18,6 +18,11 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
 from app.services.prompt_manager import get_prompt_manager
+from app.services.reasoning_filter import (
+    REASONING_FILTER_FALLBACK,
+    ReasoningTraceStreamFilter,
+    strip_reasoning_trace,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -481,6 +486,7 @@ class LangChainRAGService:
             answer: str = await asyncio.to_thread(
                 chain.invoke, {"context": context, "question": question}
             )
+            answer = strip_reasoning_trace(answer) or REASONING_FILTER_FALLBACK
             _t3 = _time_module.monotonic()
             logger.info(f"[RAG-Timing] 生成阶段耗时: {_t3 - _t2:.3f}s | 总耗时: {_t3 - _start:.3f}s")
 
@@ -582,9 +588,19 @@ class LangChainRAGService:
             chain = prompt | self.llm | StrOutputParser()
 
             _t2 = _time_module.monotonic()
+            reasoning_filter = ReasoningTraceStreamFilter()
+            visible_content_emitted = False
             async for chunk in chain.astream({"context": context, "question": question}):
-                if chunk:
-                    yield {"type": "chunk", "content": chunk}
+                visible = reasoning_filter.feed(chunk)
+                if visible:
+                    visible_content_emitted = True
+                    yield {"type": "chunk", "content": visible}
+            remaining = reasoning_filter.finish()
+            if remaining:
+                visible_content_emitted = True
+                yield {"type": "chunk", "content": remaining}
+            if not visible_content_emitted:
+                yield {"type": "chunk", "content": REASONING_FILTER_FALLBACK}
             _t3 = _time_module.monotonic()
             logger.info(f"[RAG-Timing] 生成阶段耗时: {_t3 - _t2:.3f}s | 流式总耗时: {_t3 - _rag_start:.3f}s")
 

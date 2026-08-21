@@ -10,6 +10,7 @@
 """
 
 from app.api.chat import _accumulate_response_text, _strip_reasoning_trace
+from app.services.reasoning_filter import ReasoningTraceStreamFilter
 
 
 def _run(events):
@@ -85,10 +86,23 @@ def test_strip_no_think_unchanged():
     assert _strip_reasoning_trace("纯答案，无思维链") == "纯答案，无思维链"
 
 
-def test_unclosed_think_preserved_not_nuked():
-    """未闭合 <think>：故意不删到结尾（避免重蹈答案体丢失陷阱），原样返回。"""
-    text = "<think>\n模型被截断，没有闭合标签，但这里其实有答案正文..."
-    assert _strip_reasoning_trace(text) == text
+def test_unclosed_think_is_removed_fail_closed():
+    """未闭合 <think>：不得把截断的内部推理暴露给用户。"""
+    text = "<think>\n模型被截断，没有闭合标签，以下都是内部推理..."
+    out = _strip_reasoning_trace(text)
+    assert out == "响应生成异常，请重试。"
+    assert "<think>" not in out
+    assert "内部推理" not in out
+
+
+def test_unclosed_think_keeps_only_answer_before_tag():
+    text = "这是可以展示的答案。<think>后续内部推理被截断..."
+    assert _strip_reasoning_trace(text) == "这是可以展示的答案。"
+
+
+def test_think_tag_matching_is_case_insensitive():
+    text = "<THINK>内部推理</THINK>用户答案"
+    assert _strip_reasoning_trace(text) == "用户答案"
 
 
 def test_strip_multiple_think_blocks():
@@ -99,3 +113,19 @@ def test_strip_multiple_think_blocks():
 def test_strip_empty_or_none_safe():
     assert _strip_reasoning_trace("") == ""
     assert _strip_reasoning_trace(None) is None
+
+
+def test_stream_filter_handles_tags_split_across_chunks():
+    reasoning_filter = ReasoningTraceStreamFilter()
+    chunks = ["<thi", "nk>内部", "推理</th", "ink>正常", "答案"]
+    output = "".join(reasoning_filter.feed(chunk) for chunk in chunks)
+    output += reasoning_filter.finish()
+    assert output == "正常答案"
+
+
+def test_stream_filter_drops_unclosed_reasoning():
+    reasoning_filter = ReasoningTraceStreamFilter()
+    chunks = ["正常答案。<thi", "nk>未闭合", "内部推理"]
+    output = "".join(reasoning_filter.feed(chunk) for chunk in chunks)
+    output += reasoning_filter.finish()
+    assert output == "正常答案。"

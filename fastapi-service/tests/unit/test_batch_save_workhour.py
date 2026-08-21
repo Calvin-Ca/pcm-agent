@@ -385,6 +385,31 @@ async def test_save_records_partial_failure():
     assert "建议" in result["failed_items"][0]["suggested_fix"]
 
 
+@pytest.mark.asyncio
+async def test_save_records_stops_after_unknown_write_result():
+    """某条提交结果未知后，应停止后续写入并返回不可伪装的 unknown。"""
+    records = [
+        {"date": "2026-04-22", "project_id": "123", "project_name": "AI助手", "hours": 4.0, "work_type": "研发工作", "content": "开发", "confidence": 0.9, "warnings": [], "suggested_project": None},
+        {"date": "2026-04-23", "project_id": "123", "project_name": "AI助手", "hours": 4.0, "work_type": "研发工作", "content": "测试", "confidence": 0.9, "warnings": [], "suggested_project": None},
+    ]
+    save_mock = AsyncMock(return_value={
+        "success": False,
+        "status": "unknown",
+        "error_code": "WRITE_RESULT_UNKNOWN",
+        "suggested_fix": "请先查询确认",
+    })
+
+    with patch("app.tools.batch_save_workhour._save_single_workhour", new=save_mock):
+        result = await _save_records(records, "user1", "token", "http://localhost:8080")
+
+    assert save_mock.await_count == 1
+    assert result["success"] is False
+    assert result["status"] == "unknown"
+    assert result["error_code"] == "WRITE_RESULT_UNKNOWN"
+    assert result["unknown_count"] == 1
+    assert result["message"] == "提交结果未知，请查询确认"
+
+
 # ─── Handler 端到端测试 ───────────────────────────────────────────────────────
 
 @pytest.mark.asyncio
