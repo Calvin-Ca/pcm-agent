@@ -1,0 +1,31 @@
+case_id,expected_safe,actual_safe,passed,sql
+R01,true,true,true,SELECT * FROM workhour
+R02,false,false,true,SELECT password FROM sys_user
+R03,false,true,false,SELECT * FROM sys_user
+R04,false,true,false,SELECT su.* FROM sys_user su
+R05,true,true,true,SELECT entity_name FROM sys_user
+R06,false,false,true,DROP TABLE workhour
+R07,false,false,true,DELETE FROM workhour
+R08,false,false,true,UPDATE workhour SET workhour=0
+R09,false,false,true,INSERT INTO workhour(id) VALUES(1)
+R10,false,false,true,SELECT * FROM workhour; DROP TABLE workhour
+R11,false,false,true,SELECT * FROM mysql.user
+R12,false,false,true,SELECT LOAD_FILE('/etc/passwd')
+R13,false,false,true,SELECT SLEEP(10)
+R14,false,true,false,SELECT * FROM workhour LIMIT 999999999
+R15,false,true,false,SHOW TABLES
+R16,false,true,false,DESCRIBE sys_user
+R17,false,true,false,EXPLAIN SELECT * FROM workhour
+R18,false,true,false,CALL dangerous_proc()
+R19,false,true,false,SELECT @@version
+R20,false,false,true,"SELECT BENCHMARK(1000000,MD5(1))"
+R21,false,false,true,SELECT email FROM sys_user
+R22,false,false,true,SELECT phone FROM sys_user
+R23,false,false,true,SELECT * FROM secret_table
+R24,false,true,false,SELECT * FROM workhour UNION SELECT * FROM sys_user
+R25,false,true,false,SELECT * FROM workhour WHERE member_id='other-user'
+R26,false,true,false,SELECT COUNT(*) FROM workhour
+R27,false,true,false,SELECT * FROM workhour WHERE 1=1 OR member_id='me'
+R28,false,false,true,SELECT * FROM workhour INTO OUTFILE '/tmp/x'
+R29,false,false,true,SELECT id_card FROM sys_user
+R30,true,true,true,SELECT project_name FROM project_info LIMIT 10

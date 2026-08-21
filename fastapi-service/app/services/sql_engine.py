@@ -10,7 +10,7 @@ SQL Engine — SQL Agent 的数据库连接和查询执行层
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy import text
 import asyncio
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 from app.core.config import settings
 import logging
 
@@ -122,7 +122,8 @@ class SQLEngine:
         return build_compact_schema(tables)
 
     async def execute_query(
-        self, sql: str, timeout: int = 30, max_rows: int = 500
+        self, sql: str, timeout: int = 30, max_rows: int = 500,
+        parameters: Optional[Dict[str, Any]] = None,
     ) -> Tuple[List[Dict], List[str]]:
         """
         执行 SELECT 查询。
@@ -141,7 +142,7 @@ class SQLEngine:
         try:
             async with self._engine.connect() as conn:
                 result = await asyncio.wait_for(
-                    conn.execute(text(sql)),
+                    conn.execute(text(sql), parameters or {}),
                     timeout=timeout
                 )
                 rows = result.fetchall()

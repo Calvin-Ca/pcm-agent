@@ -235,21 +235,21 @@ class SQLAgentLLMClient:
 
 def _build_permission_constraints(context: Any) -> str:
     """根据权限上下文构建 SQL WHERE 条件约束文本。"""
-    from app.services.permission_validator import permission_validator
-    from app.models.tool import ToolExecutionContext
+    from app.services.permission_validator import PermissionContext, permission_validator
 
     # 空 context fallback（测试环境或匿名用户）
     if not context:
         return "（无数据范围限制，匿名查询模式）"
 
-    # 将 dict 或 ToolExecutionContext 转为 PermissionContext
+    # 将 dict 转为 PermissionContext，避免 ToolExecutionContext 与权限模型字段不兼容。
     if isinstance(context, dict):
+        context = dict(context)
         # 补全缺失的必填字段，防止 ValidationError
         if not context.get("user_id"):
             context["user_id"] = "anonymous"
         if not context.get("entity_type"):
             context["entity_type"] = "employee"
-        ctx = ToolExecutionContext(**context)
+        ctx = PermissionContext(**context)
     else:
         ctx = context
 
@@ -276,6 +276,90 @@ def _build_permission_constraints(context: Any) -> str:
         return "数据范围限制（自动注入 WHERE 条件）：\n  " + "\n  AND ".join(constraints)
     else:
         return "（无显式数据范围限制，仅返回当前用户数据）"
+
+
+_PROTECTED_MEMBER_TABLES = {"workhour", "workhour_attendance", "project_member"}
+_SQL_KEYWORDS = {
+    "where", "join", "inner", "left", "right", "full", "cross", "on", "group",
+    "order", "having", "limit", "union", "offset", "for", "into",
+}
+
+
+def enforce_sql_permissions(sql: str, context: Any) -> Tuple[str, Dict[str, Any]]:
+    """在每个受保护数据源内部强制施加可信权限范围。"""
+    from app.services.permission_validator import EntityType, PermissionContext
+
+    if not context:
+        raise PermissionError("缺少权限上下文，拒绝执行 SQL")
+    if isinstance(context, dict):
+        try:
+            ctx = PermissionContext(**dict(context))
+        except Exception as exc:
+            raise PermissionError(f"权限上下文无效: {exc}") from exc
+    elif isinstance(context, PermissionContext):
+        ctx = context
+    else:
+        try:
+            ctx = PermissionContext.model_validate(context, from_attributes=True)
+        except Exception as exc:
+            raise PermissionError(f"权限上下文类型无效: {exc}") from exc
+
+    if ctx.entity_type == EntityType.SUPER_ADMIN:
+        return sql, {}
+
+    params: Dict[str, Any] = {}
+    if ctx.entity_type == EntityType.EMPLOYEE:
+        params["perm_user_id"] = ctx.user_id
+        member_predicate = "{alias}.member_id = :perm_user_id"
+        user_predicate = "{alias}.id = :perm_user_id"
+    else:
+        department_ids = list(dict.fromkeys(
+            ([ctx.department_id] if ctx.department_id else []) + list(ctx.managed_departments)
+        ))
+        if not department_ids:
+            raise PermissionError("管理员缺少管辖部门范围，拒绝执行 SQL")
+        placeholders = []
+        for index, department_id in enumerate(department_ids):
+            key = f"perm_dept_{index}"
+            params[key] = department_id
+            placeholders.append(f":{key}")
+        dept_list = ", ".join(placeholders)
+        member_predicate = (
+            "EXISTS (SELECT 1 FROM sys_user __perm_user "
+            "WHERE __perm_user.id = {alias}.member_id "
+            f"AND __perm_user.org_id IN ({dept_list}))"
+        )
+        user_predicate = f"{{alias}}.org_id IN ({dept_list})"
+
+    source_pattern = re.compile(
+        r"(?P<prefix>\b(?:FROM|JOIN)\s+)"
+        r"(?P<quote>`?)(?P<table>workhour_attendance|project_member|workhour|sys_user)(?P=quote)"
+        r"(?:\s+(?:AS\s+)?(?P<alias>[A-Za-z_]\w*))?",
+        re.IGNORECASE,
+    )
+    protected_count = 0
+
+    def replace_source(match: re.Match) -> str:
+        nonlocal protected_count
+        table = match.group("table").lower()
+        alias = match.group("alias")
+        if alias and alias.lower() in _SQL_KEYWORDS:
+            alias = None
+        alias = alias or table
+        predicate = user_predicate if table == "sys_user" else member_predicate
+        predicate = predicate.format(alias="__perm_src")
+        protected_count += 1
+        return (
+            f"{match.group('prefix')}(SELECT * FROM {table} AS __perm_src "
+            f"WHERE {predicate}) AS {alias}"
+            + (f" {match.group('alias')}" if match.group("alias") and match.group("alias").lower() in _SQL_KEYWORDS else "")
+        )
+
+    scoped_sql = source_pattern.sub(replace_source, sql)
+    if protected_count == 0:
+        # 日历等公共只读表无需主体范围；其他表仍由表白名单负责。
+        return sql, params
+    return scoped_sql, params
 
 
 # ── Handler ──────────────────────────────────────────────────────────────────
@@ -470,20 +554,34 @@ async def sql_query_handler(**kwargs) -> Dict[str, Any]:
         logger.warning(f"SQL 安全校验未通过: {sql_or_error} | SQL: {generated_sql}")
         return {"success": False, "error": f"SQL 安全校验未通过: {sql_or_error}"}
 
-    final_sql = sql_or_error  # 通过校验的 SQL
+    candidate_sql = sql_or_error
 
-    # 6. 执行 SQL（重试 1 次）
+    # 6. 服务端强制权限注入；改写后再次执行完整安全校验。
+    try:
+        scoped_sql, permission_params = enforce_sql_permissions(candidate_sql, context)
+    except PermissionError as e:
+        logger.warning(f"SQL 权限注入失败: {e}")
+        return {"success": False, "error": f"SQL 权限校验未通过: {e}"}
+    is_safe, final_sql_or_error = validate_sql(scoped_sql, max_rows=settings.SQL_AGENT_MAX_ROWS)
+    if not is_safe:
+        logger.warning(f"权限注入后的 SQL 复检失败: {final_sql_or_error}")
+        return {"success": False, "error": f"SQL 权限注入后复检未通过: {final_sql_or_error}"}
+    final_sql = final_sql_or_error
+
+    # 7. 执行 SQL（重试 1 次）
     query_results = []
     columns = []
     max_retries = 1
 
     for attempt in range(max_retries + 1):
         try:
-            rows, columns = await sql_engine.execute_query(
-                final_sql,
-                timeout=settings.SQL_AGENT_QUERY_TIMEOUT,
-                max_rows=settings.SQL_AGENT_MAX_ROWS,
-            )
+            execute_kwargs = {
+                "timeout": settings.SQL_AGENT_QUERY_TIMEOUT,
+                "max_rows": settings.SQL_AGENT_MAX_ROWS,
+            }
+            if permission_params:
+                execute_kwargs["parameters"] = permission_params
+            rows, columns = await sql_engine.execute_query(final_sql, **execute_kwargs)
             query_results = rows
             break
         except Exception as e:

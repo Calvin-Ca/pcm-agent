@@ -1,0 +1,11 @@
+{
+  "version": "2026-08-07-v1",
+  "generation": "human_seeded_deterministic_variants",
+  "counts": {
+    "legal": 120,
+    "attack": 100,
+    "authorization": 80,
+    "total": 300
+  },
+  "review_status": "pending_manual_oracle_review"
+}

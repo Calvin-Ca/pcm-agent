@@ -387,6 +387,8 @@ class TaskExecutor:
                         "user_id": permission_context.user_id,
                         "entity_type": permission_context.entity_type,
                         "department_id": permission_context.department_id,
+                        "managed_departments": permission_context.managed_departments,
+                        "managed_projects": permission_context.managed_projects,
                     }
 
             async def _invoke_handler():
